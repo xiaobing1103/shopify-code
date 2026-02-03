@@ -1,0 +1,266 @@
+{%- liquid 
+assign show_script = true
+assign show_script2 = true
+assign pr_title = product.title
+assign pr_type = product.type
+assign pr_tag = product.tags
+assign pr_collection_title = product.collections | map: 'title'
+
+# 获取样式设置
+assign properties_blocks = arr_properties
+if properties_blocks.size > 0
+  assign first_prop_block = properties_blocks.first
+  assign prop_settings = first_prop_block.settings
+  
+  # Label 样式
+  assign label_font_size = prop_settings.label_font_size | default: 12
+  assign label_font_weight = prop_settings.label_font_weight | default: 400
+  assign label_color = prop_settings.label_color | default: 'rgba(0, 0, 0, 0.6)'
+  assign label_margin_bottom = prop_settings.label_margin_bottom | default: 8
+  
+  # Input 样式
+  assign input_font_size = prop_settings.input_font_size | default: 16
+  assign input_padding = prop_settings.input_padding | default: 16
+  assign input_border_radius = prop_settings.input_border_radius | default: 4
+  assign input_border_color = prop_settings.input_border_color | default: 'rgba(0, 0, 0, 0.23)'
+  assign input_border_hover_color = prop_settings.input_border_hover_color | default: 'rgba(0, 0, 0, 0.87)'
+  assign input_border_focus_color = prop_settings.input_border_focus_color | default: '#1976d2'
+  assign field_margin_bottom = prop_settings.field_margin_bottom | default: 24
+endif
+ -%}
+{{ 'frm_properties.css' | asset_url | append: '?v=20251201-v3' | stylesheet_tag }}
+
+{%- if properties_blocks.size > 0 -%}
+<style>
+  /* Design Note - 像素级还原 fp3vm */
+  .t4s-line-item-property__field {
+    margin-bottom: 16px;
+  }
+  
+  .t4s-line-item-property__field:not(.is--type-checkbox) .t4s-line-item-property__label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+    margin: 0 0 8px;
+    letter-spacing: normal;
+    text-transform: none;
+  }
+  
+  .is--type-short input,
+  .is--type-long textarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #6b7280;
+    background: #ffffff;
+    transition: all 200ms ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .is--type-short input::placeholder,
+  .is--type-long textarea::placeholder {
+    color: #9ca3af;
+  }
+  
+  .is--type-short input:hover,
+  .is--type-long textarea:hover {
+    border-color: #d1d5db;
+  }
+  
+  .is--type-short input:focus,
+  .is--type-long textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  /* 说明文字 */
+  .t4s-line-item-property__field p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #6b7280;
+    margin: 8px 0 0;
+  }
+</style>
+{%- endif -%}
+
+{%- for field in arr_properties -%}
+
+   {%- liquid 
+    assign bk_stts_field = field.settings
+    assign type_field    = bk_stts_field.type
+    assign name_field    = bk_stts_field.heading | escape
+    assign id_field      = field.id
+    if bk_stts_field.show_at_checkout
+      assign show_at_checkout = ''
+    else
+      assign show_at_checkout = '_'
+    endif
+    assign name_field_checkout = show_at_checkout | append:name_field
+    if bk_stts_field.required
+      assign required = 'required data-field-required class="t4s-required"'
+    else
+      assign required = ''
+    endif
+    assign arr_options = bk_stts_field.options | remove: '  ' | replace: ', ', ',' | replace: ' ,', ',' | split: ','
+    assign visibility = bk_stts_field.visibility
+    if visibility == 'all'
+    elsif visibility == 'collection'
+      if collection_based_title.size == 0
+      continue
+      endif
+      assign collection_based_title = bk_stts_field.collection_based | map: 'title'
+      assign pr_title_and_collections = pr_collection_title | concat: collection_based_title
+      assign pr_title_and_collections_uniq = pr_title_and_collections | uniq
+      if pr_title_and_collections_uniq.size == pr_title_and_collections.size
+      continue
+      endif
+    elsif visibility == 'type'
+      if pr_type == blank
+      continue
+      endif
+      assign type_based = bk_stts_field.type_based | remove: '  ' | replace: ', ', ',' | replace: ' ,', ',' | split: ','
+      unless type_based contains pr_type
+      continue
+      endunless
+    elsif visibility == 'tag'
+      if pr_tag.size == 0
+      continue
+      endif
+      assign tag_based = bk_stts_field.tag_based | remove: '  ' | replace: ', ', ',' | replace: ' ,', ',' | split: ','
+      assign pr_tag_and_tags = pr_tag | concat: tag_based
+      assign pr_tag_and_tags_uniq = pr_tag_and_tags | uniq
+      if pr_tag_and_tags_uniq.size == pr_tag_and_tags.size
+      continue
+      endif
+    elsif visibility == 'product'
+      assign product_based_title = bk_stts_field.product_based | map: 'title'
+      unless product_based_title contains pr_title
+      continue
+      endunless
+    elsif visibility == 'metafield'
+      unless product.metafields.theme.visibility_customizable
+      continue
+      endunless
+    endif -%}
+
+   <div data-item-property-field class="t4s-line-item-property__field is--type-{{ type_field }}" id="b_{{ id_field }}">
+      {%- case type_field -%}
+         
+        {%- when 'short' or 'long' -%}
+        <label class="t4s-line-item-property__label t4s_as_title" for="name_{{ id_field }}">Design Note</label>
+        {%- if type_field == 'short' -%}
+        <input {{ required }} id="name_{{ id_field }}" type="text" name="properties[{{ name_field_checkout }}]" placeholder="Enter your design inspiration, text, and notes.">
+        {%- else -%}
+        <textarea {{ required }} id="name_{{ id_field }}" name="properties[{{ name_field_checkout }}]" placeholder="Enter your design inspiration, text, and notes."></textarea>
+        {%- endif -%}
+        
+        <p style="color: {{ bk_stts_field.color_des }}">{{ bk_stts_field.des }}</p>
+
+        {%- when 'checkbox' -%}
+        <input type="hidden" name="properties[{{ name_field_checkout }}]" value="No">
+        <input id="name_{{ id_field }}" {{ required }} type="checkbox" name="properties[{{ name_field_checkout }}]" value="Yes">
+        <label class="t4s-line-item-property__label t4s_as_title_" for="name_{{ id_field }}">{{ name_field }}</label>
+        <div class="t4s-ios-toggle">
+          <span class="t4s-ios-toggle-slider"></span>
+        </div>
+
+        {%- when 'radio' -%}
+        <label class="t4s-line-item-property__label t4s_as_title">{{ name_field }}</label>
+        {%- if arr_options.size > 0 -%}
+         {%- for option in arr_options %}<div class="t4s-line-item-property__field-ck"><input {{ required }} id="value{{ id_field }}__{{ forloop.index }}" type="radio" name="properties[{{ name_field_checkout }}]" value="{{ option | strip | escape }}"> <label for="value{{ id_field }}__{{ forloop.index }}">{{ option | escape }}</label></div>{% endfor -%}
+        {%- endif -%}
+
+        {%- when 'select' -%}
+        <label class="t4s-line-item-property__label t4s_as_title">{{ name_field }}</label>
+        {%- if arr_options.size > 0 -%}
+        <select {{ required }} id="name_{{ id_field }}" name="properties[{{ name_field_checkout }}]">
+          {%- for option in arr_options %}<option value="{{ option | strip | escape }}">{{ option | escape }}</option>{% endfor -%}
+        </select>
+        {%- endif -%}
+        
+        {%- when 'checkbox_group' -%}
+        
+        {%- if show_script -%}
+        {%- assign show_script = false -%}
+        <script>
+          function fillHiddenT4s(hiddenname) {
+            var checkboxes = document.querySelectorAll('[hidden-data="'+hiddenname+'"]');
+            var hiddenfield = document.getElementById(hiddenname);
+            hiddenfield.value = ""
+            var i;
+            for (i = 0; i < checkboxes.length; i++) {
+              var x = checkboxes[i];
+              if(x.checked){
+                if(hiddenfield.value == ""){
+                  hiddenfield.value = x.value;
+                  }else{
+                  hiddenfield.value = hiddenfield.value + ", " + x.value; 
+                  } 
+                }
+                hiddenfield.dispatchEvent( new Event('change', { bubbles: true, cancelable: true }) );
+              }
+          }
+        </script>
+        {%- endif -%}
+        <label class="t4s-line-item-property__label t4s_as_title">{{ name_field }}</label><br>
+        {%- if arr_options.size > 0 -%}
+        {%- for option in arr_options -%}
+        <div class="t4s-line-item-property__field-ck"><input type="checkbox" id="value{{ id_field }}__{{ forloop.index }}" hidden-data="name_{{ id_field }}" onchange="fillHiddenT4s('name_{{ id_field }}')" value="{{ option | escape }}"><label for="value{{ id_field }}__{{ forloop.index }}">{{ option | escape }}</label><svg id="t4s-line-item-property__icon_selected" viewBox="0 0 24 24"><path d="M9 20l-7-7 3-3 4 4L19 4l3 3z"></path></svg></div>
+        {%- endfor -%}
+        {%- endif -%}
+        <input type="hidden" {{ required }} id="name_{{ id_field }}" name="properties[{{ name_field_checkout }}]">
+
+        {%- else -%}
+        {%- if show_script2 -%}
+        {%- assign show_script2 = false -%}
+        <script>
+            function extractFilenameT4s(path) {
+              if (path.substr(0, 12) == "C:\\fakepath\\")
+                return path.substr(12); // modern browser
+              var x;
+              x = path.lastIndexOf('/');
+              if (x >= 0) // Unix-based path
+                return path.substr(x+1);
+              x = path.lastIndexOf('\\');
+              if (x >= 0) // Windows-based path
+                return path.substr(x+1);
+              return path; // just the filename
+            }
+            function updateFilenameT4s(path, id) {
+               var name = extractFilenameT4s(path);
+               if (name) document.getElementById(id).textContent = extractFilenameT4s(path);
+            }
+        </script>
+        {%- endif -%}
+        <label class="t4s-line-item-property__label t4s_as_title" id="label_{{ id_field }}" for="name_{{ id_field }}">{{ name_field }}</label><br>
+        <input {{ required }} id="name_{{ id_field }}" type="file" onchange="updateFilenameT4s(this.value,'label_{{ id_field }}')" data-accept="image/jpg,image/jpeg,image/gif,image/png" autocorrect="off" autocapitalize="off" name="properties[{{ name_field_checkout }}]">
+
+      {%- endcase -%}
+   </div>
+
+{%- endfor -%}
+<div class="t4s-line-item-property__space t4s-clearfix"></div>
+
+<script>
+// iOS风格开关按钮交互
+document.addEventListener('DOMContentLoaded', function() {
+  const iosToggles = document.querySelectorAll('.t4s-ios-toggle');
+
+  iosToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      const field = this.closest('.t4s-line-item-property__field');
+      const checkbox = field.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        // 触发change事件
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+  });
+});
+</script>

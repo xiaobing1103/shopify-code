@@ -1,0 +1,241 @@
+{%- liquid
+	assign price_varies_style = settings.price_varies_style
+	assign placeholder_img = settings.placeholder_img
+
+	comment
+		Define specific product handles to display in the "Explore more" section
+		These are hardcoded product handles that will always show
+	endcomment
+	assign metal_card_1_handle = 'metal-digital-business-card'
+	assign metal_card_2_handle = 'metal-digital-business-card-2'
+	assign metal_card_3_handle = 'metal-digital-business-card-3'
+	assign wood_card_handle = 'wood-digital-business-card'
+
+	assign metal_card_1 = all_products[metal_card_1_handle]
+	assign metal_card_2 = all_products[metal_card_2_handle]
+	assign metal_card_3 = all_products[metal_card_3_handle]
+	assign wood_card = all_products[wood_card_handle]
+-%}
+
+<style>
+.t4s-minicart-explore {
+	padding: 0 20px;
+	margin-bottom: 0;
+	margin-top: 16px;
+}
+
+.t4s-minicart-explore__title {
+	font-size: 18px;
+	font-weight: 600;
+	color: #1a1a1a;
+	margin-bottom: 16px;
+	text-align: left;
+}
+
+.t4s-minicart-explore__grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 12px;
+	margin-bottom: 20px;
+}
+
+.t4s-minicart-explore__item {
+	background: #fcfbfe;
+	border-radius: 16px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	text-decoration: none;
+	transition: transform 0.2s ease;
+	display: flex;
+	flex-direction: column;
+}
+
+.t4s-minicart-explore__item:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.t4s-minicart-explore__item:active {
+	transform: scale(0.98);
+}
+
+.t4s-minicart-explore__item--img {
+	position: relative;
+	width: 100%;
+	padding-top: 100%;
+	overflow: hidden;
+}
+
+.t4s-minicart-explore__item--img a {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.t4s-minicart-explore__item--img img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.t4s-minicart-explore__item--content {
+	padding: 8px 8px 10px 8px;
+	background: #fcfbfe;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.t4s-minicart-explore__item--title {
+	color: #52525b;
+	font-size: 11px;
+	font-weight: 600;
+	text-align: center;
+	line-height: 1.3;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	min-height: 40px;
+	margin-bottom: 4px;
+}
+
+.t4s-minicart-explore__item--title:hover {
+	text-decoration: none;
+}
+
+.t4s-minicart-explore__item--price {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--primary-price-color);
+	margin-top: auto;
+	text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+	.t4s-minicart-explore {
+		padding: 0 0px;
+		margin-top: 32px;
+	}
+
+	.t4s-minicart-explore__title {
+		font-size: 16px;
+		margin-bottom: 12px;
+	}
+
+	.t4s-minicart-explore__item--title {
+		font-size: 10px;
+		padding: 6px 6px 8px 6px;
+		min-height: 36px;
+	}
+}
+</style>
+
+<div class="t4s-minicart-explore">
+	<h3 class="t4s-minicart-explore__title">Explore More</h3>
+
+	<div class="t4s-minicart-explore__grid">
+		{%- comment -%} Product 1: Metal Digital Business Card 1 {%- endcomment -%}
+		{%- if metal_card_1.available -%}
+			<a href="{{ metal_card_1.url }}" class="t4s-minicart-explore__item" data-loading-bar>
+				<div class="t4s-minicart-explore__item--content">
+					<div class="t4s-minicart-explore__item--title">Metal Digital Business Card</div>
+				</div>
+				<div class="t4s-minicart-explore__item--img">
+					{%- assign image = metal_card_1.featured_media | default: placeholder_img -%}
+					{%- if image != blank -%}
+						<img class="lazyloadt4s"
+							data-src="{{ image | image_url: width: 1 }}"
+							data-widths="[200,400,600]"
+							data-optimumx="2"
+							data-sizes="auto"
+							src="{% render 'img_svg', w: image.width, h: image.height %}"
+							width="{{ image.width }}"
+							height="{{ image.height }}"
+							alt="{{ image.alt | escape }}">
+						<span class="lazyloadt4s-loader is-bg-img" style="background: url({{ image | image_url: width: 1 }});"></span>
+					{%- endif -%}
+				</div>
+			</a>
+		{%- endif -%}
+
+		{%- comment -%} Product 2: Metal Digital Business Card 2 {%- endcomment -%}
+		{%- if metal_card_2.available -%}
+			<a href="{{ metal_card_2.url }}" class="t4s-minicart-explore__item" data-loading-bar>
+				<div class="t4s-minicart-explore__item--content">
+					<div class="t4s-minicart-explore__item--title">Metal Digital Business Card</div>
+				</div>
+				<div class="t4s-minicart-explore__item--img">
+					{%- assign image = metal_card_2.featured_media | default: placeholder_img -%}
+					{%- if image != blank -%}
+						<img class="lazyloadt4s"
+							data-src="{{ image | image_url: width: 1 }}"
+							data-widths="[200,400,600]"
+							data-optimumx="2"
+							data-sizes="auto"
+							src="{% render 'img_svg', w: image.width, h: image.height %}"
+							width="{{ image.width }}"
+							height="{{ image.height }}"
+							alt="{{ image.alt | escape }}">
+						<span class="lazyloadt4s-loader is-bg-img" style="background: url({{ image | image_url: width: 1 }});"></span>
+					{%- endif -%}
+				</div>
+			</a>
+		{%- endif -%}
+
+		{%- comment -%} Product 3: Metal Digital Business Card 3 {%- endcomment -%}
+		{%- if metal_card_3.available -%}
+			<a href="{{ metal_card_3.url }}" class="t4s-minicart-explore__item" data-loading-bar>
+				<div class="t4s-minicart-explore__item--content">
+					<div class="t4s-minicart-explore__item--title">Metal Digital Business Card</div>
+				</div>
+				<div class="t4s-minicart-explore__item--img">
+					{%- assign image = metal_card_3.featured_media | default: placeholder_img -%}
+					{%- if image != blank -%}
+						<img class="lazyloadt4s"
+							data-src="{{ image | image_url: width: 1 }}"
+							data-widths="[200,400,600]"
+							data-optimumx="2"
+							data-sizes="auto"
+							src="{% render 'img_svg', w: image.width, h: image.height %}"
+							width="{{ image.width }}"
+							height="{{ image.height }}"
+							alt="{{ image.alt | escape }}">
+						<span class="lazyloadt4s-loader is-bg-img" style="background: url({{ image | image_url: width: 1 }});"></span>
+					{%- endif -%}
+				</div>
+			</a>
+		{%- endif -%}
+
+		{%- comment -%} Product 4: Wood Digital Business Card {%- endcomment -%}
+		{%- if wood_card.available -%}
+			<a href="{{ wood_card.url }}" class="t4s-minicart-explore__item" data-loading-bar>
+				<div class="t4s-minicart-explore__item--content">
+					<div class="t4s-minicart-explore__item--title">Wood Digital Business Card</div>
+				</div>
+				<div class="t4s-minicart-explore__item--img">
+					{%- assign image = wood_card.featured_media | default: placeholder_img -%}
+					{%- if image != blank -%}
+						<img class="lazyloadt4s"
+							data-src="{{ image | image_url: width: 1 }}"
+							data-widths="[200,400,600]"
+							data-optimumx="2"
+							data-sizes="auto"
+							src="{% render 'img_svg', w: image.width, h: image.height %}"
+							width="{{ image.width }}"
+							height="{{ image.height }}"
+							alt="{{ image.alt | escape }}">
+						<span class="lazyloadt4s-loader is-bg-img" style="background: url({{ image | image_url: width: 1 }});"></span>
+					{%- endif -%}
+				</div>
+			</a>
+		{%- endif -%}
+	</div>
+</div>

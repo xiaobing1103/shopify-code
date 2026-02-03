@@ -1,0 +1,2091 @@
+{% comment %}
+  ---------------------------------------------------------
+  Copyright © 2025 Section Store. All rights reserved.
+  Unauthorized copying, modification, distribution, or use
+  of this code or any portion of it, is strictly prohibited.
+  Violators will be prosecuted to the fullest extent of the law.
+  For inquiries or permissions, contact daniel@section.store
+  ---------------------------------------------------------
+{% endcomment %}
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+>
+
+{%- liquid
+  assign padding_horizontal = section.settings.padding_horizontal
+  assign padding_horizontal_mobile = section.settings.padding_horizontal_mobile
+  assign padding_top = section.settings.padding_top
+  assign padding_bottom = section.settings.padding_bottom
+  assign border_color = section.settings.border_color
+  assign border_thickness = section.settings.border_thickness
+  assign margin_top = section.settings.margin_top
+  assign margin_bottom = section.settings.margin_bottom
+  assign margin_horizontal_mobile = section.settings.margin_horizontal_mobile
+  assign margin_horizontal = section.settings.margin_horizontal
+  assign background_color = section.settings.background_color
+  assign background_gradient = section.settings.background_gradient
+  assign full_width = section.settings.full_width
+  assign content_width = section.settings.content_width
+  assign lazy = section.settings.lazy
+  assign section_radius = section.settings.section_radius
+  assign background_style = section.settings.background_style
+
+  assign slider_view_mobile = section.settings.slider_view_mobile
+  assign slider_view = section.settings.slider_view
+
+  assign card_padding_vertical = section.settings.card_padding_vertical
+  assign card_padding_vertical_mobile = section.settings.card_padding_vertical_mobile
+  assign card_padding_horizontal = section.settings.card_padding_horizontal
+  assign card_padding_horizontal_mobile = section.settings.card_padding_horizontal_mobile
+  assign card_radius = section.settings.card_radius
+  assign card_border_thickness = section.settings.card_border_thickness
+  assign card_border_color = section.settings.card_border_color
+  assign card_shadow = section.settings.card_shadow
+  assign card_shadow_color = section.settings.card_shadow_color
+  assign card_ratio = section.settings.card_ratio
+  assign card_ratio_mobile = section.settings.card_ratio_mobile
+  assign card_overlay_color = section.settings.card_overlay_color
+  assign card_overlay = section.settings.card_overlay
+  assign slide_clickable = section.settings.slide_clickable
+
+  assign content_horizontal_position_mobile = section.settings.content_horizontal_position_mobile
+  assign content_horizontal_position = section.settings.content_horizontal_position
+
+  assign badge_size = section.settings.badge_size
+  assign badge_size_mobile = section.settings.badge_size_mobile
+  assign badge_color = section.settings.badge_color
+  assign badge_custom = section.settings.badge_custom
+  assign badge_font = section.settings.badge_font
+  assign badge_height = section.settings.badge_height
+  assign badge_padding_vertical_mobile = section.settings.badge_padding_vertical_mobile
+  assign badge_padding_vertical = section.settings.badge_padding_vertical
+  assign badge_padding_horizontal_mobile = section.settings.badge_padding_horizontal_mobile
+  assign badge_padding_horizontal = section.settings.badge_padding_horizontal
+  assign badge_bg_color = section.settings.badge_bg_color
+  assign badge_radius = section.settings.badge_radius
+
+  assign title_size = section.settings.title_size
+  assign title_size_mobile = section.settings.title_size_mobile
+  assign title_color = section.settings.title_color
+  assign title_custom = section.settings.title_custom
+  assign title_font = section.settings.title_font
+  assign title_height = section.settings.title_height
+
+  assign text_size = section.settings.text_size
+  assign text_size_mobile = section.settings.text_size_mobile
+  assign text_color = section.settings.text_color
+  assign text_custom = section.settings.text_custom
+  assign text_font = section.settings.text_font
+  assign text_height = section.settings.text_height
+  assign text_mt = section.settings.text_mt
+  assign text_mt_mobile = section.settings.text_mt_mobile
+
+  assign button_size = section.settings.button_size
+  assign button_size_mobile = section.settings.button_size_mobile
+  assign button_color = section.settings.button_color
+  assign button_hover_color = section.settings.button_hover_color
+  assign button_custom = section.settings.button_custom
+  assign button_font = section.settings.button_font
+  assign button_height = section.settings.button_height
+  assign button_padding_vertical = section.settings.button_padding_vertical
+  assign button_padding_vertical_mobile = section.settings.button_padding_vertical_mobile
+  assign button_padding_horizontal = section.settings.button_padding_horizontal
+  assign button_padding_horizontal_mobile = section.settings.button_padding_horizontal_mobile
+  assign button_radius = section.settings.button_radius
+  assign button_border_thickness = section.settings.button_border_thickness
+  assign button_border_color = section.settings.button_border_color
+  assign button_border_hover_color = section.settings.button_border_hover_color
+  assign button_bg_color = section.settings.button_bg_color
+  assign button_bg_hover_color = section.settings.button_bg_hover_color
+  assign new_tab = section.settings.new_tab
+  assign button_style = section.settings.button_style
+
+  assign arrow_size = section.settings.arrow_size
+  assign arrow_size_mobile = section.settings.arrow_size_mobile
+  assign arrow_icon_size = section.settings.arrow_icon_size
+  assign arrow_icon_size_mobile = section.settings.arrow_icon_size_mobile
+  assign arrow_color = section.settings.arrow_color
+  assign arrow_hover_color = section.settings.arrow_hover_color
+  assign arrow_bg_color = section.settings.arrow_bg_color
+  assign arrow_bg_hover_color = section.settings.arrow_bg_hover_color
+  assign arrow_radius = section.settings.arrow_radius
+  assign arrow_border_thickness = section.settings.arrow_border_thickness
+  assign arrow_border_color = section.settings.arrow_border_color
+  assign arrow_border_hover_color = section.settings.arrow_border_hover_color
+  assign arrow_show_desktop = section.settings.arrow_show_desktop
+  assign arrow_show_mobile = section.settings.arrow_show_mobile
+  assign arrow_hover_effect = section.settings.arrow_hover_effect
+  assign arrow_shadow = section.settings.arrow_shadow
+
+  assign text_align = ''
+
+  if content_horizontal_position == 'center'
+    assign text_align = 'center'
+  elsif content_horizontal_position == 'end'
+    assign text_align = 'right'
+  else
+    assign text_align = 'left'
+  endif
+
+  assign text_align_mobile = ''
+
+  if content_horizontal_position_mobile == 'center'
+    assign text_align_mobile = 'center'
+  elsif content_horizontal_position_mobile == 'end'
+    assign text_align_mobile = 'right'
+  else
+    assign text_align_mobile = 'left'
+  endif
+
+  assign loading_attribute = 'eager'
+  if lazy
+    assign loading_attribute = 'lazy'
+  endif
+
+  if card_ratio == 'portrait'
+    assign aspect_ratio = 9.6 | divided_by: 12
+    assign calculated_width = 750
+    assign calculated_height = 750 | divided_by: aspect_ratio | round
+  elsif card_ratio == 'landscape'
+    assign aspect_ratio = 12 | divided_by: 9
+    assign calculated_width = 750
+    assign calculated_height = 750 | divided_by: aspect_ratio | round
+  elsif card_ratio == 'square'
+    assign calculated_width = 750
+    assign calculated_height = 750
+  else
+    # For original ratio, use default 4:3 aspect
+    assign calculated_width = 750
+    assign calculated_height = 750 | divided_by: 1.33 | round
+  endif
+
+  # Set up responsive sizes attribute for better browser resource allocation
+  capture sizes
+    echo '(min-width: 1400px) 750px, '
+    echo '(min-width: 750px) calc(50vw - 100px), '
+    echo 'calc(100vw - 30px)'
+  endcapture
+-%}
+
+{%- style -%}
+  {{ badge_font | font_face: font_display: 'swap' }}
+  {{ title_font | font_face: font_display: 'swap' }}
+  {{ text_font | font_face: font_display: 'swap' }}
+  {{ button_font | font_face: font_display: 'swap' }}
+
+  .section-{{ section.id }} {
+    border-top: solid {{ border_color }} {{ border_thickness }}px;
+    border-bottom: solid {{ border_color }} {{ border_thickness }}px;
+    margin-top: {{ margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ margin_bottom | times: 0.75 | round: 0 }}px;
+    margin-left: {{ margin_horizontal_mobile }}rem;
+    margin-right: {{ margin_horizontal_mobile }}rem;
+    border-radius: {{ section_radius | times: 0.6 | round: 0 }}px;
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }}-settings {
+    margin: 0 auto;
+    padding-top: {{ padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-left: {{ padding_horizontal_mobile }}rem;
+    padding-right: {{ padding_horizontal_mobile }}rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slider-slide-{{ section.id }} {
+    position: relative;
+    box-sizing: border-box !important;
+    border-radius: {{ card_radius }}px;
+    border: {{ card_border_thickness }}px solid {{ card_border_color }};
+    overflow: hidden;
+    text-decoration: none;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: end !important;
+  }
+
+  .slider-image-{{ section.id }} {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .slider-image-{{ section.id }}:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: {{ card_overlay_color | hex_to_rgba: card_overlay }};
+    z-index: 1;
+  }
+
+  .slider-image-{{ section.id }} img,
+  .slider-image-{{ section.id }} svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .slider-image-{{ section.id }} svg {
+    background-color: #AEAEAE;
+  }
+
+  .slider-badge-{{ section.id }} {
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    left: 10px;
+     margin: 0;
+    font-size: {{ badge_size_mobile }}px;
+    color: {{ badge_color }};
+    line-height: {{ badge_height }}%;
+    padding: {{ badge_padding_vertical_mobile }}px {{ badge_padding_horizontal_mobile }}px;
+    border-radius: {{ badge_radius }}px;
+    background-color: {{ badge_bg_color | hex_to_rgba: 0.3 }};
+    text-transform: unset;
+  }
+
+  .slider-content-{{ section.id }} {
+    display: flex !important;
+    align-items: center;
+    box-sizing: border-box;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: {{ content_horizontal_position_mobile }};
+    padding: {{ card_padding_vertical_mobile }}px {{ card_padding_horizontal_mobile }}px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .slider-title-{{ section.id }} {
+    margin: 0;
+    font-size: {{ title_size_mobile }}px;
+    color: {{ title_color }};
+    line-height: {{ title_height }}%;
+    text-transform: unset;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+  }
+
+  .slider-text-{{ section.id }} {
+    margin-top: {{ text_mt_mobile }}px;
+  }
+
+  .slider-text-{{ section.id }} * {
+    margin: 0;
+    font-size: {{ text_size_mobile }}px;
+    color: {{ text_color }};
+    line-height: {{ text_height }}%;
+    text-transform: unset;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+  }
+
+
+  .slider-button-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: fit-content;
+    gap: 10px;
+    width: 100%;
+    margin: 0;
+    margin-top: {{ button_mt_mobile }}px;
+    font-size: {{ button_size_mobile }}px;
+    color: {{ button_color }};
+    line-height: {{ button_height }}%;
+    text-align: center;
+    text-transform: unset;
+    text-decoration: none;
+    padding: {{ button_padding_vertical_mobile }}px {{ button_padding_horizontal_mobile }}px;
+    border-radius: {{ button_radius }}px;
+    transition: all 0.25s ease 0s;
+    background-color: transparent;
+    border: 0px;
+    cursor: pointer;
+    font-weight: 700;
+    min-width: max-content;
+  }
+
+  .slider-button-inner-{{ section.id }} {
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .slider-button-{{ section.id }}:hover {
+    color: {{ button_hover_color }};
+    transition: all 0.25s ease 0s;
+  }
+
+  .slider-button-{{ section.id }} svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .slider-button-{{ section.id }} svg path {
+    fill: {{ button_color }};
+    transition: all 0.25s ease 0s;
+  }
+
+  .slider-button-{{ section.id }}:hover svg path {
+    fill: {{ button_hover_color }};
+    transition: all 0.25s ease 0s;
+  }
+  
+  .slider-btn-prev-{{ section.id }},
+  .slider-btn-next-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-shrink: 0;
+    z-index: 2;
+    width: {{ arrow_size_mobile }}px;
+    height: {{ arrow_size_mobile }}px;
+    border: 0px;
+    border: {{ arrow_border_thickness }}px solid {{ arrow_border_color }};
+    border-radius: {{ arrow_radius }}px;
+    background: transparent;
+    background: {{ arrow_bg_color }};
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+
+  .slider-btn-prev-{{ section.id }} {
+    left: 4%;
+  }
+
+  .slider-btn-next-{{ section.id }} {
+    right: 4%;
+  }
+
+  .slider-btn-prev-{{ section.id }} .animate-icon,
+  .slider-btn-next-{{ section.id }} .animate-icon {
+    pointer-events: none;
+    place-items: center;
+    display: grid;
+  }
+
+  .slider-btn-prev-{{ section.id }} .animate-icon:before,
+  .slider-btn-next-{{ section.id }} .animate-icon:before {
+    content: "";
+    grid-area: 1 / -1;
+    transition: all .2s ease;
+    width: {{ arrow_icon_size_mobile }}px;
+    height: {{ arrow_icon_size_mobile }}px;
+    transform: rotate(calc(1 * 45deg));
+    box-sizing: border-box;
+    border-style: solid;
+    border: 0px;
+    border-right: 2px solid currentColor;
+    border-top: 2px solid currentColor;
+    position: relative;
+    left: -1px;
+  }
+
+  .slider-btn-prev-{{ section.id }} .animate-icon:before {
+    left: unset;
+    right: -1px;
+    border-right: 0px;
+    border-top: 0px;
+    border-bottom: 2px solid currentColor;
+    border-left: 2px solid currentColor;
+  }
+
+  .slider-btn-prev-{{ section.id }} .animate-icon:after,
+  .slider-btn-next-{{ section.id }} .animate-icon:after {
+    content: "";
+    grid-area: 1 / -1;
+    transition: all .2s ease;
+    width: {{ arrow_icon_size_mobile | minus: 0.3 }}px;
+    height: 1.6px;
+    transform-origin: center;
+    opacity: 0;
+    background: currentColor;
+    transform: scaleX(.5);
+  }
+
+  .slider-btn-prev-{{ section.id }} span,
+  .slider-btn-next-{{ section.id }} span {
+    color: {{ arrow_color }};
+  }
+
+  .slider-btn-prev-{{ section.id }}.swiper-button-disabled,
+  .slider-btn-next-{{ section.id }}.swiper-button-disabled {
+    opacity: 0.5;
+  }
+
+  .slider-btn-prev-{{ section.id }}.swiper-button-lock,
+  .slider-btn-next-{{ section.id }}.swiper-button-lock {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media(min-width: 1024px) {
+
+    .section-{{ section.id }} {
+      margin-top: {{ margin_top }}px;
+      margin-bottom: {{ margin_bottom }}px;
+      margin-left: {{ margin_horizontal }}rem;
+      margin-right: {{ margin_horizontal }}rem;
+      border-radius: {{ section_radius }}px;
+    }
+
+    .section-{{ section.id }}-settings {
+      padding: 0 5rem;
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_horizontal }}rem;
+      padding-right: {{ padding_horizontal }}rem;
+    }
+
+    .slider-content-{{ section.id }} {
+      text-decoration: none;
+      align-items: {{ content_horizontal_position }};
+      padding: {{ card_padding_vertical }}px {{ card_padding_horizontal }}px;
+    }
+
+    .slider-badge-{{ section.id }} {
+      font-size: {{ badge_size }}px;
+      padding: {{ badge_padding_vertical }}px {{ badge_padding_horizontal }}px;
+    }
+
+    .slider-title-{{ section.id }} {
+      font-size: {{ title_size }}px;
+      text-align: {{ text_align }};
+    }
+
+    .slider-text-{{ section.id }} {
+      margin-top: {{ text_mt }}px;
+    }
+
+    .slider-text-{{ section.id }} * {
+      font-size: {{ text_size }}px;
+    }
+
+    .slider-button-{{ section.id }} {
+      padding: {{ button_padding_vertical }}px {{ button_padding_horizontal }}px;
+      font-size: {{ button_size }}px;
+    }
+    
+   .slider-btn-prev-{{ section.id }},
+   .slider-btn-next-{{ section.id }} {
+      width: {{ arrow_size }}px;
+      height: {{ arrow_size }}px;
+      transition: all 0.25s ease 0s;
+    }
+
+    .slider-btn-prev-{{ section.id }} .animate-icon:before,
+    .slider-btn-next-{{ section.id }} .animate-icon:before {
+      width: {{ arrow_icon_size }}px;
+      height: {{ arrow_icon_size }}px;
+    }
+
+    .slider-btn-prev-{{ section.id }} .animate-icon:after,
+    .slider-btn-next-{{ section.id }} .animate-icon:after {
+      width: {{ arrow_icon_size | minus: 0.3 }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% unless full_width %}
+  <style>
+    .section-{{ section.id }}-settings {
+      max-width: {{ content_width }}px;
+    }
+  </style>
+{% endunless %}
+
+{% if margin_horizontal_mobile > 0 %}
+  <style>
+    .section-{{ section.id }} {
+      border-left: solid {{ border_color }} {{ border_thickness }}px;
+      border-right: solid {{ border_color }} {{ border_thickness }}px;
+    }
+
+    @media(min-width: 1024px) {
+      .section-{{ section.id }} {
+        border-left: 0px;
+        border-right: 0px;
+      }
+    }
+  </style>
+{% endif %}
+
+{% if margin_horizontal > 0 %}
+  <style>
+    @media(min-width: 1024px) {
+      .section-{{ section.id }} {
+        border-left: solid {{ border_color }} {{ border_thickness }}px;
+        border-right: solid {{ border_color }} {{ border_thickness }}px;
+      }
+    }
+  </style>
+{% endif %}
+
+{% if title_custom %}
+  <style>
+    .slider-title-{{ section.id }} {
+      font-family: {{ title_font.family }}, {{ title_font.fallback_families }};
+      font-weight: {{ title_font.weight }};
+      font-style: {{ title_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if badge_custom %}
+  <style>
+    .slider-badge-{{ section.id }} {
+      font-family: {{ badge_font.family }}, {{ badge_font.fallback_families }};
+      font-weight: {{ badge_font.weight }};
+      font-style: {{ badge_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if title_custom %}
+  <style>
+    .slider-title-{{ section.id }} {
+      font-family: {{ title_font.family }}, {{ title_font.fallback_families }};
+      font-weight: {{ title_font.weight }};
+      font-style: {{ title_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if text_custom %}
+  <style>
+    .slider-text-{{ section.id }} * {
+      font-family: {{ text_font.family }}, {{ text_font.fallback_families }};
+      font-weight: {{ text_font.weight }};
+      font-style: {{ text_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if button_custom %}
+  <style>
+    .slider-button-{{ section.id }} {
+      font-family: {{ button_font.family }}, {{ button_font.fallback_families }};
+      font-weight: {{ button_font.weight }};
+      font-style: {{ button_font.style }};
+    }
+  </style>
+{% endif %}
+
+
+{% if button_style == "non_outline" or button_style == "non_outline_arrow" %}
+  <style>
+    .slider-button-{{ section.id }} {
+      transition: all 0.3s ease 0s;
+      background-color: {{  button_bg_color }};
+    }
+
+    .slider-button-{{ section.id }}:hover {
+      transition: all 0.3s ease 0s;
+      background-color: {{  button_bg_hover_color }};
+    }
+  </style>
+{% elsif button_style == "outline" or button_style == "outline_arrow" %}
+  <style>          
+    .slider-button-{{ section.id }} {
+      transition: all 0.3s ease 0s;
+      background-color: {{  button_bg_color }};
+      border: {{  button_border_thickness }}px solid {{  button_border_color }};
+    }
+
+    .slider-button-{{ section.id }}:hover {
+      transition: all 0.3s ease 0s;
+      background-color: {{  button_bg_hover_color }};
+      border: {{  button_border_thickness }}px solid {{  button_border_hover_color }};
+    }
+  </style>
+{% elsif button_style == "link" %}
+  <style>
+    .slider-button-{{ section.id }} {
+      padding: 0px !important;
+      -webkit-box-shadow: none !important;
+      -moz-box-shadow: none !important;
+      box-shadow: none !important;
+    }
+  </style>
+{% endif %}   
+
+{% if card_shadow %}
+  <style>
+    .slider-slide-{{ section.id }} {
+      box-shadow: 1px 1px 10px {{ card_shadow_color | hex_to_rgba: 0.3 }};
+    }
+  </style>
+{% endif %}
+
+{% if arrow_shadow %}
+  <style>
+    .slider-btn-prev-{{ section.id }},
+    .slider-btn-next-{{ section.id }} {
+      box-shadow: 0px 0px 10px 0px rgba(0,0,0,.15);
+    }
+  </style>
+{% endif %}
+
+{% if card_ratio_mobile == 'portrait' %}
+  <style>
+    .slider-slide-{{ section.id }} {
+     aspect-ratio: 9.6/12;
+    }
+  </style>
+{% elsif card_ratio_mobile == 'landscape' %}
+  <style>
+    .slider-slide-{{ section.id }}{
+     aspect-ratio: 12/9;
+    }
+  </style>
+{% elsif card_ratio_mobile == 'square' %}
+  <style>
+    .slider-slide-{{ section.id }} {
+     aspect-ratio: 12/12;
+    }
+  </style>
+{% else %}
+  <style>
+    .slider-slide-{{ section.id }} {
+     aspect-ratio: auto;
+    }
+  </style>
+{% endif %}
+
+{% if card_ratio == 'portrait' %}
+  <style>
+    @media(min-width: 1024px) {
+     .slider-slide-{{ section.id }} {
+       aspect-ratio: 9.6/12;
+      }
+    }
+  </style>
+{% elsif card_ratio == 'landscape' %}
+  <style>
+    @media(min-width: 1024px) {
+      .slider-slide-{{ section.id }}{
+       aspect-ratio: 12/9;
+      }
+    }
+  </style>
+{% elsif card_ratio == 'square' %}
+  <style>
+    @media(min-width: 1024px) {
+      .slider-slide-{{ section.id }} {
+       aspect-ratio: 12/12;
+      }
+    }
+  </style>
+{% else %}
+  <style>
+    @media(min-width: 1024px) {
+      .slider-slide-{{ section.id }} {
+       aspect-ratio: auto;
+      }
+    }
+  </style>
+{% endif %}
+
+
+{% if arrow_hover_effect == "color" %}
+  <style>
+    .slider-btn-prev-{{ section.id }}:hover,
+    .slider-btn-next-{{ section.id }}:hover {
+      transition: all 0.3s ease 0s;
+      border: {{ arrow_border_thickness }}px solid {{ arrow_border_hover_color }};
+      background: {{ arrow_bg_hover_color }};
+    }
+  
+    .slider-btn-prev-{{ section.id }}:hover .animate-icon,
+    .slider-btn-next-{{ section.id }}:hover .animate-icon {
+      color: {{ arrow_hover_color }};
+    }
+  </style>
+{% elsif arrow_hover_effect == "scale" %}
+  <style>
+    .slider-btn-prev-{{ section.id }}:hover,
+    .slider-btn-next-{{ section.id }}:hover {
+      transform: scale(0.9) translateY(-50%);
+    }
+
+    @media(min-width: 1024px) {
+      .slider-btn-prev-{{ section.id }}:hover,
+      .slider-btn-next-{{ section.id }}:hover {
+        transform: scale(0.9) translateY(-50%);
+      }
+    }
+  </style>
+{% elsif arrow_hover_effect == "arrow" %}
+  <style>
+    .slider-btn-next-{{ section.id }}:hover .animate-icon:before {
+      transform: translate(calc(1 * 0.125rem)) rotate(calc(1 * 45deg));
+    }
+  
+    .slider-btn-prev-{{ section.id }}:hover .animate-icon:before {
+      transform: translate(calc(-1 * 0.125rem)) rotate(calc(1 * 45deg));
+    }
+    
+    .slider-btn-prev-{{ section.id }}:hover .animate-icon:after,
+    .slider-btn-next-{{ section.id }}:hover .animate-icon:after {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  </style>
+{% endif %}
+
+{% if arrow_show_mobile %}
+  <style>
+    .slider-btn-prev-{{ section.id }},
+    .slider-btn-next-{{ section.id }} {
+      display: flex;
+    }
+  </style>
+{% else %}
+  <style>
+    .slider-btn-prev-{{ section.id }},
+    .slider-btn-next-{{ section.id }} {
+      display: none;
+    }
+  </style>
+{% endif %}
+
+{% if arrow_show_desktop %}
+  <style>
+    @media(min-width: 1024px) {
+      .slider-btn-prev-{{ section.id }},
+      .slider-btn-next-{{ section.id }} {
+        display: flex;
+      }
+    }
+  </style>
+{% else %}
+  <style>
+    @media(min-width: 1024px) {
+      .slider-btn-prev-{{ section.id }},
+      .slider-btn-next-{{ section.id }} {
+        display: none;
+      }
+    }
+  </style>
+{% endif %}
+
+{% for block in section.blocks %}
+  <style>
+    .slider-content-{{ block.id }} {
+      background-color: {{ block.settings.content_bg_color | hex_to_rgba: 0.5 }};
+    }
+  </style>
+{% endfor %}
+
+{% comment %} PREVIEW {% endcomment %}
+<style>
+  .slider-slider-{{ section.id }}.preview .swiper-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  .slider-slider-{{ section.id }}.preview .slider-slide-{{ section.id }} {
+    width: 100%;
+  }
+
+  .slider-slider-{{ section.id }}.preview .slider-slide-{{ section.id }}:not(:first-child) {
+    margin-left: 10px;
+  } 
+
+  @media(min-width: 1024px) {
+    .slider-slider-{{ section.id }}.preview .slider-slide-{{ section.id }}:not(:first-child) {
+      margin-left: 10px;
+    } 
+
+    .slider-slider-{{ section.id }}.preview .slider-slide-{{ section.id }} {
+      width: calc(100% / {{ slider_view }} - (10px));
+    }
+  }
+</style>
+
+<div
+  class="section-{{ section.id }} slider-{{ section.id }}"
+  {% if background_style == 'solid' %}style="background-color:{{ background_color }};"{% else %} style="background-image: {{ background_gradient }};"{% endif %}
+>
+  <div class="section-{{ section.id }}-settings">
+    <div
+      class="slider-slider-{{ section.id }} preview"
+      data-view="{{ slider_view }}"
+      data-view-mobile="{{ slider_view_mobile }}"
+    >
+      <div class="swiper-wrapper">
+        {% for i in (1..2) %}
+          {% for block in section.blocks %}
+            <{% if slide_clickable %}{% if block.settings.button_url != blank %}a href="{{ block.settings.button_url }}" {% if new_tab %}target="_blank"{% endif %} {% else %}div{% endif %}{% else %}div{% endif %} class="swiper-slide slider-slide-{{ section.id }}">
+              <div class="slider-image-{{ section.id }}">
+                {% if block.settings.image != blank %}
+                  {%- liquid
+                    assign img_alt = block.settings.image.alt | escape
+                  -%}
+                  {%- capture sizes -%}  (min-width: 1200px) 428px, (min-width: 750px) calc((100vw - 130px) / 2), 100vw{%- endcapture -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1500
+                    | image_tag:
+                      loading: loading_attribute,
+                      sizes: sizes,
+                      widths: '650, 860, 1000, 1200, 1500',
+                      alt: img_alt
+                  }}
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag }}
+                {% endif %}
+              </div>
+
+              {% if block.settings.badge != blank %}
+                <p class="slider-badge-{{ section.id }}">{{ block.settings.badge }}</p>
+              {% endif %}
+
+              <div class="slider-content-{{ section.id }} slider-content-{{ block.id }}">
+                <div class="slider-content-wrap-{{ section.id }}">
+                  {% if block.settings.title != blank %}
+                    <p class="slider-title-{{ section.id }}">{{ block.settings.title }}</p>
+                  {% endif %}
+                  {% if block.settings.text != blank %}
+                    <div class="slider-text-{{ section.id }}">{{ block.settings.text }}</div>
+                  {% endif %}
+                </div>
+
+                {% if block.settings.button != blank %}
+                  <{% unless slide_clickable %}{% if block.settings.button_url != blank %}a href="{{ block.settings.button_url }}" {% if new_tab %}target="_blank"{% endif %} {% else %}div{% endif %}{% else %}div{% endunless %} class="slider-button-{{ section.id }}">
+                    <p class="slider-button-inner-{{ section.id }}">
+                    {{ block.settings.button }}
+                    {% if button_style == "non_outline_arrow" or button_style == "outline_arrow" %}
+                        <svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M187.827 98.7858C188.123 98.4749 188.123 98.4749 188.123 98.1761C188.419 97.8652 188.419 97.5663 188.704 97.5663C189 96.9566 189 96.6458 189 96.0361C189 95.4263 189 94.8166 188.704 94.5058C188.704 94.195 188.408 93.8961 188.123 93.5852C188.123 93.2744 187.827 93.2744 187.827 92.9755L103.287 4.21945C102.41 3.29889 101.533 3 100.668 3C99.791 3 98.6295 3.31083 98.0488 4.21945C97.1719 5.14 96.8872 6.06058 96.8872 6.96919C96.8872 7.88974 97.1833 9.10918 98.0488 9.7189L175.587 92.0539H6.79206C4.75371 92.0539 3 93.895 3 96.0351C3 98.1751 4.75365 100.016 6.79206 100.016H175.575L97.7543 182.042C96.2967 183.572 96.2967 186.322 97.7543 187.852C99.2119 189.383 101.831 189.383 103.288 187.852L187.827 98.7858Z" fill="black"></path>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M188.607 97.5657C188.432 97.5657 188.365 97.6788 188.27 97.8382C188.211 97.9378 188.141 98.0554 188.027 98.1748C188.027 98.4734 188.027 98.4734 187.731 98.7839L103.281 187.759C101.825 189.287 99.2085 189.287 97.7524 187.759C96.2963 186.23 96.2963 183.483 97.7524 181.954L175.492 100.013L6.88489 100.013C4.8486 100.013 3.09677 98.1739 3.09677 96.036C3.09677 93.8982 4.84866 92.059 6.88489 92.059L175.504 92.059L98.0465 9.80878C97.182 9.19968 96.8862 7.9815 96.8862 7.0619C96.8862 6.15422 97.1706 5.2346 98.0465 4.315C98.6267 3.40732 99.787 3.0968 100.663 3.0968C101.527 3.0968 102.403 3.39539 103.279 4.315L187.731 92.9796C187.731 93.1274 187.804 93.2021 187.877 93.2774C187.952 93.3543 188.027 93.4319 188.027 93.5887C188.046 93.6098 188.066 93.6308 188.085 93.6518C188.338 93.9267 188.584 94.1935 188.606 94.4689C188.607 94.482 188.607 94.4951 188.607 94.5083C188.903 94.8188 188.903 95.4279 188.903 96.037C188.903 96.6461 188.903 96.9566 188.607 97.5657ZM191.489 93.2767C191.79 93.8661 191.89 94.4204 191.934 94.7363C192.001 95.2226 192 95.7194 192 95.9856L192 96.037C192 96.0544 192 96.0729 192 96.0926C192 96.3523 192.001 96.8096 191.924 97.2931C191.828 97.8884 191.64 98.41 191.393 98.9184L190.546 100.663H190.212C190.127 100.759 190.038 100.852 189.988 100.905L189.974 100.92L105.527 189.891C102.85 192.701 98.1865 192.704 95.51 189.895C94.1476 188.464 93.5636 186.587 93.5636 184.857C93.5636 183.128 94.1468 181.252 95.5071 179.822M191.489 93.2767C191.316 92.7908 191.078 92.4357 190.938 92.2406C190.903 92.1912 190.866 92.142 190.828 92.0939V91.7408L105.522 2.17912C104.076 0.661813 102.397 0 100.663 0C99.3914 0 97.0569 0.401401 95.6212 2.37737C94.3151 3.83819 93.7895 5.45521 93.7895 7.0619C93.7895 8.26663 94.1183 10.6061 95.9608 12.111L168.333 88.9622L6.88489 88.9622C2.9981 88.9622 0 92.3316 0 96.036C0 99.7405 2.99801 103.11 6.88489 103.11L168.285 103.11" fill="black"></path>
+                          <path d="M169.5 104L16.5 102.5V90H171L97.5 10.5V7L107.5 4.5C131.167 29.6667 180.2 81.5 187 87.5C193.8 93.5 191.5 99 189.5 101L105.5 184L94 181.5L169.5 104Z" fill="black"></path>
+                        </svg>
+                      {% endif %}
+                    </p>
+                  </{% unless slide_clickable %}{% if block.settings.button_url != blank %}a{% else %}div{% endif %}{% else %}div{% endunless %}>
+                {% endif %}
+            
+              </div>
+            </{% if slide_clickable %}{% if block.settings.button_url != blank %}a{% else %}div{% endif %}{% else %}div{% endif %}>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      <button class="slider-btn-prev-{{ section.id }}">
+        <span class="animate-icon"></span>
+      </button>
+      <button class="slider-btn-next-{{ section.id }}">
+        <span class="animate-icon"></span>
+      </button> 
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+<script>
+  function initSlider2() {
+    document.querySelector('.slider-slider-{{ section.id }}').classList.remove('preview');
+    const slider = new Swiper(".slider-slider-{{ section.id }}", {
+      effect: "coverflow",
+      centeredSlides: true,
+      loop: true,
+      navigation: {
+        nextEl: '.slider-btn-next-{{ section.id }}',
+        prevEl: '.slider-btn-prev-{{ section.id }}'
+      },
+      initialSlide: 1,
+      breakpoints: {
+        320: {
+          slidesPerView: parseFloat(document.querySelector(`.slider-slider-{{ section.id }}`).dataset.viewMobile),
+          coverflowEffect: {
+            rotate: 0,
+            stretch: 0,          
+            depth: 160,            
+            modifier: 1,
+            slideShadows: false
+          },
+        },
+        768: {       
+          slidesPerView: parseFloat(document.querySelector(`.slider-slider-{{ section.id }}`).dataset.viewMobile),
+          coverflowEffect: {
+            rotate: 0,
+            stretch: 0,          
+            depth: 160,            
+            modifier: 1,
+            slideShadows: false
+          },
+        },
+        1024: {
+          coverflowEffect: {
+            rotate: 0,
+            stretch: 0,
+            {% if full_width %}
+              {% if slider_view == 3 %}
+                depth: 387,
+              {% elsif slider_view == 4 %}
+                depth: 150,
+              {% elsif slider_view == 5 %}
+                depth: 160,
+              {% endif %}
+            {% else %}
+              {% if slider_view == 3 %}
+                depth: 400,
+              {% elsif slider_view == 4 %}
+                depth: 300,
+              {% elsif slider_view == 5 %}
+                depth: 240,
+              {% endif %}
+            {% endif %}
+            modifier: 1,
+            slideShadows: false
+          },
+          slidesPerView: parseFloat(document.querySelector(`.slider-slider-{{ section.id }}`).dataset.view),
+        },
+        1200: {
+          coverflowEffect: {
+            rotate: 0,
+            stretch: 0,
+            {% if full_width %}
+              {% if slider_view == 3 %}
+                depth: 387,
+              {% elsif slider_view == 4 %}
+                depth: 150,
+              {% elsif slider_view == 5 %}
+                depth: 160,
+              {% endif %}
+            {% else %}
+              {% if slider_view == 3 %}
+                depth: 400,
+              {% elsif slider_view == 4 %}
+                depth: 300,
+              {% elsif slider_view == 5 %}
+                depth: 240,
+              {% endif %}
+            {% endif %}
+            modifier: 1,
+            slideShadows: false
+          },
+          slidesPerView: parseFloat(document.querySelector(`.slider-slider-{{ section.id }}`).dataset.view),
+        },
+        1500: {
+          coverflowEffect: {
+            rotate: 0,
+            stretch: 0,
+            {% if full_width %}
+              {% if slider_view == 3 %}
+                depth: 387,
+              {% elsif slider_view == 4 %}
+                depth: 150,
+              {% elsif slider_view == 5 %}
+                depth: 160,
+              {% endif %}
+            {% else %}
+              {% if slider_view == 3 %}
+                depth: 400,
+              {% elsif slider_view == 4 %}
+                depth: 300,
+              {% elsif slider_view == 5 %}
+                depth: 240,
+              {% endif %}
+            {% endif %}
+            modifier: 1,
+            slideShadows: false
+          },
+          slidesPerView: parseFloat(document.querySelector(`.slider-slider-{{ section.id }}`).dataset.view),
+        }
+      },      
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initSlider2);
+  
+  if (Shopify.designMode) {
+     document.addEventListener('shopify:section:unload', initSlider2);
+     document.addEventListener('shopify:section:load', initSlider2);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "SS - Slider #2 pro",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content":"⚠️ Save settings to see section in action"
+    },
+    {
+      "type": "header",
+      "content": "Slider"
+    },
+    {
+      "type": "range",
+      "id": "slider_view",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Slides per view",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "slider_view_mobile",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "label": "Slides per view - mobile",
+      "default": 1.2
+    },
+    {
+      "type": "header",
+      "content": "Slide"
+    },
+    {
+       "type": "range",
+       "id": "card_radius",
+       "min": 0,
+       "max": 100,
+       "step": 2,
+       "unit": "px",
+       "label": "Roundness",
+       "default": 16
+    },
+    {
+       "type": "range",
+       "id": "card_border_thickness",
+       "min": 0,
+       "max": 10,
+       "step": 1,
+       "unit": "px",
+       "label": "Border thickness",
+       "default": 0
+    },
+    {
+       "type": "checkbox",
+       "id": "card_shadow",
+       "label": "Use shadow",
+       "default": true
+    },
+    {
+      "type": "select",
+      "id": "card_ratio",
+      "label": "Aspect ratio",
+      "default": "portrait",
+      "options": [
+        {
+          "label": "Portrait",
+          "value": "portrait"
+        },
+        {
+          "label": "Square",
+          "value": "square"
+        },
+        {
+          "label": "Landscape",
+          "value": "landscape"
+        },
+        {
+          "label": "Original",
+          "value": "original"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "card_ratio_mobile",
+      "label": "Aspect ratio - mobile",
+      "default": "portrait",
+      "options": [
+        {
+          "label": "Portrait",
+          "value": "portrait"
+        },
+        {
+          "label": "Square",
+          "value": "square"
+        },
+        {
+          "label": "Landscape",
+          "value": "landscape"
+        },
+        {
+          "label": "Original",
+          "value": "original"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "card_overlay",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Overlay",
+      "default": 0.1
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_padding_advanced",
+      "label": "Advanced padding settings",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "card_padding_vertical",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical",
+      "default": 18,
+      "visible_if": "{{ section.settings.card_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "card_padding_vertical_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical - mobile",
+      "default": 16,
+      "visible_if": "{{ section.settings.card_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "card_padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 18,
+      "visible_if": "{{ section.settings.card_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "card_padding_horizontal_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal - mobile",
+      "default": 16,
+      "visible_if": "{{ section.settings.card_padding_advanced }}"
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "badge_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4",
+      "visible_if": "{{ section.settings.badge_custom }}"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "badge_size_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "badge_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "badge_padding_advanced",
+      "label": "Advanced padding settings",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 16,
+      "visible_if": "{{ section.settings.badge_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_horizontal_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal - mobile",
+      "default": 12,
+      "visible_if": "{{ section.settings.badge_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_vertical",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical",
+      "default": 6,
+      "visible_if": "{{ section.settings.badge_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_vertical_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical - mobile",
+      "default": 6,
+      "visible_if": "{{ section.settings.badge_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "badge_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Roundness",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4",
+      "visible_if": "{{ section.settings.title_custom }}"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "title_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 130
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "text_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4",
+      "visible_if": "{{ section.settings.text_custom }}"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "text_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "text_mt",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "text_mt_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin top - mobile",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "new_tab",
+      "label": "Open link in new tab"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_clickable",
+      "label": "Make the entire slide clickable",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Style",
+      "default": "non_outline",
+      "options": [
+        {
+          "label": "Link",
+          "value": "link"
+        },
+        {
+          "label": "Non-outline",
+          "value": "non_outline"
+        },
+        {
+          "label": "Non-outline & arrow",
+          "value": "non_outline_arrow"
+        },
+        {
+          "label": "Outline",
+          "value": "outline"
+        },
+        {
+          "label": "Outline & arrow",
+          "value": "outline_arrow"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "button_custom",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Font family",
+      "default": "josefin_sans_n4",
+      "visible_if": "{{ section.settings.button_custom }}"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_size_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size - mobile",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_height",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "label": "Line height",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "button_padding_advanced",
+      "label": "Advanced padding settings",
+      "default": false,
+      "visible_if": "{{ section.settings.button_style != 'link' }}"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical",
+      "default": 16,
+      "visible_if": "{{ section.settings.button_style != 'link' and section.settings.button_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical - mobile",
+      "default": 16,
+      "visible_if": "{{ section.settings.button_style != 'link' and section.settings.button_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 20,
+      "visible_if": "{{ section.settings.button_style != 'link' and section.settings.button_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding horizontal - mobile",
+      "default": 20,
+      "visible_if": "{{ section.settings.button_style != 'link' and section.settings.button_padding_advanced }}"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Roundness",
+      "default": 100,
+      "visible_if": "{{ section.settings.button_style != 'link' }}"
+    },
+    {
+      "type": "range",
+      "id": "button_border_thickness",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 1,
+      "visible_if": "{{ section.settings.button_style == 'outline' or section.settings.button_style == 'outline_arrow' }}"
+    },
+    {
+      "type": "header",
+      "content": "Arrows"
+    },      
+    {
+      "type": "checkbox",
+      "id": "arrow_show_desktop",
+      "label": "Show on desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "arrow_show_mobile",
+      "label": "Show on mobile",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Size",
+      "default": 50,
+      "visible_if": "{{ section.settings.arrow_show_desktop }}"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size_mobile",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Size - mobile",
+      "default": 50,
+      "visible_if": "{{ section.settings.arrow_show_mobile }}"
+    },
+    {
+      "type": "range",
+      "id": "arrow_icon_size",
+      "min": 5,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 10,
+      "visible_if": "{{ section.settings.arrow_show_desktop }}"
+    },
+    {
+      "type": "range",
+      "id": "arrow_icon_size_mobile",
+      "min": 5,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon size - mobile",
+      "default": 10,
+      "visible_if": "{{ section.settings.arrow_show_mobile }}"
+    },
+    {
+      "type": "range",
+      "id": "arrow_border_thickness",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 0,
+      "visible_if": "{{ section.settings.arrow_show_mobile or section.settings.arrow_show_desktop }}"
+    },
+    {
+      "type": "range",
+      "id": "arrow_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Roundness",
+      "default": 100,
+      "visible_if": "{{ section.settings.arrow_show_mobile or section.settings.arrow_show_desktop }}"
+    },
+    {
+      "type": "select",
+      "id": "arrow_hover_effect",
+      "label": "Hover effect",
+      "default": "color",
+      "visible_if": "{{ section.settings.arrow_show_mobile or section.settings.arrow_show_desktop }}",
+      "options": [
+        {
+          "label": "Change color",
+          "value": "color"
+        },
+        {
+          "label": "Change size",
+          "value": "scale"
+        },
+        {
+          "label": "Change arrow",
+          "value": "arrow"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "arrow_shadow",
+      "label": "Use shadow",
+      "visible_if": "{{ section.settings.arrow_show_mobile or section.settings.arrow_show_desktop }}",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Badge colors"
+    },
+    {
+      "type": "color",
+      "label": "Text",
+      "id": "badge_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Background",
+      "id": "badge_bg_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Card colors"
+    },
+    {
+      "type": "color",
+      "label": "Title",
+      "id": "title_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Text",
+      "id": "text_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Border",
+      "id": "card_border_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.card_border_thickness >= 1 }}"
+    },
+    {
+      "type": "color",
+      "label": "Overlay",
+      "id": "card_overlay_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.card_overlay >= 0.1 }}"
+    },
+    {
+      "type": "color",
+      "label": "Shadow",
+      "id": "card_shadow_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.card_shadow }}"
+    },
+    {
+      "type": "header",
+      "content": "Button colors"
+    },
+    {
+      "type": "color",
+      "label": "Text",
+      "id": "button_color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "label": "Text hover",
+      "id": "button_hover_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "label": "Background",
+      "id": "button_bg_color",
+      "default": "#FFFFFF",
+      "visible_if": "{{ section.settings.button_style != 'link' }}"
+    },
+    {
+      "type": "color",
+      "label": "Background hover",
+      "id": "button_bg_hover_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.button_style != 'link' }}"
+    },
+    {
+      "type": "color",
+      "label": "Border",
+      "id": "button_border_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.button_style == 'outline' or section.settings.button_style == 'outline_arrow' }}"
+    },
+    {
+      "type": "color",
+      "label": "Border hover",
+      "id": "button_border_hover_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.button_style == 'outline' or section.settings.button_style == 'outline_arrow' }}"
+    },
+    {
+      "type": "header",
+      "content": "Arrow colors",
+      "visible_if": "{{ section.settings.arrow_show_mobile or section.settings.arrow_show_desktop }}"
+    },
+    {
+      "type": "color",
+      "label": "Arrow",
+      "id": "arrow_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.arrow_show_mobile or section.settings.arrow_show_desktop }}"
+    },
+    {
+      "type": "color",
+      "label": "Arrow hover",
+      "id": "arrow_hover_color",
+      "default": "#FFFFFF",
+      "visible_if": "{{ section.settings.arrow_hover_effect == 'color' and section.settings.arrow_show_desktop or section.settings.arrow_hover_effect == 'color' and section.settings.arrow_show_mobile }}"
+    },
+    {
+      "type": "color",
+      "label": "Background",
+      "id": "arrow_bg_color",
+      "default": "#FFFFFF",
+      "visible_if": "{{ section.settings.arrow_show_mobile or section.settings.arrow_show_desktop }}"
+    },
+    {
+      "type": "color",
+      "label": "Background hover",
+      "id": "arrow_bg_hover_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.arrow_hover_effect == 'color' and section.settings.arrow_show_desktop or section.settings.arrow_hover_effect == 'color' and section.settings.arrow_show_mobile }}"
+    },
+    {
+      "type": "color",
+      "label": "Border",
+      "id": "arrow_border_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.arrow_show_mobile or section.settings.arrow_show_desktop }}"
+    },
+    {
+      "type": "color",
+      "label": "Border hover",
+      "id": "arrow_border_hover_color",
+      "default": "#121212",
+      "visible_if": "{{ section.settings.arrow_hover_effect == 'color' and section.settings.arrow_show_desktop or section.settings.arrow_hover_effect == 'color' and section.settings.arrow_show_mobile }}"
+    },
+    {
+      "type": "header",
+      "content": "Section colors"
+    },
+    { 
+      "type": "select",
+      "id": "background_style",
+      "label": "Background style",
+      "default": "solid",
+      "options": [
+        { 
+          "label": "Solid",
+          "value": "solid" 
+        },
+        { 
+          "label": "Gradient",
+          "value": "gradient" 
+        } 
+      ] 
+    },
+    {
+      "type": "color",
+      "label": "Background",
+      "id": "background_color",
+      "default": "#FFFFFF",
+      "visible_if": "{{ section.settings.background_style == 'solid' }}",
+      
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Gradient",
+      "default": "linear-gradient(180deg, #FFFFFF 0%, #F2F2F2 100%)",
+      "visible_if": "{{ section.settings.background_style == 'gradient' }}"
+    },
+    {
+      "type": "color",
+      "label": "Border",
+      "id": "border_color",
+      "default": "#121212"
+    },
+    {
+      "type": "header",
+      "content": "Section margin (outside)"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_horizontal",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "rem",
+      "label": "Sides",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_horizontal_mobile",
+      "min": 0,
+      "max": 15,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Sides - mobile",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section padding (inside)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top",
+      "default": 36
+    },
+    {
+       "type": "range",
+       "id": "padding_bottom",
+       "min": 0,
+       "max": 100,
+       "step": 4,
+       "unit": "px",
+       "label": "Bottom",
+       "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "rem",
+      "label": "Sides",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 0,
+      "max": 15,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Sides - mobile",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 800,
+      "max": 2000,
+      "step": 100,
+      "unit": "px",
+      "label": "Content width",
+      "default": 1200,
+      "visible_if": "{{ section.settings.full_width == false }}"
+    },
+    {
+      "type": "range",
+      "id": "border_thickness",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Border thickness",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Roundness",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "lazy",
+      "label": "Lazy load",
+      "info": "Lazy load images for speed optimisation",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Badge"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "New Slide"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Text</p>"
+        },
+        {
+          "type": "text",
+          "id": "button",
+          "label": "Button label",
+          "default": "View",
+          "info": "Leave the label blank to hide the button."
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button link"
+        },
+        {
+          "type": "color",
+          "label": "Content background",
+          "id": "content_bg_color",
+          "default": "#121212"
+        },
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SS - Slider #2 pro",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

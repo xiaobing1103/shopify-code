@@ -1,0 +1,844 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2023 Section Store. All rights reserved.
+Unauthorized copying, modification, distribution, or use
+of this code or any portion of it, is strictly prohibited.
+Violators will be prosecuted to the fullest extent of the law.
+For inquiries or permissions, contact daniel@section.store
+---------------------------------------------------------
+{% endcomment %}
+
+{%- liquid 
+  assign padding_horizontal = section.settings.padding_horizontal
+  assign padding_horizontal_mobile = section.settings.padding_horizontal_mobile
+  assign padding_top = section.settings.padding_top
+  assign padding_bottom = section.settings.padding_bottom
+  assign border_color = section.settings.border_color
+  assign border_thickness = section.settings.border_thickness
+  assign margin_top = section.settings.margin_top
+  assign margin_bottom = section.settings.margin_bottom
+  assign background_color = section.settings.background_color
+  assign background_gradient = section.settings.background_gradient
+
+  assign toggles_position = section.settings.toggles_position
+      
+  assign heading = section.settings.heading
+  assign heading_custom = section.settings.heading_custom
+  assign heading_font = section.settings.heading_font
+  assign heading_size = section.settings.heading_size
+  assign heading_size_mobile = section.settings.heading_size_mobile
+  assign heading_height = section.settings.heading_height
+  assign heading_color = section.settings.heading_color
+  assign heading_align = section.settings.heading_align
+  assign heading_align_mobile = section.settings.heading_align_mobile
+
+  assign items_gap = section.settings.items_gap
+  assign items_gap_mobile = section.settings.items_gap_mobile
+  assign items_mt = section.settings.items_mt
+  assign items_mt_mobile = section.settings.items_mt_mobile
+
+  assign item_gap = section.settings.item_gap
+  assign item_gap_mobile = section.settings.item_gap_mobile
+  assign item_padding_vertical = section.settings.item_padding_vertical
+  assign item_padding_vertical_mobile = section.settings.item_padding_vertical_mobile
+  assign item_padding_horizontal = section.settings.item_padding_horizontal
+  assign item_padding_horizontal_mobile = section.settings.item_padding_horizontal_mobile
+  assign item_border_thickness = section.settings.item_border_thickness
+  assign item_border_color = section.settings.item_border_color
+  assign item_border_color_hover = section.settings.item_border_color_hover
+  assign item_radius = section.settings.item_radius
+
+  assign use_icon = section.settings.use_icon
+  assign icon_size = section.settings.icon_size
+  assign icon_size_mobile = section.settings.icon_size_mobile
+  assign icon_color = section.settings.icon_color
+  assign icon_color_hover = section.settings.icon_color_hover
+
+  assign text_custom = section.settings.text_custom
+  assign text_font = section.settings.text_font
+  assign text_size = section.settings.text_size
+  assign text_size_mobile = section.settings.text_size_mobile
+  assign text_height = section.settings.text_height
+  assign text_color = section.settings.text_color
+  assign text_color_hover = section.settings.text_color_hover
+-%}
+
+{%- style -%}
+  {{ heading_font | font_face: font_display: 'swap' }}
+  {{ text_font | font_face: font_display: 'swap' }}
+
+  .section-{{ section.id }} {
+    border-top: solid {{ border_color }} {{ border_thickness }}px;
+    border-bottom: solid {{ border_color }} {{ border_thickness }}px;
+    margin-top: {{ margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ margin_bottom | times: 0.75 | round: 0 }}px;   
+    overflow: hidden;
+  }
+  
+  .section-{{ section.id }}-settings {
+    margin: 0 auto;
+    padding-top: {{ padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-left: {{ padding_horizontal_mobile }}rem;
+    padding-right: {{ padding_horizontal_mobile }}rem;
+  }  
+
+  .product-toggles-heading-{{ section.id }} {
+    text-align: {{ heading_align_mobile }};
+  }
+
+  .product-toggles-heading-{{ section.id }} * {
+    margin: 0;
+    font-size: {{ heading_size_mobile }}px;
+    color: {{ heading_color }};
+    line-height: {{ heading_height }}%;
+    text-transform: unset;
+    text-decoration: none;
+  }
+
+  .product-toggles-wrap-{{ section.id }} {
+    display: flex;
+    align-items: stretch;
+    gap: {{ items_gap_mobile }}px;
+    flex-wrap: wrap;
+    margin-top: {{ items_mt_mobile }}px;
+  }
+
+  .product-toggles-item-{{ section.id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: {{ item_gap_mobile }}px;
+    text-decoration: none;    
+    padding: {{ item_padding_vertical_mobile }}px {{ item_padding_horizontal_mobile }}px;
+    border: {{ item_border_thickness }}px solid {{ item_border_color }};
+    border-radius: {{ item_radius }}px;
+    cursor: pointer;
+  }
+
+  .product-toggles-item-{{ section.id }}:hover {
+    border: {{ item_border_thickness }}px solid {{ item_border_color_hover }};
+  }
+
+  .product-toggles-text-{{ section.id }} {
+    margin: 0;
+    font-size: {{ text_size_mobile }}px;
+    color: {{ text_color }};
+    line-height: {{ text_height }}%;
+    text-transform: unset;
+    flex-shrink: 0;
+  }
+
+  .product-toggles-icon-{{ section.id }} {
+    flex: 0 0 {{ icon_size_mobile }}px;
+    width: {{ icon_size_mobile }}px;
+  }
+
+  .product-toggles-icon-{{ section.id }} img,
+  .product-toggles-icon-{{ section.id }} svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .product-toggles-icon-{{ section.id }} svg path {
+    transition: all 0.25s ease 0s;
+    fill: {{ icon_color }};
+  }  
+
+  .product-toggles-item-{{ section.id }}:hover .product-toggles-text-{{ section.id }} {
+    transition: all 0.25s ease 0s;
+    color: {{ text_color_hover }};
+  }
+
+  .product-toggles-item-{{ section.id }}:hover .product-toggles-icon-{{ section.id }} svg path {
+    transition: all 0.25s ease 0s;
+    fill: {{ icon_color_hover }};
+  } 
+  
+  @media(min-width: 1024px) {
+    .section-{{ section.id }} {
+      margin-top: {{ margin_top }}px;
+      margin-bottom: {{ margin_bottom }}px;
+    }
+    
+    .section-{{ section.id }}-settings {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_horizontal }}rem;
+      padding-right: {{ padding_horizontal }}rem;
+    }
+
+    .product-toggles-heading-{{ section.id }} {
+      text-align: {{ heading_align }};
+    }
+  
+    .product-toggles-heading-{{ section.id }} * {
+      font-size: {{ heading_size }}px;
+    }
+
+    .product-toggles-wrap-{{ section.id }} {
+      gap: {{ items_gap }}px;
+      margin-top: {{ items_mt }}px;
+    }
+
+    .product-toggles-item-{{ section.id }} {
+      gap: {{ item_gap }}px;
+      padding: {{ item_padding_vertical }}px {{ item_padding_horizontal }}px;
+    }
+
+    .product-toggles-icon-{{ section.id }} {
+      flex: 0 0 {{ icon_size }}px;
+      width: {{ icon_size }}px;
+    }
+
+    .product-toggles-text-{{ section.id }} {
+      font-size: {{ text_size }}px;
+    }
+  }
+  
+{%- endstyle -%}
+
+{% if heading_custom %}
+  <style>
+    .product-toggles-heading-{{ section.id }} * {
+      font-family: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+      font-weight: {{ heading_font.weight }};
+      font-style: {{ heading_font.style }};
+    }
+  </style>
+{% endif %}
+
+{% if text_custom %}
+  <style>
+    .product-toggles-text-{{ section.id }} {
+      font-family: {{ text_font.family }}, {{ text_font.fallback_families }};
+      font-weight: {{ text_font.weight }};
+      font-style: {{ text_font.style }};
+    }
+  </style>
+{% endif %}
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {       
+    var productForm = document.querySelector('#ss-product-toggles');
+
+    if (!productForm){
+      var productForm = document.querySelector('{% if toggles_position == "below_title" or toggles_position == "above_title" %}.product__title{% elsif toggles_position == "below_description" or toggles_position == "above_description" %}.product__description{% elsif toggles_position == "below_price" %}.price.price--large.price--show-badge{% else %}.button--add-to-cart, .product .product-form, .product-single__add-to-cart, .shopify-payment-button, .shopify-payment-button__button, .ProductForm__BuyButtons, .add-to-cart{% endif %}');
+      if (!productForm) return;
+    }
+
+    const templateContent =  document.querySelector('#ss-product-toggles-{{ section.id }}').content
+
+    productForm.insertAdjacentElement('{% if toggles_position == "below_buy" or toggles_position == "below_title" or toggles_position == "below_description" or toggles_position == "below_price" %}afterend{% else %}beforebegin{% endif %}', templateContent.firstElementChild)
+  })  
+</script>
+
+<template id="ss-product-toggles-{{ section.id }}">
+  <div class="section-{{ section.id }} product-toggles-{{ section.id }}" style="background-color:{{ background_color }}; background-image: {{ background_gradient }};">
+    <div class="section-{{ section.id }}-settings">
+      {% if heading != blank %}
+        <div class="product-toggles-heading-{{ section.id }}">
+          {{ heading }}
+        </div>
+      {% endif %}
+      <div class="product-toggles-wrap-{{ section.id }}">
+        {% for block in section.blocks %}
+          <{% if block.settings.use_link %}a href="{{ block.settings.url }}"{% else %}div{% endif %} class="product-toggles-item-{{ section.id }}">
+            {% if use_icon %}
+              <div class="product-toggles-icon-{{ section.id }}">
+                {% if block.settings.custom_icon != blank %}
+                  <img src="{{ block.settings.custom_icon | image_url }}" alt="{{ block.settings.custom_icon.alt }}">
+                {% else %} 
+                  <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.47464 9.9703L7.24725 12.1977C7.11057 12.3344 6.88896 12.3344 6.75227 12.1977L4.52489 9.9703C4.3882 9.83361 4.3882 9.61201 4.52489 9.47532C4.66157 9.33864 4.88318 9.33864 5.01986 9.47532L6.64976 11.1052L6.64976 3.5502C6.64976 3.3569 6.80646 3.2002 6.99976 3.2002C7.19306 3.2002 7.34976 3.3569 7.34976 3.5502L7.34976 11.1052L8.97966 9.47532C9.11634 9.33864 9.33795 9.33864 9.47464 9.47532C9.61132 9.61201 9.61132 9.83361 9.47464 9.9703Z" fill="currentColor"></path>
+                  </svg>                                   
+                {% endif %}  
+              </div>
+            {% endif %}
+            {% if block.settings.text != blank %}
+              <p class="product-toggles-text-{{ section.id }}">{{ block.settings.text }}</p>  
+            {% endif %} 
+          </{% if block.settings.use_link != blank %}a{% else %}div{% endif %}>  
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  function initProductToggles() {
+
+    setTimeout(() => {
+
+      let allSections = document.querySelectorAll(".shopify-section");
+      let togglesSection = document.querySelector(".product-toggles-{{ section.id }}");
+      let productSection = togglesSection.closest('.shopify-section');
+
+      let sectionsArray = Array.from(allSections);  
+ 
+      let productSectionIndex = sectionsArray.indexOf(productSection);  
+      
+      let sectionsAfterProductSection = sectionsArray.filter((section, index) => index > productSectionIndex);
+
+      let idsAfterProductSection = sectionsAfterProductSection.map(section => section.id);  
+      
+      
+      let items = document.querySelectorAll('.product-toggles-item-{{ section.id }}');
+
+      if(items) {
+        items.forEach((el, index) => {
+
+          if (index < idsAfterProductSection.length) {  
+            const newHref = `#${idsAfterProductSection[index]}`;  
+            if (!el.getAttribute('href')) {  
+              el.setAttribute('href', newHref);  
+            }  
+          }   
+            
+          el.addEventListener('click', (event) => {  
+              event.preventDefault();  
+              const targetId = el.getAttribute('href');  
+              if (targetId) {  
+                  const targetElement = document.querySelector(targetId);  
+                  if (targetElement) {  
+                      const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                      const offsetPosition = elementPosition - 100;
+                      
+                      window.scrollTo({  
+                          top: offsetPosition,  
+                          behavior: 'smooth'
+                      });  
+                  }  
+              }  
+          });
+        });
+      }
+    }, 400)
+
+  }
+
+  document.addEventListener('DOMContentLoaded', initProductToggles);
+  
+  if (Shopify.designMode) {
+     document.addEventListener('shopify:section:unload', initProductToggles);
+     document.addEventListener('shopify:section:load', initProductToggles);
+  }
+</script>
+            
+{% schema %}
+  {
+    "name": "SS - Product toggles",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Custom placement",
+        "info": "Copy this code: <div id='ss-product-toggles'></div> - Click 'Add block' -> Custom Liquid/HTML -> Paste."
+      },
+      {
+        "type": "select",
+        "id": "toggles_position",
+        "label": "Position",
+        "default": "below_buy",
+        "options": [
+          {
+            "label": "Above buy buttons",
+            "value": "above_buy"
+          },
+          {
+            "label": "Below buy buttons",
+            "value": "below_buy"
+          },
+          {
+            "label": "Above product title",
+            "value": "above_title"
+          },
+          {
+            "label": "Below product title",
+            "value": "below_title"
+          },
+          {
+            "label": "Above product description",
+            "value": "above_description"
+          },
+          {
+            "label": "Below product description",
+            "value": "below_description"
+          },
+          {
+            "label": "Below price",
+            "value": "below_price"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Heading settings"
+      },
+      {
+        "type": "richtext",
+        "id": "heading",
+        "label": "Text",
+        "default": "<h2>Heading</h2>"
+      },
+      {
+        "type": "checkbox",
+        "id": "heading_custom",
+        "label": "Use custom font",
+        "default": false
+      },
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Font family",
+        "default": "josefin_sans_n4"
+      },
+      {
+        "type": "range",
+        "id": "heading_size",
+        "min": 0,
+        "max": 72,
+        "step": 1,
+        "unit": "px",
+        "label": "Font size",
+        "default": 15
+      },
+      {
+        "type": "range",
+        "id": "heading_size_mobile",
+        "min": 0,
+        "max": 72,
+        "step": 1,
+        "unit": "px",
+        "label": "Font size - mobile",
+        "default": 15
+      },
+      {
+        "type": "range",
+        "id": "heading_height",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Line height",
+        "default": 130
+      },
+      {
+        "type": "text_alignment",
+        "id": "heading_align",
+        "label": "Alignment"
+      },
+      {
+        "type": "text_alignment",
+        "id": "heading_align_mobile",
+        "label": "Alignment - mobile"
+      },
+      {
+        "type": "header",
+        "content": "Toggles settings"
+      },
+      {
+        "type": "range",
+        "id": "items_gap",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Gap",
+        "default": 8
+      },
+      {
+        "type": "range",
+        "id": "items_gap_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Gap - mobile",
+        "default": 8
+      },   
+      {
+        "type": "range",
+        "id": "items_mt",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Margin top",
+        "default": 8
+      },
+      {
+        "type": "range",
+        "id": "items_mt_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Margin top - mobile",
+        "default": 8
+      }, 
+      {
+        "type": "header",
+        "content": "Toggle settings"
+      },
+      {
+        "type": "range",
+        "id": "item_padding_vertical",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Padding vertical",
+        "default": 6
+      },
+      {
+        "type": "range",
+        "id": "item_padding_vertical_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Padding vertical - mobile",
+        "default": 6
+      },
+      {
+        "type": "range",
+        "id": "item_padding_horizontal",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Padding horizontal",
+        "default": 12
+      },
+      {
+        "type": "range",
+        "id": "item_padding_horizontal_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Padding horizontal - mobile",
+        "default": 12
+      },
+      {
+        "type": "range",
+        "id": "item_gap",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Gap",
+        "default": 6
+      },
+      {
+        "type": "range",
+        "id": "item_gap_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Gap - mobile",
+        "default": 6
+      },  
+      {
+        "type": "range",
+        "id": "item_radius",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Roundness",
+        "default": 100
+      }, 
+      {
+        "type": "range",
+        "id": "item_border_thickness",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "unit": "px",
+        "label": "Border thickness",
+        "default": 1
+      },      
+      {
+        "type": "header",
+        "content": "Icon settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_icon",
+        "label": "Use icon",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "icon_size",
+        "min": 10,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Size",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "icon_size_mobile",
+        "min": 10,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Size - mobile",
+        "default": 16
+      },      
+      {
+        "type": "header",
+        "content": "Text settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "text_custom",
+        "label": "Use custom font",
+        "default": false
+      },
+      {
+        "type": "font_picker",
+        "id": "text_font",
+        "label": "Font family",
+        "default": "josefin_sans_n4"
+      },
+      {
+        "type": "range",
+        "id": "text_size",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Font size",
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "text_size_mobile",
+        "min": 0,
+        "max": 72,
+        "step": 2,
+        "unit": "px",
+        "label": "Font size - mobile",
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "text_height",
+        "min": 50,
+        "max": 200,
+        "step": 10,
+        "unit": "%",
+        "label": "Line height",
+        "default": 100
+      },
+      {
+        "type": "header",
+        "content": "Toggle colors"
+      },
+      {
+        "type": "color",
+        "label": "Icon",
+        "id": "icon_color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "label": "Icon hover",
+        "id": "icon_color_hover",
+        "default": "#ababab"
+      },      
+      {
+        "type": "color",
+        "label": "Text",
+        "id": "text_color",
+        "default": "#000000"
+      }, 
+      {
+        "type": "color",
+        "label": "Text hover",
+        "id": "text_color_hover",
+        "default": "#ababab"
+      },
+      {
+        "type": "color",
+        "label": "Border",
+        "id": "item_border_color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "label": "Border hover",
+        "id": "item_border_color_hover",
+        "default": "#ababab"
+      },
+      {
+        "type": "header",
+        "content": "Section colors"
+      },
+      {
+        "type": "color",
+        "label": "Heading",
+        "id": "heading_color",
+        "default": "#000000"
+      }, 
+      {
+        "type": "color",
+        "label": "Section background",
+        "id": "background_color"
+      },
+      {
+        "type": "color_background",
+        "id": "background_gradient",
+        "label": "Section background gradient"
+      },
+      {
+        "type": "color",
+        "label": "Border",
+        "id": "border_color",
+        "default": "#000000"
+      },
+      {
+        "type": "header",
+        "content": "Section margin (outside)"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin bottom",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section padding (inside)"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Padding top",
+        "default": 0
+      },
+      {
+         "type": "range",
+         "id": "padding_bottom",
+         "min": 0,
+         "max": 100,
+         "step": 4,
+         "unit": "px",
+         "label": "Padding bottom",
+         "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_horizontal",
+        "min": 0,
+        "max": 15,
+        "step": 0.5,
+        "unit": "rem",
+        "label": "Padding sides",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_horizontal_mobile",
+        "min": 0,
+        "max": 15,
+        "step": 0.5,
+        "unit": "rem",
+        "label": "Padding sides - mobile",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section settings"
+      },
+      {
+        "type": "range",
+        "id": "border_thickness",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Border thickness",
+        "default": 0
+      }
+    ],
+    "blocks": [
+      {
+        "type": "item",
+        "name": "Toggle",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Custom icon",
+            "id": "custom_icon"
+          },  
+          {
+            "type": "text",
+            "label": "Text",
+            "id": "text",
+            "default": "Text"            
+          },
+          {
+            "type": "checkbox",
+            "id": "use_link",
+            "label": "Use as link",
+            "default": true
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "URL",
+            "info": "Leave blank to auto-generate anchor links. First block will anchor to first section below the product information section etc."
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "SS - Product toggles",
+        "blocks": [
+          {
+            "type": "item"
+          },
+          {
+            "type": "item"
+          },
+          {
+            "type": "item"
+          },
+          {
+            "type": "item"
+          },
+          {
+            "type": "item"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

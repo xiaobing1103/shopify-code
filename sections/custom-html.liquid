@@ -1,0 +1,933 @@
+<!-- sections/custom-html.liquid -->
+{{ 'section.css' | asset_url | stylesheet_tag }}
+{{ 'general-block.css' | asset_url | stylesheet_tag }}
+{{ 'countdown.css' | asset_url | stylesheet_tag }}
+{{ 'button-style.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign sid = section.id
+  assign se_stts = section.settings
+  assign se_blocks = section.blocks
+  assign stt_layout = se_stts.layout
+  assign stt_image_bg = se_stts.image_bg
+  if stt_layout == 't4s-se-container'
+    assign html_layout = '<div class="t4s-container">__</div></div>' | split: '__'
+  elsif stt_layout == 't4s-container-wrap'
+    assign html_layout = '<div class="t4s-container">__</div>' | split: '__'
+  else
+    assign html_layout = '__' | split: '__'
+  endif
+
+  assign t4s_se_class = 't4s_nt_se_' | append: sid
+  if se_stts.use_cus_css and se_stts.code_cus_css != blank
+    render 'se_cus_css', code_cus_css: se_stts.code_cus_css, t4s_se_class: t4s_se_class
+  endif
+
+  assign sale_title = se_stts.sale_title
+  assign sale_discount = se_stts.sale_discount
+  assign countdown_end_date = se_stts.countdown_end_date
+  assign button_text = se_stts.button_text
+  assign button_text_color = se_stts.button_text_color
+  assign countdown_bg_color = se_stts.countdown_bg_color
+  assign countdown_text_color = se_stts.countdown_text_color
+  assign bg_color = se_stts.bg_color
+  assign text_color = se_stts.text_color
+  assign banner_bg_gradient = se_stts.banner_bg_gradient
+  assign banner_bg_image_desktop = se_stts.banner_bg_image_desktop
+  assign banner_bg_image_mobile = se_stts.banner_bg_image_mobile
+-%}
+<div
+  class="t4s-section-inner t4s_nt_se_{{ sid }} t4s_se_{{ sid }} {{ stt_layout }}{% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} t4s-has-imgbg lazyloadt4s{% endif %}"
+  {% if stt_image_bg != blank and stt_layout != 't4s-se-container' %}
+    data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto" data-optimumx="2"
+  {% endif %}
+  {% render 'section_style', se_stts: se_stts -%}
+>
+  {{- html_layout[0] -}}
+  {%- if stt_layout == 't4s-se-container' -%}
+    <div
+      class="t4s-container-inner{% if stt_image_bg != blank %} t4s-has-imgbg lazyloadt4s{% endif %}"
+      {% if stt_image_bg != blank %}
+        data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto" data-optimumx="2"
+      {% endif %}
+    >
+  {% endif -%}
+  <div
+    class="t4s-black-friday-banner{% if banner_bg_image_desktop != blank or banner_bg_image_mobile != blank %} has-bg-image{% endif %}"
+    hdt-reveal="slide-in"
+    style="{% if banner_bg_image_desktop == blank and banner_bg_image_mobile == blank %}--banner-bg: {{ banner_bg_gradient | default: bg_color | default: 'linear-gradient(90deg, #6B9FFF 0%, #A8C5FF 100%)' }};{% endif %} --banner-text: {{ text_color | default: '#ffffff' }}; --countdown-bg: {{ countdown_bg_color | default: '#ffffff' }}; --countdown-text: {{ countdown_text_color | default: '#1a1a1a' }};{% if banner_bg_image_desktop != blank %} --banner-bg-image-desktop: url({{ banner_bg_image_desktop | image_url: width: 1920 }});{% endif %}{% if banner_bg_image_mobile != blank %} --banner-bg-image-mobile: url({{ banner_bg_image_mobile | image_url: width: 768 }});{% endif %}"
+  >
+    <div class="t4s-banner-content">
+      <div class="t4s-banner-left">
+        <div class="t4s-sale-title t4s-sale-title-pc">{{ sale_title | default: 'Black Friday Sale' }}</div>
+        <div class="t4s-sale-subtitle t4s-sale-subtitle-pc">— Save {{ sale_discount | default: '30' }} %</div>
+        <div class="t4s-sale-title t4s-sale-title-mobile">
+          {{ sale_title | default: 'Black Friday Sale' }}
+          <span class="t4s-sale-subtitle">— Save {{ sale_discount | default: '30' }} %</span>
+        </div>
+      </div>
+
+      <div class="t4s-banner-center">
+        <div
+          class="t4s-countdown t4s-countdown-des-1 t4s-countdown-size-medium t4s-text-center"
+          data-countdown="{{ countdown_end_date | default: '2025/12/31 23:59:59' }}"
+        >
+          <div class="time t4s-countdown-enabled">
+            <span class="cd-number-box cd-days-box">
+              <span class="cd-number" data-unit="days-tens">0</span>
+            </span>
+            <span class="cd-number-box cd-days-box">
+              <span class="cd-number" data-unit="days-ones">0</span>
+            </span>
+            <span class="separator days-separator">d</span>
+            <span class="cd-number-box">
+              <span class="cd-number" data-unit="hours-tens">0</span>
+            </span>
+            <span class="cd-number-box">
+              <span class="cd-number" data-unit="hours-ones">0</span>
+            </span>
+            <span class="separator">h</span>
+            <span class="cd-number-box">
+              <span class="cd-number" data-unit="minutes-tens">0</span>
+            </span>
+            <span class="cd-number-box">
+              <span class="cd-number" data-unit="minutes-ones">0</span>
+            </span>
+            <span class="separator">m</span>
+            <span class="cd-number-box">
+              <span class="cd-number" data-unit="seconds-tens">0</span>
+            </span>
+            <span class="cd-number-box">
+              <span class="cd-number" data-unit="seconds-ones">0</span>
+            </span>
+            <span class="separator">s</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="t4s-banner-right">
+        <a
+          href="javascript:void(0);"
+          id="bf-apply-discount-btn"
+          data-discount-code="{{ se_stts.discount_code | default: 'ES-83NEQGZH3GU7' }}"
+          class="t4s-apply-discount-btn"
+          style="--btn-text-color: {{ button_text_color | default: '#1a1a1a' }};"
+        >
+          <span class="bf-btn-icon" style="display: none;">✓</span>
+          <span class="bf-btn-text">{{ button_text | default: 'Apply Discount' }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  {{- html_layout[1] -}}
+</div>
+
+{%- schema -%}
+{
+  "name": "Black Friday Sale Banner",
+  "tag": "section",
+  "class": "t4s-section t4s-section-all t4s_tp_cdt t4s-custom-html",
+  "settings": [
+    {
+      "type": "header",
+      "content": "1. 内容设置"
+    },
+    {
+      "type": "text",
+      "id": "sale_title",
+      "label": "促销标题",
+      "default": "Black Friday Sale"
+    },
+    {
+      "type": "text",
+      "id": "sale_discount",
+      "label": "折扣百分比",
+      "default": "30",
+      "info": "只需输入数字，例如：30"
+    },
+    {
+      "type": "text",
+      "id": "countdown_end_date",
+      "label": "倒计时结束时间",
+      "default": "2025/12/31 23:59:59",
+      "info": "格式：2025/12/31 23:59:59 或使用ISO格式 2025-12-31T23:59:59"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "按钮文字",
+      "default": "Apply Discount"
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "折扣码",
+      "default": "ES-83NEQGZH3GU7",
+      "info": "设置您的 Shopify 折扣码"
+    },
+    {
+      "type": "header",
+      "content": "2. 样式设置"
+    },
+    {
+      "type": "paragraph",
+      "content": "背景设置优先级:背景图片 > 渐变色背景 > 纯色背景"
+    },
+    {
+      "type": "color_background",
+      "id": "banner_bg_gradient",
+      "label": "Banner 渐变色背景",
+      "default": "linear-gradient(90deg, #6B9FFF 0%, #A8C5FF 100%)",
+      "info": "可以设置纯色或渐变色"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_bg_image_desktop",
+      "label": "Banner 背景图片 - 桌面端",
+      "info": "推荐尺寸:1920x400px,优先级高于渐变色"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_bg_image_mobile",
+      "label": "Banner 背景图片 - 移动端",
+      "info": "推荐尺寸:768x600px,移动端专用背景图"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_color",
+      "label": "背景颜色/渐变(兼容旧版)",
+      "default": "linear-gradient(90deg, #6B9FFF 0%, #A8C5FF 100%)"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "文字颜色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "按钮文字颜色",
+      "default": "#1a1a1a",
+      "info": "设置 Apply Discount 按钮的文字颜色"
+    },
+    {
+      "type": "color",
+      "id": "countdown_bg_color",
+      "label": "倒计时数字背景颜色",
+      "default": "#ffffff",
+      "info": "设置倒计时数字块的背景颜色"
+    },
+    {
+      "type": "color",
+      "id": "countdown_text_color",
+      "label": "倒计时数字颜色",
+      "default": "#1a1a1a",
+      "info": "设置倒计时数字的文字颜色"
+    },
+    {
+      "type": "header",
+      "content": "3. 布局设置"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "default": "t4s-container-wrap",
+      "label": "Layout",
+      "options": [
+        { "value": "t4s-se-container", "label": "Container" },
+        { "value": "t4s-container-wrap", "label": "Wrapped container" },
+        { "value": "t4s-container-fluid", "label": "Full width" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "cl_bg",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "cl_bg_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bg",
+      "label": "Background image"
+    },
+    {
+      "type": "text",
+      "id": "mg",
+      "label": "Margin",
+      "info": "Margin top, margin right, margin bottom, margin left. If you not use to blank",
+      "default": ",,50px,",
+      "placeholder": ",,50px,"
+    },
+    {
+      "type": "text",
+      "id": "pd",
+      "label": "Padding",
+      "info": "Padding top, padding right, padding bottom, padding left. If you not use to blank",
+      "placeholder": "50px,,50px,"
+    },
+    {
+      "type": "header",
+      "content": "+ Design Tablet Options"
+    },
+    {
+      "type": "text",
+      "id": "mg_tb",
+      "label": "Margin",
+      "placeholder": ",,50px,"
+    },
+    {
+      "type": "text",
+      "id": "pd_tb",
+      "label": "Padding",
+      "placeholder": ",,50px,"
+    },
+    {
+      "type": "header",
+      "content": "+ Design mobile options"
+    },
+    {
+      "type": "text",
+      "id": "mg_mb",
+      "label": "Margin",
+      "default": ",,30px,",
+      "placeholder": ",,50px,"
+    },
+    {
+      "type": "text",
+      "id": "pd_mb",
+      "label": "Padding",
+      "placeholder": ",,50px,"
+    },
+    {
+      "type": "header",
+      "content": "4. Custom css"
+    },
+    {
+      "id": "use_cus_css",
+      "type": "checkbox",
+      "label": "Use custom css",
+      "default": false,
+      "info": "If you want custom style for this section."
+    },
+    {
+      "id": "code_cus_css",
+      "type": "textarea",
+      "label": "Code custom css",
+      "info": "Use selector .SectionID to style css"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Black Friday Sale Banner",
+      "category": "Homepage"
+    }
+  ]
+}
+{%- endschema -%}
+
+<style>
+  .t4s-black-friday-banner {
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 没有背景图片时使用渐变色 */
+  .t4s-black-friday-banner:not(.has-bg-image) {
+    background: var(--banner-bg);
+  }
+
+  /* 有背景图片时使用图片替代渐变色 - 桌面端 */
+  .t4s-black-friday-banner.has-bg-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--banner-bg-image-desktop);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  /* 确保内容在背景图片之上 */
+  .t4s-black-friday-banner .t4s-banner-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .t4s-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+  }
+
+  .t4s-banner-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--banner-text);
+  }
+
+  .t4s-sale-title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--banner-text);
+  }
+
+  /* PC端显示垂直布局 */
+  .t4s-sale-title-mobile {
+    display: none;
+  }
+
+  .t4s-sale-title-pc,
+  .t4s-sale-subtitle-pc {
+    display: block;
+  }
+
+  .t4s-sale-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--banner-text);
+    opacity: 0.95;
+  }
+
+  .t4s-banner-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .t4s-banner-center .t4s-countdown {
+    margin-bottom: 0;
+  }
+
+  .t4s-banner-center .t4s-countdown .time {
+    gap: 3px;
+    align-items: center;
+  }
+
+  .t4s-banner-center .t4s-countdown .time > span {
+    margin: 0;
+    max-width: 30px;
+    min-width: 30px;
+  }
+
+  .t4s-banner-center .t4s-countdown .time > span.separator {
+    min-width: auto;
+    max-width: none;
+    min-height: auto;
+    font-size: 25px;
+    font-weight: 400;
+    color: var(--banner-text);
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .t4s-banner-center .t4s-countdown .time > span.separator.days-separator {
+    display: none; /* 默认隐藏天数分隔符 */
+  }
+
+  .t4s-banner-center .t4s-countdown .time.has-days > span.separator.days-separator {
+    display: flex; /* 当有天数时显示 */
+  }
+
+  /* 默认隐藏天数数字块 */
+  .t4s-banner-center .t4s-countdown .time > span.cd-days-box {
+    display: none;
+  }
+
+  /* 当有天数时显示天数数字块 */
+  .t4s-banner-center .t4s-countdown .time.has-days > span.cd-days-box {
+    display: inline-flex;
+  }
+
+  .t4s-banner-center .t4s-countdown .time > span .cd-number {
+    background: var(--countdown-bg, #ffffff);
+    color: var(--countdown-text, #1a1a1a);
+    border-radius: 3px;
+    font-size: 25px;
+    font-weight: 500;
+    min-height: 44px;
+    max-width: 30px;
+    min-width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* PC端数字块左右两边的透明圆形装饰 */
+  .t4s-banner-center .t4s-countdown .time > span .cd-number::before,
+  .t4s-banner-center .t4s-countdown .time > span .cd-number::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--banner-bg);
+  }
+
+  .t4s-banner-center .t4s-countdown .time > span .cd-number::before {
+    left: -6px;
+  }
+
+  .t4s-banner-center .t4s-countdown .time > span .cd-number::after {
+    right: -6px;
+  }
+
+  .t4s-banner-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .t4s-apply-discount-btn {
+    background: #ffffff;
+    color: var(--btn-text-color, #1a1a1a);
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .t4s-apply-discount-btn .bf-btn-icon {
+    font-size: 16px;
+    font-weight: bold;
+    color: #10b981;
+  }
+
+  .t4s-apply-discount-btn.applied .bf-btn-icon {
+    display: inline-block !important;
+  }
+
+  .t4s-apply-discount-btn:hover {
+    background: #f5f5f5;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  .bf-btn-text {
+    color: var(--btn-text-color, #0980ff);
+  }
+  @media (max-width: 1024px) {
+    .t4s-banner-content {
+      gap: 15px;
+    }
+
+    .t4s-sale-title {
+      font-size: 16px;
+    }
+
+    .t4s-sale-subtitle {
+      font-size: 13px;
+    }
+
+    .t4s-banner-center .t4s-countdown .time > span {
+      min-width: 38px;
+      min-height: 38px;
+    }
+
+    .t4s-banner-center .t4s-countdown .time > span .cd-number {
+      font-size: 18px;
+      min-height: 38px;
+      min-width: 38px;
+    }
+
+    .t4s-apply-discount-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .cd-number-box {
+      min-width: 25px;
+    }
+    .t4s-black-friday-banner {
+      padding: 12px 16px;
+      border-radius: 12px;
+    }
+
+    /* 移动端优先使用移动端背景图片，没有则用桌面端图片 */
+    .t4s-black-friday-banner.has-bg-image::before {
+      background-image: var(--banner-bg-image-mobile, var(--banner-bg-image-desktop));
+    }
+
+    .t4s-banner-content {
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .t4s-banner-left {
+      align-items: center;
+      gap: 4px;
+    }
+
+    .t4s-sale-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 移动端显示同一行 */
+    .t4s-sale-title-pc,
+    .t4s-sale-subtitle-pc {
+      display: none;
+    }
+
+    .t4s-sale-title-mobile {
+      display: flex;
+    }
+
+    .t4s-sale-subtitle {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .t4s-banner-center {
+      flex: 1;
+      width: 100%;
+    }
+
+    .t4s-banner-center .t4s-countdown .time {
+      gap: 2px;
+      justify-content: center;
+      flex-wrap: nowrap;
+    }
+
+    .t4s-banner-center .t4s-countdown .time > span {
+      margin: 0;
+      max-width: 25px;
+      min-width: 25px;
+    }
+
+    .t4s-banner-center .t4s-countdown .time > span.separator {
+      min-width: auto;
+      max-width: none;
+      font-size: 22px;
+      font-weight: 300;
+      margin: 0 1px;
+    }
+
+    /* 移动端默认隐藏天数数字块 */
+    .t4s-banner-center .t4s-countdown .time > span.cd-days-box {
+      display: none;
+    }
+
+    /* 移动端当有天数时显示天数数字块 */
+    .t4s-banner-center .t4s-countdown .time.has-days > span.cd-days-box {
+      display: inline-flex;
+    }
+
+    /* 移动端倒计时数字样式 - 提高优先级覆盖全局样式 */
+    .t4s-black-friday-banner .t4s-banner-center .t4s-countdown.t4s-countdown-des-1.t4s-countdown-size-medium .time > span .cd-number {
+      font-size: 25px !important;
+      font-weight: 400;
+      min-height: 36px;
+      max-width: 25px;
+      min-width: 25px;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 移动端数字块左右两边的透明圆形装饰 */
+    .t4s-banner-center .t4s-countdown .time > span .cd-number::before,
+    .t4s-banner-center .t4s-countdown .time > span .cd-number::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--banner-bg);
+    }
+
+    .t4s-banner-center .t4s-countdown .time > span .cd-number::before {
+      left: -6px;
+    }
+
+    .t4s-banner-center .t4s-countdown .time > span .cd-number::after {
+      right: -6px;
+    }
+
+    .t4s-banner-right {
+      width: 100%;
+    }
+
+    .t4s-apply-discount-btn {
+      padding: 6px 28px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      width: auto;
+      max-width: 220px;
+      margin: 0 auto;
+      display: flex;
+    }
+
+    .t4s-apply-discount-btn .bf-btn-icon {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{%- javascript -%}
+  (function () {
+    'use strict';
+
+    // ========== 倒计时功能 ==========
+    class CountdownTimer {
+      constructor(element) {
+        this.element = element;
+        const endDateStr = element.dataset.countdown;
+
+        if (!endDateStr || endDateStr.trim() === '') {
+          console.warn('倒计时：未设置结束时间');
+          return;
+        }
+
+        // 处理多种日期格式
+        let endDate;
+        const normalizedDateStr = endDateStr.trim().replace(/-/g, '/');
+        endDate = new Date(normalizedDateStr);
+
+        if (isNaN(endDate.getTime())) {
+          endDate = new Date(endDateStr.replace(' ', 'T'));
+        }
+
+        this.endDate = endDate.getTime();
+
+        if (isNaN(this.endDate)) {
+          console.error('倒计时日期格式错误:', endDateStr);
+          this.endDate = new Date().getTime() + 60 * 60 * 1000;
+        }
+
+        console.log('倒计时初始化成功 - 结束时间:', new Date(this.endDate).toLocaleString());
+        this.init();
+      }
+
+      init() {
+        this.updateCountdown();
+        this.interval = setInterval(() => this.updateCountdown(), 1000);
+
+        window.addEventListener('beforeunload', () => {
+          if (this.interval) {
+            clearInterval(this.interval);
+          }
+        });
+      }
+
+      updateCountdown() {
+        try {
+          const now = new Date().getTime();
+          const distance = this.endDate - now;
+
+          if (distance < 0) {
+            if (this.interval) {
+              clearInterval(this.interval);
+            }
+            this.setAllToZero();
+            console.log('倒计时已结束');
+            return;
+          }
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          // 控制天数显示
+          const timeContainer = this.element.querySelector('.time');
+          if (timeContainer) {
+            if (days > 0) {
+              timeContainer.classList.add('has-days');
+            } else {
+              timeContainer.classList.remove('has-days');
+            }
+          }
+
+          this.updateDisplay('days-tens', Math.floor(days / 10));
+          this.updateDisplay('days-ones', days % 10);
+          this.updateDisplay('hours-tens', Math.floor(hours / 10));
+          this.updateDisplay('hours-ones', hours % 10);
+          this.updateDisplay('minutes-tens', Math.floor(minutes / 10));
+          this.updateDisplay('minutes-ones', minutes % 10);
+          this.updateDisplay('seconds-tens', Math.floor(seconds / 10));
+          this.updateDisplay('seconds-ones', seconds % 10);
+        } catch (error) {
+          console.error('倒计时更新错误:', error);
+        }
+      }
+
+      updateDisplay(unit, value) {
+        const el = this.element.querySelector(`[data-unit="${unit}"]`);
+        if (el && el.textContent !== String(value)) {
+          el.textContent = value;
+        }
+      }
+
+      setAllToZero() {
+        const units = ['days-tens', 'days-ones', 'hours-tens', 'hours-ones', 'minutes-tens', 'minutes-ones', 'seconds-tens', 'seconds-ones'];
+        units.forEach((unit) => this.updateDisplay(unit, 0));
+      }
+    }
+
+    // ========== Cookie 工具函数 ==========
+    const CookieUtil = {
+      set: function (name, value, days) {
+        try {
+          let expires = '';
+          if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+            expires = '; expires=' + date.toUTCString();
+          }
+          document.cookie = name + '=' + (value || '') + expires + '; path=/';
+          return true;
+        } catch (e) {
+          console.error('Cookie 设置失败:', e);
+          return false;
+        }
+      },
+      get: function (name) {
+        try {
+          const nameEQ = name + '=';
+          const ca = document.cookie.split(';');
+          for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+          }
+          return null;
+        } catch (e) {
+          console.error('Cookie 读取失败:', e);
+          return null;
+        }
+      },
+      remove: function (name) {
+        try {
+          document.cookie = name + '=; Max-Age=-99999999; path=/';
+        } catch (e) {
+          console.error('Cookie 删除失败:', e);
+        }
+      },
+    };
+
+    // ========== Black Friday 折扣功能 ==========
+    function initBlackFridayDiscount() {
+      const applyBtn = document.getElementById('bf-apply-discount-btn');
+      if (!applyBtn) return;
+
+      // 获取当前按钮的折扣码
+      const currentDiscountCode = applyBtn.dataset.discountCode || '';
+
+      // 检查 Cookie 中的折扣码
+      const cookieDiscountCode = CookieUtil.get('discount_code');
+
+      // 只有当 Cookie 中的折扣码与当前折扣码完全相同时，才显示 Applied 状态
+      const isCurrentDiscountApplied = cookieDiscountCode === currentDiscountCode;
+
+      if (isCurrentDiscountApplied) {
+        applyBtn.classList.add('applied');
+        const icon = applyBtn.querySelector('.bf-btn-icon');
+        if (icon) icon.style.display = 'inline-block';
+        const btnText = applyBtn.querySelector('.bf-btn-text');
+        if (btnText) btnText.textContent = 'Applied';
+      } else {
+        // 如果折扣码不匹配，确保按钮显示默认状态
+        applyBtn.classList.remove('applied');
+        const icon = applyBtn.querySelector('.bf-btn-icon');
+        if (icon) icon.style.display = 'none';
+        const btnText = applyBtn.querySelector('.bf-btn-text');
+        if (btnText) btnText.textContent = applyBtn.dataset.buttonText || 'Apply Discount';
+      }
+
+      // 点击事件
+      applyBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const discountCode = this.dataset.discountCode || 'ES-83NEQGZH3GU7';
+
+        // 设置 Cookie（保存 7 天）
+        CookieUtil.set('discount_code', discountCode, 7);
+
+        // 构建跳转 URL
+        // 当前路径，例如 /products/custom-wood-card
+        const currentPath = window.location.pathname + window.location.search;
+        // 跳转到折扣链接：/discount/折扣码?redirect=当前路径
+        const redirectUrl = '/discount/' + discountCode + '?redirect=' + encodeURIComponent(currentPath);
+
+        // 跳转
+        window.location.href = redirectUrl;
+      });
+    }
+
+    // ========== 初始化所有倒计时 ==========
+    function initCountdowns() {
+      const countdownElements = document.querySelectorAll('[data-countdown]');
+      if (countdownElements.length === 0) {
+        return;
+      }
+
+      countdownElements.forEach((element) => {
+        if (!element.hasAttribute('data-countdown-initialized')) {
+          element.setAttribute('data-countdown-initialized', 'true');
+          new CountdownTimer(element);
+        }
+      });
+    }
+
+    // ========== 页面加载初始化 ==========
+    function init() {
+      initCountdowns();
+      initBlackFridayDiscount();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    // Shopify 主题编辑器支持
+    if (window.Shopify && window.Shopify.designMode) {
+      document.addEventListener('shopify:section:load', init);
+      document.addEventListener('shopify:section:reorder', init);
+    }
+  })();
+{%- endjavascript -%}

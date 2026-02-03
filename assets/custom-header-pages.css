@@ -1,0 +1,302 @@
+/* ============================================
+   Custom Header Styles for Different Pages
+   ============================================
+   
+   使用方法：
+   系统会自动为每个页面类型添加类名：
+   - 首页: .page-home
+   - 产品页: .page-product
+   - 分类页: .page-collection
+   - 普通页面: .page-page
+   - 博客: .page-blog
+   - 文章: .page-article
+   - 购物车: .page-cart
+   - 搜索: .page-search
+   
+   你也可以在 Header section 设置中添加自定义类名
+   
+   如果使用了模板后缀（如 product.custom），会自动添加 .template-custom 类
+*/
+
+/* ============================================
+   首页 Header 样式
+   ============================================ */
+.page-home {
+  /* 背景颜色 */
+  --h-bg-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.page-home .t4s-header__wrapper * {
+  /* 文字/图标颜色 */
+  color: #ffffff !important;
+}
+
+.page-home .t4s-header__wrapper a:hover,
+.page-home .t4s-header__wrapper button:hover {
+  /* 悬停颜色 */
+  color: #56cfe1 !important;
+}
+
+/* 首页移动端图标排序 */
+@media (max-width: 1024px) {
+  .page-home .t4s-mobile-icon-search { 
+    order: 1 !important; 
+  }
+  .page-home .t4s-mobile-icon-cart { 
+    order: 2 !important; 
+  }
+  .page-home .t4s-mobile-icon-menu { 
+    order: 3 !important; 
+  }
+}
+
+/* ============================================
+   产品页 Header 样式
+   ============================================ */
+.page-product {
+  /* 背景颜色 */
+  --h-bg-color: #ffffff !important;
+}
+
+.page-product .t4s-header__wrapper * {
+  /* 文字/图标颜色 */
+  color: #222222 !important;
+}
+
+.page-product .t4s-header__wrapper a:hover,
+.page-product .t4s-header__wrapper button:hover {
+  /* 悬停颜色 */
+  color: #ff6b6b !important;
+}
+
+/* 产品页移动端图标排序 - 菜单在最前 */
+@media (max-width: 1024px) {
+  .page-product .t4s-mobile-icon-menu { 
+    order: 1 !important; 
+  }
+  .page-product .t4s-mobile-icon-search { 
+    order: 2 !important; 
+  }
+  .page-product .t4s-mobile-icon-cart { 
+    order: 3 !important; 
+  }
+}
+
+/* ============================================
+   分类页 Header 样式
+   ============================================ */
+.page-collection {
+  /* 背景颜色 */
+  --h-bg-color: #f8f9fa !important;
+}
+
+.page-collection .t4s-header__wrapper * {
+  /* 文字/图标颜色 */
+  color: #333333 !important;
+}
+
+.page-collection .t4s-header__wrapper a:hover,
+.page-collection .t4s-header__wrapper button:hover {
+  /* 悬停颜色 */
+  color: #4ecdc4 !important;
+}
+
+/* 分类页移动端图标排序 */
+@media (max-width: 1024px) {
+  .page-collection .t4s-mobile-icon-search { 
+    order: 2 !important; 
+  }
+  .page-collection .t4s-mobile-icon-cart { 
+    order: 1 !important; 
+  }
+  .page-collection .t4s-mobile-icon-menu { 
+    order: 3 !important; 
+  }
+}
+
+/* ============================================
+   博客/文章页 Header 样式
+   ============================================ */
+.page-blog,
+.page-article {
+  --h-bg-color: #ffffff !important;
+}
+
+.page-blog .t4s-header__wrapper *,
+.page-article .t4s-header__wrapper * {
+  color: #222222 !important;
+}
+
+/* ============================================
+   购物车页 Header 样式
+   ============================================ */
+.page-cart {
+  --h-bg-color: #ffffff !important;
+}
+
+.page-cart .t4s-header__wrapper * {
+  color: #222222 !important;
+}
+
+/* ============================================
+   搜索页 Header 样式
+   ============================================ */
+.page-search {
+  --h-bg-color: #ffffff !important;
+}
+
+.page-search .t4s-header__wrapper * {
+  color: #222222 !important;
+}
+
+/* ============================================
+   普通页面 Header 样式
+   ============================================ */
+.page-page {
+  --h-bg-color: #ffffff !important;
+}
+
+.page-page .t4s-header__wrapper * {
+  color: #222222 !important;
+}
+
+/* ============================================
+   特定模板后缀样式示例
+   ============================================
+   
+   如果你创建了自定义模板（如 product.vip.liquid），
+   系统会自动添加 .template-vip 类
+*/
+
+/* VIP 产品页 */
+.template-vip {
+  --h-bg-color: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.template-vip .t4s-header__wrapper * {
+  color: #ffffff !important;
+}
+
+/* Sale 产品页 */
+.template-sale {
+  --h-bg-color: #ff6b6b !important;
+}
+
+.template-sale .t4s-header__wrapper * {
+  color: #ffffff !important;
+}
+
+/* ============================================
+   自定义类名样式（通过 section 设置添加）
+   ============================================ */
+
+/* 如果你在 section 设置中添加了自定义类名，在这里定义样式 */
+.custom-header-style {
+  --h-bg-color: #000000 !important;
+}
+
+.custom-header-style .t4s-header__wrapper * {
+  color: #ffffff !important;
+}
+
+/* ============================================
+   通用样式 - 图标大小控制
+   ============================================ */
+
+/* 移动端图标大小 */
+@media (max-width: 1024px) {
+  .home-header .t4s-site-nav__icons svg.t4s-icon,
+  .home-header .t4s-push-menu-btn svg {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .product-header .t4s-site-nav__icons svg.t4s-icon,
+  .product-header .t4s-push-menu-btn svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+
+/* 桌面端图标大小 */
+@media (min-width: 768px) {
+  .home-header .t4s-site-nav__icons svg.t4s-icon,
+  .home-header .t4s-push-menu-btn svg {
+    width: 26px !important;
+    height: 26px !important;
+  }
+}
+
+/* ============================================
+   Logo 样式控制
+   ============================================ */
+
+/* 首页 Logo 大小 */
+.home-header .t4s-header__logo img {
+  max-height: 50px !important;
+}
+
+/* 产品页 Logo 大小 */
+.product-header .t4s-header__logo img {
+  max-height: 40px !important;
+}
+
+/* ============================================
+   购物车计数器样式
+   ============================================ */
+
+.home-header .t4s-count-box {
+  --h-count-bgcolor: #ff6b6b !important;
+  --h-count-color: #ffffff !important;
+}
+
+.product-header .t4s-count-box {
+  --h-count-bgcolor: #4ecdc4 !important;
+  --h-count-color: #ffffff !important;
+}
+
+/* ============================================
+   Sticky Header 样式
+   ============================================ */
+
+.is-header--stuck .home-header {
+  --h-bg-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.is-header--stuck .home-header .t4s-header__wrapper * {
+  color: #222222 !important;
+}
+
+/* ============================================
+   自定义模板示例
+   ============================================
+   
+   复制下面的模板来创建新页面的样式：
+*/
+
+/*
+.your-custom-class {
+  --h-bg-color: #ffffff !important;
+}
+
+.your-custom-class .t4s-header__wrapper * {
+  color: #222222 !important;
+}
+
+.your-custom-class .t4s-header__wrapper a:hover,
+.your-custom-class .t4s-header__wrapper button:hover {
+  color: #56cfe1 !important;
+}
+
+@media (max-width: 1024px) {
+  .your-custom-class .t4s-mobile-icon-search { 
+    order: 1 !important; 
+  }
+  .your-custom-class .t4s-mobile-icon-cart { 
+    order: 2 !important; 
+  }
+  .your-custom-class .t4s-mobile-icon-menu { 
+    order: 3 !important; 
+  }
+}
+*/

@@ -1,0 +1,1264 @@
+/*-----------------------------------------------------------------------------/
+/ Custom Theme CSS
+/-----------------------------------------------------------------------------*/
+
+/* ============ 像素级还原 fp3vm 设计 - v4.0 ============ */
+
+/* ============ Upload 部分 ============ */
+.pplr-wrapper.pplr-upload {
+    margin-top: 0 !important;
+    margin-bottom: 16px !important;
+    position: relative !important;
+}
+
+/* 强制显示 Upload: 标题 - 最高优先级 */
+.pplr-wrapper.pplr-upload .pplrlabel,
+.pplr-wrapper.pplr-upload label,
+.pplr-upload .pplrlabel,
+.pplr-wrapper.pplr-upload>.pplrlabel,
+.pplr-wrapper.pplr-upload>label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #000000 !important;
+    margin: 0 0 8px !important;
+    padding: 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    width: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    line-height: 1.5 !important;
+    position: static !important;
+    clip: auto !important;
+    overflow: visible !important;
+    text-indent: 0 !important;
+    white-space: normal !important;
+}
+
+/* 防止被隐藏 */
+.pplr-wrapper.pplr-upload .pplrlabel[style*="display: none"],
+.pplr-wrapper.pplr-upload label[style*="display: none"] {
+    display: block !important;
+}
+
+/* Upload 按钮容器 - 白色背景框 */
+.pplrfileuploadbutton {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.pplrfileuploadbutton input[type="file"].fileupload {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+}
+
+/* Upload 按钮样式 - 使用 CSS 变量支持主题编辑器配置 */
+.pplrfileuploadbutton::before {
+    content: '' !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 48px !important;
+    padding: 14px 20px !important;
+    border: 1px solid var(--pplr-upload-btn-border, #409CFF) !important;
+    border-radius: 8px !important;
+    background: var(--pplr-upload-btn-bg, #409CFF) url('http://file.1foo.com/2025/12/08/a1d15b06f7cf59dc459d4c2f50e52342.png') no-repeat center center !important;
+    background-position: calc(50% - 45px) center !important;
+    background-size: 16px 16px !important;
+    color: var(--pplr-upload-btn-text, #ffffff) !important;
+    font-family: inherit !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 200ms ease !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+    pointer-events: none !important;
+}
+
+/* Upload Logo 文字 - 居中显示 */
+.pplrfileuploadbutton::after {
+    content: 'Upload Logo' !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin-left: 18px !important;
+    color: var(--pplr-upload-btn-text, #ffffff) !important;
+    font-size: 14px !important;
+    pointer-events: none !important;
+    white-space: nowrap !important;
+}
+
+.pplrfileuploadbutton:hover::before {
+    border-color: var(--pplr-upload-btn-border, #2D7FDB) !important;
+    background-color: var(--pplr-upload-btn-bg-hover, #2D7FDB) !important;
+}
+
+.pplrfileuploadcover {
+    display: none !important;
+}
+
+/* ============ Design Note 部分 - Ant Design 风格 ============ */
+.pplr-wrapper.pplr-single-line-text,
+.pplr-wrapper.pplr-text {
+    margin-bottom: 24px !important;
+    position: relative !important;
+}
+
+.pplr-wrapper.pplr-single-line-text .pplrlabel,
+.pplr-wrapper.pplr-text .pplrlabel,
+.t4s-line-item-property__field.is--type-short .t4s-line-item-property__label,
+.t4s-line-item-property__field.is--type-long .t4s-line-item-property__label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #000000 !important;
+    margin: 0 0 8px !important;
+    display: block !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
+/* 隐藏空的 label - 当 label 没有文本内容或只包含空白时自动隐藏 */
+.pplr-wrapper.pplr-single-line-text .pplrlabel:empty,
+.pplr-wrapper.pplr-text .pplrlabel:empty,
+.t4s-line-item-property__field.is--type-short .t4s-line-item-property__label:empty,
+.t4s-line-item-property__field.is--type-long .t4s-line-item-property__label:empty {
+    display: none !important;
+    margin: 0 !important;
+}
+
+/* 隐藏只包含空白内容的 label（只有空格、换行等） */
+.pplr-wrapper.pplr-single-line-text .pplrlabel:blank,
+.pplr-wrapper.pplr-text .pplrlabel:blank,
+.t4s-line-item-property__field.is--type-short .t4s-line-item-property__label:blank,
+.t4s-line-item-property__field.is--type-long .t4s-line-item-property__label:blank {
+    display: none !important;
+    margin: 0 !important;
+}
+
+/* Design Note 输入框 - Ant Design 风格 */
+.pplr-wrapper.pplr-single-line-text input.pplr_text,
+.pplr-wrapper.pplr-text input.pplr_text,
+.t4s-line-item-property__field.is--type-short input,
+.t4s-line-item-property__field.is--type-long textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 40px !important;
+    height: 32px !important;
+    padding: 4px 11px !important;
+    font-size: 14px !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+    line-height: 1.5715 !important;
+    color: #7D7D7E !important;
+    background: #ffffff !important;
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 2px !important;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+    box-shadow: none !important;
+    border-radius: 5px !important;
+}
+
+/* Ant Design placeholder 样式 - 修复Product Personalizer插件初始黑色问题 */
+.pplr-wrapper.pplr-single-line-text input.pplr_text::placeholder,
+.pplr-wrapper.pplr-text input.pplr_text::placeholder,
+.t4s-line-item-property__field.is--type-short input::placeholder,
+.t4s-line-item-property__field.is--type-long textarea::placeholder {
+    color: #7D7D7E !important;
+    opacity: 1 !important;
+}
+
+/* 针对Product Personalizer插件的额外修复 - 覆盖所有浏览器前缀 */
+.pplr-wrapper.pplr-text input.pplr_text::-webkit-input-placeholder {
+    color: #7D7D7E !important;
+    opacity: 1 !important;
+}
+
+.pplr-wrapper.pplr-text input.pplr_text::-moz-placeholder {
+    color: #7D7D7E !important;
+    opacity: 1 !important;
+}
+
+.pplr-wrapper.pplr-text input.pplr_text:-ms-input-placeholder {
+    color: #7D7D7E !important;
+    opacity: 1 !important;
+}
+
+.pplr-wrapper.pplr-text input.pplr_text::-ms-input-placeholder {
+    color: #7D7D7E !important;
+    opacity: 1 !important;
+}
+
+/* Ant Design hover 效果 */
+.pplr-wrapper.pplr-single-line-text input.pplr_text:hover,
+.pplr-wrapper.pplr-text input.pplr_text:hover,
+.t4s-line-item-property__field.is--type-short input:hover,
+.t4s-line-item-property__field.is--type-long textarea:hover {
+    border-color: #40a9ff !important;
+}
+
+/* Ant Design focus 效果 */
+.pplr-wrapper.pplr-single-line-text input.pplr_text:focus,
+.pplr-wrapper.pplr-text input.pplr_text:focus,
+.t4s-line-item-property__field.is--type-short input:focus,
+.t4s-line-item-property__field.is--type-long textarea:focus {
+    outline: none !important;
+    border-color: #40a9ff !important;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+}
+
+/* Design Note 说明文字 */
+.t4s-line-item-property__field p {
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    color: #6b7280 !important;
+    margin: 8px 0 0 !important;
+}
+
+/* PPLR Text Input 下方说明文字 - 已移至 main-product.liquid schema 控制 */
+/* 如需修改文字内容、字体大小和颜色，请在 Shopify 后台编辑器中调整 */
+
+/* ============ BUNDLE & SAVE 部分 - 像素级还原 v5.0 ============ */
+
+  /* 每个选项包装器的边距 */
+.pplr-wrapper, .t4s-line-item-property__field {
+    margin-top: 10px !important;
+    margin-bottom:0px !important;
+      /* 选项之间的间距 - 可根据需要调整 */
+}
+
+/* 主标题 - 隐藏 Quantity 标题 */
+.kaching-bundles__block-title {
+    display: none !important;
+    margin: 0 !important;
+}
+.kaching-bundles .kaching-bundles__free-gift__content{
+    text-align: center;
+}
+.kaching-bundles .kaching-bundles__free-gift__main{
+    gap: 5px;
+}
+/* 移除可能存在的伪元素 */
+.kaching-bundles__block-title::before,
+.kaching-bundles__block-title::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* 卡片容器 */
+.kaching-bundles__bars {
+    display: flex !important;
+    gap: 16px !important;
+    margin-bottom: 24px !important;
+    align-items: stretch !important;
+    flex-direction: row !important;
+}
+
+/* 单个卡片 - 恢复原始设计 */
+.kaching-bundles__bar {
+    flex: 1 !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.kaching-bundles__bar-wrapper {
+    /* min-height: 160px !important; */
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 26px 7px 15px !important;
+    background: #ffffff !important;
+    cursor: pointer !important;
+    transition: all 200ms ease !important;
+    position: relative !important;
+    overflow: visible !important;
+}
+
+/* 隐藏单选按钮 - fp3vm 没有单选按钮 */
+.kaching-bundles__bar input[type="radio"] {
+    display: none !important;
+}
+
+.kaching-bundles__bar-radio {
+    display: none !important;
+}
+
+/* 卡片悬停 */
+.kaching-bundles__bar:hover {
+    z-index: 5 !important;
+}
+
+.kaching-bundles__bar:hover .kaching-bundles__bar-wrapper {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* 选中的卡片 - 蓝色边框，提升层级 */
+.kaching-bundles__bar--selected {
+    z-index: 10 !important;
+}
+
+.kaching-bundles__bar--selected .kaching-bundles__bar-wrapper {
+    border-color: #3b82f6 !important;
+    border-width: 2px !important;
+    background: #ffffff !important;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* 右下角选中图标 - 使用勾选字符 ✔ */
+.kaching-bundles__bar--selected .kaching-bundles__bar-wrapper::after {
+    content: "✔" !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: 32px !important;
+    height: 32px !important;
+    background: #007BFF !important;
+    border-radius: 8px 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    color: #fff !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+    z-index: 100 !important;
+    pointer-events: none !important;
+}
+
+/* 卡片内容布局 */
+.kaching-bundles__bar-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0px !important;
+}
+
+.kaching-bundles__bar-first-line {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+}
+
+/* 顶部标签 - 渐变蓝色背景，只有上边两个角圆角 */
+.kaching-bundles__bar-label {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #3b82f6 !important;
+    background: linear-gradient(90deg, #DFF0FF 0%, #D0E9FF 50%, #CEDDFF 100%) !important;
+    padding: 6px 14px !important;
+    border-radius: 10px 10px 0 0 !important;
+    margin: 0 0 16px 0 !important;
+    display: inline-block !important;
+    text-transform: none !important;
+    letter-spacing: 0.3px !important;
+    white-space: nowrap !important;
+    order: -1 !important;
+}
+
+/* 套餐标题 */
+.kaching-bundles__bar-title {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    margin: 15px 0px 0px !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+}
+
+/* 价格容器 */
+.kaching-bundles__bar-pricing {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin-top: 16px !important;
+}
+
+/* 价格 */
+.kaching-bundles__bar-price {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    text-align: center !important;
+    line-height: 1 !important;
+}
+
+/* 原价(划线) - 隐藏 */
+.kaching-bundles__bar-full-price {
+    display: none !important;
+}
+
+/* 覆盖插件的内联样式变量 */
+.kaching-bundles__block {
+    --bar-border-color: #e5e7eb !important;
+    --bar-selected-border-color: #3b82f6 !important;
+    --bar-background-color: #ffffff !important;
+    --bar-selected-background-color: #ffffff !important;
+    --bar-border-radius: 12px !important;
+    --bar-label-background-color: #dbeafe !important;
+    --bar-label-color: #3b82f6 !important;
+    --bar-title-color: #000000 !important;
+    --bar-price-color: #000000 !important;
+    --bar-full-price-color: #9ca3af !important;
+}
+
+/* 移动端 - 三个卡片一排显示 */
+@media (max-width: 767px) {
+    .kaching-bundles__bars {
+        flex-direction: row !important;
+        gap: 8px !important;
+    }
+
+    .kaching-bundles__bar {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+
+    .kaching-bundles__bar-wrapper {
+        min-height: 100px !important;
+        padding: 12px 8px !important;
+    }
+
+    /* 调整标签字体大小 */
+    .kaching-bundles__bar-label {
+        font-size: 9px !important;
+        padding: 4px 8px !important;
+        margin: 0 0 8px 0 !important;
+    }
+
+    /* 调整标题字体大小 */
+    .kaching-bundles__bar-title {
+        font-size: 14px !important;
+        margin: 8px 0 0px !important;
+    }
+
+    /* 调整价格字体大小 */
+    .kaching-bundles__bar-price {
+        font-size: 18px !important;
+    }
+
+    /* 调整选中图标大小 */
+    .kaching-bundles__bar--selected .kaching-bundles__bar-wrapper::after {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 14px !important;
+    }
+}
+
+.pplr-wrapper label {
+
+    padding: 0px !important;
+}
+
+/* ============ 字段间距 ============ */
+.pplr-wrapper,
+.t4s-line-item-property__field {
+    margin-bottom: 16px !important;
+}
+
+/* ============ PPLR Checkbox 样式 (Remove icon / Remove QR code) - 完美还原 ============ */
+/* 外层 Flex 容器 - 让两个 checkbox 横向排列 */
+.pplr-wrapper.pplr-checkbox.pplr-remove-icon,
+.pplr-wrapper.pplr-checkbox.pplr-remove-qr-code {
+    width: calc(50% - 6px) !important;
+    display: inline-flex !important;
+    vertical-align: top !important;
+}
+
+.pplr-wrapper.pplr-checkbox.pplr-remove-icon {
+    margin-right: 12px !important;
+}
+
+.pplr-wrapper.pplr-checkbox.pplr-remove-qr-code {
+    margin-right: 0 !important;
+}
+
+/* Checkbox 容器 */
+.pplr-wrapper.pplr-checkbox {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    min-height: 45px !important;
+    padding: 10px 10px 10px 22px !important;
+    background: linear-gradient(90deg, #DFF0FF 0%, #D0E9FF 50%, #CEDDFF 100%) 0 0 / 12px 100% no-repeat, #ffffff !important;
+    border-radius: 6px !important;
+    margin-bottom: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    position: relative !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Hover 状态 - 保持渐变背景 */
+.pplr-wrapper.pplr-checkbox:hover {
+    background: linear-gradient(90deg, #DFF0FF 0%, #D0E9FF 50%, #CEDDFF 100%) 0 0 / 12px 100% no-repeat, #f9fafb !important;
+    border-color: #d1d5db !important;
+}
+
+/* 隐藏原始 checkbox - 但保持可点击 */
+.pplr-wrapper.pplr-checkbox input[type="checkbox"].pplrcheckbox {
+    position: absolute !important;
+    opacity: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+}
+
+/* Label 样式 - 显示图标和文字 */
+.pplr-wrapper.pplr-checkbox .pplrlabel {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #000000 !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    flex: 1 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* 左侧图标 (使用 ::before 伪元素) */
+.pplr-wrapper.pplr-checkbox .pplrlabel::before {
+    content: '' !important;
+    display: block !important;
+    width: 20px !important;
+    height: 20px !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    flex-shrink: 0 !important;
+}
+
+/* Remove icon 使用 MeunIcon (四个圆点) */
+.pplr-wrapper.pplr-checkbox.pplr-remove-icon .pplrlabel::before {
+    background-image: url("data:image/svg+xml,%3Csvg%20version%3D%221.0%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2228%22%20height%3D%2228%22%3E%3Cpath%20d%3D%22M0%200%20C0.825%200.2475%201.65%200.495%202.5%200.75%20C6.29646191%200.94156526%206.29646191%200.94156526%209%200%20C11.5%20-0.25%2011.5%20-0.25%2013.875%201.375%20C15.5%203.75%2015.5%203.75%2015.25%206.25%20C15.0025%207.075%2014.755%207.9%2014.5%208.75%20C14.30843474%2012.54646191%2014.30843474%2012.54646191%2015.25%2015.25%20C15.5%2017.75%2015.5%2017.75%2013.875%2020.125%20C11.5%2021.75%2011.5%2021.75%209%2021.5%20C8.175%2021.2525%207.35%2021.005%206.5%2020.75%20C2.70353809%2020.55843474%202.70353809%2020.55843474%200%2021.5%20C-2.5%2021.75%20-2.5%2021.75%20-4.875%2020.125%20C-6.5%2017.75%20-6.5%2017.75%20-6.25%2015.25%20C-6.0025%2014.425%20-5.755%2013.6%20-5.5%2012.75%20C-5.30843474%208.95353809%20-5.30843474%208.95353809%20-6.25%206.25%20C-6.5%203.75%20-6.5%203.75%20-4.875%201.375%20C-2.5%20-0.25%20-2.5%20-0.25%200%200%20Z%20M-1.5%201.75%20C-2.49%202.74%20-3.48%203.73%20-4.5%204.75%20C-3.84%206.07%20-3.18%207.39%20-2.5%208.75%20C-0.85%208.75%200.8%208.75%202.5%208.75%20C2.5%207.1%202.5%205.45%202.5%203.75%20C1.18%203.09%20-0.14%202.43%20-1.5%201.75%20Z%20M6.5%203.75%20C6.24969023%206.33380177%206.24969023%206.33380177%206.5%208.75%20C8.15%208.75%209.8%208.75%2011.5%208.75%20C12.16%207.43%2012.82%206.11%2013.5%204.75%20C12.52149805%203.72895449%2011.52019573%202.7293879%2010.5%201.75%20C9.03774984%201.65754997%209.03774984%201.65754997%206.5%203.75%20Z%20M-2.5%2012.75%20C-3.16%2014.07%20-3.82%2015.39%20-4.5%2016.75%20C-3.51%2017.74%20-2.52%2018.73%20-1.5%2019.75%20C-0.18%2019.09%201.14%2018.43%202.5%2017.75%20C2.5%2016.1%202.5%2014.45%202.5%2012.75%20C0.85%2012.75%20-0.8%2012.75%20-2.5%2012.75%20Z%20M6.5%2012.75%20C6.5%2014.4%206.5%2016.05%206.5%2017.75%20C8.48%2018.74%208.48%2018.74%2010.5%2019.75%20C11.49%2018.76%2012.48%2017.77%2013.5%2016.75%20C12.84%2015.43%2012.18%2014.11%2011.5%2012.75%20C9.85%2012.75%208.2%2012.75%206.5%2012.75%20Z%22%20fill%3D%22%231B1B1F%22%20transform%3D%22translate(9.5%2C3.25)%22%2F%3E%3C%2Fsvg%3E") !important;
+
+}
+
+/* Remove QR code 使用 QrcodeIcon (QR码样式) */
+.pplr-wrapper.pplr-checkbox.pplr-remove-qr-code .pplrlabel::before {
+    background-image: url("data:image/svg+xml,%3Csvg%20version%3D%221.0%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2228%22%20height%3D%2228%22%3E%3Cpath%20d%3D%22M0%200%20C2.64%200%205.28%200%208%200%20C8%202.64%208%205.28%208%208%20C5.36%208%202.72%208%200%208%20C0%205.36%200%202.72%200%200%20Z%20M2%202%20C2%203.32%202%204.64%202%206%20C3.32%206%204.64%206%206%206%20C6%204.68%206%203.36%206%202%20C4.68%202%203.36%202%202%202%20Z%22%20fill%3D%22%231B1B1F%22%20transform%3D%22translate(16%2C16)%22%2F%3E%3Cpath%20d%3D%22M0%200%20C2.64%200%205.28%200%208%200%20C8%202.64%208%205.28%208%208%20C5.36%208%202.72%208%200%208%20C0%205.36%200%202.72%200%200%20Z%20M2%202%20C2%203.32%202%204.64%202%206%20C3.32%206%204.64%206%206%206%20C6%204.68%206%203.36%206%202%20C4.68%202%203.36%202%202%202%20Z%22%20fill%3D%22%231B1B1F%22%20transform%3D%22translate(4%2C16)%22%2F%3E%3Cpath%20d%3D%22M0%200%20C2.64%200%205.28%200%208%200%20C8%202.64%208%205.28%208%208%20C5.36%208%202.72%208%200%208%20C0%205.36%200%202.72%200%200%20Z%20M2%202%20C2%203.32%202%204.64%202%206%20C3.32%206%204.64%206%206%206%20C6%204.68%206%203.36%206%202%20C4.68%202%203.36%202%202%202%20Z%22%20fill%3D%22%231B1B1F%22%20transform%3D%22translate(16%2C4)%22%2F%3E%3Cpath%20d%3D%22M0%200%20C2.64%200%205.28%200%208%200%20C8%202.64%208%205.28%208%208%20C5.36%208%202.72%208%200%208%20C0%205.36%200%202.72%200%200%20Z%20M2%202%20C2%203.32%202%204.64%202%206%20C3.32%206%204.64%206%206%206%20C6%204.68%206%203.36%206%202%20C4.68%202%203.36%202%202%202%20Z%22%20fill%3D%22%231B1B1F%22%20transform%3D%22translate(4%2C4)%22%2F%3E%3Cpath%20d%3D%22M0%200%20C0.66%200%201.32%200%202%200%20C2%203.63%202%207.26%202%2011%20C-1.63%2011%20-5.26%2011%20-9%2011%20C-9%2010.34%20-9%209.68%20-9%209%20C-6.03%209%20-3.06%209%200%209%20C0%206.03%200%203.06%200%200%20Z%22%20fill%3D%22%231B1B1E%22%20transform%3D%22translate(13%2C4)%22%2F%3E%3Cpath%20d%3D%22M0%200%20C0.66%200%201.32%200%202%200%20C2%202.64%202%205.28%202%208%20C1.34%208%200.68%208%200%208%20C0%205.36%200%202.72%200%200%20Z%22%20fill%3D%22%231B1B1E%22%20transform%3D%22translate(13%2C16)%22%2F%3E%3Cpath%20d%3D%22M0%200%20C2.64%200%205.28%200%208%200%20C8%200.66%208%201.32%208%202%20C5.36%202%202.72%202%200%202%20C0%201.34%200%200.68%200%200%20Z%22%20fill%3D%22%231B1B1E%22%20transform%3D%22translate(16%2C13)%22%2F%3E%3C%2Fsvg%3E") !important;
+
+}
+
+/* 创建自定义复选框（在 label 后面） */
+.pplr-wrapper.pplr-checkbox .pplrlabel::after {
+    content: '' !important;
+    position: relative !important;
+    width: 26px !important;
+    height: 26px !important;
+    border: 2px solid #d1d5db !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    flex-shrink: 0 !important;
+    background: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: auto !important;
+}
+
+/* 选中状态 - 蓝色背景 */
+.pplr-wrapper.pplr-checkbox:has(input[type="checkbox"].pplrcheckbox:checked) .pplrlabel::after,
+.pplr-wrapper.pplr-checkbox input[type="checkbox"].pplrcheckbox:checked~.pplrlabel::after {
+    background: #007AFF !important;
+    border-color: #007AFF !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10' fill='none'%3E%3Cpath d='M1 4.5L5 8.5L13 1' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 14px 10px !important;
+}
+
+/* ============ Checkbox 样式 (Remove icon / Remove QR code) - 完美还原 ============ */
+/* Checkbox 容器 */
+.t4s-line-item-property__field.is--type-checkbox {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: 72px !important;
+    padding: 20px !important;
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    margin-bottom: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    position: relative !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 隐藏原始 checkbox */
+.t4s-line-item-property__field.is--type-checkbox input[type="checkbox"] {
+    position: absolute !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Label 样式 - 显示图标和文字 */
+.t4s-line-item-property__field.is--type-checkbox .t4s-line-item-property__label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    font-size: 17px !important;
+    font-weight: 400 !important;
+    color: #000000 !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+    flex: 1 !important;
+    order: 1 !important;
+}
+
+/* 四方格图标 (使用 ::before 伪元素) */
+.t4s-line-item-property__field.is--type-checkbox .t4s-line-item-property__label::before {
+    content: '' !important;
+    display: block !important;
+    width: 28px !important;
+    height: 28px !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Crect x='6' y='6' width='6' height='6' rx='1' fill='%23666'/%3E%3Crect x='16' y='6' width='6' height='6' rx='1' fill='%23666'/%3E%3Crect x='6' y='16' width='6' height='6' rx='1' fill='%23666'/%3E%3Crect x='16' y='16' width='6' height='6' rx='1' fill='%23666'/%3E%3C/svg%3E") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    flex-shrink: 0 !important;
+}
+
+/* 隐藏 iOS toggle,使用自定义复选框 */
+.t4s-ios-toggle {
+    position: relative !important;
+    width: 26px !important;
+    height: 26px !important;
+    border: 2px solid #d1d5db !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    flex-shrink: 0 !important;
+    order: 2 !important;
+    background: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 隐藏原来的滑块 */
+.t4s-ios-toggle-slider {
+    display: none !important;
+}
+
+/* 复选框打勾图标 */
+.t4s-ios-toggle::after {
+    content: '' !important;
+    display: block !important;
+    width: 14px !important;
+    height: 10px !important;
+    border-left: 2.5px solid #ffffff !important;
+    border-bottom: 2.5px solid #ffffff !important;
+    transform: rotate(-45deg) translateY(-1px) !important;
+    opacity: 0 !important;
+    transition: opacity 0.2s ease !important;
+}
+
+/* 选中状态 - 蓝色背景,显示白色勾 */
+.t4s-line-item-property__field.is--type-checkbox input[type="checkbox"]:checked~.t4s-ios-toggle {
+    background: #007AFF !important;
+    border-color: #007AFF !important;
+}
+
+.t4s-line-item-property__field.is--type-checkbox input[type="checkbox"]:checked~.t4s-ios-toggle::after {
+    opacity: 1 !important;
+}
+
+/* 悬停效果 */
+.t4s-line-item-property__field.is--type-checkbox:hover {
+    background: #f9fafb !important;
+}
+
+kaching-bundles-block {
+    margin-top: 16px !important;
+}
+
+/* ============ QUANTITY 变体选择器样式 (3 Pack, 5 Pack, 10 Pack) ============ */
+/* 变体选择器标题样式 */
+.t4s-swatch__title {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #000000 !important;
+    margin-bottom: 12px !important;
+    /* text-transform: uppercase !important; */
+    /* letter-spacing: 0.5px !important; */
+}
+
+/* 变体选择器列表 - 横向排列 */
+.t4s-swatch__list {
+    display: flex !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+}
+
+/* 变体选择按钮样式 - 像素级还原图片样式 - 只针对非颜色选择器 */
+.t4s-swatch__item:not(.is-sw__color) {
+    min-width: 100px !important;
+    height: 56px !important;
+    padding: 16px 24px !important;
+    padding-left: 32px !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 200ms ease !important;
+    text-align: center !important;
+    position: relative !important;
+    overflow: visible !important;
+}
+
+/* 左侧渐变蓝色背景条 - 只针对非颜色选择器 */
+.t4s-swatch__item:not(.is-sw__color)::before {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 20px !important;
+    background: linear-gradient(90deg, #DFF0FF 0%, #D0E9FF 50%, #CEDDFF 100%) !important;
+    border-radius: 10px 0 0 10px !important;
+    z-index: 0 !important;
+}
+
+/* 悬停效果 - 只针对非颜色选择器 */
+.t4s-swatch__item:not(.is-sw__color):hover {
+    border-color: #3b82f6 !important;
+    background: #f8faff !important;
+}
+
+/* 选中状态 - 蓝色边框 - 只针对非颜色选择器 */
+.t4s-swatch__item:not(.is-sw__color).is--selected {
+    border-color: #3b82f6 !important;
+    border-width: 2px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15) !important;
+}
+
+/* 选中状态 - 右下角白色✔图标 - 只针对非颜色选择器 */
+.t4s-swatch__item:not(.is-sw__color).is--selected::after {
+    content: "✔" !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    background: #007BFF !important;
+    border-radius: 8px 0 8px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+    z-index: 2 !important;
+}
+
+/* 移动端优化 - 只针对非颜色选择器 */
+@media (max-width: 767px) {
+    .t4s-swatch__item:not(.is-sw__color) {
+        min-width: 85px !important;
+        height: 48px !important;
+        padding: 12px 20px !important;
+        padding-left: 28px !important;
+        font-size: 14px !important;
+    }
+
+    .t4s-swatch__item:not(.is-sw__color)::before {
+        width: 16px !important;
+    }
+
+    .t4s-swatch__item:not(.is-sw__color).is--selected::after {
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 12px !important;
+    }
+}
+
+/* ============ 商品数量选择器 - 像素级还原 ============ */
+
+/* 让数量选择器独立占据一行 */
+.t4s-product-form__buttons {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.t4s-product-form__buttons>.t4s-d-flex {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+}
+
+/* 数量选择器容器 - 独立一行，左对齐，更宽 */
+.t4s-quantity-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    background: #ffffff !important;
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb !important;
+
+    padding: 0 !important;
+    min-height: 48px !important;
+    width: 100% !important;
+    max-width: 340px !important;
+    margin: 0 10px 0 0 !important;
+    order: -1 !important;
+}
+
+/* 数量标签 */
+.t4s-quantity-wrapper::before {
+    content: 'Quantity :' !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #000000 !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+}
+
+/* 减号按钮 */
+.t4s-quantity-selector.is--minus {
+    width: 40px !important;
+    height: 32px !important;
+    min-width: 40px !important;
+    border: none !important;
+    border-radius: 10px !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 200ms ease !important;
+    box-shadow: 0px 2px 6px 0px rgba(53, 53, 57, 0.2) !important;
+}
+
+/* 数量输入框 */
+.t4s-quantity-input {
+    width: 60px !important;
+    height: 32px !important;
+    border: none !important;
+    border-radius: 10px !important;
+    text-align: center !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+    padding: 0 8px !important;
+    margin: 0 8px !important;
+    appearance: textfield !important;
+    -moz-appearance: textfield !important;
+    -webkit-appearance: textfield !important;
+    box-shadow: 0px 2px 6px 0px rgba(53, 53, 57, 0.2) !important;
+}
+
+.t4s-quantity-input::-webkit-outer-spin-button,
+.t4s-quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+.t4s-quantity-input:focus {
+    outline: none !important;
+    box-shadow: 0px 2px 8px 0px rgba(53, 53, 57, 0.2) !important;
+}
+
+/* 加号按钮 */
+.t4s-quantity-selector.is--plus {
+    width: 40px !important;
+    height: 32px !important;
+    min-width: 40px !important;
+    border: none !important;
+    border-radius: 10px !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 16px 0 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 200ms ease !important;
+    box-shadow: 0px 2px 6px 0px rgba(53, 53, 57, 0.2) !important;
+}
+
+/* 按钮图标 */
+.t4s-quantity-selector svg {
+    width: 12px !important;
+    height: 12px !important;
+    color: #6b7280 !important;
+}
+
+/* 按钮悬停效果 */
+.t4s-quantity-selector:hover {
+    background: #f9fafb !important;
+    box-shadow: 0px 3px 8px 0px rgba(53, 53, 57, 0.2) !important;
+}
+
+.t4s-quantity-selector:hover svg {
+    color: #000000 !important;
+}
+
+/* 按钮禁用状态 */
+.t4s-quantity-selector:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+.t4s-quantity-selector:disabled:hover {
+    background: #ffffff !important;
+    box-shadow: 0px 2px 6px 0px rgba(53, 53, 57, 0.2) !important;
+}
+
+/* Mini Cart 数量选择器 - 隐藏 Quantity 标签 */
+.t4s-quantity-cart-item::before,
+.t4s-cart__actions-row .t4s-quantity-wrapper::before,
+.t4s-mini_cart .t4s-quantity-wrapper::before,
+[data-cart-items] .t4s-quantity-wrapper::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* Mini Cart 数量选择器样式调整 */
+.t4s-quantity-cart-item,
+.t4s-cart__actions-row .t4s-quantity-wrapper,
+.t4s-mini_cart .t4s-quantity-wrapper,
+[data-cart-items] .t4s-quantity-wrapper {
+    max-width: 100% !important;
+    width: auto !important;
+    justify-content: center !important;
+}
+
+.t4s-quantity-cart-item .t4s-quantity-selector.is--minus,
+.t4s-cart__actions-row .t4s-quantity-selector.is--minus,
+.t4s-mini_cart .t4s-quantity-selector.is--minus,
+[data-cart-items] .t4s-quantity-selector.is--minus {
+    margin: 0 !important;
+}
+
+/* 移动端数量选择器优化 */
+@media (max-width: 767px) {
+    .t4s-quantity-wrapper {
+        min-height: 44px !important;
+        max-width: 100% !important;
+        margin-bottom: 10px !important;
+    }
+
+    .t4s-quantity-wrapper::before {
+        font-size: 13px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .t4s-quantity-selector.is--minus {
+        width: 36px !important;
+        height: 28px !important;
+        min-width: 36px !important;
+    }
+
+    .t4s-quantity-selector.is--plus {
+        width: 36px !important;
+        height: 28px !important;
+        min-width: 36px !important;
+        margin: 0 12px 0 0 !important;
+    }
+
+    .t4s-quantity-input {
+        width: 55px !important;
+        height: 28px !important;
+        font-size: 13px !important;
+    }
+
+    /* Mini Cart 移动端调整 */
+    .t4s-quantity-cart-item .t4s-quantity-selector.is--plus,
+    .t4s-cart__actions-row .t4s-quantity-selector.is--plus,
+    .t4s-mini_cart .t4s-quantity-selector.is--plus,
+    [data-cart-items] .t4s-quantity-selector.is--plus {
+        margin: 0 !important;
+    }
+}
+
+/* ============ ADD TO CART 按钮 - 像素级还原 ============ */
+.t4s-product-form__submit {
+    min-height: 56px !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 200ms ease !important;
+}
+
+.t4s-product-form__submit:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* ============ Zakeke 定制按钮样式 ============ */
+/* 使用属性选择器 [style] 来覆盖内联样式 */
+button.zakeke-product-button.btn.button[style*="width"],
+button.zakeke-product-button.btn.button[data-product-id],
+button.zakeke-product-button[style],
+.zakeke-product-button[style] {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    /* min-height: 56px !important; */
+    /* border-radius: 12px !important; */
+    /* font-size: 16px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important; */
+    letter-spacing: 0.5px !important;
+    transition: all 200ms ease !important;
+    border: none !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px 24px !important;
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    animation: none !important;
+}
+
+button.zakeke-product-button.btn.button[style*="width"]:hover,
+button.zakeke-product-button.btn.button[data-product-id]:hover,
+button.zakeke-product-button[style]:hover,
+.zakeke-product-button[style]:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Zakeke 按钮文字 */
+button.zakeke-product-button span,
+.zakeke-product-button span {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* 额外的覆盖规则 - 针对 Zakeke 容器 */
+#shopify-block-AN2NWazU0NWxWb09BZ__zakeke_product_customiser_2d3d_zakeke_customize_TqgPpr button,
+[class*="zakeke"] button.btn {
+    width: 100% !important;
+}
+
+/*---------------- Global Custom CSS -------------------*/
+    {
+        {
+        settings.global_css
+    }
+}
+
+/* ============ Product Personalizer 颜色选择器样式定制 ============ */
+
+/* 禁用 tooltip 悬停预览图片 */
+.swtooltip {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+.pplr-swatch-element:hover .swtooltip,
+.pplrimage:hover .swtooltip,
+.swtooltip.after,
+.swtooltip.sleftbefore {
+    display: none !important;
+}
+
+/* Color 标题样式 - 可在后台 Theme Settings > Product Personalizer 调节 */
+.pplr-wrapper.pplr-color .pplrlabel {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    /* text-transform: uppercase !important; */
+    color: #000000 !important;
+    margin-bottom: 0px !important;
+    letter-spacing: 0.5px !important;
+    padding: 0 !important;
+}
+
+/* 颜色选择器容器 */
+.pplrgcolor.pplr_thumb_image {
+    display: flex !important;
+    flex-wrap: wrap !important;
+
+    gap: {
+            {
+            settings.pplr_color_swatch_gap | default: 8
+        }
+    }
+
+    px !important;
+    align-items: center !important;
+}
+
+/* 颜色色块样式 - 圆形设计，默认无边框 */
+.pplr-swatch-element.pplrimage {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* 隐藏文本标签 */
+.pplr-swatch-element .img_dropdown {
+    display: none !important;
+}
+
+.pplr-swatch-element.pplrimage {
+    background-size: auto !important;
+}
+
+
+/* 选中状态 - 淡蓝色方形边框 */
+.pplr-swatch-element.pplrimage.selected {
+    border: 2px solid #5091f8 !important;
+    /* border-radius: 4px !important; */
+    box-shadow: none !important;
+    background-size: auto !important;
+
+}
+
+/* 悬停效果 - 轻微缩放 */
+.pplr-swatch-element.pplrimage:hover {
+    transform: scale(1.05) !important;
+}
+
+/* 禁用主题自带颜色选择器的 tooltip */
+.t4s-tooltip {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+.is-t4s-style__color .t4s-swatch__item[data-tooltip] {
+    pointer-events: auto !important;
+}
+
+.is-t4s-style__color .t4s-swatch__item[data-tooltip]:hover::before,
+.is-t4s-style__color .t4s-swatch__item[data-tooltip]:hover::after {
+    display: none !important;
+}
+
+/*---------------- Custom CSS for only desktop -------------------*/
+@media (min-width: 1025px) {
+        {
+            {
+            settings.desktop_css
+        }
+    }
+}
+
+/*---------------- Custom CSS for tablet, mobile -------------------*/
+@media (max-width: 1024px) {
+        {
+            {
+            settings.tablet_mobile_css
+        }
+    }
+}
+
+/*---------------- Custom CSS for only tablet -------------------*/
+@media (min-width: 768px) and (max-width: 1024px) {
+        {
+            {
+            settings.tablet_css
+        }
+    }
+}
+
+/*---------------- Custom CSS for only mobile -------------------*/
+@media (max-width: 767px) {
+
+    /* PPLR Checkbox 移动端优化 */
+    .pplr-wrapper.pplr-checkbox {
+        min-height: 40px !important;
+        padding: 8px 8px 8px 18px !important;
+        background: linear-gradient(90deg, #DFF0FF 0%, #D0E9FF 50%, #CEDDFF 100%) 0 0 / 8px 100% no-repeat, #ffffff !important;
+        border-radius: 6px !important;
+    }
+
+    .pplr-wrapper.pplr-checkbox:hover {
+        background: linear-gradient(90deg, #DFF0FF 0%, #D0E9FF 50%, #CEDDFF 100%) 0 0 / 8px 100% no-repeat, #f9fafb !important;
+    }
+
+    /* 缩小文字和图标 */
+    .pplr-wrapper.pplr-checkbox .pplrlabel {
+        gap: 4px !important;
+        font-size: 9px !important;
+    }
+
+
+    /* 缩小左侧图标 */
+    .pplr-wrapper.pplr-checkbox .pplrlabel::before {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    /* 缩小自定义复选框 */
+    .pplr-wrapper.pplr-checkbox .pplrlabel::after {
+        width: 20px !important;
+        height: 20px !important;
+        border-width: 1.5px !important;
+    }
+
+    /* 缩小选中状态的勾选图标 */
+    .pplr-wrapper.pplr-checkbox:has(input[type="checkbox"].pplrcheckbox:checked) .pplrlabel::after,
+    .pplr-wrapper.pplr-checkbox input[type="checkbox"].pplrcheckbox:checked~.pplrlabel::after {
+        background-size: 11px 8px !important;
+    }
+
+        {
+            {
+            settings.mobile_css
+        }
+    }
+}

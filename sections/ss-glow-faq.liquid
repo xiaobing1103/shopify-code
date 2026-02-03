@@ -1,0 +1,392 @@
+{% assign cards = section.blocks | where: "type", "card" %}
+<div class="glow-faq-section">
+  <h2 class="grodas-accordion-section__title">{{ section.settings.title }}</h2>
+  <div class="grodas-ac-cards js-grodas-ac-cards" data-collapse="{{ section.settings.collapse_other }}">
+    {% for card in cards %}
+      <div class="grodas-ac-card js-grodas-ac-card {% if forloop.first %}{% if section.settings.open_first %}grodas-ac-card--active{% endif %}{% endif %}">
+        <div class="grodas-ac-card__wrapper js-grodas-ac-card-wrapper js-grodas-ac-card-trigger">
+          <button class="grodas-ac-card__button js-grodas-ac-card-button" type="button"></button>
+          <h3 class="grodas-ac-card__title js-grodas-ac-card-trigger">{{ card.settings.title }}</h3>
+          <p class="grodas-ac-card__content">{{ card.settings.content | newline_to_br }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "SS - Glow FAQ",
+	"tag": "section",
+	"class": "grodas-accordion-section",
+    "settings": [
+		{
+			"type": "richtext",
+			"id": "title",
+			"label": "Title",
+			"default": "<p>Frequently Asked Questions</p>"
+		},
+		{
+			"type": "checkbox",
+			"id": "collapse_other",
+			"label": "Collapse other cards on click",
+			"default": true
+		},
+        {
+			"type": "checkbox",
+			"id": "open_first",
+			"label": "First card open",
+			"default": true
+		},
+		{
+        "type": "range",
+        "id": "header_font_size",
+        "min": 12,
+        "max": 120,
+        "step": 2,
+        "unit": "px",
+        "label": "Header Font Size",
+        "default": 42
+    	},
+		{
+        "type": "range",
+        "id": "header_mob_font_size",
+        "min": 12,
+        "max": 120,
+        "step": 2,
+        "unit": "px",
+        "label": "Mobile Header Font Size",
+        "default": 28
+    	},
+        {
+            "type": "header",
+            "content": "Colors"
+        },
+        {
+            "type": "color",
+            "id": "question_color",
+            "label": "Title color when collapsed",
+            "default": "#DBD7F2"
+        },
+      {
+            "type": "color",
+            "id": "content_text_color",
+            "label": "Content color",
+            "default": "#121212"
+        },
+        {
+            "type": "color",
+            "id": "blur_color",
+            "label": "Accordion Icon Blur color",
+            "default": "#DBD7F2"
+        },
+        {
+           "type": "header",
+           "content": "Gradient color settings"
+        },
+		{
+            "type": "color",
+            "id": "gradient_color_1",
+            "label": "Gradient color 1",
+            "default": "#4222DE"
+        },
+        {
+            "type": "color",
+            "id": "gradient_color_2",
+            "label": "Gradient color 2",
+            "default": "#659BFF"
+        },
+        {
+            "type": "color",
+            "id": "gradient_color_3",
+            "label": "Gradient color 3",
+            "default": "#7FF6E8"
+        }
+	],
+	"blocks": [
+		{
+			"type": "card",
+			"name": "Card",
+			"settings": [
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Title",
+					"default": "How fast do you deliver?"
+				},
+				{
+					"type": "textarea",
+					"id": "content",
+					"label": "Content",
+					"default": "US + CA 2 days, EU 3 days, ROW 5 days"
+				}
+			]
+		}
+	],
+     "presets": [
+    {
+      "name": "SS - Glow FAQ",
+      "blocks": [
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        }
+      ]
+    }
+  ]
+  }
+{% endschema %}
+
+
+<style>
+  
+    .glow-faq-section {
+		padding: 5rem;
+    }
+  
+	.grodas-accordion-section {
+		margin: 0 auto;
+		padding: 0;
+	}
+	
+	.grodas-accordion-section__title p {
+		margin: 0;
+    	padding: 0px 3rem;
+		font-weight: 600;
+     	font-size: {{ section.settings.header_font_size }}px;
+		line-height: 1.5em;
+		text-transform: none;
+		text-align: center;
+		-webkit-transition: background 0.4s;
+		-o-transition: background 0.4s;
+		transition: background 0.4s;
+	}
+	
+	.grodas-accordion-section__title em {
+		display: inline-block;
+		font-style: normal;
+		background: -o-linear-gradient(353.9deg, #4222DE 0%, #659BFF 53.03%, #7FF7E8 103.23%);
+		background: linear-gradient(96.1deg, #4222DE 0%, #659BFF 53.03%, #7FF7E8 103.23%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+	
+	.grodas-ac-cards {
+      	max-width:900px;
+		margin: 0 auto;
+	}
+	
+	.grodas-ac-card {
+		position: relative;
+		background: transparent;
+		padding: 1px;
+		border-radius: 15px;
+		margin-top: 28px;
+		-webkit-box-shadow: 4px 4px 20px {{section.settings.blur_color}};
+				box-shadow: 4px 4px 20px {{section.settings.blur_color}};
+	}
+	
+	.grodas-ac-card:first-child {
+		margin-top: 41px;
+	}
+	
+	.grodas-ac-card--active {
+		background: linear-gradient(to right, {{section.settings.gradient_color_1}} 0%,{{section.settings.gradient_color_2}} 50%, {{section.settings.gradient_color_3}});
+	}
+	
+	.grodas-ac-card__wrapper {
+		width: 100%;
+		height: 100%;
+		max-height: 200px;
+		background: #fff;
+		padding: 18px 16px 18px 18px;
+		border-radius: 15px;
+		-webkit-transition: max-height 0.3s ease-out;
+		-o-transition: max-height 0.3s ease-out;
+		transition: max-height 0.3s ease-out;
+		overflow: hidden;
+		cursor: pointer;
+	}
+	
+	.grodas-ac-card--active .grodas-ac-card__wrapper {
+		max-height: 1000px;
+		-webkit-transition: max-height 0.4s ease-in;
+		-o-transition: max-height 0.4s ease-in;
+		transition: max-height 0.4s ease-in;
+	}
+	
+	.grodas-ac-card__button {
+		position: absolute;
+		display: block;
+		width: 16px;
+		height: 16px;
+		top: 21.5px;
+		right: 21px;
+		background-color: transparent;
+		border: none;
+		margin: 0;
+		padding: 0;
+		background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTciIGhlaWdodD0iMTciIHZpZXdCb3g9IjAgMCAxNyAxNyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0wLjYwMjY5IDguNjkyMTRDMC42MDI2OSA4LjEzOTg1IDEuMDUwNDEgNy42OTIxNCAxLjYwMjY5IDcuNjkyMTRMNy42NzM3NiA3LjY5MjE0TDcuNjczNzYgMS42MjEwN0M3LjY3Mzc2IDEuMDY4NzkgOC4xMjE0NyAwLjYyMTA3MSA4LjY3Mzc2IDAuNjIxMDcxQzkuMjI2MDQgMC42MjEwNzEgOS42NzM3NiAxLjA2ODc5IDkuNjczNzYgMS42MjEwN0w5LjY3Mzc2IDcuNjkyMTRIMTUuNzQ0OEMxNi4yOTcxIDcuNjkyMTQgMTYuNzQ0OCA4LjEzOTg1IDE2Ljc0NDggOC42OTIxNEMxNi43NDQ4IDkuMjQ0NDIgMTYuMjk3MSA5LjY5MjE0IDE1Ljc0NDggOS42OTIxNEg5LjY3Mzc2TDkuNjczNzYgMTUuNzYzMkM5LjY3Mzc2IDE2LjMxNTUgOS4yMjYwNCAxNi43NjMyIDguNjczNzYgMTYuNzYzMkM4LjEyMTQ3IDE2Ljc2MzIgNy42NzM3NiAxNi4zMTU1IDcuNjczNzYgMTUuNzYzMlY5LjY5MjE0TDEuNjAyNjkgOS42OTIxNEMxLjA1MDQxIDkuNjkyMTQgMC42MDI2OSA5LjI0NDQyIDAuNjAyNjkgOC42OTIxNFoiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl80Nl8yNzApIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfNDZfMjcwIiB4MT0iLTAuOTAyMjMyIiB5MT0iNy4wMTc3OSIgeDI9IjE1LjMzNCIgeTI9IjIuNDE4ODkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzBCMTEyOCIvPgo8c3RvcCBvZmZzZXQ9IjAuMDAwMSIgc3RvcC1jb2xvcj0iIzIxMjU2MCIvPgo8c3RvcCBvZmZzZXQ9IjAuMzAyMDgzIiBzdG9wLWNvbG9yPSIjMTIxODNDIi8+CjxzdG9wIG9mZnNldD0iMC41NjA3MzEiIHN0b3AtY29sb3I9IiMwQjExMjgiLz4KPHN0b3Agb2Zmc2V0PSIwLjcyOTE2NyIgc3RvcC1jb2xvcj0iIzBCMTEyOCIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMxMjE3M0QiLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K);
+		background-repeat: no-repeat;
+		background-size: 16px 16px;
+		background-position: center center;
+		cursor: pointer;
+		outline: none;
+	}
+	
+	.grodas-ac-card__button:hover,
+	.grodas-ac-card__button:focus {
+		background-color: transparent;
+		outline: none;
+	}
+	
+	.grodas-ac-card--active .grodas-ac-card__button {
+		background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMiIgdmlld0JveD0iMCAwIDE4IDIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjAuMTg4NDc3IiB3aWR0aD0iMTciIGhlaWdodD0iMiIgcng9IjEiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl80Nl8yNjkpIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MF9saW5lYXJfNDZfMjY5IiB4MT0iMC4xODg0NzciIHkxPSIwIiB4Mj0iMTAuODM3NiIgeTI9IjkuNjY2MTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzQyMjJERSIvPgo8c3RvcCBvZmZzZXQ9IjAuNTEzNzA4IiBzdG9wLWNvbG9yPSIjNjU5QkZGIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzdGRjdFOCIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=);
+		background-size: 17px 2px;
+	}
+	
+	.grodas-ac-card__title {
+        color: {{section.settings.question_color}};
+		margin: 0;
+		padding: 0 24px 0 0;
+		font-weight: 500;
+		font-size: 16px;
+		line-height: 1.5;
+		text-transform: none;
+		cursor: pointer;
+	}
+	
+	.grodas-ac-card--active .grodas-ac-card__title {
+		display: inline-block;
+        background: linear-gradient(to right, {{section.settings.gradient_color_1}} 0%,{{section.settings.gradient_color_2}} 50%, {{section.settings.gradient_color_3}});
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		-webkit-transition: background 0.4s;
+		-o-transition: background 0.4s;
+		transition: background 0.4s;
+	}
+	
+	.grodas-ac-card__content {
+		padding: 0;
+		margin: 0;
+		max-height: 0;
+		opacity: 0;
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 1.5;
+		-webkit-transition: all 0.4s ease-out;
+		-o-transition: all 0.4s ease-out;
+		transition: all 0.4s ease-out;
+	}
+	
+	.grodas-ac-card--active .grodas-ac-card__content {
+        color: {{ section.settings.content_text_color }};
+		padding-top: 7px;
+		max-height: 1000px;
+		opacity: 1;
+		-webkit-transition: all 0.4s ease-in;
+		-o-transition: all 0.4s ease-in;
+		transition: all 0.4s ease-in;
+	}
+	
+    @media (max-width: 767px) {
+      .glow-faq-section{
+      	padding: 3rem 1.5rem;
+      }
+      .grodas-accordion-section__title p {
+      	padding: 0px;
+        font-size: {{ section.settings.header_mob_font_size }}px;
+      }
+    }
+	@media only screen and (min-width: 415px) {
+		.grodas-accordion-section {
+			max-width: 828px;
+		}
+	
+		.grodas-accordion-section__title {
+			font-size: 32px;
+		}
+	
+		.grodas-ac-card {
+			margin-top: 25px;
+		}
+	
+		.grodas-ac-card:first-child {
+			margin-top: 51px;
+		}
+	
+		.grodas-ac-card__wrapper {
+			padding: 15px 25px;
+		}
+	
+		.grodas-ac-card__title {
+			font-size: 18px;
+		}
+	
+		.grodas-ac-card__content {
+			font-size: 18px;
+			line-height: 2em;
+		}
+	
+		.grodas-ac-card--active .grodas-ac-card__content {
+			padding-top: 14px;
+		}
+	}
+	
+	@media only screen and (min-width: 1025px) {
+		.grodas-accordion-section {
+			max-width: 1242px;
+		}
+	
+		.grodas-ac-card {
+			margin-top: 25px;
+		}
+	
+		.grodas-ac-card:first-child {
+			margin-top: 42px;
+		}
+	
+		.grodas-ac-card__wrapper {
+			padding: 15px 25px
+		}
+	
+		.grodas-ac-card__button {
+		}
+	
+		.grodas-ac-card--active .grodas-ac-card__content {
+			padding-top: 0px;
+		}
+	}
+</style>
+
+<script>
+  (function () {
+  	Array.from(document.querySelectorAll(".js-grodas-ac-cards")).forEach(cards => {
+      cards.onclick = function (event) {
+        let collapseOther = cards.getAttribute("data-collapse");
+        let trigger = event.target.closest(".js-grodas-ac-card-trigger");
+        let card = event.target.closest(".js-grodas-ac-card");
+        let content = event.target.closest(".grodas-ac-card__content");
+
+        if (content) return;
+        if (!trigger) return;
+        if (!card) return;
+        if (!cards.contains(trigger)) return;
+
+        if (collapseOther === "true") {
+          let cardActive = card.classList.contains("grodas-ac-card--active");
+          Array.from(cards.querySelectorAll(".js-grodas-ac-card")).forEach(c => c.classList.remove("grodas-ac-card--active"));
+          if (!cardActive) card.classList.add("grodas-ac-card--active");
+        } else {
+          card.classList.toggle("grodas-ac-card--active"); 
+        }
+      };
+    });
+  })();
+</script>

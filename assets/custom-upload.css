@@ -1,0 +1,212 @@
+/* ============================================
+   Custom Image Upload Component Styles
+   替代 Product Personalizer 的自定义上传组件
+   ============================================ */
+
+.t4s-custom-upload {
+  margin: 16px 0;
+  width: 100%;
+}
+
+/* 标签样式 */
+.t4s-custom-upload__label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000000;
+  margin: 0 0 8px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* 上传容器 */
+.t4s-custom-upload__container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 隐藏原生文件输入 */
+.t4s-custom-upload__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 自定义上传按钮 */
+.t4s-custom-upload__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: transparent;
+  border: 1px solid rgba(25, 118, 210, 0.5);
+  border-radius: 8px;
+  color: #1976d2;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 200ms ease;
+  width: fit-content;
+  min-width: 150px;
+}
+
+.t4s-custom-upload__button:hover {
+  background: rgba(25, 118, 210, 0.04);
+  border-color: #1976d2;
+}
+
+.t4s-custom-upload__button:active {
+  transform: scale(0.98);
+}
+
+/* 上传图标 */
+.t4s-custom-upload__icon {
+  flex-shrink: 0;
+}
+
+/* 文件名显示 */
+.t4s-custom-upload__filename {
+  font-size: 12px;
+  color: #6b7280;
+  padding: 4px 0;
+  word-break: break-all;
+}
+
+/* 预览区域包装 */
+.t4s-custom-upload__preview-wrapper {
+  margin-top: 12px;
+}
+
+/* 预览容器 */
+.t4s-custom-upload__preview {
+  position: relative;
+  display: inline-block;
+  max-width: 150px;
+}
+
+/* 预览图片 */
+.t4s-custom-upload__preview-img {
+  max-width: 150px;
+  max-height: 150px;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  object-fit: contain;
+  background: #f9fafb;
+}
+
+/* 移除按钮 */
+.t4s-custom-upload__remove {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  background: #ef4444;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.t4s-custom-upload__remove:hover {
+  background: #dc2626;
+  transform: scale(1.1);
+}
+
+.t4s-custom-upload__remove svg {
+  fill: white;
+}
+
+/* ============================================
+   设计备注输入框样式
+   ============================================ */
+
+.t4s-custom-upload__note-section {
+  margin-bottom: 16px;
+}
+
+.t4s-custom-upload__note-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #374151;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.t4s-custom-upload__note-input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.t4s-custom-upload__note-input::placeholder {
+  color: #9ca3af;
+}
+
+.t4s-custom-upload__note-input:hover {
+  border-color: #9ca3af;
+}
+
+.t4s-custom-upload__note-description {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 6px 0 0;
+  line-height: 1.4;
+}
+
+/* ============================================
+   购物车中的上传图片显示样式
+   ============================================ */
+
+/* 上传图片显示容器 - 在属性区域显示 */
+.t4s-cart-uploaded-image-display {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.t4s-cart-uploaded-image-display img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+/* 响应式调整 */
+@media (max-width: 767px) {
+  .t4s-custom-upload__button {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .t4s-custom-upload__preview {
+    max-width: 120px;
+  }
+  
+  .t4s-custom-upload__preview-img {
+    max-width: 120px;
+    max-height: 120px;
+  }
+}
