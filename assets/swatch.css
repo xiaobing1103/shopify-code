@@ -36,7 +36,7 @@
 t4s-color-mode__circle 
 t4s-selector-mode__circle  */
 .t4s-swatch__option {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 .t4s-swatch__list {
     margin: 10px -5px 0;

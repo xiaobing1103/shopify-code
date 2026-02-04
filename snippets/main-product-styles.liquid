@@ -1,0 +1,195 @@
+{%- comment -%} 按钮样式确保正确应用 {%- endcomment -%}
+<style>
+  /* 确保按钮样式正确应用 */
+  .t4s-product-form__submit.t4s-btn {
+    transition: all 0.3s ease;
+  }
+  
+  /* Custom 按钮颜色样式 */
+  .t4s-btn-color-custom {
+    color: var(--btn-color, #ffffff) !important;
+    background-color: var(--btn-background, #000000) !important;
+    border-color: var(--btn-background, #000000) !important;
+  }
+  
+  .t4s-btn-color-custom:hover {
+    color: var(--btn-color-hover, #ffffff) !important;
+    background-color: var(--btn-background-hover, #333333) !important;
+    border-color: var(--btn-background-hover, #333333) !important;
+  }
+  
+  /* 确保按钮效果正确应用 */
+  .t4s-btn-effect-fade:hover {
+    opacity: 0.8;
+  }
+  
+  .t4s-btn-effect-rectangle-out {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .t4s-btn-effect-rectangle-out:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--btn-background-hover, #333333);
+    transition: left 0.3s ease;
+    z-index: -1;
+  }
+  
+  .t4s-btn-effect-rectangle-out:hover:before {
+    left: 0;
+  }
+</style>
+
+{%- comment -%} Product Personalizer 动态样式 {%- endcomment -%}
+<style>
+  /* Product Personalizer 整体容器边距 */
+  .product-personalizer.pplr_background {
+    padding: 0px !important;  /* 内边距 - 可根据需要调整 */
+    margin: 0px 0 !important;  /* 外边距 上下20px 左右0 - 可根据需要调整 */
+  }
+
+  /* 每个选项包装器的边距 */
+  .pplr-wrapper, .t4s-line-item-property__field {
+    margin-bottom: 10px !important;  /* 选项之间的间距 - 可根据需要调整 */
+  }
+
+  /* Color Selector 样式 */
+  .pplr-wrapper.pplr-color .pplrlabel {
+    font-size: {{ se_stts.pplr_color_title_size | default: 14 }}px !important;
+    font-weight: {{ se_stts.pplr_color_title_weight | default: 400 }} !important;
+  }
+  .pplrgcolor.pplr_thumb_image {
+    gap: {{ se_stts.pplr_color_swatch_gap | default: 8 }}px !important;
+  }
+  .pplr-swatch-element.pplrimage {
+    width: {{ se_stts.pplr_color_swatch_size | default: 40 }}px !important;
+    height: {{ se_stts.pplr_color_swatch_size | default: 40 }}px !important;
+  }
+  .pplr-swatch-element.pplrimage.selected {
+    border: {{ se_stts.pplr_color_selected_border | default: 2 }}px solid {{ se_stts.pplr_color_selected_border_color | default: '#3b82f6' }} !important;
+  }
+
+  /* Text Input 下方说明文字 */
+  {%- if se_stts.pplr_text_input_note != blank -%}
+  .pplr-wrapper.pplr-text::after,
+  .pplr-wrapper.pplr-single-line-text::after {
+    content: "{{ se_stts.pplr_text_input_note | replace: '"', "'" }}" !important;
+    display: block !important;
+    font-size: {{ se_stts.pplr_text_note_size | default: 10 }}px !important;
+    line-height: 1.4 !important;
+    color: {{ se_stts.pplr_text_note_color | default: '#dddddd' }} !important;
+    margin-top: 6px !important;
+    font-weight: 400 !important;
+  }
+  {%- endif -%}
+
+  /* Upload Logo 按钮自定义颜色 */
+  .pplrfileuploadbutton::before {
+    background-color: {{ se_stts.pplr_upload_btn_bg_color | default: 'transparent' }} !important;
+    color: {{ se_stts.pplr_upload_btn_text_color | default: '#1976d2' }} !important;
+    border-color: {{ se_stts.pplr_upload_btn_border_color | default: 'rgba(25, 118, 210, 0.5)' }} !important;
+  }
+
+  .pplrfileuploadbutton:hover::before {
+    background-color: {{ se_stts.pplr_upload_btn_bg_hover_color | default: 'rgba(25, 118, 210, 0.04)' }} !important;
+    border-color: {{ se_stts.pplr_upload_btn_text_color | default: '#1976d2' }} !important;
+  }
+
+  /* Upload Logo 按钮文字自定义 */
+  .pplrfileuploadbutton::after {
+    {% if se_stts.pplr_upload_btn_text != blank %}
+    content: '{{ se_stts.pplr_upload_btn_text | escape }}' !important;
+    {% endif %}
+  }
+</style>
+
+{%- if media_heading != blank -%}
+  <style>
+    .t4s-product-media-heading-{{ se_id }} {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 10;
+      font-size: {{ media_heading_size }}px;
+      line-height: {{ media_heading_height }}%;
+      color: {{ media_heading_color }};
+      {% if media_heading_bg_gradient != blank %}
+      background: {{ media_heading_bg_gradient }};
+      {% else %}
+      background: {{ media_heading_bg_color }};
+      {% endif %}
+      padding: {{ media_heading_padding_v }}px {{ media_heading_padding_h }}px;
+      border-radius: {{ media_heading_radius }}px;
+      border: {{ media_heading_border_width }}px solid {{ media_heading_border_color }};
+      font-weight: 500;
+      {% if media_heading_show_desktop %}
+      display: block;
+      {% else %}
+      display: none;
+      {% endif %}
+    }
+
+    @media (max-width: 767px) {
+      .t4s-product-media-heading-{{ se_id }} {
+        {% if media_heading_show_mobile %}
+        display: block;
+        {% else %}
+        display: none;
+        {% endif %}
+      }
+    }
+  </style>
+{%- endif -%}
+
+{%- if media_custom_img_enable and media_custom_img != blank -%}
+  <style>
+    .t4s-product-media-custom-img-{{ se_id }} {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      width: {{ media_custom_img_width }}px;
+      height: {{ media_custom_img_width }}px;
+      border-radius: {{ media_custom_img_radius }}px;
+      overflow: hidden;
+      {% if media_custom_img_show_desktop %}
+      display: block;
+      {% else %}
+      display: none;
+      {% endif %}
+    }
+    .t4s-product-media-custom-img-{{ se_id }} img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    @media (max-width: 767px) {
+      .t4s-product-media-custom-img-{{ se_id }} {
+        {% if media_custom_img_show_mobile %}
+        display: block;
+        {% else %}
+        display: none;
+        {% endif %}
+      }
+    }
+  </style>
+{%- endif -%}
+
+<style>
+  /* 覆盖 Product Personalizer 插件的默认 margin-bottom */
+  .product-personalizer .pplr-wrapper.pplr-text,
+  .product-personalizer .pplr-wrapper.pplr-single-line-text {
+    margin-bottom: 0px !important;
+  }
+
+  /* 如果上面的不生效，使用更具体的选择器 */
+  #pplr-{{ product.id }} .pplr-wrapper.pplr-text,
+  #pplr-{{ product.id }} .pplr-wrapper.pplr-single-line-text {
+    margin-bottom: 0px !important;
+  }
+</style>

@@ -1077,6 +1077,39 @@
                     }
                   </script>
 
+                {%- when 'color_selector' -%}
+                  {%- comment -%} 独立的 Color Selector Block {%- endcomment -%}
+                  {%- if isProductDefault == false -%}
+                    {%- liquid
+                      assign stt_color_ck = settings.color_ck | default: ';'
+                      assign color_ck = stt_color_ck | append: ',color,colors,couleur,colour' | remove: ';,'
+                      assign get_color = color_ck | downcase | replace: ' ,', ',' | replace: ', ', ',' | split: ',' | uniq
+                      assign choose_an_option = 'products.product.choose_an_option' | t
+                    -%}
+                    
+                    <style>
+                      .t4s-color-selector-block-{{ block.id }} {
+                        margin-top: {{ bk_stts.margin_top | default: 16 }}px !important;
+                        margin-bottom: {{ bk_stts.margin_bottom | default: 16 }}px !important;
+                      }
+                    </style>
+                    
+                    <div class="t4s-color-selector-block t4s-color-selector-block-{{ block.id }}" {{ block.shopify_attributes }}>
+                      {%- render 'product-color-selector',
+                        product: product,
+                        current_variant: current_variant,
+                        pr_se_id: pr_se_id,
+                        bk_stts: bk_stts,
+                        isProductDefault: isProductDefault,
+                        get_color: get_color,
+                        choose_an_option: choose_an_option,
+                        name_sizeg: name_sizeg,
+                        html_sizeg: html_sizeg,
+                        show_tooltip: show_tooltip
+                      -%}
+                    </div>
+                  {%- endif -%}
+
                 {%- when 'form' -%}
                   {%- liquid
                     assign product_list = bk_stts.product_list
@@ -1097,7 +1130,7 @@
                     endcomment
                     
                     if product_list == blank
-                      render 'product-form', type: 'main', product: product, bk_stts: bk_stts, pr_se_id: pr_se_id, isExternal: isExternal, external_title: external_title, external_link: external_link, isProductAvailable: isProductAvailable, isProductDefault: isProductDefault, current_variant: current_variant, remove_soldout: remove_soldout, PR_no_pick: PR_no_pick, isPreoder: isPreoder, is_fit_ratio_img: is_fit_ratio_img, first_ratio_img: first_ratio_img, name_sizeg: name_sizeg, html_sizeg: html_sizeg, advance_pr_type: advance_pr_type, advance_label: advance_label, html_price: html_price, shopify_attributes: block.shopify_attributes, arr_properties: arr_properties, cus_qty: cus_qty
+                      render 'product-form', type: 'main', product: product, bk_stts: bk_stts, pr_se_id: pr_se_id, isExternal: isExternal, external_title: external_title, external_link: external_link, isProductAvailable: isProductAvailable, isProductDefault: isProductDefault, current_variant: current_variant, remove_soldout: remove_soldout, PR_no_pick: PR_no_pick, isPreoder: isPreoder, is_fit_ratio_img: is_fit_ratio_img, first_ratio_img: first_ratio_img, name_sizeg: name_sizeg, html_sizeg: html_sizeg, advance_pr_type: advance_pr_type, advance_label: advance_label, html_price: html_price, shopify_attributes: block.shopify_attributes, arr_properties: arr_properties, cus_qty: cus_qty, seBlocks: seBlocks
                     else
                       render 'grouped-form', product: product, bk_stts: bk_stts, pr_se_id: pr_se_id, product_list: product_list, shopify_attributes: block.shopify_attributes, cus_qty: cus_qty
                     endif
@@ -4019,6 +4052,13 @@
           "content": "+ Product Swatch"
         },
         {
+          "type": "checkbox",
+          "id": "hide_color_selector",
+          "label": "Hide color selector",
+          "default": false,
+          "info": "Hide the color option selector from the product form"
+        },
+        {
           "type": "select",
           "id": "selector_mode",
           "label": "Selector type",
@@ -6937,6 +6977,118 @@
           "default": 8
         }
       ]
+    },
+    {
+      "type": "color_selector",
+      "name": "🎨 Color Selector",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Display product color/variant selector independently. This allows you to position the color selector anywhere in the product layout."
+        },
+        {
+          "type": "header",
+          "content": "+ Color Selector Settings"
+        },
+        {
+          "type": "select",
+          "id": "color_mode",
+          "label": "Color selector type",
+          "options": [
+            {
+              "value": "circle",
+              "label": "Circle"
+            },
+            {
+              "value": "radio",
+              "label": "Radio"
+            },
+            {
+              "value": "radio is-sw-cl__full",
+              "label": "Radio full"
+            },
+            {
+              "value": "block",
+              "label": "Block"
+            },
+            {
+              "value": "block2",
+              "label": "Block round"
+            },
+            {
+              "value": "dropdown",
+              "label": "Dropdown"
+            },
+            {
+              "value": "color",
+              "label": "Color swatch"
+            },
+            {
+              "value": "color is-sw-cl__round",
+              "label": "Color swatch round"
+            },
+            {
+              "value": "variant_image",
+              "label": "Variant image"
+            },
+            {
+              "value": "variant_image is-sw-cl__round",
+              "label": "Variant image round"
+            }
+          ],
+          "default": "color"
+        },
+        {
+          "type": "select",
+          "id": "color_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "Small"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "large",
+              "label": "Large"
+            },
+            {
+              "value": "exlarge",
+              "label": "Extra Large"
+            }
+          ],
+          "label": "Color selector size",
+          "info": "Only working with color swatch, variant image",
+          "default": "medium"
+        },
+        {
+          "type": "header",
+          "content": "+ Block Spacing"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin bottom",
+          "default": 16
+        }
+      ]
     }
   ],
   "default": {
@@ -6949,6 +7101,9 @@
       },
       {
         "type": "description"
+      },
+      {
+        "type": "color_selector"
       },
       {
         "type": "form"

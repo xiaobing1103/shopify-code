@@ -1,0 +1,340 @@
+/* ========================================
+   Bundle/Pack Selector Styles - Design Match
+   ======================================== */
+
+/* Container */
+.t4s-bundle-selector {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  margin: 20px 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  position: relative !important;
+}
+
+.t4s-bundle-selector__title {
+  display: block !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  margin-bottom: 20px !important;
+  color: #333 !important;
+  text-align: left !important;
+  line-height: 1.4 !important;
+}
+
+/* Options Grid */
+.t4s-bundle-selector__options {
+  display: grid !important;
+  gap: 16px !important;
+  margin-bottom: 16px !important;
+  width: 100% !important;
+}
+
+.t4s-bundle-layout-horizontal {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
+.t4s-bundle-layout-vertical {
+  grid-template-columns: 1fr !important;
+}
+
+/* Bundle Option Card */
+.t4s-bundle-option {
+  position: relative !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+.t4s-bundle-option__inner {
+  position: relative !important;
+  padding: 0 !important;
+  border: 3px solid #E0E0E0 !important;
+  border-radius: 16px !important;
+  background: #F5F5F5 !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+  height: 100% !important;
+  min-height: 240px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.t4s-bundle-option:hover .t4s-bundle-option__inner {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Selected State - ALL items turn GOLD when selected */
+.t4s-bundle-option.is-selected .t4s-bundle-option__inner {
+  border-color: #C9A961 !important;
+  border-width: 4px !important;
+  background: #FFFEF9 !important;
+  box-shadow: 0 8px 24px rgba(201, 169, 97, 0.3) !important;
+}
+
+.t4s-bundle-option.is-selected .t4s-bundle-option__badge {
+  background: #C9A961 !important;
+  color: #FFFFFF !important;
+}
+
+/* Discount Badge (Top Header) */
+.t4s-bundle-option__badge {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  background: #555555 !important;
+  color: #FFFFFF !important;
+  border-radius: 0 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  margin: 0 !important;
+  transition: background 0.3s ease !important;
+}
+
+/* Content Area - Takes up remaining space */
+.t4s-bundle-option__content {
+  padding: 24px 16px !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Label (e.g., "1 Pack", "3 Pack") */
+.t4s-bundle-option__label {
+  font-size: 32px !important;
+  font-weight: 400 !important;
+  color: #333333 !important;
+  margin: 0 0 16px 0 !important;
+  line-height: 1.2 !important;
+}
+
+/* Price */
+.t4s-bundle-option__price {
+  font-size: 48px !important;
+  font-weight: 700 !important;
+  color: #333333 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+/* Free Shipping Tag (Bottom) - Fixed height */
+.t4s-bundle-option__shipping {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  border-radius: 0 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  color: #555555 !important;
+  background: #E8E8E8 !important;
+  display: block !important;
+  text-align: center !important;
+  border-top: 1px solid #D0D0D0 !important;
+  height: 48px !important;
+  line-height: 20px !important;
+}
+
+/* Placeholder for items without Free Shipping - keeps height consistent */
+.t4s-bundle-option__shipping-placeholder {
+  width: 100% !important;
+  height: 48px !important;
+  display: block !important;
+}
+
+/* Corner Triangle - Shows on ALL items when selected */
+.t4s-bundle-option__inner::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-style: solid !important;
+  border-width: 0 0 50px 50px !important;
+  border-color: transparent transparent transparent transparent !important;
+  transition: border-color 0.3s ease !important;
+  z-index: 1 !important;
+}
+
+.t4s-bundle-option.is-selected .t4s-bundle-option__inner::after {
+  border-color: transparent transparent #C9A961 transparent !important;
+}
+
+/* Checkmark - White checkmark inside the gold triangle */
+.t4s-bundle-option__checkmark {
+  position: absolute !important;
+  bottom: 12px !important;
+  right: 12px !important;
+  width: auto !important;
+  height: auto !important;
+  color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+  line-height: 1 !important;
+}
+
+.t4s-bundle-option.is-selected .t4s-bundle-option__checkmark {
+  opacity: 1 !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .t4s-bundle-layout-horizontal {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .t4s-bundle-option__inner {
+    padding: 16px 12px 12px;
+    min-height: 120px;
+  }
+  
+  .t4s-bundle-option__label {
+    font-size: 18px;
+  }
+  
+  .t4s-bundle-option__price {
+    font-size: 24px;
+  }
+  
+  .t4s-bundle-option__badge {
+    font-size: 10px;
+    padding: 3px 12px;
+  }
+  
+  .t4s-bundle-option__shipping {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .t4s-bundle-layout-horizontal {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Animation */
+@keyframes bundleSelect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.t4s-bundle-option.is-selected {
+  animation: bundleSelect 0.3s ease;
+}
+
+/* Accessibility */
+.t4s-bundle-option:focus-within .t4s-bundle-option__inner {
+  outline: 2px solid #2196F3;
+  outline-offset: 2px;
+}
+
+/* Loading State */
+.t4s-bundle-selector.is-loading .t4s-bundle-option {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+  .t4s-bundle-layout-horizontal {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  
+  .t4s-bundle-option__inner {
+    min-height: 220px !important;
+  }
+  
+  .t4s-bundle-option__label {
+    font-size: 28px !important;
+  }
+  
+  .t4s-bundle-option__price {
+    font-size: 40px !important;
+  }
+  
+  .t4s-bundle-option__badge {
+    font-size: 14px !important;
+    padding: 10px 16px !important;
+  }
+  
+  .t4s-bundle-option__shipping {
+    font-size: 14px !important;
+    padding: 12px 16px !important;
+    height: 44px !important;
+  }
+  
+  .t4s-bundle-option__shipping-placeholder {
+    height: 44px !important;
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .t4s-bundle-layout-horizontal {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+  }
+  
+  .t4s-bundle-option__label {
+    font-size: 28px !important;
+  }
+  
+  .t4s-bundle-option__price {
+    font-size: 42px !important;
+  }
+}
+
+/* Animation */
+@keyframes bundleSelect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.t4s-bundle-option.is-selected {
+  animation: bundleSelect 0.4s ease !important;
+}
+
+/* Accessibility */
+.t4s-bundle-option:focus-within .t4s-bundle-option__inner {
+  outline: 3px solid #C9A961 !important;
+  outline-offset: 2px !important;
+}
+
+/* Loading State */
+.t4s-bundle-selector.is-loading .t4s-bundle-option {
+  pointer-events: none !important;
+  opacity: 0.6 !important;
+}

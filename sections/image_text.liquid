@@ -47,6 +47,10 @@
                     else
                         assign arrow_icon = 2
                     endif
+                    assign hide_desktop_class = ''
+                    if bk_stts.hide_on_desktop
+                        assign hide_desktop_class = 't4s-d-lg-none'
+                    endif
                -%}
                 {%- capture html_img_text -%}
                     {%- for i in (1..5) -%}
@@ -86,7 +90,7 @@
                         assign order_mobile = 0
                     endif
                -%}
-                <div class="t4s-col-img t4s-col-item t4s-col-lg-{{ bk_stts.col_dk }} t4s-col-md-{{ bk_stts.col_tb }} t4s-col-12 t4s-order-md-{{ forloop_index }} t4s-order-{{ order_mobile }} t4s-image-text-layout-{{ bk_stts.layout_des }} {% if block_first.type == 'bl_image' %}t4s-image-text-col-img-left{% else %}t4s-image-text-col-img-right{% endif %}" timeline hdt-reveal="slide-in"> 
+                <div class="t4s-col-img t4s-col-item t4s-col-lg-{{ bk_stts.col_dk }} t4s-col-md-{{ bk_stts.col_tb }} t4s-col-12 t4s-order-md-{{ forloop_index }} t4s-order-{{ order_mobile }} t4s-image-text-layout-{{ bk_stts.layout_des }} {% if block_first.type == 'bl_image' %}t4s-image-text-col-img-left{% else %}t4s-image-text-col-img-right{% endif %} {{ hide_desktop_class }}" timeline hdt-reveal="slide-in"> 
                     {%- if bk_stts.layout_des == "grid" -%}
                         <div class="t4s-image-text-overlap">
                             <div class="t4s-image-text-overlap-centered t4s-image-text-overlap-{{ index }}">{{ html_img_text }}</div>
@@ -707,6 +711,13 @@
                         "label": "Reverse"
                     }
                 ]
+            },
+            {
+                "type": "checkbox",
+                "id": "hide_on_desktop",
+                "label": "Hide image on desktop",
+                "info": "Image will only show on mobile and tablet devices",
+                "default": false
             },
             {
                 "type": "header",

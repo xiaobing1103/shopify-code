@@ -30,6 +30,7 @@
   if color_mode_list contains color_mode
     assign color_swatch = 'is-sw__color '
   endif
+  assign hide_color_selector = bk_stts.hide_color_selector | default: false
   assign current_variant_available = current_variant.available
   assign use_incoming_mess = settings.use_incoming_mess
   assign current_variant_incoming = false
@@ -226,7 +227,7 @@
       {%- endif -%}
 
       {%- comment -%} Render color options BEFORE Product Personalizer, inside swatch wrapper {%- endcomment -%}
-      {%- if isProductDefault == false -%}
+      {%- if isProductDefault == false and hide_color_selector == false -%}
         <div class="t4s-swatch t4s-color-mode__{{ color_mode }} t4s-color-size__{{ bk_stts.color_size }} t4s-selector-mode__{{ selector_mode }}">
           {%- for option in product.options_with_values -%}
             {%- liquid
