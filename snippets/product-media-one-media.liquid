@@ -1,0 +1,59 @@
+{%- comment -%}
+  Product Media - One Media Size
+  用于显示单个产品图片/媒体
+  
+  参数:
+  - product_media: 产品媒体数组
+  - se_stts: section settings
+  - se_id: section id
+  - image_ratio: 图片比例
+  - imgatt: 图片属性
+  - variant_images: 变体图片
+  - enable_video_looping: 视频循环
+  - enable_video_muting: 视频静音
+  - enable_video_autoplaying: 视频自动播放
+  - height: 高度
+  - class_pswp_disable: pswp 禁用类
+  - media_custom_img_enable: 是否启用自定义图片
+  - media_custom_img: 自定义图片
+  - media_heading: 媒体标题
+  - product: 产品对象
+{%- endcomment -%}
+
+{%- assign media = product_media.first -%}
+<div data-product-single-media-group class="t4s-product__one_media t4s-pr" timeline hdt-reveal="slide-in">
+  <div
+    data-t4s-gallery
+    data-t4s-thumb-false
+    data-main-media
+    class="t4s-row t4s-g-0 t4s-product__media t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }}"
+  >
+    {%- render 'product-thumbnail',
+      media: media,
+      imgatt: imgatt,
+      variant_images: variant_images,
+      loop: enable_video_looping,
+      mute: enable_video_muting,
+      autoplay: enable_video_autoplaying,
+      height: height,
+      se_id: se_id,
+      class_pswp_disable: class_pswp_disable,
+      variants_size: 1
+    -%}
+  </div>
+  <div
+    data-product-single-badge
+    data-sort="sale,new,soldout,preOrder,custom"
+    class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0"
+    data-rendert4s="css:{{ 'single-pr-badge.css' | asset_url }}"
+  ></div>
+  {%- if media_custom_img_enable and media_custom_img != blank -%}
+    <div class="t4s-product-media-custom-img-{{ se_id }}">
+      {{ media_custom_img | image_url: width: 200 | image_tag: loading: 'lazy', class: 't4s-obj-eff' }}
+    </div>
+  {%- endif -%}
+  {%- if media_heading != blank -%}
+    <div class="t4s-product-media-heading-{{ se_id }}">{{ media_heading }}</div>
+  {%- endif -%}
+  {%- render 'product-btns', se_stts: se_stts, product: product -%}
+</div>

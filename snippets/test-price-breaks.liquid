@@ -1,0 +1,55 @@
+{%- comment -%}
+  测试 Shopify Quantity Price Breaks
+  用法: {% render 'test-price-breaks', variant: current_variant %}
+{%- endcomment -%}
+
+<div style="background: #f5f5f5; padding: 20px; margin: 20px 0; border: 2px solid #333;">
+  <h3>🔍 Price Breaks Debug Info</h3>
+  
+  <h4>Variant Info:</h4>
+  <ul>
+    <li><strong>Variant ID:</strong> {{ variant.id }}</li>
+    <li><strong>Base Price:</strong> {{ variant.price | money }}</li>
+    <li><strong>Compare At Price:</strong> {{ variant.compare_at_price | money }}</li>
+  </ul>
+  
+  <h4>Quantity Rules:</h4>
+  <ul>
+    <li><strong>Min:</strong> {{ variant.quantity_rule.min | default: 'N/A' }}</li>
+    <li><strong>Max:</strong> {{ variant.quantity_rule.max | default: 'N/A' }}</li>
+    <li><strong>Increment:</strong> {{ variant.quantity_rule.increment | default: 'N/A' }}</li>
+  </ul>
+  
+  <h4>Price Breaks:</h4>
+  {%- if variant.quantity_price_breaks.size > 0 -%}
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background: #333; color: white;">
+          <th style="padding: 8px; border: 1px solid #ddd;">Minimum Quantity</th>
+          <th style="padding: 8px; border: 1px solid #ddd;">Price Per Item</th>
+          <th style="padding: 8px; border: 1px solid #ddd;">Total Price</th>
+          <th style="padding: 8px; border: 1px solid #ddd;">Discount %</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for price_break in variant.quantity_price_breaks -%}
+          {%- assign total_price = price_break.price | times: price_break.minimum_quantity -%}
+          {%- assign original_total = variant.price | times: price_break.minimum_quantity -%}
+          {%- assign discount = original_total | minus: total_price | times: 100.0 | divided_by: original_total | round -%}
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;">{{ price_break.minimum_quantity }}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">{{ price_break.price | money }}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">{{ total_price | money }}</td>
+            <td style="padding: 8px; border: 1px solid #ddd;">{{ discount }}%</td>
+          </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+  {%- else -%}
+    <p style="color: red; font-weight: bold;">❌ No price breaks found for this variant!</p>
+    <p>请在 Shopify Admin 中为此产品设置 Volume Pricing (阶梯定价)。</p>
+  {%- endif -%}
+  
+  <h4>JSON Data:</h4>
+  <pre style="background: white; padding: 10px; overflow-x: auto;">{{ variant.quantity_price_breaks | json }}</pre>
+</div>

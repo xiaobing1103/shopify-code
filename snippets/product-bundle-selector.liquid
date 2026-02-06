@@ -1,0 +1,677 @@
+{%- comment -%}
+  Bundle Selector Component
+  
+  Parameters:
+  - block: Block object with settings
+  - block_id: Block ID for unique styling
+  - current_variant: Current product variant
+  - bk_stts: Block settings object
+{%- endcomment -%}
+
+<style>
+  .t4s-bundle-selector-block-{{ block_id }} {
+    margin: 10px 0 !important;
+    width: 100% !important;
+  }
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-selector__options {
+    display: grid !important;
+    gap: {{ bk_stts.bundle_gap | default: 12 }}px !important;
+    margin-bottom: 8px !important;
+  }
+  /* Horizontal Layout - 3 columns */
+  .t4s-bundle-selector-block-{{ block_id }}.t4s-bundle-layout-horizontal .t4s-bundle-selector__options {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  /* Vertical Layout - 1 column */
+  .t4s-bundle-selector-block-{{ block_id }}.t4s-bundle-layout-vertical .t4s-bundle-selector__options {
+    grid-template-columns: 1fr !important;
+  }
+  .t4s-bundle-option {
+    position: relative !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+    border-radius: {{ bk_stts.bundle_border_radius | default: 8 }}px !important;
+  }
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__inner {
+    border: {{ bk_stts.bundle_border_width | default: 2 }}px solid {{ bk_stts.bundle_border_color | default: '#E0E0E0' }} !important;
+    border-radius: {{ bk_stts.bundle_border_radius | default: 8 }}px !important;
+    background: {{ bk_stts.bundle_bg_color | default: '#F5F5F5' }} !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  .t4s-bundle-option:hover .t4s-bundle-option__inner {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15) !important;
+    border-color: {{ bk_stts.bundle_hover_border_color | default: '#93c5fd' }} !important;
+  }
+  .t4s-bundle-option.is-selected .t4s-bundle-option__inner {
+    border-color: {{ bk_stts.bundle_selected_border_color | default: '#C9A961' }} !important;
+    border-width: 2px !important;
+    background: {{ bk_stts.bundle_selected_bg_color | default: '#FFFEF9' }} !important;
+    box-shadow: 0 4px 12px rgba(201,169,97,0.3) !important;
+  }
+  .t4s-bundle-option.is-selected .t4s-bundle-option__badge {
+    {% if bk_stts.bundle_badge_selected_use_gradient and bk_stts.bundle_badge_selected_gradient != blank %}
+      background: {{ bk_stts.bundle_badge_selected_gradient }} !important;
+    {% else %}
+      background: {{ bk_stts.bundle_selected_border_color | default: '#C9A961' }} !important;
+    {% endif %}
+  }
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__badge {
+    width: 100% !important;
+    padding: {{ bk_stts.bundle_badge_padding_v | default: 8 }}px {{ bk_stts.bundle_badge_padding_h | default: 8 }}px !important;
+    {% if bk_stts.bundle_badge_use_gradient and bk_stts.bundle_badge_gradient != blank %}
+      background: {{ bk_stts.bundle_badge_gradient }} !important;
+    {% else %}
+      background: #555555 !important;
+    {% endif %}
+    color: #FFFFFF !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+  }
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__content {
+    padding: {{ bk_stts.bundle_padding | default: 8 }}px !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .t4s-bundle-option__label {
+    font-size: {{ bk_stts.bundle_quantity_size | default: 16 }}px !important;
+    font-weight: {{ bk_stts.bundle_quantity_weight | default: 400 }} !important;
+    color: {{ bk_stts.bundle_text_color | default: '#333333' }} !important;
+    margin: 0 0 8px 0 !important;
+  }
+  .t4s-bundle-option__price {
+    font-size: {{ bk_stts.bundle_price_size | default: 24 }}px !important;
+    font-weight: {{ bk_stts.bundle_price_weight | default: 700 }} !important;
+    color: {{ bk_stts.bundle_text_color | default: '#333333' }} !important;
+    margin: 0 !important;
+  }
+  .t4s-bundle-option__shipping {
+    width: 100% !important;
+    padding: {{ bk_stts.bundle_shipping_padding_v | default: 7 }}px {{ bk_stts.bundle_shipping_padding_h | default: 8 }}px !important;
+    background: {{ bk_stts.bundle_shipping_bg_color | default: '#E8E8E8' }} !important;
+    color: {{ bk_stts.bundle_shipping_text_color | default: '#555555' }} !important;
+    font-size: 11px !important;
+    text-align: center !important;
+    min-height: 24px !important;
+    line-height: 1.2 !important;
+  }
+  .t4s-bundle-option__shipping-placeholder {
+    width: 100% !important;
+    height: 24px !important;
+  }
+  .t4s-bundle-option__inner::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    border-style: solid !important;
+    border-width: 0 0 {{ bk_stts.bundle_checkmark_triangle_size | default: 35 }}px {{ bk_stts.bundle_checkmark_triangle_size | default: 35 }}px !important;
+    border-color: transparent !important;
+    transition: all 0.3s ease !important;
+    z-index: 1 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+  .t4s-bundle-option.is-selected .t4s-bundle-option__inner::after {
+    border-color: transparent transparent {{ bk_stts.bundle_selected_border_color | default: '#C9A961' }} transparent !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .t4s-bundle-option__checkmark {
+    position: absolute !important;
+    bottom: {{ bk_stts.bundle_checkmark_bottom | default: 4 }}px !important;
+    right: {{ bk_stts.bundle_checkmark_right | default: 4 }}px !important;
+    color: {{ bk_stts.bundle_checkmark_color | default: '#FFFFFF' }} !important;
+    font-size: {{ bk_stts.bundle_checkmark_size | default: 16 }}px !important;
+    font-weight: 700 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+    z-index: 2 !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: {{ bk_stts.bundle_checkmark_size | default: 16 }}px !important;
+    height: {{ bk_stts.bundle_checkmark_size | default: 16 }}px !important;
+    pointer-events: none !important;
+  }
+  .t4s-bundle-option.is-selected .t4s-bundle-option__checkmark {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  @media (max-width: 767px) {
+    .t4s-bundle-selector-block-{{ block_id }}.t4s-bundle-layout-horizontal .t4s-bundle-selector__options {
+      {% if bk_stts.mobile_keep_horizontal %}
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: {{ bk_stts.bundle_gap_mobile | default: 8 }}px !important;
+      {% else %}
+        grid-template-columns: 1fr !important;
+      {% endif %}
+    }
+    {% if bk_stts.mobile_keep_horizontal %}
+      .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__inner {
+        height: 100% !important;
+        padding: {{ bk_stts.bundle_padding_mobile | default: 6 }}px !important;
+      }
+      .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__badge {
+        padding: {{ bk_stts.bundle_badge_padding_v_mobile | default: 6 }}px {{ bk_stts.bundle_badge_padding_h_mobile | default: 4 }}px !important;
+        font-size: {{ bk_stts.mobile_badge_font_size | default: 9 }}px !important;
+      }
+      .t4s-bundle-option__label { 
+        font-size: {{ bk_stts.mobile_label_font_size | default: 12 }}px !important;
+        margin: 0 0 4px 0 !important;
+      }
+      .t4s-bundle-option__price { 
+        font-size: {{ bk_stts.mobile_price_font_size | default: 16 }}px !important;
+      }
+      .t4s-bundle-option__shipping {
+        padding: {{ bk_stts.bundle_shipping_padding_v_mobile | default: 4 }}px {{ bk_stts.bundle_shipping_padding_h_mobile | default: 4 }}px !important;
+        font-size: {{ bk_stts.mobile_shipping_font_size | default: 9 }}px !important;
+        min-height: 20px !important;
+      }
+      .t4s-bundle-option__checkmark {
+        font-size: {{ bk_stts.mobile_checkmark_size | default: 12 }}px !important;
+        width: {{ bk_stts.mobile_checkmark_size | default: 12 }}px !important;
+        height: {{ bk_stts.mobile_checkmark_size | default: 12 }}px !important;
+        bottom: {{ bk_stts.mobile_checkmark_bottom | default: 2 }}px !important;
+        right: {{ bk_stts.mobile_checkmark_right | default: 2 }}px !important;
+      }
+      .t4s-bundle-option__inner::after {
+        border-width: 0 0 {{ bk_stts.mobile_checkmark_triangle_size | default: 25 }}px {{ bk_stts.mobile_checkmark_triangle_size | default: 25 }}px !important;
+      }
+    {% else %}
+      .t4s-bundle-option__label { font-size: 14px !important; }
+      .t4s-bundle-option__price { font-size: 20px !important; }
+      .t4s-bundle-option__badge { font-size: 10px !important; }
+    {% endif %}
+    .t4s-bundle-option__shipping { font-size: 10px !important; }
+  }
+</style>
+
+{%- if bk_stts.enable_bundle_selector -%}
+  {%- comment -%} 读取 Shopify Quantity Rules 和 Price Breaks {%- endcomment -%}
+  {%- liquid
+    assign price_breaks = current_variant.quantity_price_breaks
+    assign base_price = current_variant.price
+    
+    # 决定使用哪种定价模式
+    assign use_shopify_pricing = false
+    if bk_stts.pricing_mode == 'shopify' and price_breaks.size > 0
+      assign use_shopify_pricing = true
+    endif
+  -%}
+  
+  <div class="t4s-bundle-selector-wrapper t4s-bundle-selector-block-{{ block_id }} t4s-bundle-layout-{{ bk_stts.layout_direction | default: 'horizontal' }}" {{ block.shopify_attributes }} style="margin: 20px 0;">
+    <div class="t4s-bundle-selector" 
+         data-bundle-selector 
+         data-base-price="{{ base_price }}" 
+         data-price-breaks='{{ price_breaks | json | escape }}'
+         data-pricing-mode="{{ bk_stts.pricing_mode | default: 'manual' }}">
+      <div class="t4s-bundle-selector__options">
+        
+        {%- if use_shopify_pricing -%}
+          {%- comment -%} 模式 1: 使用 Shopify Volume Pricing {%- endcomment -%}
+          {%- for price_break in price_breaks limit: 3 -%}
+            {%- liquid
+              assign tier_quantity = price_break.minimum_quantity
+              assign tier_price = price_break.price
+              assign tier_total_price = tier_price | times: tier_quantity
+              assign original_total = base_price | times: tier_quantity
+              assign discount_amount = original_total | minus: tier_total_price
+              assign discount_percent = discount_amount | times: 100.0 | divided_by: original_total | round
+              
+              if forloop.index == 2
+                assign is_selected = ' is-selected'
+              else
+                assign is_selected = ''
+              endif
+              
+              assign tier_id = 'tier-' | append: tier_quantity
+            -%}
+            
+            <div 
+              class="t4s-bundle-option{{ is_selected }}" 
+              data-bundle-option
+              data-tier="{{ tier_id }}"
+              data-quantity="{{ tier_quantity }}"
+              data-price="{{ tier_price }}"
+              data-discount="{{ discount_percent }}"
+              style="position: relative; cursor: pointer;"
+            >
+              <div class="t4s-bundle-option__inner">
+                {%- if discount_percent > 0 -%}
+                  <div class="t4s-bundle-option__badge">SAVE {{ discount_percent }}%</div>
+                {%- else -%}
+                  <div class="t4s-bundle-option__badge">{{ bk_stts.pack1_title | default: 'Standard' }}</div>
+                {%- endif -%}
+                
+                <div class="t4s-bundle-option__content">
+                  <div class="t4s-bundle-option__label" data-label>
+                    {{ tier_quantity }} {% if tier_quantity == 1 %}{{ bk_stts.unit_singular | default: 'Card' }}{% else %}{{ bk_stts.unit_plural | default: 'Cards' }}{% endif %}
+                  </div>
+                  <div class="t4s-bundle-option__price" data-bundle-price>
+                    {%- if settings.currency_code_enabled -%}
+                      {{ tier_total_price | money_with_currency | remove: '.00' | remove: ',00' }}
+                    {%- else -%}
+                      {{ tier_total_price | money | remove: '.00' | remove: ',00' }}
+                    {%- endif -%}
+                  </div>
+                </div>
+                
+                {%- if forloop.index > 1 and bk_stts.pack2_show_shipping -%}
+                  <div class="t4s-bundle-option__shipping">{{ bk_stts.pack2_shipping_text | default: 'Free Shipping' }}</div>
+                {%- elsif forloop.index > 2 and bk_stts.pack3_show_shipping -%}
+                  <div class="t4s-bundle-option__shipping">{{ bk_stts.pack3_shipping_text | default: 'Free Shipping' }}</div>
+                {%- else -%}
+                  <div class="t4s-bundle-option__shipping-placeholder"></div>
+                {%- endif -%}
+                
+                <div class="t4s-bundle-option__checkmark">✓</div>
+              </div>
+            </div>
+          {%- endfor -%}
+          
+        {%- else -%}
+          {%- comment -%} 模式 2: 使用手动配置 {%- endcomment -%}
+          
+          {%- comment -%} Pack 1 {%- endcomment -%}
+          {%- liquid
+            assign pack1_qty = bk_stts.pack1_quantity | default: 1
+            assign pack1_discount = bk_stts.pack1_discount | default: 0
+            
+            if pack1_discount > 0
+              # 计算折扣后的价格（cents）
+              assign total_cents = base_price | times: pack1_qty
+              assign discount_multiplier = 100 | minus: pack1_discount
+              assign discounted_cents = total_cents | times: discount_multiplier | divided_by: 100.0
+              # 转换为美元并向上取整，再转回 cents
+              assign pack1_dollars = discounted_cents | divided_by: 100.0 | ceil
+              assign pack1_price = pack1_dollars | times: 100
+            else
+              assign pack1_price = base_price | times: pack1_qty
+            endif
+          -%}
+          <div 
+            class="t4s-bundle-option" 
+            data-bundle-option
+            data-tier="tier-{{ pack1_qty }}"
+            data-quantity="{{ pack1_qty }}"
+            data-discount="{{ pack1_discount }}"
+            style="position: relative; cursor: pointer;"
+          >
+            <div class="t4s-bundle-option__inner">
+              {%- if pack1_discount > 0 -%}
+                <div class="t4s-bundle-option__badge">SAVE {{ pack1_discount }}%</div>
+              {%- else -%}
+                <div class="t4s-bundle-option__badge">{{ bk_stts.pack1_title | default: 'Standard' }}</div>
+              {%- endif -%}
+              <div class="t4s-bundle-option__content">
+                <div class="t4s-bundle-option__label" data-label>
+                  {{ pack1_qty }} {% if pack1_qty == 1 %}{{ bk_stts.unit_singular | default: 'Card' }}{% else %}{{ bk_stts.unit_plural | default: 'Cards' }}{% endif %}
+                </div>
+                <div class="t4s-bundle-option__price" data-bundle-price>
+                  {%- if settings.currency_code_enabled -%}
+                    {{ pack1_price | money_with_currency | remove: '.00' | remove: ',00' }}
+                  {%- else -%}
+                    {{ pack1_price | money | remove: '.00' | remove: ',00' }}
+                  {%- endif -%}
+                </div>
+              </div>
+              {%- if bk_stts.pack1_show_shipping -%}
+                <div class="t4s-bundle-option__shipping">{{ bk_stts.pack1_shipping_text | default: 'Free Shipping' }}</div>
+              {%- else -%}
+                <div class="t4s-bundle-option__shipping-placeholder"></div>
+              {%- endif -%}
+              <div class="t4s-bundle-option__checkmark">✓</div>
+            </div>
+          </div>
+
+          {%- comment -%} Pack 2 {%- endcomment -%}
+          {%- liquid
+            assign pack2_qty = bk_stts.pack2_quantity | default: 3
+            assign pack2_discount = bk_stts.pack2_discount | default: 19
+            
+            if pack2_discount > 0
+              # 计算折扣后的价格（cents）
+              assign total_cents = base_price | times: pack2_qty
+              assign discount_multiplier = 100 | minus: pack2_discount
+              assign discounted_cents = total_cents | times: discount_multiplier | divided_by: 100.0
+              # 转换为美元并向上取整，再转回 cents
+              assign pack2_dollars = discounted_cents | divided_by: 100.0 | ceil
+              assign pack2_price = pack2_dollars | times: 100
+            else
+              assign pack2_price = base_price | times: pack2_qty
+            endif
+          -%}
+          <div 
+            class="t4s-bundle-option t4s-bundle-option--recommended is-selected" 
+            data-bundle-option
+            data-tier="tier-{{ pack2_qty }}"
+            data-quantity="{{ pack2_qty }}"
+            data-discount="{{ pack2_discount }}"
+            style="position: relative; cursor: pointer;"
+          >
+            <div class="t4s-bundle-option__inner">
+              <div class="t4s-bundle-option__badge">SAVE {{ pack2_discount }}%</div>
+              <div class="t4s-bundle-option__content">
+                <div class="t4s-bundle-option__label" data-label>
+                  {{ pack2_qty }} {{ bk_stts.unit_plural | default: 'Cards' }}
+                </div>
+                <div class="t4s-bundle-option__price" data-bundle-price>
+                  {%- if settings.currency_code_enabled -%}
+                    {{ pack2_price | money_with_currency | remove: '.00' | remove: ',00' }}
+                  {%- else -%}
+                    {{ pack2_price | money | remove: '.00' | remove: ',00' }}
+                  {%- endif -%}
+                </div>
+              </div>
+              {%- if bk_stts.pack2_show_shipping -%}
+                <div class="t4s-bundle-option__shipping">{{ bk_stts.pack2_shipping_text | default: 'Free Shipping' }}</div>
+              {%- else -%}
+                <div class="t4s-bundle-option__shipping-placeholder"></div>
+              {%- endif -%}
+              <div class="t4s-bundle-option__checkmark">✓</div>
+            </div>
+          </div>
+
+          {%- comment -%} Pack 3 {%- endcomment -%}
+          {%- liquid
+            assign pack3_qty = bk_stts.pack3_quantity | default: 5
+            assign pack3_discount = bk_stts.pack3_discount | default: 40
+            
+            if pack3_discount > 0
+              # 计算折扣后的价格（cents）
+              assign total_cents = base_price | times: pack3_qty
+              assign discount_multiplier = 100 | minus: pack3_discount
+              assign discounted_cents = total_cents | times: discount_multiplier | divided_by: 100.0
+              # 转换为美元并向上取整，再转回 cents
+              assign pack3_dollars = discounted_cents | divided_by: 100.0 | ceil
+              assign pack3_price = pack3_dollars | times: 100
+            else
+              assign pack3_price = base_price | times: pack3_qty
+            endif
+          -%}
+          <div 
+            class="t4s-bundle-option" 
+            data-bundle-option
+            data-tier="tier-{{ pack3_qty }}"
+            data-quantity="{{ pack3_qty }}"
+            data-discount="{{ pack3_discount }}"
+            style="position: relative; cursor: pointer;"
+          >
+            <div class="t4s-bundle-option__inner">
+              <div class="t4s-bundle-option__badge">SAVE {{ pack3_discount }}%</div>
+              <div class="t4s-bundle-option__content">
+                <div class="t4s-bundle-option__label" data-label>
+                  {{ pack3_qty }} {{ bk_stts.unit_plural | default: 'Cards' }}
+                </div>
+                <div class="t4s-bundle-option__price" data-bundle-price>
+                  {%- if settings.currency_code_enabled -%}
+                    {{ pack3_price | money_with_currency | remove: '.00' | remove: ',00' }}
+                  {%- else -%}
+                    {{ pack3_price | money | remove: '.00' | remove: ',00' }}
+                  {%- endif -%}
+                </div>
+              </div>
+              {%- if bk_stts.pack3_show_shipping -%}
+                <div class="t4s-bundle-option__shipping">{{ bk_stts.pack3_shipping_text | default: 'Free Shipping' }}</div>
+              {%- else -%}
+                <div class="t4s-bundle-option__shipping-placeholder"></div>
+              {%- endif -%}
+              <div class="t4s-bundle-option__checkmark">✓</div>
+            </div>
+          </div>
+        {%- endif -%}
+        
+      </div>
+    </div>
+    
+    <input type="hidden" data-bundle-quantity-input name="quantity" value="{% if use_shopify_pricing and price_breaks.size > 1 %}{{ price_breaks[1].minimum_quantity }}{% else %}{{ bk_stts.pack2_quantity | default: 3 }}{% endif %}">
+    <input type="hidden" data-bundle-tier-input value="tier-{% if use_shopify_pricing and price_breaks.size > 1 %}{{ price_breaks[1].minimum_quantity }}{% else %}{{ bk_stts.pack2_quantity | default: 3 }}{% endif %}">
+  </div>
+
+  <script>
+    (function() {
+      class BundleSelector {
+        constructor(container) {
+          this.container = container;
+          this.options = container.querySelectorAll('[data-bundle-option]');
+          this.quantityInput = container.querySelector('[data-bundle-quantity-input]');
+          this.tierInput = container.querySelector('[data-bundle-tier-input]');
+          this.basePrice = parseInt(container.dataset.basePrice) || 0;
+          this.pricingMode = container.dataset.pricingMode || 'manual';
+          this.productForm = this.findProductForm();
+          this.formQuantityInput = this.productForm?.querySelector('input[name="quantity"]');
+          
+          // 读取 Shopify Price Breaks 数据
+          this.priceBreaks = this.parsePriceBreaks(container.dataset.priceBreaks);
+          console.log('Bundle Selector: Pricing Mode:', this.pricingMode);
+          console.log('Bundle Selector: Price Breaks from Shopify:', this.priceBreaks);
+          
+          this.init();
+        }
+        
+        parsePriceBreaks(priceBreaksJson) {
+          if (!priceBreaksJson) return [];
+          try {
+            const breaks = JSON.parse(priceBreaksJson);
+            return breaks.map(b => ({
+              quantity: b.minimum_quantity,
+              price: b.price
+            }));
+          } catch (e) {
+            console.error('Failed to parse price breaks:', e);
+            return [];
+          }
+        }
+        
+        getPriceForQuantity(quantity) {
+          // 模式 1: 使用 Shopify Volume Pricing
+          if (this.pricingMode === 'shopify' && this.priceBreaks.length > 0) {
+            let applicableBreak = this.priceBreaks[0];
+            for (let i = 0; i < this.priceBreaks.length; i++) {
+              if (this.priceBreaks[i].quantity <= quantity) {
+                applicableBreak = this.priceBreaks[i];
+              } else {
+                break;
+              }
+            }
+            return applicableBreak.price * quantity;
+          }
+          
+          // 模式 2: 使用手动折扣配置
+          return this.basePrice * quantity;
+        }
+        
+        init() {
+          if (this.options.length === 0) return;
+          
+          // 初始化时根据当前 Quantity 选择对应的 option
+          const initialQty = this.formQuantityInput ? parseInt(this.formQuantityInput.value) || 1 : 1;
+          this.updateSelection(initialQty);
+          
+          // Bundle 选项点击事件
+          this.options.forEach(option => {
+            option.addEventListener('click', (e) => {
+              e.preventDefault();
+              const quantity = parseInt(option.dataset.quantity) || 1;
+              
+              // 更新数量选择器
+              if (this.formQuantityInput) {
+                this.formQuantityInput.value = quantity;
+                this.formQuantityInput.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+              
+              this.updateSelection(quantity);
+            });
+            option.setAttribute('tabindex', '0');
+            option.setAttribute('role', 'radio');
+          });
+          
+          // 监听数量选择器变化
+          if (this.formQuantityInput) {
+            this.formQuantityInput.addEventListener('change', () => {
+              const qty = parseInt(this.formQuantityInput.value) || 1;
+              this.updateSelection(qty);
+            });
+            
+            // 监听 +/- 按钮点击
+            const qtyButtons = this.productForm.querySelectorAll('[data-quantity-selector]');
+            qtyButtons.forEach(btn => {
+              btn.addEventListener('click', () => {
+                setTimeout(() => {
+                  const qty = parseInt(this.formQuantityInput.value) || 1;
+                  this.updateSelection(qty);
+                }, 50);
+              });
+            });
+          }
+        }
+        
+        findProductForm() {
+          return this.container.closest('form') || document.querySelector('form[action*="/cart/add"]');
+        }
+        
+        updateSelection(currentQty) {
+          console.log('更新选择，当前数量:', currentQty);
+          
+          // 找到应该被选中的 option（根据数量区间）
+          let selectedOption = null;
+          const sortedOptions = Array.from(this.options).sort((a, b) => {
+            return parseInt(a.dataset.quantity) - parseInt(b.dataset.quantity);
+          });
+          
+          for (let i = 0; i < sortedOptions.length; i++) {
+            const optQty = parseInt(sortedOptions[i].dataset.quantity);
+            const nextOptQty = i < sortedOptions.length - 1 ? parseInt(sortedOptions[i + 1].dataset.quantity) : Infinity;
+            
+            if (currentQty >= optQty && currentQty < nextOptQty) {
+              selectedOption = sortedOptions[i];
+              break;
+            } else if (i === sortedOptions.length - 1 && currentQty >= optQty) {
+              selectedOption = sortedOptions[i];
+              break;
+            }
+          }
+          
+          // 更新选中状态
+          this.options.forEach(opt => {
+            if (opt === selectedOption) {
+              opt.classList.add('is-selected');
+              opt.setAttribute('aria-checked', 'true');
+            } else {
+              opt.classList.remove('is-selected');
+              opt.setAttribute('aria-checked', 'false');
+            }
+          });
+          
+          // 更新所有选项的价格
+          this.updateAllPrices(currentQty);
+          
+          // 更新隐藏输入
+          if (selectedOption) {
+            const tier = selectedOption.dataset.tier;
+            const discount = parseInt(selectedOption.dataset.discount) || 0;
+            if (this.quantityInput) this.quantityInput.value = currentQty;
+            if (this.tierInput) this.tierInput.value = tier;
+            
+            // 触发自定义事件
+            this.container.dispatchEvent(new CustomEvent('bundleChanged', {
+              detail: { quantity: currentQty, discount, tier, option: selectedOption },
+              bubbles: true
+            }));
+          }
+        }
+        
+        updateAllPrices(currentQty) {
+          this.options.forEach(option => {
+            const optionQty = parseInt(option.dataset.quantity);
+            const optionDiscount = parseInt(option.dataset.discount) || 0;
+            const priceElement = option.querySelector('[data-bundle-price]');
+            
+            if (!priceElement) return;
+            
+            // 确定这个选项应该显示的数量
+            const sortedOptions = Array.from(this.options).sort((a, b) => {
+              return parseInt(a.dataset.quantity) - parseInt(b.dataset.quantity);
+            });
+            
+            const optIndex = sortedOptions.indexOf(option);
+            const nextOptQty = optIndex < sortedOptions.length - 1 ? 
+              parseInt(sortedOptions[optIndex + 1].dataset.quantity) : Infinity;
+            
+            // 判断当前 Quantity 是否在这个选项的区间内
+            let displayQty = optionQty; // 默认显示选项自己的数量
+            if (currentQty >= optionQty && currentQty < nextOptQty) {
+              displayQty = currentQty; // 如果在区间内，显示当前数量
+            }
+            
+            let finalPrice;
+            
+            // 根据定价模式计算价格
+            if (this.pricingMode === 'shopify' && this.priceBreaks.length > 0) {
+              finalPrice = this.getPriceForQuantity(displayQty);
+            } else {
+              // 手动模式：应用折扣百分比
+              const baseTotal = this.basePrice * displayQty;
+              if (optionDiscount > 0) {
+                const discountedPrice = baseTotal * (100 - optionDiscount) / 100;
+                // 使用 Math.ceil 向上取整到美元，然后转回 cents
+                finalPrice = Math.ceil(discountedPrice / 100) * 100;
+              } else {
+                finalPrice = baseTotal;
+              }
+            }
+            
+            // 更新价格显示
+            priceElement.textContent = this.formatPrice(finalPrice);
+          });
+        }
+        
+        formatPrice(cents) {
+          // 使用 Shopify 的货币格式
+          if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+            const formatted = Shopify.formatMoney(cents, window.theme?.moneyFormat || '${{amount}}');
+            // 移除小数点和小数部分
+            return formatted.replace(/\.\d+/, '').replace(/,\d+$/, '');
+          }
+          
+          // 后备格式
+          const dollars = Math.round(cents / 100);
+          return `$${dollars}`;
+        }
+      }
+      
+      function initBundleSelectors() {
+        const selectors = document.querySelectorAll('[data-bundle-selector]');
+        selectors.forEach(selector => {
+          if (!selector.bundleSelectorInstance) {
+            selector.bundleSelectorInstance = new BundleSelector(selector);
+          }
+        });
+      }
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initBundleSelectors);
+      } else {
+        initBundleSelectors();
+      }
+      
+      if (typeof Shopify !== 'undefined' && Shopify.designMode) {
+        document.addEventListener('shopify:section:load', initBundleSelectors);
+      }
+    })();
+  </script>
+{%- endif -%}

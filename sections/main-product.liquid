@@ -1,7 +1,33 @@
-{%- comment -%}
+﻿{%- comment -%}
   Color_pink | alt text
   t4option0_0 | alt text
 {%- endcomment -%}
+
+{%- liquid
+  assign seBlocks_temp = section.blocks
+  assign block_form_temp = seBlocks_temp | where: 'type', 'form' | first
+  if block_form_temp.settings.show_kaching_bundles == false
+    assign hide_kaching_bundles = true
+  else
+    assign hide_kaching_bundles = false
+  endif
+-%}
+
+{%- if hide_kaching_bundles -%}
+  <style>
+    /* 隐藏 Kaching Bundles - 通过 Schema 开关控制 */
+    kaching-bundle,
+    kaching-bundles-block,
+    .kaching-bundles,
+    [class*="kaching"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      overflow: hidden !important;
+    }
+  </style>
+{%- endif -%}
 
 {%- liquid
   assign isProductAvailable = product.available
@@ -236,7 +262,7 @@
 
       if bk_size_chart == '2' or pos_sizeg == '2'
         assign ck_s = false
-        assign size_ck = bk_stts__sizeg.size_ck | append: ',size,sizes,Größe'
+        assign size_ck = bk_stts__sizeg.size_ck | append: ',size,sizes,Gr??e'
         assign get_size = size_ck | downcase | replace: ' ,', ',' | replace: ', ', ',' | split: ',' | uniq
         for option in product.options_with_values
           assign name = option.name | downcase
@@ -274,6 +300,13 @@
 
 {%- comment -%} 按钮样式确保正确应用 {%- endcomment -%}
 <style>
+  /* 移动端隐藏 */
+  @media (max-width: 767px) {
+    .t4s-dn-mb {
+      display: none !important;
+    }
+  }
+
   /* 确保按钮样式正确应用 */
   .t4s-product-form__submit.t4s-btn {
     transition: all 0.3s ease;
@@ -321,18 +354,18 @@
 
 {%- comment -%} Product Personalizer 动态样式 {%- endcomment -%}
 <style>
-  /* Product Personalizer 整体容器边距 */
+  /* Product Personalizer 容器内外边距 */
   .product-personalizer.pplr_background {
     padding: 0px !important;  /* 内边距 - 可根据需要调整 */
     margin: 0px 0 !important;  /* 外边距 上下20px 左右0 - 可根据需要调整 */
   }
 
-  /* 每个选项包装器的边距 */
+  /* 每个选项容器的边距 */
   .pplr-wrapper, .t4s-line-item-property__field {
     margin-bottom: 10px !important;  /* 选项之间的间距 - 可根据需要调整 */
   }
 
-  /* Color Selector 样式 */
+  /* Color Selector ��ʽ */
   .pplr-wrapper.pplr-color .pplrlabel {
     font-size: {{ se_stts.pplr_color_title_size | default: 14 }}px !important;
     font-weight: {{ se_stts.pplr_color_title_weight | default: 400 }} !important;
@@ -374,7 +407,7 @@
     border-color: {{ se_stts.pplr_upload_btn_text_color | default: '#1976d2' }} !important;
   }
 
-  /* Upload Logo 按钮文字自定义 */
+  /* Upload Logo 按钮文本自定义 */
   .pplrfileuploadbutton::after {
     {% if se_stts.pplr_upload_btn_text != blank %}
     content: '{{ se_stts.pplr_upload_btn_text | escape }}' !important;
@@ -468,194 +501,67 @@
         <div class="t4s-{{ class_media }} t4s-col-12 t4s-col-item t4s-product__media-wrapper">
           {%- case media_layout -%}
             {%- when 'no_media_size' -%}
-              {%- assign image = settings.placeholder_img -%}
-              {%- if image != blank -%}
-                <div class="t4s-product__no_media t4s-pr" timeline hdt-reveal="slide-in">
-                  <div
-                    data-t4s-gallery
-                    data-t4s-thumb-false
-                    data-main-media
-                    class="t4s-product__media-item t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }}"
-                  >
-                    <div
-                      data-t4s-gallery--open
-                      data-media-type="image"
-                      class="t4s_ratio t4s-product__media{{ class_pswp_disable }}"
-                      {{ imgatt }}style="--aspect-ratioapt:{{ image.aspect_ratio }};--mw-media:{{ image.width }}px"
-                    >
-                      <noscript>
-                        {{-
-                          image
-                          | image_url: width: 1500
-                          | image_tag:
-                            widths: '288, 576, 750, 1100, 1500',
-                            class: 't4s-img-noscript',
-                            loading: 'lazy',
-                            sizes: '(min-width: 1500px) 1500px, (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)'
-                        -}}
-                      </noscript>
-                      <img
-                        data-master="{{ image | image_url }}"
-                        class="lazyloadt4s t4s-lz--fadeIn"
-                        data-src="{{ image | image_url: width: 1 }}"
-                        data-widths="[100,200,400,600,700,800,900,1000,1200,1400,1600]"
-                        data-optimumx="2"
-                        data-sizes="auto"
-                        src="{% render 'img_svg', w: image.width, h: image.height %}"
-                        width="{{ image.width }}"
-                        height="{{ image.height }}"
-                        alt="{{ image.alt | escape }}"
-
-                      ><span class="lazyloadt4s-loader"></span>
-                    </div>
-                  </div>
-                  <div
-                    data-product-single-badge
-                    data-sort="sale,new,soldout,preOrder,custom"
-                    class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0"
-                    data-rendert4s="css:{{ 'single-pr-badge.css' | asset_url }}"
-                  ></div>
-                  {%- if media_custom_img_enable and media_custom_img != blank -%}
-                    <div class="t4s-product-media-custom-img-{{ se_id }}">
-                      {{ media_custom_img | image_url: width: 400 | image_tag: loading: 'lazy', class: 't4s-obj-eff' }}
-                    </div>
-                  {%- endif -%}
-                  {%- if media_heading != blank -%}
-                    <div class="t4s-product-media-heading-{{ se_id }}">{{ media_heading }}</div>
-                  {%- endif -%}
-                  {%- render 'product-btns', se_stts: se_stts, product: product -%}
-                </div>
-              {%- endif -%}
+              {%- render 'product-media-no-media',
+                se_stts: se_stts,
+                se_id: se_id,
+                image_ratio: image_ratio,
+                imgatt: imgatt,
+                class_pswp_disable: class_pswp_disable,
+                media_custom_img_enable: media_custom_img_enable,
+                media_custom_img: media_custom_img,
+                media_heading: media_heading,
+                product: product
+              -%}
 
             {%- when 'one_media_size' -%}
-              {%- assign media = product_media.first -%}
-              <div data-product-single-media-group class="t4s-product__one_media t4s-pr" timeline hdt-reveal="slide-in">
-                <div
-                  data-t4s-gallery
-                  data-t4s-thumb-false
-                  data-main-media
-                  class="t4s-row t4s-g-0 t4s-product__media t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }}"
-                >
-                  {%- render 'product-thumbnail',
-                    media: media,
-                    imgatt: imgatt,
-                    variant_images: variant_images,
-                    loop: enable_video_looping,
-                    mute: enable_video_muting,
-                    autoplay: enable_video_autoplaying,
-                    height: height,
-                    se_id: se_id,
-                    class_pswp_disable: class_pswp_disable,
-                    variants_size: 1
-                  -%}
-                </div>
-                <div
-                  data-product-single-badge
-                  data-sort="sale,new,soldout,preOrder,custom"
-                  class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0"
-                  data-rendert4s="css:{{ 'single-pr-badge.css' | asset_url }}"
-                ></div>
-                {%- if media_custom_img != blank -%}
-                  <div class="t4s-product-media-custom-img-{{ se_id }}">
-                    {{ media_custom_img | image_url: width: 200 | image_tag: loading: 'lazy', class: 't4s-obj-eff' }}
-                  </div>
-                {%- endif -%}
-                {%- if media_heading != blank -%}
-                  <div class="t4s-product-media-heading-{{ se_id }}">{{ media_heading }}</div>
-                {%- endif -%}
-                {%- render 'product-btns', se_stts: se_stts, product: product -%}
-              </div>
+              {%- render 'product-media-one-media',
+                product_media: product_media,
+                se_stts: se_stts,
+                se_id: se_id,
+                image_ratio: image_ratio,
+                imgatt: imgatt,
+                variant_images: variant_images,
+                enable_video_looping: enable_video_looping,
+                enable_video_muting: enable_video_muting,
+                enable_video_autoplaying: enable_video_autoplaying,
+                height: height,
+                class_pswp_disable: class_pswp_disable,
+                media_custom_img_enable: media_custom_img_enable,
+                media_custom_img: media_custom_img,
+                media_heading: media_heading,
+                product: product
+              -%}
 
             {%- when 'thumbnails_left', 'thumbnails_bottom', 'thumbnails_right', 'without_thumbnails' -%}
-              {%- liquid
-                if media_layout == 'thumbnails_left'
-                  assign class_main = 't4s-col-lg t4s-order-lg-last '
-                  assign class_thumb = 't4s-col-lg-auto t4s-order-lg-first '
-                elsif media_layout == 'thumbnails_right'
-                  assign class_main = 't4s-col-lg '
-                  assign class_thumb = 't4s-col-lg-auto '
-                else
-                  assign class_gx_lg = ' t4s-g-lg-10 '
-                endif
+              {%- render 'product-media-thumbnails',
+                media_layout: media_layout,
+                product_media: product_media,
+                se_stts: se_stts,
+                se_id: se_id,
+                image_ratio: image_ratio,
+                imgatt: imgatt,
+                variant_images: variant_images,
+                enable_video_looping: enable_video_looping,
+                enable_video_muting: enable_video_muting,
+                enable_video_autoplaying: enable_video_autoplaying,
+                height: height,
+                isMediaHidden: isMediaHidden,
+                current_option1: current_option1,
+                current_option2: current_option2,
+                current_option3: current_option3,
+                ops_name: ops_name,
+                ops_name_1: ops_name_1,
+                ops_name_2: ops_name_2,
+                ops_name_3: ops_name_3,
+                class_pswp_disable: class_pswp_disable,
+                variants_size: variants_size,
+                canMedia_group: canMedia_group,
+                has_media_360: has_media_360,
+                media_custom_img_enable: media_custom_img_enable,
+                media_custom_img: media_custom_img,
+                media_heading: media_heading,
+                product: product
               -%}
-              {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
-              <div class="t4s-row t4s-g-0" timeline hdt-reveal="slide-in">
-                <div data-product-single-media-group class="{{ class_main }}t4s-col-12 t4s-col-item t4s-pr">
-                  <div
-                    data-t4s-gallery
-                    data-main-media
-                    data-t4s-thumb-true
-                    class="t4s-row t4s-g-0 t4s-slide-eff-{{ se_stts.eff }} flickityt4s t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }} t4s-flicky-slider {% if se_stts.nav_btn %} t4s-slider-btn-{{ se_stts.nav_btn }} t4s-slider-btn-style-{{ se_stts.btn_owl }} t4s-slider-btn-{{ se_stts.btn_shape }} t4s-slider-btn-{{ se_stts.btn_size }} t4s-slider-btn-cl-{{ se_stts.btn_cl }} t4s-slider-btn-vi-{{ se_stts.btn_vi }} t4s-slider-btn-hidden-mobile-{{ se_stts.btn_hidden_mobile }} {% endif %} {% if se_stts.nav_dot %} t4s-dots-style-{{ se_stts.dot_owl }} t4s-dots-cl-{{ se_stts.dots_cl }} t4s-dots-round-{{ se_stts.dots_round }} t4s-dots-hidden-mobile-{{ se_stts.dots_hidden_mobile }} {% endif %}"
-                    data-flickityt4s-js='{"t4sid": "{{ se_id }}", "status": true, "checkVisibility": false, "cellSelector": "[data-main-slide]:not(.is--media-hide)","isFilter":{{ canMedia_group }},"imagesLoaded": 0,"adaptiveHeight": 1, "contain": 1, "groupCells": "100%", "dragThreshold" : {% if se_stts.eff == 'fade' %}6{% else %}5{% endif %}, "cellAlign": "left","wrapAround": true,"prevNextButtons": {{ se_stts.nav_btn }},"percentPosition": 1,"pageDots": {{ se_stts.nav_dot }}, "autoPlay" : 0, "pauseAutoPlayOnHover" : true , "thumbNav": {% if media_layout != 'without_thumbnails' %}true{% else %}false{% endif %}, "thumbVertical": {% if media_layout != 'thumbnails_bottom' %}true{% else %}false{% endif %}, "isMedia": true }'
-                    style="--flickity-btn-pos: 0px;--flickity-btn-pos-mb: 0px;--space-dots: {{ se_stts.dots_space }}px;"
-                  >
-                    {%- liquid
-                      for media in product_media
-                        if media.preview_image and media.preview_image.alt contains 'break--360'
-                          break
-                        endif
-                        render 'product-thumbnail', media: media, imgatt: imgatt, variant_images: variant_images, loop: enable_video_looping, mute: enable_video_muting, autoplay: enable_video_autoplaying, height: height, se_id: se_id, isMediaHidden: isMediaHidden, current_option1: current_option1, current_option2: current_option2, current_option3: current_option3, ops_name: ops_name, ops_name_1: ops_name_1, ops_name_2: ops_name_2, ops_name_3: ops_name_3, class_pswp_disable: class_pswp_disable, variants_size: variants_size
-                      endfor
-                      if has_media_360
-                        render 'product-360', product: product, se_id: se_id
-                      endif
-                    -%}
-                    {%- if se_stts.nav_dot and se_stts.dot_owl == 'number' -%}
-                      <div class="flickityt4s-page-dots t4s-dots-list carousel--status{{ se_id }}">
-                        <span data-current-slide></span> / <span data-total-number></span>
-                      </div>
-                    {%- endif -%}
-                  </div>
-                  <div
-                    data-product-single-badge
-                    data-sort="sale,new,soldout,preOrder,custom"
-                    class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0"
-                    data-rendert4s="css:{{ 'single-pr-badge.css' | asset_url }}"
-                  ></div>
-                  {%- if media_custom_img_enable and media_custom_img != blank -%}
-                    <div class="t4s-product-media-custom-img-{{ se_id }}">
-                      {{ media_custom_img | image_url: width: 400 | image_tag: loading: 'lazy', class: 't4s-obj-eff' }}
-                    </div>
-                  {%- endif -%}
-                  {%- if media_heading != blank -%}
-                    <div class="t4s-product-media-heading-{{ se_id }}">{{ media_heading }}</div>
-                  {%- endif -%}
-                  {%- render 'product-btns', se_stts: se_stts, product: product -%}
-                </div>
-
-                {%- if media_layout != 'without_thumbnails' -%}
-                  <div class="{{ class_thumb }}t4s-col-12 t4s-col-item t4s-col-thumb t4s-pr t4s-oh">
-                    <div
-                      data-thumb__scroller="{{ se_id }}"
-                      class="t4s-carousel__nav-scroller is__position-{{ media_layout | remove: 'thumbnails_' }}"
-                    >
-                      <div class="t4s-row t4s-row-mt t4s-row-cols-4 t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }} {{ class_gx_lg }}t4s-g-5 t4s-carousel__nav carousel__nav--{{ se_id }} carousel__nav-hover1">
-                        {%- for media in product_media limit: 4 -%}
-                          {%- assign image = media.preview_image -%}
-                          <div class="t4s-col-item t4s-product__thumb-item">
-                            <div
-                              class="t4s_ratio t4s-product__thumb"
-                              {{ imgatt }}style="--aspect-ratioapt:{{ image.aspect_ratio }}"
-                            ></div>
-                          </div>
-                        {%- endfor -%}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      data-thumb-btn__prev="{{ se_id }}"
-                      aria-label="Previous"
-                      class="btn_pnav_prev t4s-pa t4s-pe-none t4s-op-0"
-                    ></button>
-                    <button
-                      type="button"
-                      data-thumb-btn__next="{{ se_id }}"
-                      aria-label="Next"
-                      class="btn_pnav_next t4s-pa t4s-pe-none t4s-op-0"
-                    ></button>
-                  </div>
-                {%- endif -%}
-              </div>
 
             {%- when 'one_column', 'two_columns', 'combined_grid' -%}
               {%- liquid
@@ -717,6 +623,49 @@
                 </div>
               </div>
           {%- endcase -%}
+
+          {%- comment -%} 图片区域下方的 Blocks {%- endcomment -%}
+          <div class="t4s-product__media-blocks">
+            {%- for block in seBlocks -%}
+              {%- case block.type -%}
+                {%- when 'media_below_text' -%}
+                  <div class="t4s-product-media-block t4s-product-media-block--text" {{ block.shopify_attributes }}>
+                    <div class="t4s-rte" style="margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px;">
+                      {{ block.settings.text }}
+                    </div>
+                  </div>
+
+                {%- when 'media_below_html' -%}
+                  <div class="t4s-product-media-block t4s-product-media-block--html" {{ block.shopify_attributes }}>
+                    <div class="t4s-rte" style="margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px;">
+                      {{ block.settings.page.content }}
+                    </div>
+                  </div>
+
+                {%- when 'media_below_liquid' -%}
+                  <div class="t4s-product-media-block t4s-product-media-block--liquid" {{ block.shopify_attributes }}>
+                    <div style="margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px;">
+                      {{ block.settings.custom_liquid }}
+                    </div>
+                  </div>
+
+                {%- when 'media_below_image' -%}
+                  {%- if block.settings.image != blank -%}
+                    <div class="t4s-product-media-block t4s-product-media-block--image{% if block.settings.hide_on_mobile %} t4s-dn-mb{% endif %}" {{ block.shopify_attributes }}>
+                      <div style="margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px; text-align: {{ block.settings.alignment }};">
+                        {%- if block.settings.link != blank -%}
+                          <a href="{{ block.settings.link }}">
+                        {%- endif -%}
+                        {{ block.settings.image | image_url: width: block.settings.image_width | image_tag: loading: 'lazy', style: 'max-width: 100%; height: auto;' }}
+                        {%- if block.settings.link != blank -%}
+                          </a>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
         </div>
         <div data-t4s-zoom-info class="t4s-{{ class_info }} t4s-col-12 t4s-col-item t4s-product__info-wrapper t4s-pr">
           <div id="product-zoom-{{ section.id }}" class="t4s-product__zoom-wrapper"></div>
@@ -856,13 +805,13 @@
 </style>
 
                     <script>
-                      // 立即检查 localStorage 并显示对应价格（避免闪烁）
+                      // 根据浏览器 localStorage 显示对应价格（避免闪烁）
                       (function () {
                         try {
                           var isDiscountApplied = localStorage.getItem('bf_discount_applied');
                           console.log('=== Black Friday 价格初始化 ===');
                           console.log('localStorage bf_discount_applied:', isDiscountApplied);
-                          console.log('所有 localStorage:', localStorage);
+                          console.log('完整 localStorage:', localStorage);
 
                           var container = document.currentScript.closest('[data-bf-price-container]');
                           console.log('价格容器:', container);
@@ -880,7 +829,7 @@
                               if (originalPrice) originalPrice.style.display = 'none';
                               if (discountPrice) discountPrice.style.display = 'block';
                             } else {
-                              console.log('✗ 显示原始价格');
+                              console.log('✓ 显示原始价格');
                               // 显示原价，隐藏折扣价
                               if (originalPrice) originalPrice.style.display = 'block';
                               if (discountPrice) discountPrice.style.display = 'none';
@@ -1123,7 +1072,7 @@
                     assign arr_properties = seBlocks | where: 'type', 'properties'
                     
                     comment
-                      Debug: 输出 bk_stts 的关键设置
+                      Debug: ���� bk_stts �Ĺؼ�����
                       echo 'Debug - Button Style: ' | append: bk_stts.button_style
                       echo 'Debug - Button Color: ' | append: bk_stts.button_color
                       echo 'Debug - Button Effect: ' | append: bk_stts.button_effect
@@ -1137,473 +1086,12 @@
                   -%}
 
                 {%- when 'custom_image_upload' -%}
-                  {%- comment -%} 自定义图片上传区块 {%- endcomment -%}
-                  {{ 'custom-upload.css' | asset_url | stylesheet_tag }}
-                  {%- assign upload_id = 'custom-upload-' | append: product.id | append: '-' | append: block.id -%}
-                  {%- assign note_input_id = 'design-note-' | append: product.id | append: '-' | append: block.id -%}
-                  {%- comment -%} 固定属性名：tm_customer_upload_image 和 tm_customer_remark {%- endcomment -%}
-                  {%- assign property_name = 'tm_customer_upload_image' -%}
-                  {%- assign note_property_name = 'tm_customer_remark' -%}
-                  {%- assign display_label = bk_stts.upload_label | default: 'Upload Your Design' -%}
-                  {%- assign note_display_label = bk_stts.note_label | default: 'Design Note' -%}
-                  
-                  <style>
-                    /* Custom Upload Block - Inline Styles */
-                    .t4s-custom-upload__container {
-                      width: 100%;
-                    }
-                    .t4s-custom-upload__button {
-                      width: 100% !important;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      gap: 8px;
-                      padding: 12px 16px;
-                      border: 1px solid;
-                      cursor: pointer;
-                      box-sizing: border-box;
-                    }
-                    .t4s-custom-upload__uploaded-display {
-                      display: flex;
-                      align-items: center;
-                      justify-content: space-between;
-                      padding: 8px 12px;
-                      border: 1px solid #e5e7eb;
-                      border-radius: 6px;
-                      background: #f9fafb;
-                      min-height: 44px;
-                      box-sizing: border-box;
-                    }
-                    .t4s-custom-upload__uploaded-left {
-                      display: flex;
-                      align-items: center;
-                      gap: 10px;
-                      flex: 1;
-                      min-width: 0;
-                    }
-                    .t4s-custom-upload__uploaded-thumb {
-                      width: auto;
-                      height: 30px;
-                      max-width: 60px;
-                      border-radius: 4px;
-                      object-fit: contain;
-                      flex-shrink: 0;
-                      border: 1px solid #e5e7eb;
-                    }
-                    .t4s-custom-upload__uploaded-name {
-                      font-size: 13px;
-                      color: #374151;
-                      overflow: hidden;
-                      text-overflow: ellipsis;
-                      white-space: nowrap;
-                      flex: 1;
-                      min-width: 0;
-                    }
-                    .t4s-custom-upload__uploaded-delete {
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      width: 28px;
-                      height: 28px;
-                      border: none;
-                      background: transparent;
-                      cursor: pointer;
-                      color: #9ca3af;
-                      transition: none;
-                      flex-shrink: 0;
-                    }
-                    .t4s-custom-upload__uploaded-delete,
-                    .t4s-custom-upload__uploaded-delete:hover,
-                    .t4s-custom-upload__uploaded-delete:focus,
-                    .t4s-custom-upload__uploaded-delete:active {
-                      background: transparent !important;
-                      background-color: transparent !important;
-                      border-color: transparent !important;
-                      color: #9ca3af !important;
-                      box-shadow: none !important;
-                      outline: none !important;
-                    }
-                    .t4s-custom-upload__uploaded-delete img {
-                      width: 18px !important;
-                      height: 18px !important;
-                      max-width: none !important;
-                      display: block !important;
-                    }
-                  </style>
-                  
-                  <div 
-                    class="t4s-custom-upload" 
-                    data-custom-upload 
-                    data-product-id="{{ product.id }}"
-                    data-block-id="{{ block.id }}"
-                    {{ block.shopify_attributes }}
-                  >
-                    {%- comment -%} 1. Upload Your Design 区域（显示在上方） {%- endcomment -%}
-                    <label class="t4s-custom-upload__label" for="{{ upload_id }}">
-                      {{ display_label }}
-                      {%- if bk_stts.required -%}<span style="color:#ef4444;margin-left:2px;">*</span>{%- endif -%}
-                    </label>
-                    
-                    <div class="t4s-custom-upload__container">
-                      <input 
-                        type="file" 
-                        id="{{ upload_id }}" 
-                        class="t4s-custom-upload__input"
-                        form="product-form-{{ pr_se_id }}"
-                        name="properties[{{ property_name }}]"
-                        accept="image/jpeg,image/png,image/gif,image/webp"
-                        data-upload-input
-                        {% if bk_stts.required %}required{% endif %}
-                      >
-                      
-                      {%- comment -%} Choose File 按钮（上传前显示） {%- endcomment -%}
-                      <div 
-                        class="t4s-custom-upload__button" 
-                        data-upload-trigger
-                        style="background:{{ bk_stts.btn_bg_color }};color:{{ bk_stts.btn_text_color }};border-color:{{ bk_stts.btn_border_color }};border-radius:{{ bk_stts.btn_border_radius }}px;"
-                      >
-                        <svg class="t4s-custom-upload__icon" viewBox="0 0 24 24" width="20" height="20">
-                          <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/>
-                        </svg>
-                        <span class="t4s-custom-upload__text">{{ bk_stts.btn_text | default: 'Choose File' }}</span>
-                      </div>
-                      
-                      {%- comment -%} 上传成功后显示的容器（缩略图 + 文件名 + 删除按钮） {%- endcomment -%}
-                      <div class="t4s-custom-upload__uploaded-display" data-uploaded-display style="display: none;">
-                        <div class="t4s-custom-upload__uploaded-left">
-                          <img src="" alt="Uploaded" class="t4s-custom-upload__uploaded-thumb" data-uploaded-thumb height="30">
-                          <span class="t4s-custom-upload__uploaded-name" data-uploaded-name></span>
-                        </div>
-                        <button type="button" class="t4s-custom-upload__uploaded-delete" data-uploaded-delete aria-label="Remove uploaded file">
-                          <img src="{{ 'icon_trash.png' | asset_url }}" alt="Delete" width="18" height="18" style="display:block;">
-                        </button>
-                      </div>
-                    </div>
-                    
-                    {%- comment -%} 隐藏的文件名显示（保留兼容性） {%- endcomment -%}
-                    <div class="t4s-custom-upload__filename" data-filename style="display: none;">
-                      {{ bk_stts.no_file_text | default: 'No file chosen' }}
-                    </div>
-                    
-                    {%- comment -%} 2. 设计备注输入框（显示在下方） {%- endcomment -%}
-                    {%- if bk_stts.show_note_input -%}
-                    <div class="t4s-custom-upload__note-section" style="margin-top: 16px;">
-                      <label class="t4s-custom-upload__label" for="{{ note_input_id }}">
-                        {{ note_display_label }}
-                        {%- if bk_stts.note_required -%}<span style="color:#ef4444;margin-left:2px;">*</span>{%- endif -%}
-                      </label>
-                      <input 
-                        type="text" 
-                        id="{{ note_input_id }}" 
-                        class="t4s-custom-upload__note-input"
-                        form="product-form-{{ pr_se_id }}"
-                        name="properties[{{ note_property_name }}]"
-                        placeholder="{{ bk_stts.note_placeholder | default: 'Enter your personalization text...' }}"
-                        data-design-note-input
-                        maxlength="{{ bk_stts.note_max_length | default: 100 }}"
-                        {% if bk_stts.note_required %}required{% endif %}
-                      >
-                      {%- if bk_stts.note_description != blank -%}
-                        <p class="t4s-custom-upload__note-description">{{ bk_stts.note_description }}</p>
-                      {%- endif -%}
-                    </div>
-                    {%- endif -%}
-                    
-                    {%- comment -%} 旧的预览区域（隐藏，保留兼容性） {%- endcomment -%}
-                    <div class="t4s-custom-upload__preview-wrapper" data-preview-wrapper style="display: none !important;">
-                      <div class="t4s-custom-upload__preview">
-                        <img src="" alt="Preview" data-preview-image class="t4s-custom-upload__preview-img" width="150" height="150">
-                        <button type="button" class="t4s-custom-upload__remove" data-remove-upload aria-label="Remove image">
-                          <svg viewBox="0 0 24 24" width="16" height="16">
-                            <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-
-                    {%- comment -%} 描述文本（隐藏） {%- endcomment -%}
-                    {%- if bk_stts.show_description and bk_stts.description != blank -%}
-                      <p class="t4s-custom-upload__description" style="display: none;">{{ bk_stts.description }}</p>
-                    {%- endif -%}
-                    
-                    {%- comment -%} 图片预览数据（仅用于本地预览，不提交到订单） {%- endcomment -%}
-                    <input type="hidden" form="product-form-{{ pr_se_id }}" data-image-data value="">
-                    {%- comment -%} 隐藏的文件名字段，用于购物车显示 {%- endcomment -%}
-                    <input type="hidden" form="product-form-{{ pr_se_id }}" name="properties[_tm_customer_upload_filename]" data-upload-filename value="">
-                  </div>
-                  
-                  <script>
-                  (function() {
-                    var blockId = '{{ block.id }}';
-                    var productId = '{{ product.id }}';
-                    var noFileText = {{ bk_stts.no_file_text | default: 'No file chosen' | json }};
-                    
-                    function initUpload() {
-                      var container = document.querySelector('[data-custom-upload][data-block-id="' + blockId + '"]');
-                      if (!container) return;
-                      
-                      var input = container.querySelector('[data-upload-input]');
-                      var trigger = container.querySelector('[data-upload-trigger]');
-                      var filename = container.querySelector('[data-filename]');
-                      var previewWrapper = container.querySelector('[data-preview-wrapper]');
-                      var previewImage = container.querySelector('[data-preview-image]');
-                      var removeBtn = container.querySelector('[data-remove-upload]');
-                      var imageDataInput = container.querySelector('[data-image-data]');
-                      var designNoteInput = container.querySelector('[data-design-note-input]');
-                      var filenameInput = container.querySelector('[data-upload-filename]');
-                      
-                      // 新UI元素：上传成功后显示的容器
-                      var uploadedDisplay = container.querySelector('[data-uploaded-display]');
-                      var uploadedThumb = container.querySelector('[data-uploaded-thumb]');
-                      var uploadedName = container.querySelector('[data-uploaded-name]');
-                      var uploadedDelete = container.querySelector('[data-uploaded-delete]');
-                      
-                      // 显示上传成功状态
-                      function showUploadedState(imgSrc, fileName) {
-                        trigger.style.display = 'none';
-                        uploadedThumb.src = imgSrc;
-                        uploadedName.textContent = fileName;
-                        uploadedDisplay.style.display = 'flex';
-                      }
-                      
-                      // 恢复初始状态（Choose File 按钮）
-                      function showInitialState() {
-                        uploadedDisplay.style.display = 'none';
-                        uploadedThumb.src = '';
-                        uploadedName.textContent = '';
-                        trigger.style.display = 'flex';
-                      }
-                      
-                      // 恢复已保存的图片和设计备注
-                      var saved = localStorage.getItem('custom_upload_' + productId);
-                      if (saved) {
-                        try {
-                          var data = JSON.parse(saved);
-                          if (data.imageData && data.filename) {
-                            previewImage.src = data.imageData;
-                            filename.textContent = data.filename;
-                            imageDataInput.value = data.imageData;
-                            // 显示上传成功状态
-                            showUploadedState(data.imageData, data.filename);
-                          }
-                          if (data.designNote && designNoteInput) {
-                            designNoteInput.value = data.designNote;
-                          }
-                        } catch (e) {}
-                      }
-                      
-                      trigger.addEventListener('click', function() { input.click(); });
-                      
-                      // 设计备注输入框事件 + 绑定 Product Personalizer 输入框
-                      var pplrInput = null;
-                      var isSyncing = false; // 防止循环触发
-                      
-                      function findPplrInput() {
-                        // 查找 Product Personalizer 的文本输入框
-                        var pplrWrapper = document.querySelector('.pplr-wrapper.pplr-single-line-text, .pplr-wrapper.pplr-text');
-                        if (pplrWrapper) {
-                          return pplrWrapper.querySelector('input[type="text"], textarea');
-                        }
-                        return null;
-                      }
-                      
-                      function syncFromPplr() {
-                        if (isSyncing || !pplrInput || !designNoteInput) return;
-                        isSyncing = true;
-                        designNoteInput.value = pplrInput.value;
-                        saveUploadData();
-                        isSyncing = false;
-                      }
-                      
-                      function syncToPplr() {
-                        if (isSyncing || !pplrInput || !designNoteInput) return;
-                        isSyncing = true;
-                        pplrInput.value = designNoteInput.value;
-                        // 触发 pplr 输入框的 input 事件，让插件更新
-                        pplrInput.dispatchEvent(new Event('input', { bubbles: true }));
-                        pplrInput.dispatchEvent(new Event('change', { bubbles: true }));
-                        isSyncing = false;
-                      }
-                      
-                      function bindPplrInput() {
-                        pplrInput = findPplrInput();
-                        if (pplrInput && designNoteInput) {
-                          // 初始同步：从 pplr 到我的输入框
-                          if (pplrInput.value && !designNoteInput.value) {
-                            syncFromPplr();
-                          } else if (designNoteInput.value && !pplrInput.value) {
-                            syncToPplr();
-                          }
-                          
-                          // 监听 pplr 输入框变化
-                          pplrInput.addEventListener('input', syncFromPplr);
-                          pplrInput.addEventListener('change', syncFromPplr);
-                        }
-                      }
-                      
-                      // 延迟绑定，等待 Product Personalizer 加载
-                      setTimeout(bindPplrInput, 500);
-                      setTimeout(bindPplrInput, 1500);
-                      setTimeout(bindPplrInput, 3000);
-                      
-                      // 使用 MutationObserver 监听 DOM 变化
-                      var pplrObserver = new MutationObserver(function(mutations) {
-                        if (!pplrInput) {
-                          bindPplrInput();
-                        }
-                      });
-                      pplrObserver.observe(document.body, { childList: true, subtree: true });
-                      
-                      if (designNoteInput) {
-                        designNoteInput.addEventListener('input', function() {
-                          saveUploadData();
-                          syncToPplr();
-                        });
-                      }
-                      
-                      function saveUploadData() {
-                        var saveData = {
-                          imageData: imageDataInput.value || '',
-                          filename: filename.textContent !== noFileText ? filename.textContent : '',
-                          designNote: designNoteInput ? designNoteInput.value : '',
-                          timestamp: Date.now()
-                        };
-                        localStorage.setItem('custom_upload_' + productId, JSON.stringify(saveData));
-                        
-                        // 保存到购物车存储
-                        var cartImages = {};
-                        try { var s = localStorage.getItem('cart_uploaded_images'); if(s) cartImages = JSON.parse(s); } catch(e){}
-                        cartImages[productId] = saveData;
-                        localStorage.setItem('cart_uploaded_images', JSON.stringify(cartImages));
-                      }
-                      
-                      input.addEventListener('change', function(e) {
-                        var file = e.target.files[0];
-                        if (!file) return;
-                        
-                        if (!['image/jpeg','image/png','image/gif','image/webp'].includes(file.type)) {
-                          alert('Please select a valid image file'); return;
-                        }
-                        if (file.size > 5 * 1024 * 1024) {
-                          alert('File size must be less than 5MB'); return;
-                        }
-                        
-                        filename.textContent = file.name;
-                        
-                        // 更新隐藏的文件名字段，用于购物车显示
-                        if (filenameInput) {
-                          filenameInput.value = file.name;
-                        }
-                        
-                        var reader = new FileReader();
-                        reader.onload = function(re) {
-                          var imgData = re.target.result;
-                          previewImage.src = imgData;
-                          imageDataInput.value = imgData;
-                          
-                          // 显示上传成功状态（缩略图 + 文件名 + 删除按钮）
-                          showUploadedState(imgData, file.name);
-                          
-                          saveUploadData();
-                          window.dispatchEvent(new CustomEvent('customImageUploaded', { detail: { productId: productId } }));
-                        };
-                        reader.readAsDataURL(file);
-                      });
-                      
-                      // 旧的删除按钮事件（保留兼容性）
-                      removeBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        input.value = '';
-                        filename.textContent = noFileText;
-                        previewImage.src = '';
-                        imageDataInput.value = '';
-                        if (filenameInput) filenameInput.value = '';
-                        showInitialState();
-                        saveUploadData();
-                        window.dispatchEvent(new CustomEvent('customImageRemoved', { detail: { productId: productId } }));
-                      });
-                      
-                      // 新的删除按钮事件（上传成功容器中的删除图标）
-                      uploadedDelete.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        input.value = '';
-                        filename.textContent = noFileText;
-                        previewImage.src = '';
-                        imageDataInput.value = '';
-                        if (filenameInput) filenameInput.value = '';
-                        showInitialState();
-                        saveUploadData();
-                        window.dispatchEvent(new CustomEvent('customImageRemoved', { detail: { productId: productId } }));
-                      });
-                      
-                      // Add to Cart 后清空上传组件和设计备注
-                      function clearUploadData() {
-                        input.value = '';
-                        filename.textContent = noFileText;
-                        previewImage.src = '';
-                        imageDataInput.value = '';
-                        if (filenameInput) {
-                          filenameInput.value = '';
-                        }
-                        if (designNoteInput) {
-                          designNoteInput.value = '';
-                        }
-                        // 恢复初始状态
-                        showInitialState();
-                        // 清空 pplr 输入框
-                        if (pplrInput) {
-                          pplrInput.value = '';
-                          pplrInput.dispatchEvent(new Event('input', { bubbles: true }));
-                          pplrInput.dispatchEvent(new Event('change', { bubbles: true }));
-                        }
-                        // 清空 localStorage
-                        localStorage.removeItem('custom_upload_' + productId);
-                        try {
-                          var cartImages = JSON.parse(localStorage.getItem('cart_uploaded_images') || '{}');
-                          delete cartImages[productId];
-                          localStorage.setItem('cart_uploaded_images', JSON.stringify(cartImages));
-                        } catch(e) {}
-                      }
-                      
-                      // 监听多种 Add to Cart 事件
-                      // 1. 监听表单提交
-                      var productForm = document.querySelector('form[action*="/cart/add"]');
-                      if (productForm) {
-                        productForm.addEventListener('submit', function() {
-                          // 延迟清空，确保表单数据已提交
-                          setTimeout(clearUploadData, 500);
-                        });
-                      }
-                      
-                      // 2. 监听自定义 ATC 事件
-                      document.addEventListener('t4s:cart:added', function() {
-                        clearUploadData();
-                      });
-                      
-                      // 3. 监听全局 cart:refresh 事件
-                      window.addEventListener('cart:refresh', function() {
-                        clearUploadData();
-                      });
-                      
-                      // 4. 监听 Add to Cart 按钮点击
-                      var atcButtons = document.querySelectorAll('[data-action-atc], [name="add"], .t4s-btn__atc, .product-form__submit');
-                      atcButtons.forEach(function(btn) {
-                        btn.addEventListener('click', function() {
-                          // 延迟清空，等待请求完成
-                          setTimeout(clearUploadData, 1000);
-                        });
-                      });
-                    }
-                    
-                    if (document.readyState === 'loading') {
-                      document.addEventListener('DOMContentLoaded', initUpload);
-                    } else {
-                      initUpload();
-                    }
-                  })();
-                  </script>
+                  {%- render 'product-block-custom-upload',
+                    block: block,
+                    bk_stts: bk_stts,
+                    product: product,
+                    pr_se_id: pr_se_id
+                  -%}
 
                 {%- when 'size_delivery_ask' -%}
                   <div class="t4s-extra-link" {{ block.shopify_attributes }}>
@@ -1621,7 +1109,7 @@
 
                         if bk_size_chart == '2' or pos_sizeg == '2'
                           assign ck_s = false
-                          assign size_ck = bk_stts__sizeg.size_ck | append: ',size,sizes,Größe'
+                          assign size_ck = bk_stts__sizeg.size_ck | append: ',size,sizes,Gr??e'
                           assign get_size = size_ck | downcase | replace: ' ,', ',' | replace: ', ', ',' | split: ',' | uniq
                           for option in product.options_with_values
                             assign name = option.name | downcase
@@ -2300,7 +1788,34 @@
                   </div>
 
                 {%- when '@app' -%}
-                  {%- render block -%}
+                  {%- liquid
+                    assign is_kaching_bundles = false
+                    
+                    if block.type contains 'kaching-bundles' or block.type contains '6c637362-a106-4a32-94ac-94dcfd68cdb8'
+                      assign is_kaching_bundles = true
+                    endif
+                    
+                    assign show_kaching = true
+                    if is_kaching_bundles
+                      assign form_block = section.blocks | where: 'type', 'form' | first
+                      if form_block.settings.show_kaching_bundles == false
+                        assign show_kaching = false
+                      endif
+                    endif
+                  -%}
+                  
+                  {%- if is_kaching_bundles and show_kaching == false -%}
+                    <style>
+                      kaching-bundle,
+                      kaching-bundles-block {
+                        display: none !important;
+                      }
+                    </style>
+                  {%- endif -%}
+                  
+                  {%- unless is_kaching_bundles and show_kaching == false -%}
+                    {%- render block -%}
+                  {%- endunless -%}
                 {%- when 'complimentary_products' -%}
                   {%- if product.metafields['shopify--discovery--product_recommendation'].complementary_products.value
                       == blank
@@ -2321,6 +1836,16 @@
                       {%- endfor -%}
                     </ul>
                   </div>
+
+                {%- when 'bundle_selector' -%}
+                  {%- comment -%} 捆绑包/套装选择器 Block {%- endcomment -%}
+                  {%- render 'product-bundle-selector', 
+                    block: block, 
+                    block_id: block.id, 
+                    current_variant: current_variant, 
+                    bk_stts: bk_stts 
+                  -%}
+
               {%- endcase -%}
             {%- endfor -%}
           </div>
@@ -3113,7 +2638,7 @@
     },
     {
       "type": "paragraph",
-      "content": "—————————————————"
+      "content": "����������������������������������"
     },
     {
       "type": "checkbox",
@@ -3882,7 +3407,7 @@
             },
             {
               "value": "1",
-              "label": "$39.00 – $59.00"
+              "label": "$39.00 �C $59.00"
             },
             {
               "value": "2",
@@ -3911,7 +3436,7 @@
           ],
           "label": "Save badge type",
           "default": "0",
-          "info": "Elevate your sales with [Advanced Badges](https:\/\/apps.shopify.com\/product-badges-label-design?utm_source=co_marketing&utm_medium=the4) – CRO boost!"
+          "info": "Elevate your sales with [Advanced Badges](https:\/\/apps.shopify.com\/product-badges-label-design?utm_source=co_marketing&utm_medium=the4) �C CRO boost!"
         },
         {
           "type": "checkbox",
@@ -4589,6 +4114,17 @@
         },
         {
           "type": "header",
+          "content": "+ Kaching Bundles"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_kaching_bundles",
+          "label": "Show Kaching Bundles",
+          "default": true,
+          "info": "Show or hide the Kaching Bundles app block"
+        },
+        {
+          "type": "header",
           "content": "+ Grouped Product"
         },
         {
@@ -4638,6 +4174,688 @@
           "id": "advance_pr_list",
           "label": "Products",
           "limit": 10
+        }
+      ]
+    },
+    {
+      "type": "bundle_selector",
+      "name": "✨Bundle/Pack Selector",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_bundle_selector",
+          "label": "Enable Bundle Selector",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Layout Settings"
+        },
+        {
+          "type": "select",
+          "id": "layout_direction",
+          "label": "Layout Direction",
+          "options": [
+            {
+              "value": "horizontal",
+              "label": "Horizontal"
+            },
+            {
+              "value": "vertical",
+              "label": "Vertical"
+            }
+          ],
+          "default": "horizontal"
+        },
+        {
+          "type": "range",
+          "id": "bundle_gap",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "label": "Gap between options",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "bundle_padding",
+          "min": 4,
+          "max": 24,
+          "step": 2,
+          "unit": "px",
+          "label": "Option padding",
+          "default": 8
+        },
+        {
+          "type": "range",
+          "id": "bundle_border_radius",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "label": "Border radius",
+          "default": 8
+        },
+        {
+          "type": "range",
+          "id": "bundle_border_width",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "unit": "px",
+          "label": "Border width",
+          "default": 2
+        },
+        {
+          "type": "header",
+          "content": "Mobile Layout Settings"
+        },
+        {
+          "type": "checkbox",
+          "id": "mobile_keep_horizontal",
+          "label": "Keep horizontal layout on mobile",
+          "default": true,
+          "info": "Keep 3 columns on mobile devices (recommended for better UX)"
+        },
+        {
+          "type": "range",
+          "id": "bundle_gap_mobile",
+          "min": 4,
+          "max": 20,
+          "step": 2,
+          "unit": "px",
+          "label": "Gap between options (mobile)",
+          "default": 8,
+          "info": "Spacing between bundle options on mobile"
+        },
+        {
+          "type": "range",
+          "id": "mobile_min_height",
+          "min": 80,
+          "max": 150,
+          "step": 5,
+          "unit": "px",
+          "label": "Minimum height (mobile)",
+          "default": 100,
+          "info": "Minimum height of each bundle option on mobile"
+        },
+        {
+          "type": "range",
+          "id": "bundle_padding_mobile",
+          "min": 0,
+          "max": 12,
+          "step": 1,
+          "unit": "px",
+          "label": "Content padding (mobile)",
+          "default": 0,
+          "info": "Inner padding of bundle options on mobile"
+        },
+        {
+          "type": "range",
+          "id": "mobile_badge_font_size",
+          "min": 8,
+          "max": 14,
+          "step": 1,
+          "unit": "px",
+          "label": "Badge font size (mobile)",
+          "default": 9
+        },
+        {
+          "type": "range",
+          "id": "bundle_badge_padding_v_mobile",
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "unit": "px",
+          "label": "Badge padding vertical (mobile)",
+          "default": 6
+        },
+        {
+          "type": "range",
+          "id": "bundle_badge_padding_h_mobile",
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "unit": "px",
+          "label": "Badge padding horizontal (mobile)",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "mobile_label_font_size",
+          "min": 10,
+          "max": 16,
+          "step": 1,
+          "unit": "px",
+          "label": "Label font size (mobile)",
+          "default": 12,
+          "info": "Font size for quantity text (e.g., '3 Cards')"
+        },
+        {
+          "type": "range",
+          "id": "mobile_price_font_size",
+          "min": 14,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Price font size (mobile)",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "mobile_shipping_font_size",
+          "min": 8,
+          "max": 12,
+          "step": 1,
+          "unit": "px",
+          "label": "Shipping text font size (mobile)",
+          "default": 9
+        },
+        {
+          "type": "range",
+          "id": "bundle_shipping_padding_v_mobile",
+          "min": 2,
+          "max": 10,
+          "step": 1,
+          "unit": "px",
+          "label": "Shipping padding vertical (mobile)",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "bundle_shipping_padding_h_mobile",
+          "min": 2,
+          "max": 10,
+          "step": 1,
+          "unit": "px",
+          "label": "Shipping padding horizontal (mobile)",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "mobile_checkmark_size",
+          "min": 10,
+          "max": 18,
+          "step": 1,
+          "unit": "px",
+          "label": "Checkmark size (mobile)",
+          "default": 12
+        },
+        {
+          "type": "range",
+          "id": "mobile_checkmark_triangle_size",
+          "min": 20,
+          "max": 35,
+          "step": 1,
+          "unit": "px",
+          "label": "Checkmark triangle size (mobile)",
+          "default": 25
+        },
+        {
+          "type": "range",
+          "id": "mobile_checkmark_bottom",
+          "min": 0,
+          "max": 8,
+          "step": 1,
+          "unit": "px",
+          "label": "Checkmark bottom position (mobile)",
+          "default": 2
+        },
+        {
+          "type": "range",
+          "id": "mobile_checkmark_right",
+          "min": 0,
+          "max": 8,
+          "step": 1,
+          "unit": "px",
+          "label": "Checkmark right position (mobile)",
+          "default": 2
+        },
+        {
+          "type": "header",
+          "content": "Color Settings"
+        },
+        {
+          "type": "color",
+          "id": "bundle_border_color",
+          "label": "Border color",
+          "default": "#e5e7eb"
+        },
+        {
+          "type": "color",
+          "id": "bundle_bg_color",
+          "label": "Background color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "bundle_text_color",
+          "label": "Text color",
+          "default": "#1f2937"
+        },
+        {
+          "type": "color",
+          "id": "bundle_selected_border_color",
+          "label": "Selected border color",
+          "default": "#3b82f6"
+        },
+        {
+          "type": "color",
+          "id": "bundle_selected_bg_color",
+          "label": "Selected background color",
+          "default": "#eff6ff"
+        },
+        {
+          "type": "color",
+          "id": "bundle_hover_border_color",
+          "label": "Hover border color",
+          "default": "#93c5fd"
+        },
+        {
+          "type": "color",
+          "id": "bundle_discount_bg_color",
+          "label": "Discount badge background",
+          "default": "#fef3c7"
+        },
+        {
+          "type": "color",
+          "id": "bundle_discount_text_color",
+          "label": "Discount badge text",
+          "default": "#92400e"
+        },
+        {
+          "type": "header",
+          "content": "Badge Gradient Background - Normal State"
+        },
+        {
+          "type": "checkbox",
+          "id": "bundle_badge_use_gradient",
+          "label": "Use gradient background for badges (normal state)",
+          "default": false,
+          "info": "Enable to use gradient instead of solid color for unselected pack title badges"
+        },
+        {
+          "type": "color_background",
+          "id": "bundle_badge_gradient",
+          "label": "Badge gradient background (normal)",
+          "default": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          "info": "Gradient background for unselected pack title badges"
+        },
+        {
+          "type": "header",
+          "content": "Badge Gradient Background - Selected State"
+        },
+        {
+          "type": "checkbox",
+          "id": "bundle_badge_selected_use_gradient",
+          "label": "Use gradient background for badges (selected state)",
+          "default": false,
+          "info": "Enable to use gradient instead of solid color for selected pack title badge"
+        },
+        {
+          "type": "color_background",
+          "id": "bundle_badge_selected_gradient",
+          "label": "Badge gradient background (selected)",
+          "default": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+          "info": "Gradient background for selected pack title badge"
+        },
+        {
+          "type": "color",
+          "id": "bundle_shipping_bg_color",
+          "label": "Shipping badge background",
+          "default": "#dbeafe"
+        },
+        {
+          "type": "color",
+          "id": "bundle_shipping_text_color",
+          "label": "Shipping badge text",
+          "default": "#1e40af"
+        },
+        {
+          "type": "color",
+          "id": "bundle_checkmark_color",
+          "label": "Checkmark color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "header",
+          "content": "Pricing Mode"
+        },
+        {
+          "type": "select",
+          "id": "pricing_mode",
+          "label": "Pricing Mode",
+          "info": "Choose how to calculate bundle prices",
+          "options": [
+            {
+              "value": "shopify",
+              "label": "Shopify Volume Pricing (Auto)"
+            },
+            {
+              "value": "manual",
+              "label": "Manual Configuration"
+            }
+          ],
+          "default": "manual"
+        },
+        {
+          "type": "text",
+          "id": "unit_singular",
+          "label": "Unit Name (Singular)",
+          "default": "Card",
+          "info": "e.g., Card, Item, Product"
+        },
+        {
+          "type": "text",
+          "id": "unit_plural",
+          "label": "Unit Name (Plural)",
+          "default": "Cards",
+          "info": "e.g., Cards, Items, Products"
+        },
+        {
+          "type": "header",
+          "content": "Pack 1 - Standard"
+        },
+        {
+          "type": "range",
+          "id": "pack1_quantity",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "label": "Quantity",
+          "default": 1,
+          "info": "Only used in Manual mode"
+        },
+        {
+          "type": "range",
+          "id": "pack1_discount",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Discount",
+          "default": 0,
+          "info": "Only used in Manual mode"
+        },
+        {
+          "type": "text",
+          "id": "pack1_title",
+          "label": "Title",
+          "default": "Standard"
+        },
+        {
+          "type": "checkbox",
+          "id": "pack1_show_shipping",
+          "label": "Show shipping badge",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "pack1_shipping_text",
+          "label": "Shipping text",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "color",
+          "id": "pack1_shipping_bg_color",
+          "label": "Shipping badge background",
+          "default": "#dbeafe"
+        },
+        {
+          "type": "color",
+          "id": "pack1_shipping_text_color",
+          "label": "Shipping badge text",
+          "default": "#1e40af"
+        },
+        {
+          "type": "header",
+          "content": "Pack 2 - Recommended"
+        },
+        {
+          "type": "range",
+          "id": "pack2_quantity",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "label": "Quantity",
+          "default": 3,
+          "info": "Only used in Manual mode"
+        },
+        {
+          "type": "range",
+          "id": "pack2_discount",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Discount",
+          "default": 19,
+          "info": "Only used in Manual mode"
+        },
+        {
+          "type": "text",
+          "id": "pack2_title",
+          "label": "Title",
+          "default": "Recommended"
+        },
+        {
+          "type": "checkbox",
+          "id": "pack2_show_shipping",
+          "label": "Show shipping badge",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "pack2_shipping_text",
+          "label": "Shipping text",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "color",
+          "id": "pack2_shipping_bg_color",
+          "label": "Shipping badge background",
+          "default": "#dbeafe"
+        },
+        {
+          "type": "color",
+          "id": "pack2_shipping_text_color",
+          "label": "Shipping badge text",
+          "default": "#1e40af"
+        },
+        {
+          "type": "header",
+          "content": "Pack 3 - Best Value"
+        },
+        {
+          "type": "range",
+          "id": "pack3_quantity",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "label": "Quantity",
+          "default": 5,
+          "info": "Only used in Manual mode"
+        },
+        {
+          "type": "range",
+          "id": "pack3_discount",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Discount",
+          "default": 40,
+          "info": "Only used in Manual mode"
+        },
+        {
+          "type": "text",
+          "id": "pack3_title",
+          "label": "Title",
+          "default": "Best Value"
+        },
+        {
+          "type": "checkbox",
+          "id": "pack3_show_shipping",
+          "label": "Show shipping badge",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "pack3_shipping_text",
+          "label": "Shipping text",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "color",
+          "id": "pack3_shipping_bg_color",
+          "label": "Shipping badge background",
+          "default": "#d1fae5"
+        },
+        {
+          "type": "color",
+          "id": "pack3_shipping_text_color",
+          "label": "Shipping badge text",
+          "default": "#065f46"
+        },
+        {
+          "type": "header",
+          "content": "Typography Settings"
+        },
+        {
+          "type": "range",
+          "id": "bundle_badge_padding_v",
+          "min": 4,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "label": "Badge padding vertical",
+          "default": 8,
+          "info": "Top and bottom padding for pack title badges"
+        },
+        {
+          "type": "range",
+          "id": "bundle_badge_padding_h",
+          "min": 4,
+          "max": 30,
+          "step": 1,
+          "unit": "px",
+          "label": "Badge padding horizontal",
+          "default": 8,
+          "info": "Left and right padding for pack title badges"
+        },
+        {
+          "type": "range",
+          "id": "bundle_quantity_size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Quantity text size",
+          "default": 16,
+          "info": "Font size for quantity text (e.g., '3 Cards')"
+        },
+        {
+          "type": "range",
+          "id": "bundle_quantity_weight",
+          "min": 300,
+          "max": 700,
+          "step": 100,
+          "label": "Quantity text weight",
+          "default": 400,
+          "info": "Font weight for quantity text"
+        },
+        {
+          "type": "range",
+          "id": "bundle_price_size",
+          "min": 16,
+          "max": 40,
+          "step": 1,
+          "unit": "px",
+          "label": "Price text size",
+          "default": 24,
+          "info": "Font size for price display"
+        },
+        {
+          "type": "range",
+          "id": "bundle_price_weight",
+          "min": 300,
+          "max": 900,
+          "step": 100,
+          "label": "Price text weight",
+          "default": 700,
+          "info": "Font weight for price display"
+        },
+        {
+          "type": "range",
+          "id": "bundle_shipping_padding_v",
+          "min": 4,
+          "max": 16,
+          "step": 1,
+          "unit": "px",
+          "label": "Shipping badge padding vertical",
+          "default": 7,
+          "info": "Top and bottom padding for shipping text"
+        },
+        {
+          "type": "range",
+          "id": "bundle_shipping_padding_h",
+          "min": 4,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "label": "Shipping badge padding horizontal",
+          "default": 8,
+          "info": "Left and right padding for shipping text"
+        },
+        {
+          "type": "header",
+          "content": "Checkmark Settings"
+        },
+        {
+          "type": "range",
+          "id": "bundle_checkmark_triangle_size",
+          "min": 25,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Triangle size",
+          "default": 35,
+          "info": "Size of the corner triangle when selected"
+        },
+        {
+          "type": "range",
+          "id": "bundle_checkmark_size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Checkmark icon size",
+          "default": 16,
+          "info": "Size of the checkmark icon"
+        },
+        {
+          "type": "range",
+          "id": "bundle_checkmark_bottom",
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "unit": "px",
+          "label": "Checkmark bottom position",
+          "default": 4,
+          "info": "Distance from bottom edge"
+        },
+        {
+          "type": "range",
+          "id": "bundle_checkmark_right",
+          "min": 2,
+          "max": 12,
+          "step": 1,
+          "unit": "px",
+          "label": "Checkmark right position",
+          "default": 4,
+          "info": "Distance from right edge"
         }
       ]
     },
@@ -4721,7 +4939,7 @@
           "type": "textarea",
           "id": "size_ck",
           "label": "Enter option name you want has size guide",
-          "info": "Eg: size,sizes,Größe"
+          "info": "Eg: size,sizes,Gr??e"
         },
         {
           "type": "header",
@@ -5841,7 +6059,7 @@
       "settings": [
         {
           "type": "paragraph",
-          "content": "Engage local shoppers by showing where items are available for pickup — right from the product page. [Learn more](https://help.shopify.com/en/manual/shipping/setting-up-and-managing-your-shipping/local-methods/local-pickup)"
+          "content": "Engage local shoppers by showing where items are available for pickup �� right from the product page. [Learn more](https://help.shopify.com/en/manual/shipping/setting-up-and-managing-your-shipping/local-methods/local-pickup)"
         }
       ]
     },
@@ -6597,7 +6815,7 @@
     },
     {
       "type": "properties",
-      "name": "⚡ Customizable Products",
+      "name": "? Customizable Products",
       "settings": [
         {
           "type": "paragraph",
@@ -6685,7 +6903,7 @@
           "min": 300,
           "max": 700,
           "step": 100,
-          "label": "Label font weight (标签字重)",
+          "label": "Label font weight (标签粗细)",
           "default": 400
         },
         {
@@ -6778,7 +6996,7 @@
           "id": "required",
           "default": false,
           "label": "Required",
-          "info": "If you use “Required” with a checkbox, then the checkbox will need to be checked for the customer to add the item to the cart."
+          "info": "If you use ��Required�� with a checkbox, then the checkbox will need to be checked for the customer to add the item to the cart."
         },
         {
           "type": "checkbox",
@@ -6854,7 +7072,7 @@
     },
     {
       "type": "custom_image_upload",
-      "name": "⭐ Custom Image Upload",
+      "name": "🌸🌸🌸 Custom Image Upload",
       "limit": 1,
       "settings": [
         {
@@ -6979,8 +7197,177 @@
       ]
     },
     {
+      "type": "media_below_text",
+      "name": "📷 Media Below - Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text content",
+          "default": "<p>Add text below product images</p>"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin bottom",
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "media_below_html",
+      "name": "📷 Media Below - HTML",
+      "settings": [
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Content page",
+          "info": "This page content will appear below product images"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin bottom",
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "media_below_liquid",
+      "name": "📷 Media Below - Liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Custom Liquid",
+          "info": "Add custom Liquid code below product images"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin bottom",
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "media_below_image",
+      "name": "📷 Media Below - Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        },
+        {
+          "type": "range",
+          "id": "image_width",
+          "min": 200,
+          "max": 1200,
+          "step": 50,
+          "unit": "px",
+          "label": "Image width",
+          "default": 600
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "Alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_mobile",
+          "label": "Hide on mobile",
+          "default": false,
+          "info": "Hide this image on mobile devices (screens smaller than 768px)"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin bottom",
+          "default": 20
+        }
+      ]
+    },
+    {
       "type": "color_selector",
-      "name": "🎨 Color Selector",
+      "name": "🎨🎨🎨 Color Selector",
       "limit": 1,
       "settings": [
         {
@@ -7123,13 +7510,13 @@
 {%- endschema -%}
 
 <style>
-  /* 覆盖 Product Personalizer 插件的默认 margin-bottom */
+  /* 移除 Product Personalizer 输入框默认 margin-bottom */
   .product-personalizer .pplr-wrapper.pplr-text,
   .product-personalizer .pplr-wrapper.pplr-single-line-text {
     margin-bottom: 0px !important;
   }
 
-  /* 如果上面的不生效，使用更具体的选择器 */
+  /* 如果上面的不生效，使用更高优先级选择器 */
   #pplr-{{ product.id }} .pplr-wrapper.pplr-text,
   #pplr-{{ product.id }} .pplr-wrapper.pplr-single-line-text {
     margin-bottom: 0px !important;
