@@ -201,7 +201,7 @@
     </div>
   </div>
   
-  {%- comment -%} JavaScript: 直接监听 swatch 点击，触发主 form 的对应 swatch {%- endcomment -%}
+  {%- comment -%} JavaScript: 直接监听 swatch 点击，触发主 form 的对应 swatch，并实现多选项联动筛选 {%- endcomment -%}
   <script>
     (function() {
       function initIndependentColorSelector() {
@@ -215,26 +215,268 @@
         }
         
         var independentSwatch = independentWrapper.querySelector('.t4s-swatch');
-        var mainSwatch = mainWrapper.querySelector('.t4s-swatch');
         
-        if (!independentSwatch || !mainSwatch) {
-          console.log('Swatches not found, retrying...');
+        // 🔧 关键修复：查找主 form 中所有的 swatch 容器
+        var mainSwatches = mainWrapper.querySelectorAll('.t4s-swatch');
+        var mainSwatch = null;
+        
+        // 如果有多个 swatch，找到包含选项的那个
+        if (mainSwatches.length > 0) {
+          console.log('Found', mainSwatches.length, 'swatch containers in main form');
+          
+          // 优先查找包含 data-swatch-option 的 swatch
+          for (var i = 0; i < mainSwatches.length; i++) {
+            var swatchOptions = mainSwatches[i].querySelectorAll('[data-swatch-option]');
+            if (swatchOptions.length > 0) {
+              mainSwatch = mainSwatches[i];
+              console.log('✅ Using swatch container', i, 'with', swatchOptions.length, 'options');
+              break;
+            }
+          }
+          
+          // 如果还没找到，使用第一个
+          if (!mainSwatch) {
+            mainSwatch = mainSwatches[0];
+            console.log('⚠️ Using first swatch container as fallback');
+          }
+        }
+        
+        if (!independentSwatch) {
+          console.log('Independent swatch not found, retrying...');
           setTimeout(initIndependentColorSelector, 100);
           return;
         }
         
         console.log('✅ Independent color selector initialized');
-        console.log('Independent wrapper:', independentWrapper);
-        console.log('Main wrapper:', mainWrapper);
         console.log('Independent swatch:', independentSwatch);
         console.log('Main swatch:', mainSwatch);
-        console.log('Main swatch options:', mainSwatch.querySelectorAll('[data-swatch-option]'));
-        console.log('Main swatch display:', window.getComputedStyle(mainSwatch).display);
+        
+        if (mainSwatch) {
+          var mainOptions = mainSwatch.querySelectorAll('[data-swatch-option]');
+          console.log('Main swatch has', mainOptions.length, 'options');
+          mainOptions.forEach(function(opt, idx) {
+            console.log('  Option', idx, '- data-id:', opt.getAttribute('data-id'), 'class:', opt.className);
+          });
+        }
+        
+        // 获取 variants 和 options 数据
+        var variantsJson = independentWrapper.querySelector('.pr_variants_json');
+        var optionsJson = independentWrapper.querySelector('.pr_options_json');
+        
+        if (!variantsJson || !optionsJson) {
+          console.log('❌ Variants or options JSON not found');
+          return;
+        }
+        
+        var variants = JSON.parse(variantsJson.textContent);
+        var options = JSON.parse(optionsJson.textContent);
+        
+        console.log('Variants:', variants);
+        console.log('Options:', options);
+        
+        // 获取当前选中的值（包括主 form 中的其他选项）
+        function getCurrentSelectedValues() {
+          var selectedValues = {};
+          
+          // 首先从独立选择器获取值
+          independentSwatch.querySelectorAll('[data-swatch-option]').forEach(function(option) {
+            var optionIndex = option.getAttribute('data-id');
+            var selectedItem = option.querySelector('[data-swatch-item].is--selected');
+            if (selectedItem) {
+              selectedValues[optionIndex] = selectedItem.getAttribute('data-value');
+            }
+          });
+          
+          // 🔧 关键修复：从主 form 获取其他选项的值
+          if (mainSwatch) {
+            mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
+              var mainOptionIndex = mainOption.getAttribute('data-id');
+              
+              // 如果独立选择器中没有这个选项，从主 form 获取
+              if (!selectedValues.hasOwnProperty(mainOptionIndex)) {
+                var mainSelectedItem = mainOption.querySelector('[data-swatch-item].is--selected');
+                if (mainSelectedItem) {
+                  selectedValues[mainOptionIndex] = mainSelectedItem.getAttribute('data-value');
+                }
+              }
+            });
+          }
+          
+          return selectedValues;
+        }
+        
+        // 🔧 改进：通过选项名称匹配，而不是索引
+        function findMainOption(independentOption) {
+          var optionIndex = independentOption.getAttribute('data-id');
+          var optionName = independentOption.className.match(/is-t4s-name__([^\s]+)/);
+          var optionNameValue = optionName ? optionName[1] : null;
+          
+          console.log('🔍 Looking for main option - index:', optionIndex, 'name:', optionNameValue);
+          
+          // 首先尝试通过 data-id 匹配
+          var mainOption = mainWrapper.querySelector('[data-swatch-option][data-id="' + optionIndex + '"]');
+          
+          if (mainOption) {
+            console.log('  ✅ Found by data-id');
+            return mainOption;
+          }
+          
+          // 如果通过 data-id 找不到，尝试通过 class 名称匹配
+          if (optionNameValue) {
+            mainOption = mainWrapper.querySelector('[data-swatch-option].is-t4s-name__' + optionNameValue);
+            if (mainOption) {
+              console.log('  ✅ Found by class name:', optionNameValue);
+              return mainOption;
+            }
+            
+            // 🔧 额外尝试：查找包含颜色相关 class 的选项
+            if (optionNameValue === 'color' || optionNameValue === 'colour') {
+              mainOption = mainWrapper.querySelector('[data-swatch-option].is-t4s-style__color');
+              if (mainOption) {
+                console.log('  ✅ Found by color style class');
+                return mainOption;
+              }
+            }
+          }
+          
+          // 🔧 改进：如果独立选择器只有一个选项，尝试找主 form 中唯一的颜色选项
+          var independentOptions = independentSwatch.querySelectorAll('[data-swatch-option]');
+          
+          if (independentOptions.length === 1) {
+            console.log('  → Independent has only 1 option, looking for single color option in main');
+            
+            // 查找主 form 中所有颜色选项
+            var mainColorOptions = mainWrapper.querySelectorAll('[data-swatch-option].is-t4s-style__color');
+            
+            if (mainColorOptions.length === 1) {
+              console.log('  ✅ Found by single color option fallback');
+              return mainColorOptions[0];
+            } else if (mainColorOptions.length > 1) {
+              console.log('  ⚠️ Multiple color options found:', mainColorOptions.length);
+            }
+            
+            // 如果还是找不到，尝试找主 form 中唯一的选项
+            var mainOptions = mainWrapper.querySelectorAll('[data-swatch-option]');
+            if (mainOptions.length === 1) {
+              console.log('  ✅ Found by single option fallback');
+              return mainOptions[0];
+            }
+          }
+          
+          console.log('  ❌ Not found');
+          console.log('  → Available main options:');
+          var allMainOptions = mainWrapper.querySelectorAll('[data-swatch-option]');
+          allMainOptions.forEach(function(opt, idx) {
+            console.log('    ', idx, '- data-id:', opt.getAttribute('data-id'), 'classes:', opt.className);
+          });
+          
+          return null;
+        }
+        
+        // 更新可用选项（禁用/启用 swatch items）
+        function updateAvailableOptions() {
+          console.log('🔄 Updating available options by syncing from main form');
+          
+          // 🔧 关键修复：直接从主 form 同步状态，不要自己计算
+          if (mainSwatch) {
+            independentSwatch.querySelectorAll('[data-swatch-option]').forEach(function(independentOption) {
+              // 🔧 使用改进的查找函数
+              var mainOption = findMainOption(independentOption);
+              
+              if (!mainOption) {
+                console.log('⚠️ Main option not found, skipping');
+                return;
+              }
+              
+              var optionIndex = independentOption.getAttribute('data-id');
+              console.log('✅ Syncing option', optionIndex, 'from main form');
+              
+              // 遍历独立选择器中的每个 item
+              independentOption.querySelectorAll('[data-swatch-item]').forEach(function(independentItem) {
+                var itemValue = independentItem.getAttribute('data-value');
+                
+                // 查找主 form 中对应的 item
+                var mainItem = mainOption.querySelector('[data-swatch-item][data-value="' + itemValue + '"]');
+                
+                if (!mainItem) {
+                  // 主 form 中没有这个选项，隐藏它
+                  independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
+                  independentItem.setAttribute('disabled', 'disabled');
+                  independentItem.style.display = 'none';
+                } else {
+                  // 直接复制主 form 的状态
+                  if (mainItem.classList.contains('is--soldout') || 
+                      mainItem.style.display === 'none' ||
+                      mainItem.classList.contains('is--hidden')) {
+                    independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
+                    independentItem.setAttribute('disabled', 'disabled');
+                    independentItem.style.display = 'none';
+                  } else {
+                    independentItem.classList.remove('is--soldout', 'is--unavailable', 'is--hidden');
+                    independentItem.removeAttribute('disabled');
+                    independentItem.style.display = '';
+                  }
+                }
+              });
+            });
+          } else {
+            // 如果没有主 swatch，使用 variant 计算逻辑
+            var selectedValues = getCurrentSelectedValues();
+            
+            console.log('🔄 No main swatch, calculating from variants. Current selection:', selectedValues);
+            
+            independentSwatch.querySelectorAll('[data-swatch-option]').forEach(function(option) {
+              var optionIndex = option.getAttribute('data-id');
+              
+              option.querySelectorAll('[data-swatch-item]').forEach(function(item) {
+                var itemValue = item.getAttribute('data-value');
+                
+                // 构建测试选项组合
+                var testValues = Object.assign({}, selectedValues);
+                testValues[optionIndex] = itemValue;
+                
+                // 检查是否有匹配的 variant
+                var hasMatchingVariant = variants.some(function(variant) {
+                  var matches = true;
+                  for (var idx in testValues) {
+                    var optionKey = 'option' + (parseInt(idx) + 1);
+                    if (variant[optionKey] !== testValues[idx]) {
+                      matches = false;
+                      break;
+                    }
+                  }
+                  return matches;
+                });
+                
+                // 更新 item 状态
+                if (hasMatchingVariant) {
+                  item.classList.remove('is--soldout', 'is--unavailable', 'is--hidden');
+                  item.removeAttribute('disabled');
+                  item.style.display = '';
+                } else {
+                  item.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
+                  item.setAttribute('disabled', 'disabled');
+                  item.style.display = 'none';
+                }
+              });
+            });
+          }
+          
+          console.log('✅ Available options updated');
+        }
         
         // 监听独立 swatch 的点击事件
         independentSwatch.addEventListener('click', function(e) {
           var clickedItem = e.target.closest('[data-swatch-item]');
           if (!clickedItem) return;
+          
+          // 如果点击的是禁用的选项，阻止操作
+          if (clickedItem.classList.contains('is--soldout') || clickedItem.classList.contains('is--unavailable')) {
+            console.log('🚫 Clicked item is unavailable');
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
           
           console.log('🎨 Independent swatch clicked');
           
@@ -250,141 +492,315 @@
           
           console.log('Option index:', optionIndex, 'Value:', selectedValue);
           
-          // 查找主 form 中对应的 swatch item
-          var mainSwatchOption = mainSwatch.querySelector('[data-swatch-option][data-id="' + optionIndex + '"]');
-          if (!mainSwatchOption) {
-            console.log('❌ Main swatch option not found');
-            console.log('Available main swatch options:', mainSwatch.querySelectorAll('[data-swatch-option]'));
+          // 更新独立 selector 的选中状态
+          swatchOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
+            item.classList.remove('is--selected');
+          });
+          clickedItem.classList.add('is--selected');
+          
+          // 更新当前值显示
+          var currentValueEl = swatchOption.querySelector('[data-current-value]');
+          if (currentValueEl) {
+            currentValueEl.textContent = selectedValue;
+          }
+          
+          // 🔧 关键修复：判断是单层还是多层逻辑
+          var independentOptions = independentSwatch.querySelectorAll('[data-swatch-option]');
+          var isSingleLayer = independentOptions.length === 1;
+          
+          console.log('📊 Detection: ' + (isSingleLayer ? 'Single-layer' : 'Multi-layer') + ' color selection');
+          
+          // 🔧 尝试查找主 form 的 swatch
+          var mainSwatchOption = findMainOption(swatchOption);
+          
+          // 🔧 决策逻辑：
+          // 1. 如果找到主 swatch 且有对应的 item → 使用多层逻辑（触发主 swatch）
+          // 2. 如果找不到主 swatch 或找不到对应 item → 使用单层逻辑（直接更新 variant）
+          
+          var useMultiLayerLogic = false;
+          var mainSwatchItem = null;
+          
+          if (mainSwatchOption) {
+            mainSwatchItem = mainSwatchOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
+            if (mainSwatchItem) {
+              useMultiLayerLogic = true;
+            }
+          }
+          
+          if (useMultiLayerLogic) {
+            // ========== 多层逻辑：触发主 form 的 swatch ==========
+            console.log('✅ Using MULTI-LAYER logic: Triggering main swatch click');
             
-            // 如果主 form 中没有 color selector，直接更新 select
-            console.log('🔧 Trying to update select directly...');
-            var mainForm = mainWrapper.querySelector('form');
-            if (mainForm) {
-              var mainSelect = mainForm.querySelector('select[name="id"]');
-              if (mainSelect) {
-                console.log('Found main select:', mainSelect);
+            // 触发主 swatch 的点击事件
+            mainSwatchItem.click();
+            
+            // 等待主题 JS 处理完成后，同步状态
+            setTimeout(function() {
+              console.log('⏱️ Delayed sync after main swatch click');
+              updateAvailableOptions();
+            }, 100);
+            
+            // 再等待一次，确保所有异步更新完成
+            setTimeout(function() {
+              console.log('⏱️ Final sync after main swatch click');
+              updateAvailableOptions();
+            }, 300);
+            
+          } else {
+            // ========== 单层逻辑：直接更新 variant ==========
+            console.log('✅ Using SINGLE-LAYER logic: Direct variant update');
+            
+            // 查找匹配的 variant
+            var selectedValues = getCurrentSelectedValues();
+            
+            // 🔧 从主 form 获取其他选项的值（如果有的话）
+            if (mainSwatch) {
+              mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
+                var mainOptionIndex = mainOption.getAttribute('data-id');
                 
-                // 获取产品的 variants 数据
-                var variantsJson = mainWrapper.querySelector('.pr_variants_json');
-                if (variantsJson) {
-                  try {
-                    var variants = JSON.parse(variantsJson.textContent);
-                    console.log('Variants:', variants);
-                    
-                    // 查找匹配的 variant（只根据 color 选项）
-                    var matchedVariant = variants.find(function(variant) {
-                      return variant.option1 === selectedValue || 
-                             variant.option2 === selectedValue || 
-                             variant.option3 === selectedValue;
-                    });
-                    
-                    if (matchedVariant) {
-                      console.log('✅ Found matching variant:', matchedVariant);
-                      mainSelect.value = matchedVariant.id;
-                      
-                      // 触发 change 事件
-                      var changeEvent = new Event('change', { bubbles: true });
-                      mainSelect.dispatchEvent(changeEvent);
-                      
-                      console.log('✅ Select updated and change event triggered');
-                      
-                      // 手动更新独立 selector 的选中状态（因为主 form 没有 swatch 可以监听）
-                      var independentOption = independentSwatch.querySelector('[data-swatch-option][data-id="' + optionIndex + '"]');
-                      if (independentOption) {
-                        // 移除所有选中状态
-                        independentOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
-                          item.classList.remove('is--selected');
-                        });
-                        
-                        // 添加选中状态到当前点击的 item
-                        clickedItem.classList.add('is--selected');
-                        
-                        // 更新当前值显示
-                        var currentValueEl = independentOption.querySelector('[data-current-value]');
-                        if (currentValueEl) {
-                          currentValueEl.textContent = selectedValue;
-                        }
-                        
-                        console.log('✅ Independent selector visual state updated');
-                      }
-                    } else {
-                      console.log('❌ No matching variant found');
-                    }
-                  } catch (error) {
-                    console.error('Error parsing variants:', error);
+                // 如果独立选择器中没有这个选项，从主 form 获取
+                if (!selectedValues.hasOwnProperty(mainOptionIndex)) {
+                  var mainSelectedItem = mainOption.querySelector('[data-swatch-item].is--selected');
+                  if (mainSelectedItem) {
+                    selectedValues[mainOptionIndex] = mainSelectedItem.getAttribute('data-value');
+                    console.log('📥 Got value from main form - option', mainOptionIndex, ':', selectedValues[mainOptionIndex]);
                   }
-                } else {
-                  console.log('❌ Variants JSON not found');
                 }
-              } else {
-                console.log('❌ Main select not found');
+              });
+            }
+            
+            console.log('🔍 Looking for variant with values:', selectedValues);
+            
+            var matchedVariant = variants.find(function(variant) {
+              var matches = true;
+              for (var idx in selectedValues) {
+                var optionKey = 'option' + (parseInt(idx) + 1);
+                if (variant[optionKey] !== selectedValues[idx]) {
+                  matches = false;
+                  break;
+                }
+              }
+              return matches;
+            });
+            
+            if (matchedVariant) {
+              console.log('✅ Found matching variant:', matchedVariant);
+              
+              // 更新主 form 的 select
+              var mainForm = mainWrapper.querySelector('form');
+              if (mainForm) {
+                var mainSelect = mainForm.querySelector('select[name="id"]');
+                if (mainSelect) {
+                  mainSelect.value = matchedVariant.id;
+                  
+                  // 触发 change 事件
+                  var changeEvent = new Event('change', { bubbles: true });
+                  mainSelect.dispatchEvent(changeEvent);
+                  
+                  console.log('✅ Main select updated to variant:', matchedVariant.id);
+                  
+                  // 🔧 单层逻辑也需要同步主 form 的选中状态
+                  if (mainSwatch) {
+                    setTimeout(function() {
+                      console.log('⏱️ Syncing main form selection state');
+                      
+                      // 更新主 form 中对应选项的选中状态
+                      mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
+                        var mainOptionIndex = mainOption.getAttribute('data-id');
+                        
+                        if (selectedValues.hasOwnProperty(mainOptionIndex)) {
+                          var valueToSelect = selectedValues[mainOptionIndex];
+                          
+                          // 移除所有选中状态
+                          mainOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
+                            item.classList.remove('is--selected');
+                          });
+                          
+                          // 添加选中状态到对应的 item
+                          var itemToSelect = mainOption.querySelector('[data-swatch-item][data-value="' + valueToSelect + '"]');
+                          if (itemToSelect) {
+                            itemToSelect.classList.add('is--selected');
+                            
+                            // 更新当前值显示
+                            var mainCurrentValueEl = mainOption.querySelector('[data-current-value]');
+                            if (mainCurrentValueEl) {
+                              mainCurrentValueEl.textContent = valueToSelect;
+                            }
+                          }
+                        }
+                      });
+                    }, 50);
+                  }
+                }
               }
             } else {
-              console.log('❌ Main form not found');
+              console.log('❌ No matching variant found for values:', selectedValues);
             }
-            return;
           }
-          
-          var mainSwatchItem = mainSwatchOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
-          if (!mainSwatchItem) {
-            console.log('❌ Main swatch item not found');
-            return;
-          }
-          
-          console.log('✅ Found main swatch item, triggering click');
-          
-          // 触发主 form 的 swatch item 点击
-          // 使用原生点击事件，让主题的 JavaScript 处理
-          mainSwatchItem.click();
-          
-          console.log('✅ Main swatch clicked');
         });
         
         // 监听主 swatch 的变化，同步到独立 swatch
-        var observer = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-              var target = mutation.target;
-              if (target.hasAttribute('data-swatch-item') && target.classList.contains('is--selected')) {
-                var swatchOption = target.closest('[data-swatch-option]');
-                if (!swatchOption) return;
-                
-                var optionIndex = swatchOption.getAttribute('data-id');
-                var selectedValue = target.getAttribute('data-value');
-                
-                console.log('🔄 Main swatch changed, syncing to independent');
-                
-                // 同步到独立 swatch
-                var independentOption = independentSwatch.querySelector('[data-swatch-option][data-id="' + optionIndex + '"]');
-                if (independentOption) {
-                  // 移除所有选中状态
-                  independentOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
-                    item.classList.remove('is--selected');
-                  });
+        if (mainSwatch) {
+          var observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                var target = mutation.target;
+                if (target.hasAttribute('data-swatch-item') && target.classList.contains('is--selected')) {
+                  var swatchOption = target.closest('[data-swatch-option]');
+                  if (!swatchOption) return;
                   
-                  // 添加选中状态到对应的 item
-                  var independentItem = independentOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
-                  if (independentItem) {
-                    independentItem.classList.add('is--selected');
+                  var optionIndex = swatchOption.getAttribute('data-id');
+                  var selectedValue = target.getAttribute('data-value');
+                  
+                  console.log('🔄 Main swatch changed - Option:', optionIndex, 'Value:', selectedValue);
+                  
+                  // 同步到独立 swatch（如果独立选择器中有这个选项）
+                  var independentOption = independentSwatch.querySelector('[data-swatch-option][data-id="' + optionIndex + '"]');
+                  if (independentOption) {
+                    console.log('  → Syncing selection to independent swatch');
+                    // 移除所有选中状态
+                    independentOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
+                      item.classList.remove('is--selected');
+                    });
                     
-                    // 更新当前值显示
-                    var currentValueEl = independentOption.querySelector('[data-current-value]');
-                    if (currentValueEl) {
-                      currentValueEl.textContent = selectedValue;
+                    // 添加选中状态到对应的 item
+                    var independentItem = independentOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
+                    if (independentItem) {
+                      independentItem.classList.add('is--selected');
+                      
+                      // 更新当前值显示
+                      var currentValueEl = independentOption.querySelector('[data-current-value]');
+                      if (currentValueEl) {
+                        currentValueEl.textContent = selectedValue;
+                      }
                     }
                   }
+                  
+                  // 🔧 关键修复：无论是哪个选项变化，都要更新所有选项的可用性
+                  console.log('  → Updating all options availability');
+                  
+                  // 延迟一下，等待主题 JS 更新完主 form 的其他选项
+                  setTimeout(function() {
+                    console.log('  → Delayed update: syncing all options from main form');
+                    updateAvailableOptions();
+                  }, 50);
                 }
               }
+            });
+          });
+          
+          // 监听主 swatch 中所有 items 的 class 变化
+          mainSwatch.querySelectorAll('[data-swatch-item]').forEach(function(item) {
+            observer.observe(item, { attributes: true, attributeFilter: ['class'] });
+          });
+          
+          console.log('✅ Observer attached to main swatch');
+          
+          // 🔧 额外监听：监听主 swatch 中所有 items 的 style 和 class 变化（捕获 display: none）
+          var displayObserver = new MutationObserver(function(mutations) {
+            var needsUpdate = false;
+            mutations.forEach(function(mutation) {
+              if (mutation.type === 'attributes' && 
+                  (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+                needsUpdate = true;
+              }
+            });
+            
+            if (needsUpdate) {
+              console.log('🔄 Main swatch display/class changed, updating independent swatch');
+              setTimeout(function() {
+                updateAvailableOptions();
+              }, 50);
             }
           });
-        });
+          
+          // 监听主 swatch 中所有 items 的 style 和 class 变化
+          mainSwatch.querySelectorAll('[data-swatch-item]').forEach(function(item) {
+            displayObserver.observe(item, { 
+              attributes: true, 
+              attributeFilter: ['style', 'class'] 
+            });
+          });
+          
+          console.log('✅ Display observer attached to main swatch');
+        }
         
-        // 监听主 swatch 中所有 items 的 class 变化
-        mainSwatch.querySelectorAll('[data-swatch-item]').forEach(function(item) {
-          observer.observe(item, { attributes: true, attributeFilter: ['class'] });
-        });
+        // 初始化时更新可用选项
+        console.log('🔧 Initial update of available options');
         
-        console.log('✅ Observer attached to main swatch');
+        // 🔧 关键修复：初始化时直接从主 form 同步状态，而不是自己计算
+        if (mainSwatch || mainWrapper) {
+          console.log('🔍 Syncing initial state from main form');
+          
+          // 遍历独立选择器中的所有选项
+          independentSwatch.querySelectorAll('[data-swatch-option]').forEach(function(independentOption) {
+            // 🔧 使用改进的查找函数
+            var mainOption = findMainOption(independentOption);
+            
+            if (!mainOption) {
+              console.log('⚠️ Main option not found, skipping');
+              return;
+            }
+            
+            var optionIndex = independentOption.getAttribute('data-id');
+            console.log('✅ Found main option for index:', optionIndex);
+            
+            // 遍历独立选择器中的每个 item
+            independentOption.querySelectorAll('[data-swatch-item]').forEach(function(independentItem) {
+              var itemValue = independentItem.getAttribute('data-value');
+              
+              // 查找主 form 中对应的 item
+              var mainItem = mainOption.querySelector('[data-swatch-item][data-value="' + itemValue + '"]');
+              
+              if (!mainItem) {
+                // 主 form 中没有这个选项，隐藏它
+                console.log('⚠️ Item not in main form, hiding:', itemValue);
+                independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
+                independentItem.style.display = 'none';
+              } else {
+                // 🔧 关键：直接复制主 form 的状态
+                console.log('📋 Syncing item state:', itemValue, 'from main form');
+                
+                // 复制 soldout 状态
+                if (mainItem.classList.contains('is--soldout')) {
+                  console.log('  → Item is soldout in main form');
+                  independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
+                  independentItem.style.display = 'none';
+                } else {
+                  console.log('  → Item is available in main form');
+                  independentItem.classList.remove('is--soldout', 'is--unavailable', 'is--hidden');
+                  independentItem.style.display = '';
+                }
+                
+                // 复制选中状态
+                if (mainItem.classList.contains('is--selected')) {
+                  console.log('  → Item is selected in main form');
+                  independentItem.classList.add('is--selected');
+                  
+                  // 更新当前值显示
+                  var currentValueEl = independentOption.querySelector('[data-current-value]');
+                  if (currentValueEl) {
+                    currentValueEl.textContent = itemValue;
+                  }
+                } else {
+                  independentItem.classList.remove('is--selected');
+                }
+                
+                // 复制 display 状态
+                if (mainItem.style.display === 'none') {
+                  console.log('  → Item is hidden in main form');
+                  independentItem.style.display = 'none';
+                  independentItem.classList.add('is--hidden');
+                }
+              }
+            });
+          });
+          
+          console.log('✅ Initial state synced from main form');
+        } else {
+          // 如果没有主 swatch，使用原来的逻辑
+          updateAvailableOptions();
+        }
       }
       
       // 页面加载后初始化
@@ -395,4 +811,13 @@
       }
     })();
   </script>
+  
+  {%- comment -%} CSS: 禁用状态样式 - 不可用的选项直接隐藏 {%- endcomment -%}
+  <style>
+    [data-independent-color-selector] [data-swatch-item].is--soldout,
+    [data-independent-color-selector] [data-swatch-item].is--unavailable,
+    [data-independent-color-selector] [data-swatch-item].is--hidden {
+      display: none !important;
+    }
+  </style>
 {%- endif -%}

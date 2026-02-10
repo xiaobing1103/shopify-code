@@ -1,0 +1,216 @@
+{%- comment -%}
+  Product Custom Styles
+  产品页面的所有自定义样式
+  参数: se_stts, se_id, bk_stts (各个 block 的 settings)
+{%- endcomment -%}
+
+{%- comment -%} 自定义缩略图样式 {%- endcomment -%}
+<style>
+  /* 桌面端 - 保持原有布局，只添加样式 */
+  @media (min-width: 768px) {
+    .t4s-product-thumbnails-custom .t4s_ratio {
+      border-radius: {{ se_stts.thumb_border_radius | default: 8 }}px !important;
+      overflow: hidden !important;
+      border: 2px solid rgba(0, 0, 0, 0.1) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .t4s-product-thumbnails-custom .t4s-product__thumb-item:hover .t4s_ratio {
+      border-color: {{ se_stts.thumb_hover_border_color | default: '#3b82f6' }} !important;
+      transform: scale(1.05) !important;
+    }
+
+    .t4s-product-thumbnails-custom .t4s-product__thumb-item.is-nav-selected .t4s_ratio {
+      border-color: {{ se_stts.thumb_active_border_color | default: '#1e40af' }} !important;
+      box-shadow: 0 0 0 2px {{ se_stts.thumb_active_border_color | default: '#1e40af' }} !important;
+    }
+
+    .t4s-product__thumb-img {
+      border-radius: {{ se_stts.thumb_border_radius | default: 8 }}px !important;
+    }
+
+    /* 桌面端隐藏缩略图导航箭头 */
+    .t4s-thumb-nav-arrow {
+      display: none !important;
+    }
+  }
+
+  /* 移动端 - 正常文档流布局 */
+  @media (max-width: 767px) {
+    [data-product-single-media-group] {
+      position: relative !important;
+    }
+
+    [data-main-media] {
+      padding-bottom: 0 !important;
+      position: relative !important;
+      z-index: 1 !important;
+    }
+
+    .t4s-product-thumbnails-custom-wrapper {
+      position: relative !important;
+      margin-top: {{ se_stts.thumb_margin_top_mobile | default: 15 }}px !important;
+      width: calc(100% - {{ se_stts.thumb_arrow_container_padding_mobile | default: 30 }}px) !important;
+      max-width: 100% !important;
+      padding: 0 !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      overflow: visible !important;
+    }
+
+    .t4s-product-thumbnails-custom-wrapper .t4s-carousel__nav-scroller {
+      overflow: {{ se_stts.thumb_scroller_overflow_mobile | default: 'visible' }} !important;
+    }
+
+    .t4s-product-thumbnails-custom {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      gap: {{ se_stts.thumb_gap_mobile | default: 8 }}px !important;
+      margin: 0 !important;
+    }
+
+    .t4s-product-thumbnails-custom .t4s-col-item {
+      flex: 0 0 calc(25% - {{ se_stts.thumb_gap_mobile | default: 8 }}px * 3 / 4) !important;
+      max-width: calc(25% - {{ se_stts.thumb_gap_mobile | default: 8 }}px * 3 / 4) !important;
+      width: calc(25% - {{ se_stts.thumb_gap_mobile | default: 8 }}px * 3 / 4) !important;
+    }
+
+    .t4s-product-thumbnails-custom .t4s_ratio {
+      border-radius: {{ se_stts.thumb_border_radius_mobile | default: 6 }}px !important;
+      overflow: hidden !important;
+      border: 2px solid rgba(0, 0, 0, 0.1) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .t4s-product__thumb-img {
+      border-radius: {{ se_stts.thumb_border_radius_mobile | default: 6 }}px !important;
+    }
+
+    /* 缩略图左右小箭头 - 圆形设计 */
+    .t4s-thumb-nav-arrow {
+      display: flex !important;
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: {{ se_stts.thumb_arrow_size_mobile | default: 36 }}px !important;
+      height: {{ se_stts.thumb_arrow_size_mobile | default: 36 }}px !important;
+      background: {{ se_stts.thumb_arrow_bg_color | default: 'rgba(255, 255, 255, 0.95)' }} !important;
+      border: {{ se_stts.thumb_arrow_border_width | default: 1 }}px solid {{ se_stts.thumb_arrow_border_color | default: 'rgba(0, 0, 0, 0.1)' }} !important;
+      border-radius: 50% !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      z-index: 21 !important;
+      transition: all 0.3s ease !important;
+      font-size: {{ se_stts.thumb_arrow_icon_size_mobile | default: 16 }}px !important;
+      color: {{ se_stts.thumb_arrow_color | default: '#333' }} !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .t4s-thumb-nav-arrow:hover {
+      background: {{ se_stts.thumb_arrow_bg_hover_color | default: 'rgba(255, 255, 255, 1)' }} !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+      transform: translateY(-50%) scale(1.05) !important;
+    }
+
+    .t4s-thumb-nav-arrow-prev {
+      left: {{ se_stts.thumb_arrow_offset_mobile | default: -10 }}px !important;
+    }
+
+    .t4s-thumb-nav-arrow-next {
+      right: {{ se_stts.thumb_arrow_offset_mobile | default: -10 }}px !important;
+    }
+
+    /* 主图箭头样式 */
+    [data-main-media] .flickity-button {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      z-index: 25 !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      border-radius: 50% !important;
+      width: 44px !important;
+      height: 44px !important;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2) !important;
+    }
+  }
+
+  /* Product Info Wrapper - Border & Shadow */
+  .t4s-product__info-wrapper {
+    margin-top: {{ se_stts.info_wrapper_margin_top | default: 25 }}px !important;
+    margin-bottom: {{ se_stts.info_wrapper_margin_bottom | default: 0 }}px !important;
+    border: {{ se_stts.info_wrapper_border_width | default: 1 }}px solid {{ se_stts.info_wrapper_border_color | default: 'rgba(0, 0, 0, 0.1)' }} !important;
+    border-radius: {{ se_stts.info_wrapper_border_radius | default: 12 }}px !important;
+    box-shadow: {{ se_stts.info_wrapper_shadow | default: '0 4px 12px rgba(0, 0, 0, 0.08)' }} !important;
+    padding: {{ se_stts.info_wrapper_padding | default: 24 }}px !important;
+    background: {{ se_stts.info_wrapper_bg_color | default: '#ffffff' }} !important;
+  }
+
+  @media (max-width: 767px) {
+    .t4s-product__info-wrapper {
+      margin-top: {{ se_stts.info_wrapper_margin_top_mobile | default: 20 }}px !important;
+      margin-bottom: {{ se_stts.info_wrapper_margin_bottom_mobile | default: 0 }}px !important;
+      padding: {{ se_stts.info_wrapper_padding_mobile | default: 16 }}px !important;
+      border-radius: {{ se_stts.info_wrapper_border_radius_mobile | default: 8 }}px !important;
+      box-shadow: {{ se_stts.info_wrapper_shadow_mobile | default: '0 2px 8px rgba(0, 0, 0, 0.06)' }} !important;
+    }
+  }
+</style>
+
+{%- if media_heading != blank -%}
+  <style>
+    .t4s-product-media-heading-{{ se_id }} {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 10;
+      font-size: {{ media_heading_size }}px;
+      line-height: {{ media_heading_height }}%;
+      color: {{ media_heading_color }};
+      {% if media_heading_bg_gradient != blank %}
+      background: {{ media_heading_bg_gradient }};
+      {% else %}
+      background: {{ media_heading_bg_color }};
+      {% endif %}
+      padding: {{ media_heading_padding_v }}px {{ media_heading_padding_h }}px;
+      border-radius: {{ media_heading_radius }}px;
+      border: {{ media_heading_border_width }}px solid {{ media_heading_border_color }};
+      font-weight: 500;
+      {% if media_heading_show_desktop %}display: block;{% else %}display: none;{% endif %}
+    }
+
+    @media (max-width: 767px) {
+      .t4s-product-media-heading-{{ se_id }} {
+        {% if media_heading_show_mobile %}display: block;{% else %}display: none;{% endif %}
+      }
+    }
+  </style>
+{%- endif -%}
+
+{%- if media_custom_img_enable and media_custom_img != blank -%}
+  <style>
+    .t4s-product-media-custom-img-{{ se_id }} {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+      width: {{ media_custom_img_width }}px;
+      height: {{ media_custom_img_width }}px;
+      border-radius: {{ media_custom_img_radius }}px;
+      overflow: hidden;
+      {% if media_custom_img_show_desktop %}display: block;{% else %}display: none;{% endif %}
+    }
+    .t4s-product-media-custom-img-{{ se_id }} img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    @media (max-width: 767px) {
+      .t4s-product-media-custom-img-{{ se_id }} {
+        {% if media_custom_img_show_mobile %}display: block;{% else %}display: none;{% endif %}
+      }
+    }
+  </style>
+{%- endif -%}

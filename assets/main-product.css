@@ -981,3 +981,11 @@ button.t4s-product__description_readm:hover {
 .shopify-app-block:has(> .loox-widget) {
   margin-top: 10px;
 }
+
+
+/* Hide on mobile utility class */
+@media (max-width: 767px) {
+  .t4s-dn-mb {
+    display: none !important;
+  }
+}

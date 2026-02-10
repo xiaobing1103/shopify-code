@@ -1,4 +1,4 @@
-﻿{%- comment -%}
+{%- comment -%}
   Color_pink | alt text
   t4option0_0 | alt text
 {%- endcomment -%}
@@ -298,122 +298,33 @@
 {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
 {{ 'main-product.css' | asset_url | stylesheet_tag }}
 
-{%- comment -%} 按钮样式确保正确应用 {%- endcomment -%}
-<style>
-  /* 移动端隐藏 */
-  @media (max-width: 767px) {
-    .t4s-dn-mb {
-      display: none !important;
-    }
-  }
-
-  /* 确保按钮样式正确应用 */
-  .t4s-product-form__submit.t4s-btn {
-    transition: all 0.3s ease;
-  }
-  
-  /* Custom 按钮颜色样式 */
-  .t4s-btn-color-custom {
-    color: var(--btn-color, #ffffff) !important;
-    background-color: var(--btn-background, #000000) !important;
-    border-color: var(--btn-background, #000000) !important;
-  }
-  
-  .t4s-btn-color-custom:hover {
-    color: var(--btn-color-hover, #ffffff) !important;
-    background-color: var(--btn-background-hover, #333333) !important;
-    border-color: var(--btn-background-hover, #333333) !important;
-  }
-  
-  /* 确保按钮效果正确应用 */
-  .t4s-btn-effect-fade:hover {
-    opacity: 0.8;
-  }
-  
-  .t4s-btn-effect-rectangle-out {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .t4s-btn-effect-rectangle-out:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: var(--btn-background-hover, #333333);
-    transition: left 0.3s ease;
-    z-index: -1;
-  }
-  
-  .t4s-btn-effect-rectangle-out:hover:before {
-    left: 0;
-  }
-</style>
+{%- comment -%} 使用 snippet 替代自定义样式 {%- endcomment -%}
+{%- render 'product-custom-styles', 
+  se_stts: se_stts, 
+  se_id: se_id,
+  media_heading: media_heading,
+  media_heading_size: media_heading_size,
+  media_heading_height: media_heading_height,
+  media_heading_color: media_heading_color,
+  media_heading_bg_color: media_heading_bg_color,
+  media_heading_bg_gradient: media_heading_bg_gradient,
+  media_heading_padding_v: media_heading_padding_v,
+  media_heading_padding_h: media_heading_padding_h,
+  media_heading_radius: media_heading_radius,
+  media_heading_border_width: media_heading_border_width,
+  media_heading_border_color: media_heading_border_color,
+  media_heading_show_desktop: media_heading_show_desktop,
+  media_heading_show_mobile: media_heading_show_mobile,
+  media_custom_img_enable: media_custom_img_enable,
+  media_custom_img: media_custom_img,
+  media_custom_img_width: media_custom_img_width,
+  media_custom_img_radius: media_custom_img_radius,
+  media_custom_img_show_desktop: media_custom_img_show_desktop,
+  media_custom_img_show_mobile: media_custom_img_show_mobile
+-%}
 
 {%- comment -%} Product Personalizer 动态样式 {%- endcomment -%}
-<style>
-  /* Product Personalizer 容器内外边距 */
-  .product-personalizer.pplr_background {
-    padding: 0px !important;  /* 内边距 - 可根据需要调整 */
-    margin: 0px 0 !important;  /* 外边距 上下20px 左右0 - 可根据需要调整 */
-  }
-
-  /* 每个选项容器的边距 */
-  .pplr-wrapper, .t4s-line-item-property__field {
-    margin-bottom: 10px !important;  /* 选项之间的间距 - 可根据需要调整 */
-  }
-
-  /* Color Selector ��ʽ */
-  .pplr-wrapper.pplr-color .pplrlabel {
-    font-size: {{ se_stts.pplr_color_title_size | default: 14 }}px !important;
-    font-weight: {{ se_stts.pplr_color_title_weight | default: 400 }} !important;
-  }
-  .pplrgcolor.pplr_thumb_image {
-    gap: {{ se_stts.pplr_color_swatch_gap | default: 8 }}px !important;
-  }
-  .pplr-swatch-element.pplrimage {
-    width: {{ se_stts.pplr_color_swatch_size | default: 40 }}px !important;
-    height: {{ se_stts.pplr_color_swatch_size | default: 40 }}px !important;
-  }
-  .pplr-swatch-element.pplrimage.selected {
-    border: {{ se_stts.pplr_color_selected_border | default: 2 }}px solid {{ se_stts.pplr_color_selected_border_color | default: '#3b82f6' }} !important;
-  }
-
-  /* Text Input 下方说明文字 */
-  {%- if se_stts.pplr_text_input_note != blank -%}
-  .pplr-wrapper.pplr-text::after,
-  .pplr-wrapper.pplr-single-line-text::after {
-    content: "{{ se_stts.pplr_text_input_note | replace: '"', "'" }}" !important;
-    display: block !important;
-    font-size: {{ se_stts.pplr_text_note_size | default: 10 }}px !important;
-    line-height: 1.4 !important;
-    color: {{ se_stts.pplr_text_note_color | default: '#dddddd' }} !important;
-    margin-top: 6px !important;
-    font-weight: 400 !important;
-  }
-  {%- endif -%}
-
-  /* Upload Logo 按钮自定义颜色 */
-  .pplrfileuploadbutton::before {
-    background-color: {{ se_stts.pplr_upload_btn_bg_color | default: 'transparent' }} !important;
-    color: {{ se_stts.pplr_upload_btn_text_color | default: '#1976d2' }} !important;
-    border-color: {{ se_stts.pplr_upload_btn_border_color | default: 'rgba(25, 118, 210, 0.5)' }} !important;
-  }
-
-  .pplrfileuploadbutton:hover::before {
-    background-color: {{ se_stts.pplr_upload_btn_bg_hover_color | default: 'rgba(25, 118, 210, 0.04)' }} !important;
-    border-color: {{ se_stts.pplr_upload_btn_text_color | default: '#1976d2' }} !important;
-  }
-
-  /* Upload Logo 按钮文本自定义 */
-  .pplrfileuploadbutton::after {
-    {% if se_stts.pplr_upload_btn_text != blank %}
-    content: '{{ se_stts.pplr_upload_btn_text | escape }}' !important;
-    {% endif %}
-  }
-</style>
+{%- render 'product-personalizer-styles', se_stts: se_stts, product: product -%}
 
 {%- if media_heading != blank -%}
   <style>
@@ -749,9 +660,10 @@
                   <div
                     class="t4s-product__price-review"
                     style="--price-color:{{ bk_stts.price_color }};--price-sale-color:{{ bk_stts.price_sale_color }};"
-
                     {{ block.shopify_attributes }}
                   >
+                    {%- comment -%} Price {%- endcomment -%}
+                    <div>
                     <!-- 标准价格显示，默认显示 -->
                     <div data-bf-original-price>
                       {%- render 'product-price-single',
@@ -793,17 +705,6 @@
                       </div>
                     {% endcomment %}
 
-{%- comment -%} Product Personalizer 动态样式 {%- endcomment -%}
-<style>
-  /* Product Personalizer 上传按钮自定义颜色 */
-  :root {
-    --pplr-upload-btn-bg: {{ section.settings.pplr_upload_btn_bg_color | default: 'transparent' }};
-    --pplr-upload-btn-text: {{ section.settings.pplr_upload_btn_text_color | default: '#1976d2' }};
-    --pplr-upload-btn-border: {{ section.settings.pplr_upload_btn_border_color | default: 'rgba(25, 118, 210, 0.5)' }};
-    --pplr-upload-btn-bg-hover: {{ section.settings.pplr_upload_btn_bg_hover_color | default: 'rgba(25, 118, 210, 0.04)' }};
-  }
-</style>
-
                     <script>
                       // 根据浏览器 localStorage 显示对应价格（避免闪烁）
                       (function () {
@@ -840,63 +741,78 @@
                         }
                       })();
                     </script>
+                    </div>
 
+                    {%- comment -%} Star Rating {%- endcomment -%}
                     {%- if bk_stts.rating -%}
                       {%- assign pid = product.id -%}
-                      <a
-                        href="#{{ idTabReview }}"
-                        data-go-id="#{{ idTabReview }}"
-                        class="t4s-product__review t4s-d-inline-block"
-                      >
-                        {%- case settings.app_review -%}
-                          {%- when '1' -%}
-                            <span class="shopify-product-reviews-badge" data-id="{{ pid }}"></span>
-                          {%- when '2' -%}
-                            <div class="review-widget">
-                              <ryviu-widget-total
-                                reviews_data="{{ pr_metafields.ryviu.product_reviews_info | escape }}"
-                                product_id="{{ pid }}"
-                                handle="{{ product.handle }}"
-                              ></ryviu-widget-total>
-                            </div>
-                          {%- when '3' -%}
-                            <div product-id="{{ pid }}" class="alr-display-review-badge"></div>
-                          {%- when '4' -%}
-                            <div
-                              class="loox-rating"
-                              data-id="{{ pid }}"
-                              data-rating="{{ pr_metafields.loox.avg_rating }}"
-                              data-raters="{{ pr_metafields.loox.num_reviews }}"
-                            ></div>
-                          {%- when '5' -%}
-                            {%- capture the_snippet_review_avg %}{% render 'ssw-widget-avg-rate-profile' %}{% endcapture -%}
-                            {%- unless the_snippet_review_avg contains 'Liquid error' -%}
-                              {{- the_snippet_review_avg -}}
-                            {%- endunless -%}
-                          {%- when '7' -%}
-                            <!-- Start of Judge.me code -->
-                            <div
-                              style="{{ jm_style }}"
-                              class="jdgm-widget jdgm-preview-badge"
-                              data-id="{{ product.id }}"
-                              style="pointer-events: none;"
-                            >
-                              {{- product.metafields.judgeme.badge -}}
-                            </div>
-                            <!-- End of Judge.me code -->
-                          {%- when '8' -%}
-                            <div
-                              id="scm-product-detail-rate"
-                              class="scm-reviews-rate"
-                              data-rate-version2="{{ product.metafields.scm_review_importer.reviewsData.reviewCountInfo | json }}"
-                              data-product-id="{{ product.id }}"
-                            ></div>
-                          {%- else -%}
-                            <div class="t4s-pr_rating t4s-review_pr_other">{{ bk_stts.review_liquid }}</div>
-                        {%- endcase -%}
-                      </a>
+                      <div style="margin-top: 12px;">
+                        <a
+                          href="#{{ idTabReview }}"
+                          data-go-id="#{{ idTabReview }}"
+                          class="t4s-product__review t4s-d-inline-block"
+                        >
+                          {%- case settings.app_review -%}
+                            {%- when '1' -%}
+                              <span class="shopify-product-reviews-badge" data-id="{{ pid }}"></span>
+                            {%- when '2' -%}
+                              <div class="review-widget">
+                                <ryviu-widget-total
+                                  reviews_data="{{ pr_metafields.ryviu.product_reviews_info | escape }}"
+                                  product_id="{{ pid }}"
+                                  handle="{{ product.handle }}"
+                                ></ryviu-widget-total>
+                              </div>
+                            {%- when '3' -%}
+                              <div product-id="{{ pid }}" class="alr-display-review-badge"></div>
+                            {%- when '4' -%}
+                              <div
+                                class="loox-rating"
+                                data-id="{{ pid }}"
+                                data-rating="{{ pr_metafields.loox.avg_rating }}"
+                                data-raters="{{ pr_metafields.loox.num_reviews }}"
+                              ></div>
+                            {%- when '5' -%}
+                              {%- capture the_snippet_review_avg %}{% render 'ssw-widget-avg-rate-profile' %}{% endcapture -%}
+                              {%- unless the_snippet_review_avg contains 'Liquid error' -%}
+                                {{- the_snippet_review_avg -}}
+                              {%- endunless -%}
+                            {%- when '7' -%}
+                              <!-- Start of Judge.me code -->
+                              <div
+                                style="{{ jm_style }}"
+                                class="jdgm-widget jdgm-preview-badge"
+                                data-id="{{ product.id }}"
+                                style="pointer-events: none;"
+                              >
+                                {{- product.metafields.judgeme.badge -}}
+                              </div>
+                              <!-- End of Judge.me code -->
+                            {%- when '8' -%}
+                              <div
+                                id="scm-product-detail-rate"
+                                class="scm-reviews-rate"
+                                data-rate-version2="{{ product.metafields.scm_review_importer.reviewsData.reviewCountInfo | json }}"
+                                data-product-id="{{ product.id }}"
+                              ></div>
+                            {%- else -%}
+                              <div class="t4s-pr_rating t4s-review_pr_other">{{ bk_stts.review_liquid }}</div>
+                          {%- endcase -%}
+                        </a>
+                      </div>
                     {%- endif -%}
                   </div>
+
+{%- comment -%} Product Personalizer 动态样式 {%- endcomment -%}
+<style>
+  /* Product Personalizer 上传按钮自定义颜色 */
+  :root {
+    --pplr-upload-btn-bg: {{ section.settings.pplr_upload_btn_bg_color | default: 'transparent' }};
+    --pplr-upload-btn-text: {{ section.settings.pplr_upload_btn_text_color | default: '#1976d2' }};
+    --pplr-upload-btn-border: {{ section.settings.pplr_upload_btn_border_color | default: 'rgba(25, 118, 210, 0.5)' }};
+    --pplr-upload-btn-bg-hover: {{ section.settings.pplr_upload_btn_bg_hover_color | default: 'rgba(25, 118, 210, 0.04)' }};
+  }
+</style>
 
                   {%- if bk_stts.tax_ship and cart.taxes_included or shop.shipping_policy.body != blank -%}
                     <div class="t4s-product__policies t4s-rte" data-product-policies>
@@ -1087,6 +1003,14 @@
 
                 {%- when 'custom_image_upload' -%}
                   {%- render 'product-block-custom-upload',
+                    block: block,
+                    bk_stts: bk_stts,
+                    product: product,
+                    pr_se_id: pr_se_id
+                  -%}
+
+                {%- when 'image_text_upload' -%}
+                  {%- render 'product-block-image-text-upload',
                     block: block,
                     bk_stts: bk_stts,
                     product: product,
@@ -2068,6 +1992,9 @@
           {% unless isProductAvailable %}
             disabled="disabled"
           {% endunless %}
+          {% if section.settings.sticky_atc_bg_color or section.settings.sticky_atc_text_color %}
+            style="{% if section.settings.sticky_atc_bg_color %}background-color: {{ section.settings.sticky_atc_bg_color }};{% endif %}{% if section.settings.sticky_atc_text_color %}color: {{ section.settings.sticky_atc_text_color }};{% endif %}"
+          {% endif %}
         >
           <span class="t4s-btn-atc_text">
             {%- if current_variant.available == false or isProductAvailable == false -%}
@@ -2279,6 +2206,357 @@
           "label": "Large"
         }
       ]
+    },
+    {
+      "type": "header",
+      "content": "+ Custom Thumbnail Styling (自定义缩略图样式)"
+    },
+    {
+      "type": "range",
+      "id": "thumb_gap",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Thumbnail gap (缩略图间距)",
+      "default": 10,
+      "info": "Space between thumbnails on desktop"
+    },
+    {
+      "type": "range",
+      "id": "thumb_gap_mobile",
+      "min": 4,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "label": "Thumbnail gap mobile (移动端间距)",
+      "default": 8,
+      "info": "Space between thumbnails on mobile"
+    },
+    {
+      "type": "range",
+      "id": "thumb_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Thumbnail border radius (圆角)",
+      "default": 8,
+      "info": "Border radius for thumbnails on desktop"
+    },
+    {
+      "type": "range",
+      "id": "thumb_border_radius_mobile",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Thumbnail border radius mobile (移动端圆角)",
+      "default": 6,
+      "info": "Border radius for thumbnails on mobile"
+    },
+    {
+      "type": "select",
+      "id": "thumb_scroller_overflow_mobile",
+      "label": "Thumbnail scroller overflow (mobile) (缩略图滚动容器溢出)",
+      "default": "auto",
+      "info": "Control how content outside thumbnail container is displayed on mobile",
+      "options": [
+        {
+          "value": "visible",
+          "label": "Visible (显示溢出内容)"
+        },
+        {
+          "value": "hidden",
+          "label": "Hidden (隐藏溢出内容)"
+        },
+        {
+          "value": "auto",
+          "label": "Auto (自动滚动)"
+        },
+        {
+          "value": "scroll",
+          "label": "Scroll (强制滚动条)"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "thumb_bottom_position_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Thumbnail bottom position (mobile) (缩略图底部位置)",
+      "default": 15,
+      "info": "Distance from bottom of main image container on mobile (已弃用 - 现在使用正常文档流)"
+    },
+    {
+      "type": "range",
+      "id": "thumb_margin_top_mobile",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Thumbnail margin top (mobile) (缩略图上边距)",
+      "default": 15,
+      "info": "Space above thumbnails on mobile"
+    },
+    {
+      "type": "header",
+      "content": "+ Thumbnail Arrows (Mobile)"
+    },
+    {
+      "type": "range",
+      "id": "thumb_arrow_size_mobile",
+      "min": 28,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Arrow button size (mobile) (箭头按钮大小)",
+      "default": 36,
+      "info": "Width and height of circular arrow buttons"
+    },
+    {
+      "type": "range",
+      "id": "thumb_arrow_icon_size_mobile",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Arrow icon size (mobile) (箭头图标大小)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "thumb_arrow_offset_mobile",
+      "min": -20,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Arrow offset from edge (mobile) (箭头边距)",
+      "default": -10,
+      "info": "Distance from container edge (negative = outside, positive = inside)"
+    },
+    {
+      "type": "range",
+      "id": "thumb_arrow_container_padding_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Container padding for arrows (mobile) (容器内边距)",
+      "default": 30,
+      "info": "Total horizontal space reserved for arrows"
+    },
+    {
+      "type": "range",
+      "id": "thumb_arrow_border_width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "label": "Arrow border width (箭头边框宽度)",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "thumb_arrow_bg_color",
+      "label": "Arrow background color (箭头背景色)",
+      "default": "rgba(255, 255, 255, 0.95)"
+    },
+    {
+      "type": "color",
+      "id": "thumb_arrow_bg_hover_color",
+      "label": "Arrow background hover color (箭头悬停背景色)",
+      "default": "rgba(255, 255, 255, 1)"
+    },
+    {
+      "type": "color",
+      "id": "thumb_arrow_color",
+      "label": "Arrow icon color (箭头图标颜色)",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "thumb_arrow_border_color",
+      "label": "Arrow border color (箭头边框颜色)",
+      "default": "rgba(0, 0, 0, 0.1)"
+    },
+    {
+      "type": "color",
+      "id": "thumb_hover_border_color",
+      "label": "Thumbnail hover border color (悬停边框颜色)",
+      "default": "#3b82f6",
+      "info": "Border color when hovering over thumbnail"
+    },
+    {
+      "type": "color",
+      "id": "thumb_active_border_color",
+      "label": "Thumbnail active border color (激活边框颜色)",
+      "default": "#1e40af",
+      "info": "Border color for selected thumbnail"
+    },
+    {
+      "type": "range",
+      "id": "main_image_padding_bottom",
+      "min": 60,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Main image bottom padding (主图底部内边距)",
+      "default": 100,
+      "info": "Space for thumbnails below main image on desktop"
+    },
+    {
+      "type": "range",
+      "id": "main_image_padding_bottom_mobile",
+      "min": 60,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Main image bottom padding mobile (移动端底部内边距)",
+      "default": 90,
+      "info": "Space for thumbnails below main image on mobile"
+    },
+    {
+      "type": "range",
+      "id": "thumb_arrow_position_mobile",
+      "min": 60,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile arrow position (移动端箭头位置)",
+      "default": 100,
+      "info": "Distance from bottom for navigation arrows on mobile (should be above thumbnails)"
+    },
+    {
+      "type": "header",
+      "content": "+ Product Info Wrapper Styling (产品信息容器样式)"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_margin_top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin top (上边距)",
+      "default": 25,
+      "info": "Space above the product info wrapper on desktop"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_margin_top_mobile",
+      "min": -150,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin top mobile (移动端上边距)",
+      "default": 0,
+      "info": "Space above the product info wrapper on mobile (negative values move it up)"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin bottom (下边距)",
+      "default": 0,
+      "info": "Space below the product info wrapper on desktop"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_margin_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin bottom mobile (移动端下边距)",
+      "default": 0,
+      "info": "Space below the product info wrapper on mobile"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_padding",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding (内边距)",
+      "default": 24,
+      "info": "Inner padding on desktop"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_padding_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding mobile (移动端内边距)",
+      "default": 16,
+      "info": "Inner padding on mobile"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width (边框宽度)",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "info_wrapper_border_color",
+      "label": "Border color (边框颜色)",
+      "default": "rgba(0, 0, 0, 0.1)"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Border radius (圆角)",
+      "default": 12,
+      "info": "Border radius on desktop"
+    },
+    {
+      "type": "range",
+      "id": "info_wrapper_border_radius_mobile",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Border radius mobile (移动端圆角)",
+      "default": 8,
+      "info": "Border radius on mobile"
+    },
+    {
+      "type": "color",
+      "id": "info_wrapper_bg_color",
+      "label": "Background color (背景颜色)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "info_wrapper_shadow",
+      "label": "Box shadow (阴影)",
+      "default": "0 4px 12px rgba(0, 0, 0, 0.08)",
+      "info": "CSS box-shadow value for desktop. Example: 0 4px 12px rgba(0, 0, 0, 0.08)"
+    },
+    {
+      "type": "text",
+      "id": "info_wrapper_shadow_mobile",
+      "label": "Box shadow mobile (移动端阴影)",
+      "default": "0 2px 8px rgba(0, 0, 0, 0.06)",
+      "info": "CSS box-shadow value for mobile"
     },
     {
       "type": "select",
@@ -3064,6 +3342,18 @@
       "info": "Button animation",
       "unit": "sec",
       "default": 6
+    },
+    {
+      "type": "color",
+      "id": "sticky_atc_bg_color",
+      "label": "Button background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "sticky_atc_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
     },
     {
       "type": "header",
@@ -7193,6 +7483,49 @@
           "unit": "px",
           "label": "Button border radius",
           "default": 8
+        },
+        {
+          "type": "header",
+          "content": "+ Open Form Button"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_form_button",
+          "label": "Show form button",
+          "default": true,
+          "info": "Toggle to show or hide the 'Open form' button"
+        },
+        {
+          "type": "text",
+          "id": "form_btn_text",
+          "label": "Form button text",
+          "default": "Open form",
+          "info": "Text displayed on the 'Open form' button"
+        },
+        {
+          "type": "text",
+          "id": "form_btn_data_id",
+          "label": "Form button data-id",
+          "default": "MTMxMjQ5",
+          "info": "The data-id attribute value for the form button (e.g., MTMxMjQ5)"
+        },
+        {
+          "type": "color",
+          "id": "form_btn_text_color",
+          "label": "Form button text color",
+          "default": "#D39D20",
+          "info": "Text color for the 'Open form' button"
+        },
+        {
+          "type": "range",
+          "id": "form_btn_border_radius",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "unit": "px",
+          "label": "Form button border radius",
+          "default": 4,
+          "info": "Border radius for the 'Open form' button"
         }
       ]
     },
@@ -7474,6 +7807,176 @@
           "unit": "px",
           "label": "Margin bottom",
           "default": 16
+        }
+      ]
+    },
+    {
+      "type": "image_text_upload",
+      "name": "📋 Icon Text List",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Block Spacing"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Margin bottom",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Container Styling"
+        },
+        {
+          "type": "color",
+          "id": "container_bg_color",
+          "label": "Background color",
+          "default": "#FCF9F2"
+        },
+        {
+          "type": "range",
+          "id": "container_border_width",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "unit": "px",
+          "label": "Border width",
+          "default": 1
+        },
+        {
+          "type": "color",
+          "id": "container_border_color",
+          "label": "Border color",
+          "default": "#FDF0CF"
+        },
+        {
+          "type": "range",
+          "id": "container_padding",
+          "min": 10,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "label": "Padding",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "container_border_radius",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "label": "Border radius",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "spacing_between",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "label": "Spacing between items",
+          "default": 12,
+          "info": "Space between first and second item"
+        },
+        {
+          "type": "header",
+          "content": "First Item"
+        },
+        {
+          "type": "image_picker",
+          "id": "item1_image",
+          "label": "Icon image",
+          "info": "Upload an image to use as icon (overrides emoji)"
+        },
+        {
+          "type": "text",
+          "id": "item1_icon",
+          "label": "Icon (emoji fallback)",
+          "default": "🎨",
+          "info": "Used if no image is uploaded"
+        },
+        {
+          "type": "textarea",
+          "id": "item1_text",
+          "label": "Text",
+          "default": "Design service with revisions included."
+        },
+        {
+          "type": "header",
+          "content": "Second Item"
+        },
+        {
+          "type": "image_picker",
+          "id": "item2_image",
+          "label": "Icon image",
+          "info": "Upload an image to use as icon (overrides emoji)"
+        },
+        {
+          "type": "text",
+          "id": "item2_icon",
+          "label": "Icon (emoji fallback)",
+          "default": "🌿",
+          "info": "Used if no image is uploaded"
+        },
+        {
+          "type": "textarea",
+          "id": "item2_text",
+          "label": "Text",
+          "default": "Lifetime Tekhub Platform Access"
+        },
+        {
+          "type": "header",
+          "content": "Icon & Text Styling"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "min": 16,
+          "max": 48,
+          "step": 2,
+          "unit": "px",
+          "label": "Icon size",
+          "default": 24
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon color (for emoji)",
+          "default": "#D39D20",
+          "info": "Only applies to emoji icons, not uploaded images"
+        },
+        {
+          "type": "range",
+          "id": "text_size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Font size",
+          "default": 16
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#8b8b7a"
         }
       ]
     }

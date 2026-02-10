@@ -1,0 +1,85 @@
+{%- comment -%}
+  Product Block - Icon Text List
+  图标文字列表区块
+  
+  参数:
+  - block: block 对象
+  - bk_stts: block settings
+{%- endcomment -%}
+
+<style>
+  .t4s-icon-text-list-{{ block.id }} {
+    width: 100%;
+    padding: {{ bk_stts.container_padding | default: 20 }}px;
+    background: {{ bk_stts.container_bg_color | default: '#FCF9F2' }};
+    border: {{ bk_stts.container_border_width | default: 1 }}px solid {{ bk_stts.container_border_color | default: '#FDF0CF' }};
+    border-radius: {{ bk_stts.container_border_radius | default: 16 }}px;
+    margin-top: {{ bk_stts.margin_top | default: 0 }}px;
+    margin-bottom: {{ bk_stts.margin_bottom | default: 0 }}px;
+  }
+  
+  .t4s-icon-text-list__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .t4s-icon-text-list__item + .t4s-icon-text-list__item {
+    margin-top: {{ bk_stts.spacing_between | default: 12 }}px;
+  }
+  
+  .t4s-icon-text-list__icon {
+    flex-shrink: 0;
+    width: {{ bk_stts.icon_size | default: 24 }}px;
+    height: {{ bk_stts.icon_size | default: 24 }}px;
+    font-size: {{ bk_stts.icon_size | default: 24 }}px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ bk_stts.icon_color | default: '#D39D20' }};
+  }
+  
+  .t4s-icon-text-list__icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .t4s-icon-text-list__text {
+    flex: 1;
+    font-size: {{ bk_stts.text_size | default: 16 }}px;
+    line-height: 1.5;
+    color: {{ bk_stts.text_color | default: '#8b8b7a' }};
+    margin: 0;
+    padding-top: 2px;
+  }
+</style>
+
+<div class="t4s-icon-text-list-{{ block.id }}" {{ block.shopify_attributes }}>
+  {%- if bk_stts.item1_text != blank -%}
+  <div class="t4s-icon-text-list__item">
+    <div class="t4s-icon-text-list__icon">
+      {%- if bk_stts.item1_image != blank -%}
+        {{ bk_stts.item1_image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+      {%- else -%}
+        {{ bk_stts.item1_icon | default: '🎨' }}
+      {%- endif -%}
+    </div>
+    <div class="t4s-icon-text-list__text">{{ bk_stts.item1_text }}</div>
+  </div>
+  {%- endif -%}
+  
+  {%- if bk_stts.item2_text != blank -%}
+  <div class="t4s-icon-text-list__item">
+    <div class="t4s-icon-text-list__icon">
+      {%- if bk_stts.item2_image != blank -%}
+        {{ bk_stts.item2_image | image_url: width: 100 | image_tag: loading: 'lazy' }}
+      {%- else -%}
+        {{ bk_stts.item2_icon | default: '🌿' }}
+      {%- endif -%}
+    </div>
+    <div class="t4s-icon-text-list__text">{{ bk_stts.item2_text }}</div>
+  </div>
+  {%- endif -%}
+</div>

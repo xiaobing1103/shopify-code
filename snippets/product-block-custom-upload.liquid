@@ -56,10 +56,18 @@
 </style>
 
 <div class="t4s-custom-upload" data-custom-upload data-product-id="{{ product.id }}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
-  <label class="t4s-custom-upload__label" for="{{ upload_id }}">
-    {{ display_label }}
-    {%- if bk_stts.required -%}<span style="color:#ef4444;margin-left:2px;">*</span>{%- endif -%}
-  </label>
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+    <label class="t4s-custom-upload__label" for="{{ upload_id }}" style="margin: 0;">
+      {{ display_label }}
+      {%- if bk_stts.required -%}<span style="color:#ef4444;margin-left:2px;">*</span>{%- endif -%}
+    </label>
+    {%- if bk_stts.show_form_button -%}
+    <a href="javascript:void(0);" class="globo-formbuilder-open" data-id="{{ bk_stts.form_btn_data_id | default: 'MTMxMjQ5' }}" 
+      style="padding: 6px 12px; font-size: 13px; white-space: nowrap; border-radius: {{ bk_stts.form_btn_border_radius | default: 4 }}px; color: {{ bk_stts.form_btn_text_color | default: '#1976d2' }}; text-decoration: underline; display: inline-block;">
+      {{ bk_stts.form_btn_text | default: 'Open form' }}
+    </a>
+    {%- endif -%}
+  </div>
   
   <div class="t4s-custom-upload__container">
     <input type="file" id="{{ upload_id }}" class="t4s-custom-upload__input" form="product-form-{{ pr_se_id }}"

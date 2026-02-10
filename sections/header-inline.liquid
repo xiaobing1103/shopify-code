@@ -1,13 +1,10 @@
-{%- liquid
+﻿{%- liquid
   assign se_stts = section.settings
   assign se_blocks = section.blocks 
   assign admin_sp = request.design_mode
   assign h__bgimg = se_stts.h__bgimg
-  assign h_transparent = se_stts.transparent_header
-  if request.page_type != 'index' 
-    assign h_transparent = false 
-  endif
-  assign space_transparent = se_stts.space_transparent_header
+  assign h_transparent = false
+  assign space_transparent = false
   assign mobile_layout = se_stts.mobile_layout | default: 'logo_left'
   
   # 根据页面类型自动调整移动端布局
@@ -18,16 +15,129 @@
   elsif request.page_type == 'collection' and se_stts.mobile_layout_collection != blank and se_stts.mobile_layout_collection != ''
     assign mobile_layout = se_stts.mobile_layout_collection
   endif
+
+  # 根据页面类型选择颜色（简单方式 - 直接从 section settings 读取）
+  assign final_bg_color = se_stts.bgnav
+  assign final_text_color = se_stts.clnav
+  assign final_text_hover_color = se_stts.clnav_hover
+  assign page_type_logo = blank
+  
+  # 如果启用了页面类型特定颜色，则使用对应的颜色和 logo
+  if se_stts.enable_page_colors
+    case request.page_type
+      when 'product'
+        if se_stts.product_bgnav != blank
+          assign final_bg_color = se_stts.product_bgnav
+        endif
+        if se_stts.product_clnav != blank
+          assign final_text_color = se_stts.product_clnav
+        endif
+        if se_stts.product_clnav_hover != blank
+          assign final_text_hover_color = se_stts.product_clnav_hover
+        endif
+        assign page_type_logo = se_stts.product_logo
+      when 'collection'
+        if se_stts.collection_bgnav != blank
+          assign final_bg_color = se_stts.collection_bgnav
+        endif
+        if se_stts.collection_clnav != blank
+          assign final_text_color = se_stts.collection_clnav
+        endif
+        if se_stts.collection_clnav_hover != blank
+          assign final_text_hover_color = se_stts.collection_clnav_hover
+        endif
+        assign page_type_logo = se_stts.collection_logo
+      when 'page'
+        if se_stts.page_bgnav != blank
+          assign final_bg_color = se_stts.page_bgnav
+        endif
+        if se_stts.page_clnav != blank
+          assign final_text_color = se_stts.page_clnav
+        endif
+        if se_stts.page_clnav_hover != blank
+          assign final_text_hover_color = se_stts.page_clnav_hover
+        endif
+        assign page_type_logo = se_stts.page_logo
+      when 'article'
+        if se_stts.article_bgnav != blank
+          assign final_bg_color = se_stts.article_bgnav
+        endif
+        if se_stts.article_clnav != blank
+          assign final_text_color = se_stts.article_clnav
+        endif
+        if se_stts.article_clnav_hover != blank
+          assign final_text_hover_color = se_stts.article_clnav_hover
+        endif
+        assign page_type_logo = se_stts.article_logo
+    endcase
+  endif
+  
+  # 优先级最高：单个产品/集合/页面的 Metafield 设置
+  # 如果当前是产品页面，检查产品的自定义 metafield
+  if request.page_type == 'product' and product != blank
+    if product.metafields.custom.header_bg_color != blank
+      assign final_bg_color = product.metafields.custom.header_bg_color
+    endif
+    if product.metafields.custom.header_text_color != blank
+      assign final_text_color = product.metafields.custom.header_text_color
+    endif
+    if product.metafields.custom.header_text_hover_color != blank
+      assign final_text_hover_color = product.metafields.custom.header_text_hover_color
+    endif
+    if product.metafields.custom.header_logo != blank
+      assign page_type_logo = product.metafields.custom.header_logo
+    endif
+  endif
+  
+  # 如果是集合页面，检查集合的自定义 metafield
+  if request.page_type == 'collection' and collection != blank
+    if collection.metafields.custom.header_bg_color != blank
+      assign final_bg_color = collection.metafields.custom.header_bg_color
+    endif
+    if collection.metafields.custom.header_text_color != blank
+      assign final_text_color = collection.metafields.custom.header_text_color
+    endif
+    if collection.metafields.custom.header_text_hover_color != blank
+      assign final_text_hover_color = collection.metafields.custom.header_text_hover_color
+    endif
+    if collection.metafields.custom.header_logo != blank
+      assign page_type_logo = collection.metafields.custom.header_logo
+    endif
+  endif
+  
+  # 如果是普通页面，检查页面的自定义 metafield
+  if request.page_type == 'page' and page != blank
+    if page.metafields.custom.header_bg_color != blank
+      assign final_bg_color = page.metafields.custom.header_bg_color
+    endif
+    if page.metafields.custom.header_text_color != blank
+      assign final_text_color = page.metafields.custom.header_text_color
+    endif
+    if page.metafields.custom.header_text_hover_color != blank
+      assign final_text_hover_color = page.metafields.custom.header_text_hover_color
+    endif
+    if page.metafields.custom.header_logo != blank
+      assign page_type_logo = page.metafields.custom.header_logo
+    endif
+  endif
 -%}
 
 {%- style -%}
   {%- assign opnav  = se_stts.opnav | divided_by: 100.0 -%}
+  
+  {%- comment -%} 处理背景颜色：如果透明度是100%，直接使用原始值（支持渐变），否则应用透明�?{%- endcomment -%}
+  {%- if se_stts.opnav == 100 -%}
+    {%- assign final_bg_with_opacity = final_bg_color -%}
+  {%- else -%}
+    {%- assign final_bg_with_opacity = final_bg_color | color_modify: 'alpha', opnav -%}
+  {%- endif -%}
+  
   .t4s-header__wrapper {
-    --h-text-color      : {{ se_stts.clnav }};
-    --h-text-color-rgb  : {{ se_stts.clnav | color_to_rgb | remove: 'rgba(' | remove: 'rgb(' | remove: ')' }};
-    --h-text-color-hover: {{ se_stts.clnav_hover }};
-    --h-bg-color        : {{ se_stts.bgnav | color_modify: 'alpha', opnav }};
-    background-color: var(--h-bg-color) !important;
+    --h-text-color      : {{ final_text_color }};
+    --h-text-color-rgb  : {{ final_text_color | color_to_rgb | remove: 'rgba(' | remove: 'rgb(' | remove: ')' }};
+    --h-text-color-hover: {{ final_text_hover_color }};
+    --h-bg-color        : {{ final_bg_with_opacity }};
+    background: var(--h-bg-color) !important;
   }
   .t4s-header__wrapper * {
     color: var(--h-text-color);
@@ -35,6 +145,33 @@
   .t4s-header__wrapper a:hover,
   .t4s-header__wrapper button:hover {
     color: var(--h-text-color-hover) !important;
+  }
+  
+  {%- comment -%} 下拉菜单和子菜单使用独立的颜色，不继�?header 的文字颜�?{%- endcomment -%}
+  .t4s-header__wrapper .t4s-sub-menu,
+  .t4s-header__wrapper .t4s-sub-menu *,
+  .t4s-header__wrapper .t4s-dropdown__wrapper,
+  .t4s-header__wrapper .t4s-dropdown__wrapper *,
+  .t4s-header__wrapper .t4s-lb__wrapper,
+  .t4s-header__wrapper .t4s-lb__wrapper * {
+    color: var(--text-color) !important;
+  }
+  .t4s-header__wrapper .t4s-sub-menu a:hover,
+  .t4s-header__wrapper .t4s-dropdown__wrapper a:hover,
+  .t4s-header__wrapper .t4s-lb__wrapper a:hover {
+    color: var(--primary-color) !important;
+  }
+  .t4s-header__wrapper .t4s-sub-menu .type_mn_link2 > a:not(:hover),
+  .t4s-header__wrapper .t4s-sub-menu .type_mn_link > .t4s-heading,
+  .t4s-header__wrapper .t4s-sub-menu .nt_menu .sub-menu .sub-column-item>a {
+    color: var(--secondary-color) !important;
+  }
+  
+  {%- comment -%} 确保下拉菜单背景色正�?{%- endcomment -%}
+  .t4s-header__wrapper .t4s-sub-menu,
+  .t4s-header__wrapper .t4s-dropdown__wrapper,
+  .t4s-header__wrapper .t4s-lb__wrapper {
+    background-color: var(--t4s-light-color) !important;
   }
   .t4s-count-box {
     --h-count-bgcolor: {{ se_stts.bg_hc }};
@@ -48,39 +185,21 @@
   }
   {%- endif -%}
 
-  {%- if h_transparent -%}
+  {%- comment -%} Transparent header removed - always use page-type colors {%- endcomment -%}
 
-    .t4s-section-header,#shopify-section-top-bar { --h-space-tr: {% if space_transparent %}30px{% else %}0px{% endif %} }
-
-    {%- assign opnavtr  = se_stts.opnavtr | divided_by: 100.0 -%}
-    .t4s-header__wrapper {
-      --h-text-color      : {{ se_stts.clnavtr }};
-      --h-text-color-rgb  : {{ se_stts.clnavtr | color_to_rgb | remove: 'rgba(' | remove: 'rgb(' | remove: ')' }};
-      --h-text-color-hover: {{ se_stts.clnavtr_hover }};
-      --h-bg-color        : {{ se_stts.bgnavtr | color_modify: 'alpha', opnavtr }};
-    }
-    .t4s-section-header {
-        margin-top: var(--h-space-tr);
-        margin-bottom: calc(-1 * (var(--header-height) + var(--h-space-tr)));
-        position: relative;
-        top: 0;
-        z-index: 460;
-    }
-    {%- if space_transparent -%}
-      .is--topbar-transparent.is--header-transparent #shopify-section-top-bar {
-        margin-top: var(--h-space-tr);
-      }
-      #t4s-hsticky__sentinel {
-        bottom:calc(-1 * var(--h-space-tr));
-      }
-    {%- endif -%}
-
-  {%- endif -%}
-
-  {%- if se_stts.sticky_header -%}
-
-    {%- unless se_stts.scroll_header -%}
-    .t4s-hsticky__ready .t4s-section-header {
+  {%- comment -%} Header position configuration {%- endcomment -%}
+  {%- if se_stts.header_position == 'fixed' -%}
+  .t4s-section-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 460;
+    -webkit-box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+  }
+  {%- elsif se_stts.header_position == 'sticky' or se_stts.header_position == 'sticky_hide' -%}
+  .t4s-hsticky__ready .t4s-section-header {
         position: sticky;      
         top: 0;
         z-index: 460;
@@ -89,15 +208,21 @@
       -webkit-box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
       box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
     }
-    {%- endunless -%}
     
-    {%- assign opnavst  = se_stts.opnavst | divided_by: 100.0 -%}
+    {%- comment -%} Sticky header uses page-type colors {%- endcomment -%}
+    {%- assign final_bg_sticky = final_bg_color -%}
+    {%- if se_stts.opnav != 100 -%}
+      {%- assign opnav_sticky = se_stts.opnav | divided_by: 100.0 -%}
+      {%- assign final_bg_sticky = final_bg_color | color_modify: 'alpha', opnav_sticky -%}
+    {%- endif -%}
+    
     .is-header--stuck .t4s-header__wrapper {
-      --h-text-color      : {{ se_stts.clnavst }};
-      --h-text-color-rgb  : {{ se_stts.clnavst | color_to_rgb | remove: 'rgba(' | remove: 'rgb(' | remove: ')' }};
-      --h-text-color-hover: {{ se_stts.clnavst_hover }};
-      --h-bg-color        : {{ se_stts.bgnavst | color_modify: 'alpha', opnavst }};
+      --h-text-color      : {{ final_text_color }};
+      --h-text-color-rgb  : {{ final_text_color | color_to_rgb | remove: 'rgba(' | remove: 'rgb(' | remove: ')' }};
+      --h-text-color-hover: {{ final_text_hover_color }};
+      --h-bg-color        : {{ final_bg_sticky }};
     }
+    
     .is-header--stuck .header__sticky-logo {
       display:block !important
     }
@@ -210,14 +335,6 @@
           margin-left: 10px;
       }
       {%- else -%}
-         {%- if space_transparent and h_transparent -%}
-          .is--topbar-transparent.is--header-transparent #shopify-section-top-bar,
-          html:not(.is-header--stuck) .t4s-section-header {
-            max-width: 1170px;
-            margin-right: auto;
-            margin-left: auto;
-          }
-        {%- endif -%}
         .t4s-header__wrapper>.t4s-container {
           padding-right: 20px;
           padding-left: 20px;
@@ -267,69 +384,69 @@
   }
 {%- endstyle -%}
 
-<div data-header-options='{ "isTransparent": {{ h_transparent }},"isSticky": {{ se_stts.sticky_header }},"hideScroldown": {{ se_stts.scroll_header }} }' class="t4s-header__wrapper t4s-pr t4s-header-layout_{{ se_stts.layout }} {% if h__bgimg != blank %} lazyloadt4s t4s-header__bgimg" data-bgset="{{ h__bgimg | image_url: width: 1 }}" data-ratio="{{ h__bgimg.aspect_ratio }}" data-sizes="auto"{% else %}"{% endif %}>
+<div data-header-options='{ "isTransparent": false,"isSticky": {% if se_stts.header_position == 'sticky' or se_stts.header_position == 'sticky_hide' %}true{% else %}false{% endif %},"hideScroldown": {% if se_stts.header_position == 'sticky_hide' %}true{% else %}false{% endif %} }' class="t4s-header__wrapper t4s-pr t4s-header-layout_{{ se_stts.layout }} {% if h__bgimg != blank %} lazyloadt4s t4s-header__bgimg" data-bgset="{{ h__bgimg | image_url: width: 1 }}" data-ratio="{{ h__bgimg.aspect_ratio }}" data-sizes="auto"{% else %}"{% endif %}>
   <div class="t4s-container">
     <div data-header-height class="t4s-row t4s-gx-15 t4s-gx-md-30 t4s-align-items-center t4s-justify-content-between">
     {%- case se_stts.layout -%}
 
       {%- when 'logo_left' -%}
         {%- if mobile_layout == 'logo_left' -%}
-          <div class="t4s-col-lg-2 t4s-col-md-4 t4s-col-3 t4s-order-1 t4s-text-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-2 t4s-col-md-4 t4s-col-3 t4s-order-1 t4s-text-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-2 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
           <div class="t4s-col-lg-auto t4s-col-md-4 t4s-col-9 t4s-order-3 t4s-text-end t4s-col-group_btns t4s-col-item t4s-lh-1 t4s-d-flex t4s-justify-content-end t4s-align-items-center">
             {%- render 't4s_group_btns', se_stts: se_stts, showMobileMenu: true -%}
           </div>
         {%- elsif mobile_layout == 'logo_center' -%}
-          <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-text-lg-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-text-lg-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
           <div class="t4s-col-3 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-item t4s-col-group_btns">
             {%- render 't4s_group_btns', se_stts: se_stts, showMobileMenu: true, onlyMenu: true -%}
           </div>
-          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col-lg-auto t4s-col-3 t4s-order-3 t4s-text-end t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns', se_stts: se_stts -%}</div>
         {%- else -%}
-          <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-text-lg-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-text-lg-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
           <div class="t4s-col-lg-auto t4s-col-6 t4s-order-1 t4s-order-lg-3 t4s-text-start t4s-text-lg-end t4s-col-group_btns t4s-col-item t4s-lh-1">
             {%- render 't4s_group_btns', se_stts: se_stts, showMobileMenu: true -%}
           </div>
-          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
         {%- endif -%}
     
       {%- when 'logo_center' -%}
         {%- if mobile_layout == 'logo_left' -%}
           <div class="t4s-col-5 t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
-          <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-text-lg-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-text-lg-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col-lg-5 t4s-d-none t4s-d-lg-block t4s-order-lg-3 t4s-text-lg-end t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns', se_stts: se_stts -%}</div>
-          <div class="t4s-col-3 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-3 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col-9 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-group_btns t4s-col-item t4s-lh-1">
             {%- render 't4s_group_btns', se_stts: se_stts, showMobileMenu: true -%}
           </div>
         {%- elsif mobile_layout == 'logo_center' -%}
           <div class="t4s-col-5 t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
-          <div class="t4s-col-lg-2 t4s-col-6 t4s-order-2 t4s-text-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-2 t4s-col-6 t4s-order-2 t4s-text-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col-3 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-item t4s-col-group_btns">
             {%- render 't4s_group_btns', se_stts: se_stts, showMobileMenu: true, onlyMenu: true -%}
           </div>
           <div class="t4s-col-lg-5 t4s-col-3 t4s-order-3 t4s-text-end t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns', se_stts: se_stts -%}</div>
         {%- else -%}
           <div class="t4s-col-5 t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
-          <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-text-lg-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-text-lg-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col-lg-5 t4s-d-none t4s-d-lg-block t4s-order-lg-3 t4s-text-lg-end t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns', se_stts: se_stts -%}</div>
           <div class="t4s-col-6 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-group_btns t4s-col-item t4s-lh-1">
             {%- render 't4s_group_btns', se_stts: se_stts, showMobileMenu: true -%}
           </div>
-          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
         {%- endif -%}
       
       {%- when 'menu_split' -%}
         {%- if mobile_layout == 'logo_left' -%}
           <div class="t4s-col-lg-2 t4s-d-lg-block t4s-d-none t4s-order-lg-1 t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns_split', se_stts: se_stts, isSplit1: true -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-col-item">{%- render 'menu_splits', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts, isSplit1: true -%}</div>
-          <div class="t4s-col-lg-auto t4s-d-none t4s-d-lg-block t4s-order-lg-3 t4s-text-lg-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-auto t4s-d-none t4s-d-lg-block t4s-order-lg-3 t4s-text-lg-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-4 t4s-col-item">{%- render 'menu_splits', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts, isSplit1: false -%}</div>
           <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-5 t4s-text-lg-end t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns_split', se_stts: se_stts, isSplit1: false -%}</div>
-          <div class="t4s-col-3 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-3 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col-9 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-group_btns t4s-col-item t4s-lh-1 t4s-d-flex t4s-justify-content-end t4s-align-items-center">
             <div class="t4s-me-auto">{%- render 'push_menu' -%}</div>
             {%- render 't4s_group_btns_split', se_stts: se_stts, isSplit1: false -%}
@@ -337,45 +454,45 @@
         {%- elsif mobile_layout == 'logo_center' -%}
           <div class="t4s-col-lg-2 t4s-d-lg-block t4s-d-none t4s-order-lg-1 t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns_split', se_stts: se_stts, isSplit1: true -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-col-item">{%- render 'menu_splits', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts, isSplit1: true -%}</div>
-          <div class="t4s-col-lg-auto t4s-col-6 t4s-order-2 t4s-text-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-auto t4s-col-6 t4s-order-2 t4s-text-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-4 t4s-col-item">{%- render 'menu_splits', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts, isSplit1: false -%}</div>
           <div class="t4s-col-3 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-item">{%- render 'push_menu' -%}</div>
           <div class="t4s-col-lg-2 t4s-col-3 t4s-order-3 t4s-text-end t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns_split', se_stts: se_stts, isSplit1: false -%}</div>
         {%- else -%}
           <div class="t4s-col-lg-2 t4s-d-lg-block t4s-d-none t4s-order-lg-1 t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns_split', se_stts: se_stts, isSplit1: true -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-col-item">{%- render 'menu_splits', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts, isSplit1: true -%}</div>
-          <div class="t4s-col-lg-auto t4s-d-none t4s-d-lg-block t4s-order-lg-3 t4s-text-lg-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-auto t4s-d-none t4s-d-lg-block t4s-order-lg-3 t4s-text-lg-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-4 t4s-col-item">{%- render 'menu_splits', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts, isSplit1: false -%}</div>
           <div class="t4s-col-lg-2 t4s-d-none t4s-d-lg-block t4s-order-lg-5 t4s-text-lg-end t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns_split', se_stts: se_stts, isSplit1: false -%}</div>
           <div class="t4s-col-6 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-group_btns t4s-col-item t4s-lh-1 t4s-d-flex t4s-justify-content-start t4s-align-items-center">
             {%- render 't4s_group_btns_split', se_stts: se_stts, isSplit1: false -%}
             <div class="t4s-ms-auto">{%- render 'push_menu' -%}</div>
           </div>
-          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
         {%- endif -%}
 
       {%- else -%}
         {%- if mobile_layout == 'logo_left' -%}
-          <div class="t4s-col-lg-auto t4s-col-3 t4s-order-1 t4s-text-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-auto t4s-col-3 t4s-order-1 t4s-text-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
           <div class="t4s-col-lg-auto t4s-col-9 t4s-order-2 t4s-order-lg-3 t4s-text-end t4s-col-group_btns t4s-col-item t4s-lh-1 t4s-d-flex t4s-justify-content-end t4s-align-items-center">
             <div class="t4s-d-lg-none t4s-me-auto">{%- render 'push_menu' -%}</div>
             {%- render 't4s_group_btns', se_stts: se_stts, isfrmSearch: 'true' -%}
           </div>
         {%- elsif mobile_layout == 'logo_center' -%}
-          <div class="t4s-col-lg-auto t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-text-lg-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-auto t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-text-lg-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
           <div class="t4s-col-3 t4s-d-lg-none t4s-order-1 t4s-text-start t4s-col-item">{%- render 'push_menu' -%}</div>
-          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-center t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col-lg-auto t4s-col-3 t4s-order-3 t4s-text-end t4s-col-group_btns t4s-col-item t4s-lh-1">{%- render 't4s_group_btns', se_stts: se_stts, isfrmSearch: 'true' -%}</div>
         {%- else -%}
-          <div class="t4s-col-lg-auto t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-text-lg-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-lg-auto t4s-d-none t4s-d-lg-block t4s-order-lg-1 t4s-text-lg-start t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
           <div class="t4s-col t4s-d-none t4s-d-lg-block t4s-order-lg-2 t4s-col-item">{%- render 'menu_blocks', placement: 'bottom', admin_sp: admin_sp, se_blocks: se_blocks, se_stts: se_stts -%}</div>
           <div class="t4s-col-lg-auto t4s-col-6 t4s-order-1 t4s-order-lg-3 t4s-text-start t4s-text-lg-end t4s-col-group_btns t4s-col-item t4s-lh-1 t4s-d-flex t4s-justify-content-start t4s-justify-content-lg-end t4s-align-items-center">
             {%- render 't4s_group_btns', se_stts: se_stts, isfrmSearch: 'true' -%}
             <div class="t4s-d-lg-none t4s-ms-auto">{%- render 'push_menu' -%}</div>
           </div>
-          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent -%}</div>
+          <div class="t4s-col-6 t4s-d-lg-none t4s-order-2 t4s-text-end t4s-col-item">{%- render 't4s_logo', tag: 'div', isTransparent: h_transparent, page_type_logo: page_type_logo -%}</div>
         {%- endif -%}
 
     {%- endcase -%}
@@ -383,12 +500,6 @@
   </div>
 </div>
 
-{%- if h_transparent -%}
-<script>
-document.documentElement.classList.add('is--header-transparent');
-document.documentElement.style.setProperty('--header-height', document.getElementById('shopify-section-{{ section.id }}').offsetHeight + 'px');
-</script>
-{%- endif -%}
 
 {%- schema -%}
   {
@@ -528,6 +639,31 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
         "default": true
       },
       {
+        "type": "select",
+        "id": "header_position",
+        "label": "Header position",
+        "options": [
+          {
+            "value": "static",
+            "label": "Static (normal position)"
+          },
+          {
+            "value": "sticky",
+            "label": "Sticky (always visible when scrolling)"
+          },
+          {
+            "value": "sticky_hide",
+            "label": "Sticky (hide when scrolling down)"
+          },
+          {
+            "value": "fixed",
+            "label": "Fixed (always on top)"
+          }
+        ],
+        "default": "sticky",
+        "info": "Choose how the header behaves when scrolling"
+      },
+      {
         "type": "header",
         "content": "+ Options only working desktop"
       },
@@ -604,29 +740,16 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
         "unit": "px",
         "default": 62
       },
-      /*{
-        "type": "checkbox",
-        "id": "mb_cat",
-        "label": "Show Categories?",
-        "info": "Add, Edit content to this section using the Sections sidebar.",
-        "default": true
-      },
-      {
-        "type": "checkbox",
-        "id": "only_icon",
-        "label": "Only click icon?",
-        "info": "Only click icon to show submenu.",
-        "default": false
-      },
-      {
-        "type": "checkbox",
-        "id": "first_cat",
-        "label": "Categories position the first?",
-        "default": false
-      },*/
       {
         "type": "header",
         "content": "+ Header Colors:"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_page_colors",
+        "label": "Enable page-type specific colors",
+        "info": "Set different header colors for different page types (product, collection, article, etc.)",
+        "default": false
       },
       {
         "type": "image_picker",
@@ -636,8 +759,9 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
       {
         "type": "color_background",
         "id": "bgnav",
-        "label": "Header background color",
-        "default": "linear-gradient(#ffffff, #ffffff)"
+        "label": "Header background color (Default)",
+        "default": "linear-gradient(#ffffff, #ffffff)",
+        "info": "Supports solid colors and gradients. Note: Gradients convert to solid when opacity < 100%"
       },
       {
         "type": "range",
@@ -647,27 +771,134 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%"
+        "unit": "%",
+        "info": "Note: Gradient backgrounds convert to solid when opacity < 100%"
       },
       {
         "type": "color",
         "id": "clnav",
-        "label": "Header text/icon color",
+        "label": "Header text/icon color (Default)",
         "default": "#222222"
       },
       {
         "type": "color",
         "id": "clnav_hover",
-        "label": "Header text/icon color when hover",
+        "label": "Header text/icon color when hover (Default)",
         "default": "#56cfe1"
       },
-      /*{
+      {
+        "type": "header",
+        "content": "+ Product Page Colors"
+      },
+      {
+        "type": "color_background",
+        "id": "product_bgnav",
+        "label": "Product page - Background color",
+        "info": "Leave empty to use default. Supports solid colors and gradients"
+      },
+      {
         "type": "color",
-        "id": "clsea",
-        "label": "Header search form color",
-        "info": "Only working when search form active",
-        "default": "#222"
-      },*/
+        "id": "product_clnav",
+        "label": "Product page - Text/icon color",
+        "info": "Leave empty to use default"
+      },
+      {
+        "type": "color",
+        "id": "product_clnav_hover",
+        "label": "Product page - Hover color",
+        "info": "Leave empty to use default"
+      },
+      {
+        "type": "image_picker",
+        "id": "product_logo",
+        "label": "Product page - Custom Logo",
+        "info": "Leave empty to use default logo"
+      },
+      {
+        "type": "header",
+        "content": "+ Collection Page Colors"
+      },
+      {
+        "type": "color_background",
+        "id": "collection_bgnav",
+        "label": "Collection page - Background color",
+        "info": "Leave empty to use default. Supports solid colors and gradients"
+      },
+      {
+        "type": "color",
+        "id": "collection_clnav",
+        "label": "Collection page - Text/icon color",
+        "info": "Leave empty to use default"
+      },
+      {
+        "type": "color",
+        "id": "collection_clnav_hover",
+        "label": "Collection page - Hover color",
+        "info": "Leave empty to use default"
+      },
+      {
+        "type": "image_picker",
+        "id": "collection_logo",
+        "label": "Collection page - Custom Logo",
+        "info": "Leave empty to use default logo"
+      },
+      {
+        "type": "header",
+        "content": "+ Page Colors"
+      },
+      {
+        "type": "color_background",
+        "id": "page_bgnav",
+        "label": "Page - Background color",
+        "info": "Leave empty to use default. Supports solid colors and gradients"
+      },
+      {
+        "type": "color",
+        "id": "page_clnav",
+        "label": "Page - Text/icon color",
+        "info": "Leave empty to use default"
+      },
+      {
+        "type": "color",
+        "id": "page_clnav_hover",
+        "label": "Page - Hover color",
+        "info": "Leave empty to use default"
+      },
+      {
+        "type": "image_picker",
+        "id": "page_logo",
+        "label": "Page - Custom Logo",
+        "info": "Leave empty to use default logo"
+      },
+      {
+        "type": "header",
+        "content": "+ Article/Blog Colors"
+      },
+      {
+        "type": "color_background",
+        "id": "article_bgnav",
+        "label": "Article page - Background color",
+        "info": "Leave empty to use default. Supports solid colors and gradients"
+      },
+      {
+        "type": "color",
+        "id": "article_clnav",
+        "label": "Article page - Text/icon color",
+        "info": "Leave empty to use default"
+      },
+      {
+        "type": "color",
+        "id": "article_clnav_hover",
+        "label": "Article page - Hover color",
+        "info": "Leave empty to use default"
+      },
+      {
+        "type": "image_picker",
+        "id": "article_logo",
+        "label": "Article page - Custom Logo",
+        "info": "Leave empty to use default logo"
+      },
+      
       {
         "type": "header",
         "content": "+ Header Group buttons:"
@@ -913,110 +1144,7 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
         "label": "Count text color",
         "default": "#ffffff"
       },
-      {
-        "type": "header",
-        "content": "+ Sticky header"
-      }, 
-      {
-        "type": "checkbox",
-        "id": "sticky_header",
-        "label": "Enable sticky header",
-        "default": true
-      },
-      {
-        "type": "checkbox",
-        "id": "scroll_header",
-        "label": "Hide sticky header on scroll down",
-        "default": true
-      },
-      {
-        "type": "color",
-        "id": "bgnavst",
-        "label": "Header background color",
-        "default": "#ffffff"
-      },
-      {
-        "type": "range",
-        "id": "opnavst",
-        "label": "Background opacity",
-        "default": 100,
-        "min": 0,
-        "max": 100,
-        "step": 1,
-        "unit": "%"
-      },
-      {
-        "type": "color",
-        "id": "clnavst",
-        "label": "Header text/icon color",
-        "default": "#222222"
-      },
-      {
-        "type": "color",
-        "id": "clnavst_hover",
-        "label": "Header text/icon color when hover",
-        "default": "#56cfe1"
-      },
-      /*{
-        "type": "color",
-        "id": "clseast",
-        "label": "Header search form color",
-        "info": "Only working when search form active",
-        "default": "#222"
-      },*/
-      {
-        "type": "header",
-        "content": "+ Transparent header"
-      },
-      {
-        "type": "checkbox",
-        "id": "transparent_header",
-        "label": "Enable transparent header",
-        "info": "Only active on homepage",
-        "default": false
-      },
-      {
-        "type": "checkbox",
-        "id": "space_transparent_header",
-        "label": "Enable transparent header space top",
-        "info": "Only active on homepage and transparent header active",
-        "default": false
-      },
-      {
-        "type": "color",
-        "id": "bgnavtr",
-        "label": "Header background color",
-        "default": "#000000"
-      },
-      {
-        "type": "range",
-        "id": "opnavtr",
-        "label": "Background opacity",
-        "default": 40,
-        "min": 0,
-        "max": 100,
-        "step": 1,
-        "unit": "%"
-      },
-      {
-        "type": "color",
-        "id": "clnavtr",
-        "label": "Header text/icon color",
-        "default": "#ffffff"
-      },
-      {
-        "type": "color",
-        "id": "clnavtr_hover",
-        "label": "Header text/icon color when hover",
-        "default": "#ffffff"
-      },/*
-      {
-        "type": "color",
-        "id": "clseatr",
-        "label": "Header search form color",
-        "info": "Only working when search form active",
-        "default": "#ffffff"
-      }*/
+
       {
         "type": "header",
         "content": "+ Navigation typography"
@@ -1133,13 +1261,7 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
               "type": "header",
               "content": "+ Submenu"
             },
-            /*{
-              "type": "checkbox",
-              "id": "lazy_mn",
-              "label": "Enable Lazy menu?",
-              "info": "improve page load speed",
-              "default": true
-            },*/
+            
             {
               "type": "select",
               "id": "pos_sub",
@@ -1416,7 +1538,7 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
             "step": 1,
             "unit": "px",
             "default": 20
-          },
+          }
           ]
        },
        {
@@ -1520,7 +1642,6 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
         "settings": {
           "layout": "logo_center",
           "mobile_layout": "logo_center",
-          "transparent_header": true,
           "h_icon": "kalles",
           "mobile_search_order": 1,
           "mobile_cart_order": 2,
@@ -1543,7 +1664,6 @@ document.documentElement.style.setProperty('--header-height', document.getElemen
         "settings": {
           "layout": "logo_left",
           "mobile_layout": "logo_left",
-          "sticky_header": true,
           "h_icon": "kalles",
           "mobile_search_order": 2,
           "mobile_cart_order": 3,

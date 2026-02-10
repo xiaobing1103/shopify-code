@@ -86,23 +86,48 @@
   </div>
 
   {%- if media_layout != 'without_thumbnails' -%}
-    <div class="{{ class_thumb }}t4s-col-12 t4s-col-item t4s-col-thumb t4s-pr t4s-oh">
+    <div class="{{ class_thumb }}t4s-col-12 t4s-col-item t4s-col-thumb t4s-pr t4s-oh t4s-product-thumbnails-custom-wrapper">
       <div
         data-thumb__scroller="{{ se_id }}"
         class="t4s-carousel__nav-scroller is__position-{{ media_layout | remove: 'thumbnails_' }}"
       >
-        <div class="t4s-row t4s-row-mt t4s-row-cols-4 t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }} {{ class_gx_lg }}t4s-g-5 t4s-carousel__nav carousel__nav--{{ se_id }} carousel__nav-hover1">
-          {%- for media in product_media limit: 4 -%}
+        <div class="t4s-row t4s-row-mt t4s-row-cols-4 t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }} {{ class_gx_lg }}t4s-g-5 t4s-carousel__nav carousel__nav--{{ se_id }} carousel__nav-hover1 t4s-product-thumbnails-custom" data-thumbnail-container>
+          {%- assign thumb_count = 0 -%}
+          {%- for media in product_media -%}
+            {%- if media.preview_image and media.preview_image.alt contains 'break--360' -%}
+              {%- continue -%}
+            {%- endif -%}
             {%- assign image = media.preview_image -%}
-            <div class="t4s-col-item t4s-product__thumb-item">
+            <div class="t4s-col-item t4s-product__thumb-item t4s-product__thumb-item-custom" data-thumb-index="{{ thumb_count }}">
               <div
                 class="t4s_ratio t4s-product__thumb"
                 {{ imgatt }}style="--aspect-ratioapt:{{ image.aspect_ratio }}"
-              ></div>
+              >
+                <img
+                  src="{{ image | image_url: width: 200 }}"
+                  srcset="{{ image | image_url: width: 200 }} 200w, {{ image | image_url: width: 400 }} 400w"
+                  sizes="(max-width: 767px) 20vw, 100px"
+                  alt="{{ image.alt | escape }}"
+                  width="200"
+                  height="200"
+                  loading="lazy"
+                  class="t4s-product__thumb-img"
+                >
+              </div>
             </div>
+            {%- assign thumb_count = thumb_count | plus: 1 -%}
           {%- endfor -%}
         </div>
       </div>
+      
+      {%- comment -%} 缩略图左右小箭头（仅移动端显示） {%- endcomment -%}
+      <div class="t4s-thumb-nav-arrow t4s-thumb-nav-arrow-prev" data-thumb-prev-arrow aria-label="Previous image" style="display: flex;">
+        &#8249;
+      </div>
+      <div class="t4s-thumb-nav-arrow t4s-thumb-nav-arrow-next" data-thumb-next-arrow aria-label="Next image" style="display: flex;">
+        &#8250;
+      </div>
+
       <button
         type="button"
         data-thumb-btn__prev="{{ se_id }}"
@@ -116,5 +141,306 @@
         class="btn_pnav_next t4s-pa t4s-pe-none t4s-op-0"
       ></button>
     </div>
+
+    {%- comment -%} 缩略图箭头点击脚本 - 触发主题原有按钮 {%- endcomment -%}
+    <script>
+    (function() {
+      console.log('🎯 Arrow Script Start');
+      
+      function init() {
+        const customPrev = document.querySelector('[data-thumb-prev-arrow]');
+        const customNext = document.querySelector('[data-thumb-next-arrow]');
+        const themePrev = document.querySelector('[data-thumb-btn__prev="{{ se_id }}"]');
+        const themeNext = document.querySelector('[data-thumb-btn__next="{{ se_id }}"]');
+        
+        console.log('Custom prev:', customPrev);
+        console.log('Custom next:', customNext);
+        console.log('Theme prev:', themePrev);
+        console.log('Theme next:', themeNext);
+        
+        if (!customPrev || !customNext) {
+          console.log('❌ Custom arrows not found');
+          return;
+        }
+        
+        if (!themePrev || !themeNext) {
+          console.log('❌ Theme buttons not found');
+          return;
+        }
+        
+        // 点击自定义箭头时，触发主题原有按钮
+        customPrev.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('⬅️ Custom PREV clicked, triggering theme button');
+          themePrev.click();
+          return false;
+        };
+        
+        customNext.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('➡️ Custom NEXT clicked, triggering theme button');
+          themeNext.click();
+          return false;
+        };
+        
+        console.log('✅ Arrow click handlers attached!');
+      }
+      
+      // 多次尝试初始化
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+      
+      setTimeout(init, 500);
+      setTimeout(init, 1000);
+    })();
+    </script>
+
+    {%- comment -%} 缩略图同步脚本 {%- endcomment -%}
+    <script>
+      (function() {
+        console.log('=== Thumbnail Sync Script Started ===');
+        
+        function initThumbnailSync() {
+          const mainSlider = document.querySelector('[data-main-media]');
+          const thumbnailItems = document.querySelectorAll('.t4s-product__thumb-item-custom');
+          const thumbPrevArrow = document.querySelector('[data-thumb-prev-arrow]');
+          const thumbNextArrow = document.querySelector('[data-thumb-next-arrow]');
+          
+          console.log('Main slider:', mainSlider);
+          console.log('Thumbnail items:', thumbnailItems.length);
+          console.log('Prev arrow:', thumbPrevArrow);
+          console.log('Next arrow:', thumbNextArrow);
+          
+          if (!mainSlider || !thumbnailItems.length) {
+            console.error('Required elements not found!');
+            return;
+          }
+
+          const totalImages = thumbnailItems.length;
+          let flickityInstance = null;
+          let checkCount = 0;
+          const maxChecks = 100;
+          let isSetup = false;
+
+          // 持续检查Flickity实例
+          const checkFlickity = setInterval(() => {
+            checkCount++;
+            
+            // 尝试多种方式获取Flickity实例
+            if (mainSlider.flickityData) {
+              flickityInstance = mainSlider.flickityData;
+            } else if (window.Flickity && mainSlider.classList.contains('flickityt4s-enabled')) {
+              flickityInstance = window.Flickity.data(mainSlider);
+            } else if (typeof jQuery !== 'undefined' && jQuery(mainSlider).data('flickityt4s')) {
+              flickityInstance = jQuery(mainSlider).data('flickityt4s');
+            }
+            
+            if (flickityInstance && !isSetup) {
+              clearInterval(checkFlickity);
+              console.log('✅ Flickity instance found!', flickityInstance);
+              isSetup = true;
+              setupSync();
+            } else if (checkCount >= maxChecks) {
+              clearInterval(checkFlickity);
+              console.error('❌ Flickity not found after', maxChecks, 'attempts');
+            } else if (checkCount % 10 === 0) {
+              console.log('Still waiting for Flickity... attempt', checkCount);
+            }
+          }, 100);
+
+          function setupSync() {
+            console.log('Setting up thumbnail sync...');
+            
+            // 更新缩略图选中状态和箭头
+            function updateUI(index) {
+              console.log('📍 Updating UI for index:', index);
+              
+              // 更新缩略图选中状态
+              thumbnailItems.forEach((item, i) => {
+                if (i === index) {
+                  item.classList.add('is-nav-selected');
+                  console.log('  ✓ Selected thumbnail', i);
+                } else {
+                  item.classList.remove('is-nav-selected');
+                }
+              });
+
+              // 更新箭头显示（仅移动端）
+              if (window.innerWidth <= 767) {
+                updateArrows(index);
+              }
+            }
+
+            // 更新箭头显示
+            function updateArrows(index) {
+              if (!thumbPrevArrow || !thumbNextArrow) {
+                console.log('  ⚠️ Arrows not found');
+                return;
+              }
+
+              console.log('  📊 Arrow update - Index:', index, 'Total:', totalImages);
+
+              // 左箭头
+              if (index > 0) {
+                thumbPrevArrow.classList.remove('t4s-dn');
+                thumbPrevArrow.style.display = 'flex';
+                console.log('  ← Prev arrow shown');
+              } else {
+                thumbPrevArrow.classList.add('t4s-dn');
+                thumbPrevArrow.style.display = 'none';
+                console.log('  ← Prev arrow hidden');
+              }
+
+              // 右箭头
+              if (index < totalImages - 1) {
+                thumbNextArrow.classList.remove('t4s-dn');
+                thumbNextArrow.style.display = 'flex';
+                console.log('  → Next arrow shown');
+              } else {
+                thumbNextArrow.classList.add('t4s-dn');
+                thumbNextArrow.style.display = 'none';
+                console.log('  → Next arrow hidden');
+              }
+            }
+
+            // 监听Flickity的change事件
+            try {
+              flickityInstance.on('change', function(index) {
+                console.log('🔄 Flickity change event fired - index:', index);
+                updateUI(index);
+              });
+              console.log('✅ Change event listener attached');
+            } catch(e) {
+              console.error('❌ Failed to attach change listener:', e);
+            }
+
+            // 监听Flickity的select事件（备用）
+            try {
+              flickityInstance.on('select', function(index) {
+                console.log('🎯 Flickity select event fired - index:', index);
+                updateUI(index);
+              });
+              console.log('✅ Select event listener attached');
+            } catch(e) {
+              console.error('❌ Failed to attach select listener:', e);
+            }
+
+            // 监听Flickity的settle事件（最终确认）
+            try {
+              flickityInstance.on('settle', function(index) {
+                console.log('✔️ Flickity settle event fired - index:', index);
+                const currentIndex = flickityInstance.selectedIndex;
+                updateUI(currentIndex);
+              });
+              console.log('✅ Settle event listener attached');
+            } catch(e) {
+              console.error('❌ Failed to attach settle listener:', e);
+            }
+
+            // 点击缩略图
+            thumbnailItems.forEach((item, index) => {
+              item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('👆 Thumbnail clicked:', index);
+                
+                if (flickityInstance) {
+                  flickityInstance.select(index);
+                  // 立即更新UI
+                  setTimeout(() => updateUI(index), 50);
+                }
+              });
+            });
+
+            // 左箭头点击
+            if (thumbPrevArrow) {
+              thumbPrevArrow.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('⬅️ Prev arrow clicked');
+                
+                if (flickityInstance) {
+                  flickityInstance.previous();
+                  // 立即更新UI
+                  setTimeout(() => {
+                    const idx = flickityInstance.selectedIndex;
+                    console.log('After previous, index:', idx);
+                    updateUI(idx);
+                  }, 50);
+                }
+              });
+              console.log('✅ Prev arrow listener attached');
+            }
+
+            // 右箭头点击
+            if (thumbNextArrow) {
+              thumbNextArrow.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('➡️ Next arrow clicked');
+                
+                if (flickityInstance) {
+                  flickityInstance.next();
+                  // 立即更新UI
+                  setTimeout(() => {
+                    const idx = flickityInstance.selectedIndex;
+                    console.log('After next, index:', idx);
+                    updateUI(idx);
+                  }, 50);
+                }
+              });
+              console.log('✅ Next arrow listener attached');
+            }
+
+            // 初始化UI
+            const currentIndex = flickityInstance.selectedIndex || 0;
+            console.log('Initial index:', currentIndex);
+            updateUI(currentIndex);
+
+            // 窗口大小改变
+            window.addEventListener('resize', function() {
+              if (flickityInstance) {
+                const idx = flickityInstance.selectedIndex || 0;
+                updateUI(idx);
+              }
+            });
+
+            console.log('✅ Thumbnail sync setup complete!');
+          }
+        }
+
+        // 多次尝试初始化
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            setTimeout(initThumbnailSync, 500);
+          });
+        } else {
+          console.log('DOM already loaded, initializing...');
+          setTimeout(initThumbnailSync, 500);
+        }
+
+        // 延迟初始化（以防万一）
+        setTimeout(function() {
+          console.log('Delayed initialization (1s)...');
+          initThumbnailSync();
+        }, 1000);
+
+        setTimeout(function() {
+          console.log('Delayed initialization (2s)...');
+          initThumbnailSync();
+        }, 2000);
+
+        window.addEventListener('load', function() {
+          console.log('Window loaded, initializing...');
+          setTimeout(initThumbnailSync, 1000);
+        });
+      })();
+    </script>
   {%- endif -%}
 </div>

@@ -1,0 +1,84 @@
+{%- comment -%}
+  Product Personalizer 动态样式
+  参数: se_stts (section settings)
+{%- endcomment -%}
+
+<style>
+  /* Product Personalizer 容器内外边距 */
+  .product-personalizer.pplr_background {
+    padding: 0px !important;
+    margin: 0px 0 !important;
+  }
+
+  .pplr-wrapper, .t4s-line-item-property__field {
+    margin-bottom: 10px !important;
+  }
+
+  /* Color Selector 样式 */
+  .pplr-wrapper.pplr-color .pplrlabel {
+    font-size: {{ se_stts.pplr_color_title_size | default: 14 }}px !important;
+    font-weight: {{ se_stts.pplr_color_title_weight | default: 400 }} !important;
+  }
+  
+  .pplrgcolor.pplr_thumb_image {
+    gap: {{ se_stts.pplr_color_swatch_gap | default: 8 }}px !important;
+  }
+  
+  .pplr-swatch-element.pplrimage {
+    width: {{ se_stts.pplr_color_swatch_size | default: 40 }}px !important;
+    height: {{ se_stts.pplr_color_swatch_size | default: 40 }}px !important;
+  }
+  
+  .pplr-swatch-element.pplrimage.selected {
+    border: {{ se_stts.pplr_color_selected_border | default: 2 }}px solid {{ se_stts.pplr_color_selected_border_color | default: '#3b82f6' }} !important;
+  }
+
+  /* Text Input 下方说明文字 */
+  {%- if se_stts.pplr_text_input_note != blank -%}
+  .pplr-wrapper.pplr-text::after,
+  .pplr-wrapper.pplr-single-line-text::after {
+    content: "{{ se_stts.pplr_text_input_note | replace: '"', "'" }}" !important;
+    display: block !important;
+    font-size: {{ se_stts.pplr_text_note_size | default: 10 }}px !important;
+    line-height: 1.4 !important;
+    color: {{ se_stts.pplr_text_note_color | default: '#dddddd' }} !important;
+    margin-top: 6px !important;
+    font-weight: 400 !important;
+  }
+  {%- endif -%}
+
+  /* Upload Logo 按钮自定义颜色 */
+  .pplrfileuploadbutton::before {
+    background-color: {{ se_stts.pplr_upload_btn_bg_color | default: 'transparent' }} !important;
+    color: {{ se_stts.pplr_upload_btn_text_color | default: '#1976d2' }} !important;
+    border-color: {{ se_stts.pplr_upload_btn_border_color | default: 'rgba(25, 118, 210, 0.5)' }} !important;
+  }
+
+  .pplrfileuploadbutton:hover::before {
+    background-color: {{ se_stts.pplr_upload_btn_bg_hover_color | default: 'rgba(25, 118, 210, 0.04)' }} !important;
+    border-color: {{ se_stts.pplr_upload_btn_text_color | default: '#1976d2' }} !important;
+  }
+
+  /* Upload Logo 按钮文本自定义 */
+  .pplrfileuploadbutton::after {
+    {% if se_stts.pplr_upload_btn_text != blank %}
+    content: '{{ se_stts.pplr_upload_btn_text | escape }}' !important;
+    {% endif %}
+  }
+
+  /* 移除默认 margin-bottom */
+  .product-personalizer .pplr-wrapper.pplr-text,
+  .product-personalizer .pplr-wrapper.pplr-single-line-text,
+  #pplr-{{ product.id }} .pplr-wrapper.pplr-text,
+  #pplr-{{ product.id }} .pplr-wrapper.pplr-single-line-text {
+    margin-bottom: 0px !important;
+  }
+
+  /* 上传按钮自定义颜色变量 */
+  :root {
+    --pplr-upload-btn-bg: {{ se_stts.pplr_upload_btn_bg_color | default: 'transparent' }};
+    --pplr-upload-btn-text: {{ se_stts.pplr_upload_btn_text_color | default: '#1976d2' }};
+    --pplr-upload-btn-border: {{ se_stts.pplr_upload_btn_border_color | default: 'rgba(25, 118, 210, 0.5)' }};
+    --pplr-upload-btn-bg-hover: {{ se_stts.pplr_upload_btn_bg_hover_color | default: 'rgba(25, 118, 210, 0.04)' }};
+  }
+</style>

@@ -227,8 +227,12 @@
       {%- endif -%}
 
       {%- comment -%} Render color options BEFORE Product Personalizer, inside swatch wrapper {%- endcomment -%}
-      {%- if isProductDefault == false and hide_color_selector == false -%}
-        <div class="t4s-swatch t4s-color-mode__{{ color_mode }} t4s-color-size__{{ bk_stts.color_size }} t4s-selector-mode__{{ selector_mode }}">
+      {%- comment -%} 
+        Note: When hide_color_selector is enabled, we hide the color selector visually but keep it in the DOM
+        so that the independent color selector can still interact with it for cascading logic.
+      {%- endcomment -%}
+      {%- if isProductDefault == false -%}
+        <div class="t4s-swatch t4s-color-mode__{{ color_mode }} t4s-color-size__{{ bk_stts.color_size }} t4s-selector-mode__{{ selector_mode }}" {% if hide_color_selector %}style="position: absolute !important; left: -9999px !important; opacity: 0 !important; pointer-events: none !important; width: 0 !important; height: 0 !important; overflow: hidden !important;"{% endif %}>
           {%- for option in product.options_with_values -%}
             {%- liquid
               if option.values.size == 1

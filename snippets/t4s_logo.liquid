@@ -3,7 +3,16 @@
    assign svg = svg_df
    assign logo_df = settings.logo
    assign shop_name = shop.name
-   assign shop_name_escape = s_name | escape
+   assign shop_name_escape = shop_name | escape
+
+   # 使用传递进来的页面类型 logo 参数
+   # page_type_logo 从 header section 传递过来
+   
+   # 调试：输出 page_type_logo 的值
+   comment
+   echo "DEBUG: page_type_logo = "
+   echo page_type_logo
+   endcomment
 
    assign lg_w = settings.logo_width
    if isTransparent
@@ -11,45 +20,76 @@
       assign logo_df = settings.logo_tr | default: logo_df
       assign lg_w = settings.logo_tr_width
    endif
-   assign logo = logo_df
+   
+   # 如果有页面类型特定的 logo，使用它作为基础 logo；否则使用默认 logo
+   if page_type_logo != blank
+      assign logo_base = page_type_logo
+      comment
+      echo "DEBUG: Using page_type_logo"
+      endcomment
+   else
+      assign logo_base = logo_df
+      comment
+      echo "DEBUG: Using default logo"
+      endcomment
+   endif
+   
+   assign logo = logo_base
    assign rate_retina = 2
    assign lg_w_2s = lg_w | times: rate_retina
 -%} 
 
 <{{ tag }} class="{{ class }} t4s-header__logo t4s-lh-1"><a class="{{ class_a | default: 't4s-d-inline-block' }}" href="{{ routes.root_url }}" {{ block.shopify_attributes }}>
 
-   {%- if svg != blank -%}
+   {%- comment -%} 调试信息 - 可见输出 {%- endcomment -%}
+   {%- if request.design_mode -%}
+   <div style="position:absolute;top:-20px;left:0;background:yellow;color:black;font-size:10px;padding:2px;z-index:9999;">
+     Logo: {% if page_type_logo != blank %}PAGE_TYPE{% else %}DEFAULT{% endif %} | Type: {{ request.page_type }}
+   </div>
+   {%- endif -%}
+   
+   {%- if svg != blank and page_type_logo == blank -%}
+      {%- comment -%} 只有在没有页面类型 logo 时才使用 SVG {%- endcomment -%}
       <img loading="eager" class="header__normal-logo t4s-d-none t4s-d-lg-block" src="{{ svg }}" alt="{{ shop_name_escape }}" style="width: {{ lg_w }}px">
       <img loading="lazy" class="header__sticky-logo t4s-d-none t4s-d-none" src="{{ svg_df | default: svg }}" alt="{{ shop_name_escape }}" style="width: {{ settings.logos_width }}px">
       <img loading="eager" class="header__mobile-logo t4s-d-lg-none" src="{{ svg }}" alt="{{ shop_name_escape }}" style="width: {{ settings.logo_mb_width }}px">
    
    {%- elsif logo != blank -%}
 
+    {%- comment -%} Desktop Normal Logo {%- endcomment -%}
     {%- assign logo_height = lg_w | divided_by: logo.aspect_ratio | round -%} 
     <img loading="eager" srcset="{{ logo | image_url: width: lg_w }}, {{ logo | image_url: width: lg_w_2s }} 2x" src="{{ logo | image_url: width: lg_w }}"
     class="header__normal-logo t4s-d-none t4s-d-lg-block" width="{{ lg_w }}" height="{{ logo_height }}" alt="{{ logo.alt | default: shop_name | escape }}" style="width: {{ lg_w }}px">
    
+    {%- comment -%} Sticky Logo - 使用页面类型 logo 或默认 sticky logo {%- endcomment -%}
     {%- liquid 
-    assign lg_w = settings.logos_width
-    assign logo = settings.logos | default: logo_df
-    assign lg_w_2s = lg_w | times: rate_retina
-    assign logo_height = lg_w | divided_by: logo.aspect_ratio | round -%} 
-    <style>@media(max-width: 1024px){.header__sticky-logo {width: {{ settings.logo_mb_width }}px !important }}</style>
-    <img loading="lazy" srcset="{{ logo | image_url: width: lg_w }}, {{ logo | image_url: width: lg_w_2s }} 2x" src="{{ logo | image_url: width: lg_w }}"
-    class="header__sticky-logo t4s-d-none t4s-d-none" width="{{ lg_w }}" height="{{ logo_height }}" alt="{{ logo.alt | default: shop_name | escape }}" style="width: {{ lg_w }}px">
-
-
-    {%- liquid 
-    assign lg_w = settings.logo_mb_width
-    if isTransparent
-      assign logo = settings.logo_tr | default: logo_df
+    assign lg_w_sticky = settings.logos_width
+    if page_type_logo != blank
+      assign logo_sticky = page_type_logo
     else
-      assign logo = settings.logo_mb | default: logo_df
+      assign logo_sticky = settings.logos | default: logo_base
     endif
-    assign lg_w_2s = lg_w | times: rate_retina
-    assign logo_height = lg_w | divided_by: logo.aspect_ratio | round -%} 
-    <img loading="eager" srcset="{{ logo | image_url: width: lg_w }}, {{ logo | image_url: width: lg_w_2s }} 2x" src="{{ logo | image_url: width: lg_w }}"
-    class="header__mobile-logo t4s-d-lg-none" width="{{ lg_w }}" height="{{ logo_height }}" alt="{{ logo.alt | default: shop_name | escape }}" style="width: {{ lg_w }}px">
+    assign lg_w_2s_sticky = lg_w_sticky | times: rate_retina
+    assign logo_sticky_height = lg_w_sticky | divided_by: logo_sticky.aspect_ratio | round -%} 
+    <style>@media(max-width: 1024px){.header__sticky-logo {width: {{ settings.logo_mb_width }}px !important }}</style>
+    <img loading="lazy" srcset="{{ logo_sticky | image_url: width: lg_w_sticky }}, {{ logo_sticky | image_url: width: lg_w_2s_sticky }} 2x" src="{{ logo_sticky | image_url: width: lg_w_sticky }}"
+    class="header__sticky-logo t4s-d-none t4s-d-none" width="{{ lg_w_sticky }}" height="{{ logo_sticky_height }}" alt="{{ logo_sticky.alt | default: shop_name | escape }}" style="width: {{ lg_w_sticky }}px">
+
+
+    {%- comment -%} Mobile Logo - 使用页面类型 logo 或默认 mobile logo {%- endcomment -%}
+    {%- liquid 
+    assign lg_w_mobile = settings.logo_mb_width
+    if page_type_logo != blank
+      assign logo_mobile = page_type_logo
+    elsif isTransparent
+      assign logo_mobile = settings.logo_tr | default: logo_base
+    else
+      assign logo_mobile = settings.logo_mb | default: logo_base
+    endif
+    assign lg_w_2s_mobile = lg_w_mobile | times: rate_retina
+    assign logo_mobile_height = lg_w_mobile | divided_by: logo_mobile.aspect_ratio | round -%} 
+    <img loading="eager" srcset="{{ logo_mobile | image_url: width: lg_w_mobile }}, {{ logo_mobile | image_url: width: lg_w_2s_mobile }} 2x" src="{{ logo_mobile | image_url: width: lg_w_mobile }}"
+    class="header__mobile-logo t4s-d-lg-none" width="{{ lg_w_mobile }}" height="{{ logo_mobile_height }}" alt="{{ logo_mobile.alt | default: shop_name | escape }}" style="width: {{ lg_w_mobile }}px">
 
 {%- else -%}{{- shop.name -}}
 {%- endif -%}
