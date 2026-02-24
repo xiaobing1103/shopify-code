@@ -538,6 +538,52 @@
               });
             });
           }
+          
+          // 监听 variant:changed 事件（产品价格变化）
+          this.bindVariantChangeEvent();
+        }
+        
+        bindVariantChangeEvent() {
+          const self = this;
+          
+          // 监听 jQuery 触发的 variant:changed 事件
+          if (typeof jQuery !== 'undefined') {
+            jQuery(document).on('variant:changed', function(evt) {
+              if (evt.currentVariant && evt.currentVariant.price) {
+                console.log('Bundle Selector: Variant changed, updating prices', evt.currentVariant);
+                self.updateBasePrice(evt.currentVariant.price, evt.currentVariant);
+              }
+            });
+          }
+          
+          // 监听原生 JavaScript 事件（备用）
+          document.addEventListener('variantChange', (evt) => {
+            if (evt.detail && evt.detail.variant && evt.detail.variant.price) {
+              console.log('Bundle Selector: Variant changed (native), updating prices', evt.detail.variant);
+              self.updateBasePrice(evt.detail.variant.price, evt.detail.variant);
+            }
+          });
+        }
+        
+        updateBasePrice(newPrice, variant) {
+          // 更新 base price
+          this.basePrice = parseInt(newPrice) || 0;
+          this.container.dataset.basePrice = this.basePrice;
+          
+          // 如果使用 Shopify Volume Pricing，更新 price breaks
+          if (this.pricingMode === 'shopify' && variant.quantity_price_breaks) {
+            this.priceBreaks = variant.quantity_price_breaks.map(b => ({
+              quantity: b.minimum_quantity,
+              price: b.price
+            }));
+            console.log('Bundle Selector: Updated price breaks', this.priceBreaks);
+          }
+          
+          // 获取当前选中的数量
+          const currentQty = this.formQuantityInput ? parseInt(this.formQuantityInput.value) || 1 : 1;
+          
+          // 重新计算并更新所有选项的价格
+          this.updateAllPrices(currentQty);
         }
         
         findProductForm() {
