@@ -46,6 +46,8 @@ For inquiries or permissions, contact daniel@section.store
   assign use_slider = section.settings.use_slider
   assign slider_gap_mobile = section.settings.slider_gap_mobile
   assign slider_view_mobile = section.settings.slider_view_mobile
+  assign slider_offset_left_mobile = section.settings.slider_offset_left_mobile
+  assign slider_offset_right_mobile = section.settings.slider_offset_right_mobile
 
   assign image_border_color = section.settings.image_border_color
   assign image_border_thickness = section.settings.image_border_thickness
@@ -143,8 +145,8 @@ For inquiries or permissions, contact daniel@section.store
   }
 
   .steps-slider-{{ section.id }} {
-    margin-left: -{{ padding_horizontal_mobile }}rem !important;
-    margin-right: -{{ padding_horizontal_mobile }}rem !important;
+    margin-left: calc(-{{ padding_horizontal_mobile }}rem + {{ slider_offset_left_mobile }}px) !important;
+    margin-right: calc(-{{ padding_horizontal_mobile }}rem + {{ slider_offset_right_mobile }}px) !important;
     padding-top: {{ circle_number_size_mobile | times: 0.5 | round: 0 }}px !important;
     margin-top: {{ body_mt_mobile }}px !important;
     padding-left: {{ padding_horizontal_mobile }}rem !important;
@@ -739,6 +741,28 @@ For inquiries or permissions, contact daniel@section.store
         "unit": "px",
         "label": "Slider Gap",
         "default": 20
+      },
+      {
+        "type": "range",
+        "id": "slider_offset_left_mobile",
+        "min": -100,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Slider Left Offset - Mobile",
+        "info": "Adjust the left padding/offset of the slider",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "slider_offset_right_mobile",
+        "min": -100,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "label": "Slider Right Offset - Mobile",
+        "info": "Adjust the right padding/offset of the slider",
+        "default": 0
       },
       {
         "type": "header",

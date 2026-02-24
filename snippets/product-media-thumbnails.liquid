@@ -142,61 +142,104 @@
       ></button>
     </div>
 
-    {%- comment -%} 缩略图箭头点击脚本 - 触发主题原有按钮 {%- endcomment -%}
+    {%- comment -%} 缩略图箭头点击脚本 - 使用 jQuery 和 flickityt4s {%- endcomment -%}
     <script>
     (function() {
       console.log('🎯 Arrow Script Start');
       
       function init() {
-        const customPrev = document.querySelector('[data-thumb-prev-arrow]');
-        const customNext = document.querySelector('[data-thumb-next-arrow]');
-        const themePrev = document.querySelector('[data-thumb-btn__prev="{{ se_id }}"]');
-        const themeNext = document.querySelector('[data-thumb-btn__next="{{ se_id }}"]');
+        const prev = document.querySelector('[data-thumb-prev-arrow]');
+        const next = document.querySelector('[data-thumb-next-arrow]');
+        const slider = document.querySelector('[data-main-media]');
         
-        console.log('Custom prev:', customPrev);
-        console.log('Custom next:', customNext);
-        console.log('Theme prev:', themePrev);
-        console.log('Theme next:', themeNext);
-        
-        if (!customPrev || !customNext) {
-          console.log('❌ Custom arrows not found');
+        if (!prev || !next || !slider) {
+          console.log('❌ Elements not found');
           return;
         }
         
-        if (!themePrev || !themeNext) {
-          console.log('❌ Theme buttons not found');
-          return;
+        console.log('✅ Elements found, slider:', slider);
+        
+        // 尝试多种方式获取 Flickity 实例
+        function getFlickity() {
+          // 方式1: flickityData
+          if (slider.flickityData) {
+            console.log('✅ Found via flickityData');
+            return slider.flickityData;
+          }
+          
+          // 方式2: jQuery data
+          if (typeof jQuery !== 'undefined') {
+            const jqData = jQuery(slider).data('flickityt4s');
+            if (jqData) {
+              console.log('✅ Found via jQuery data');
+              return jqData;
+            }
+          }
+          
+          // 方式3: Flickity.data
+          if (window.Flickity) {
+            const flkty = window.Flickity.data(slider);
+            if (flkty) {
+              console.log('✅ Found via Flickity.data');
+              return flkty;
+            }
+          }
+          
+          console.log('⚠️ Flickity not found yet');
+          return null;
         }
         
-        // 点击自定义箭头时，触发主题原有按钮
-        customPrev.onclick = function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('⬅️ Custom PREV clicked, triggering theme button');
-          themePrev.click();
-          return false;
-        };
-        
-        customNext.onclick = function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('➡️ Custom NEXT clicked, triggering theme button');
-          themeNext.click();
-          return false;
-        };
-        
-        console.log('✅ Arrow click handlers attached!');
+        // 等待 Flickity 初始化
+        let checkCount = 0;
+        const checkInterval = setInterval(function() {
+          checkCount++;
+          
+          const flkty = getFlickity();
+          
+          if (flkty) {
+            clearInterval(checkInterval);
+            console.log('✅ Flickity ready!', flkty);
+            
+            prev.onclick = function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('⬅️ PREV clicked');
+              flkty.previous();
+              console.log('After prev, index:', flkty.selectedIndex);
+              return false;
+            };
+            
+            next.onclick = function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('➡️ NEXT clicked');
+              flkty.next();
+              console.log('After next, index:', flkty.selectedIndex);
+              return false;
+            };
+            
+            console.log('✅ Click events attached');
+            
+          } else if (checkCount > 100) {
+            clearInterval(checkInterval);
+            console.log('❌ Flickity not found after 10 seconds');
+            console.log('Slider classes:', slider.className);
+            console.log('Slider attributes:', slider.attributes);
+          } else if (checkCount % 10 === 0) {
+            console.log('Waiting... attempt', checkCount);
+          }
+        }, 100);
       }
       
-      // 多次尝试初始化
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
         init();
       }
       
-      setTimeout(init, 500);
       setTimeout(init, 1000);
+      setTimeout(init, 2000);
+      setTimeout(init, 3000);
     })();
     </script>
 

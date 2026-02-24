@@ -138,6 +138,8 @@
   }
 
   /* Product Info Wrapper - Border & Shadow */
+  /* 使用更高优先级的选择器确保样式生效 */
+  .t4s-main-product__content .t4s-product__info-wrapper,
   .t4s-product__info-wrapper {
     margin-top: {{ se_stts.info_wrapper_margin_top | default: 25 }}px !important;
     margin-bottom: {{ se_stts.info_wrapper_margin_bottom | default: 0 }}px !important;
@@ -149,8 +151,9 @@
   }
 
   @media (max-width: 767px) {
+    .t4s-main-product__content .t4s-product__info-wrapper,
     .t4s-product__info-wrapper {
-      margin-top: {{ se_stts.info_wrapper_margin_top_mobile | default: 20 }}px !important;
+      margin-top: {{ se_stts.info_wrapper_margin_top_mobile | default: 0 }}px !important;
       margin-bottom: {{ se_stts.info_wrapper_margin_bottom_mobile | default: 0 }}px !important;
       padding: {{ se_stts.info_wrapper_padding_mobile | default: 16 }}px !important;
       border-radius: {{ se_stts.info_wrapper_border_radius_mobile | default: 8 }}px !important;

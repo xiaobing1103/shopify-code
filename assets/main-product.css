@@ -989,3 +989,23 @@ button.t4s-product__description_readm:hover {
     display: none !important;
   }
 }
+
+/* 隐藏 Kickflip Customizer 占位符文字 */
+kickflip-customizer::before,
+kickflip-customizer > div:first-child,
+kickflip-customizer p,
+kickflip-customizer span {
+  display: none !important;
+}
+
+/* 隐藏包含特定文字的元素 */
+kickflip-customizer *:not(iframe):not(canvas) {
+  color: transparent !important;
+  font-size: 0 !important;
+}
+
+/* 如果占位符在特定容器中 */
+[data-kickflip-placeholder],
+.kickflip-placeholder {
+  display: none !important;
+}

@@ -847,7 +847,7 @@ kaching-bundles-block {
 
 /* 数量标签 */
 .t4s-quantity-wrapper::before {
-    content: '{{ settings.quantity_label | default: "Quantity :" }}' !important;
+    content: 'Quantity :' !important;
     font-size: 14px !important;
     font-weight: 400 !important;
     color: #000000 !important;
@@ -1261,4 +1261,82 @@ button.zakeke-product-button span,
             settings.mobile_css
         }
     }
+}
+
+
+/* ============ Metal Card Studio Page - Custom Container Width ============ */
+/* 备用方案：如果 section schema 设置未配置，这些规则将作为后备 */
+/* 优先使用 Shopify 主题编辑器中的 "Container Width Settings" 进行调整 */
+
+/* Target the metal-card-studio product page specifically */
+body.template-product[class*="metal-studio"] .t4s-container-xl,
+body.template-product[class*="metal-studio"] .t4s-container-lg,
+body.template-product[class*="metal-studio"] .t4s-container-md,
+body.template-product[class*="metal-studio"] .t4s-container-sm,
+body.template-product[class*="metal-studio"] .t4s-container {
+    max-width: 1600px !important; /* 可调整此值，或使用主题编辑器设置 */
+}
+
+/* Alternative targeting using template suffix */
+.template-suffix-metal-studio .t4s-container-xl,
+.template-suffix-metal-studio .t4s-container-lg,
+.template-suffix-metal-studio .t4s-container-md,
+.template-suffix-metal-studio .t4s-container-sm,
+.template-suffix-metal-studio .t4s-container {
+    max-width: 1600px !important; /* 可调整此值，或使用主题编辑器设置 */
+}
+
+/* Specific targeting for Kickflip Customizer block section *ded */
+}
+
+
+/* ============ Metal Card Studio - 隐藏 iframe 滚动条 ============ */
+/* 针对 metal-card-studio 页面的 iframe 滚动条处理 */
+
+/* 隐藏 Kickflip Customizer iframe 的滚动条 */
+body.template-product[class*="metal-studio"] iframe,
+.template-suffix-metal-studio iframe,
+#shopify-section-1770758691dc39ed83 iframe {
+    overflow: hidden !important;
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+/* 隐藏 webkit 浏览器（Chrome, Safari）的滚动条 */
+body.template-product[class*="metal-studio"] iframe::-webkit-scrollbar,
+.template-suffix-metal-studio iframe::-webkit-scrollbar,
+#shopify-section-1770758691dc39ed83 iframe::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* 确保 iframe 容器也没有滚动条 */
+body.template-product[class*="metal-studio"] .kickflip-customizer,
+.template-suffix-metal-studio .kickflip-customizer,
+#shopify-section-1770758691dc39ed83 .kickflip-customizer {
+    overflow: hidden !important;
+}
+
+/* 如果需要隐藏整个页面的滚动条（可选） */
+body.template-product[class*="metal-studio"],
+.template-suffix-metal-studio body {
+    overflow-x: hidden !important; /* 只隐藏横向滚动条 */
+}
+
+/* 更通用的 iframe 滚动条隐藏（针对所有可能的 iframe） */
+body.template-product[class*="metal-studio"] iframe[src*="kickflip"],
+body.template-product[class*="metal-studio"] iframe[id*="kickflip"],
+.template-suffix-metal-studio iframe[src*="kickflip"],
+.template-suffix-metal-studio iframe[id*="kickflip"] {
+    overflow: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+body.template-product[class*="metal-studio"] iframe[src*="kickflip"]::-webkit-scrollbar,
+body.template-product[class*="metal-studio"] iframe[id*="kickflip"]::-webkit-scrollbar,
+.template-suffix-metal-studio iframe[src*="kickflip"]::-webkit-scrollbar,
+.template-suffix-metal-studio iframe[id*="kickflip"]::-webkit-scrollbar {
+    display: none !important;
 }

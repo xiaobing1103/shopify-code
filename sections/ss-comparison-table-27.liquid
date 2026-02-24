@@ -371,6 +371,12 @@ For inquiries or permissions, contact daniel@section.store
       }
     {% endif %}
   }
+/* Show ONLY on mobile - Hide on desktop/large tablets */
+  @media (min-width: 1024px) {
+    .section-{{ section.id }} {
+      display: none !important;
+    }
+  }
 {%- endstyle -%}
 
 {% if width == 'custom' %}

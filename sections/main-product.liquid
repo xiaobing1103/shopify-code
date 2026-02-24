@@ -1714,9 +1714,14 @@
                 {%- when '@app' -%}
                   {%- liquid
                     assign is_kaching_bundles = false
+                    assign is_kickflip_customizer = false
                     
                     if block.type contains 'kaching-bundles' or block.type contains '6c637362-a106-4a32-94ac-94dcfd68cdb8'
                       assign is_kaching_bundles = true
+                    endif
+                    
+                    if block.type contains 'kickflip-customizer' or block.type contains '852f7399-e025-496f-91ce-94176f54ae8c'
+                      assign is_kickflip_customizer = true
                     endif
                     
                     assign show_kaching = true
@@ -1725,6 +1730,11 @@
                       if form_block.settings.show_kaching_bundles == false
                         assign show_kaching = false
                       endif
+                    endif
+                    
+                    assign show_kickflip = false
+                    if is_kickflip_customizer and template.suffix == 'metal-studio'
+                      assign show_kickflip = true
                     endif
                   -%}
                   
@@ -1738,7 +1748,13 @@
                   {%- endif -%}
                   
                   {%- unless is_kaching_bundles and show_kaching == false -%}
-                    {%- render block -%}
+                    {%- if is_kickflip_customizer -%}
+                      {%- if show_kickflip -%}
+                        {%- render block -%}
+                      {%- endif -%}
+                    {%- else -%}
+                      {%- render block -%}
+                    {%- endif -%}
                   {%- endunless -%}
                 {%- when 'complimentary_products' -%}
                   {%- if product.metafields['shopify--discovery--product_recommendation'].complementary_products.value
@@ -4277,7 +4293,7 @@
         },
         {
           "type": "header",
-          "content": "+ Buy Now button"
+          "content": "+ Custom Rediron"
         },
         {
           "type": "checkbox",
@@ -4311,7 +4327,7 @@
           "default": "#000000"
         },
         {
-          "type": "color",
+          "type": "color", 
           "id": "buy_now_bg_hover_color",
           "label": "Button background hover color",
           "default": "#000000"
@@ -4327,6 +4343,114 @@
           "id": "buy_now_border_hover_color",
           "label": "Button border hover color",
           "default": "#000000"
+        },
+        {
+          "type": "header",
+          "content": "+ Custom Redirect Button"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_custom_redirect_btn",
+          "label": "Show Custom Redirect Button",
+          "default": false,
+          "info": "Display a custom button that redirects to a specific product page (uses same style as ADD TO CART button)"
+        },
+        {
+          "type": "text",
+          "id": "custom_redirect_btn_text",
+          "label": "Button text",
+          "default": "View Card Studio"
+        },
+        {
+          "type": "product",
+          "id": "custom_redirect_product",
+          "label": "Redirect to Product",
+          "info": "Select the product page to redirect to when button is clicked"
+        },
+        {
+          "type": "range",
+          "id": "custom_redirect_btn_padding_v",
+          "min": 0,
+          "max": 30,
+          "step": 1,
+          "unit": "px",
+          "label": "Button padding vertical",
+          "default": 16,
+          "info": "Top and bottom padding for the redirect button"
+        },
+        {
+          "type": "range",
+          "id": "custom_redirect_btn_padding_h",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "unit": "px",
+          "label": "Button padding horizontal",
+          "default": 32,
+          "info": "Left and right padding for the redirect button"
+        },
+        {
+          "type": "range",
+          "id": "custom_redirect_btn_margin_top",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "label": "Button margin top",
+          "default": 12,
+          "info": "Space above the redirect button"
+        },
+        {
+          "type": "header",
+          "content": "+ Button Separator (OR Divider)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_button_separator",
+          "label": "Show separator between buttons",
+          "default": false,
+          "info": "Display 'OR' text divider between ADD TO CART and Custom Redirect buttons"
+        },
+        {
+          "type": "text",
+          "id": "button_separator_text",
+          "label": "Separator text",
+          "default": "OR",
+          "info": "Text to display in the separator (e.g., OR, or, ——)"
+        },
+        {
+          "type": "range",
+          "id": "button_separator_margin_v",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "label": "Separator margin vertical",
+          "default": 16,
+          "info": "Top and bottom margin for the separator"
+        },
+        {
+          "type": "range",
+          "id": "button_separator_font_size",
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Separator font size",
+          "default": 14
+        },
+        {
+          "type": "color",
+          "id": "button_separator_color",
+          "label": "Separator text color",
+          "default": "#999999"
+        },
+        {
+          "type": "color",
+          "id": "button_separator_line_color",
+          "label": "Separator line color",
+          "default": "#e0e0e0",
+          "info": "Color of the horizontal lines on both sides of the text"
         },
         {
           "type": "header",

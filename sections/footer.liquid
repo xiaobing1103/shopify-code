@@ -6,7 +6,18 @@
 {{ 'footer.css' | asset_url | stylesheet_tag }}
 {%- liquid 
   assign sid = section.id
-  assign se_stts = section.settings 
+  assign se_stts = section.settings
+  
+  assign hide_footer = false
+  assign hidden_pages = se_stts.hidden_pages | strip | split: ','
+  
+  for page_name in hidden_pages
+    assign page_name_trimmed = page_name | strip
+    if template.suffix == page_name_trimmed or page.handle == page_name_trimmed or product.handle == page_name_trimmed or collection.handle == page_name_trimmed or article.handle == page_name_trimmed
+      assign hide_footer = true
+      break
+    endif
+  endfor 
   assign se_blocks = section.blocks
   assign stt_layout = se_stts.layout
   assign stt_image_bg = se_stts.image_bg 
@@ -22,7 +33,13 @@
   assign arr_item = se_blocks | where: "type", 'bl_col'  
   assign sticky   = se_stts.sticky
   assign collapse = se_stts.collapse
- -%} 
+ -%}
+{%- if hide_footer -%}
+<style>
+  #t4s-footer { display: none !important; }
+</style>
+{%- endif -%} 
+{%- unless hide_footer -%}
 <div class="t4s-section-inner t4s_nt_se_{{ sid }} t4s_se_{{ sid }} {{ stt_layout }} {%- if  se_stts.border_top == true -%} t4s-footer-has-border t4s-footer-border-{{ se_stts.border_pos }} {%- endif -%}  {%- if stt_image_bg != blank and stt_layout != 't4s-se-container' -%}  t4s-has-imgbg lazyloadt4s {%- endif -%} "  {% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto"  data-optimumx="2" {% endif %}   {% render 'section_style', se_stts: se_stts %}>
     {{- html_layout[0] -}}
     {%- if stt_layout == 't4s-se-container' -%}<div class="t4s-container-inner {% if stt_image_bg != blank %} t4s-has-imgbg lazyloadt4s {% endif %} "  {% if stt_image_bg != blank %}  data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto"  data-optimumx="2" {% endif %} > {%- endif -%}
@@ -90,6 +107,7 @@
     {{- html_layout[1] -}}
 </div>
 {%- if sticky %}<style>@media (min-width: 1025px) { #MainContent,#shopify-section-announcement-bar,#shopify-section-top-bar,#t4s-header,.t4s-prefooter,.t4s-section-header{position:relative;z-index:4}#shopify-section-top-bar {z-index: 466;} #MainContent { z-index: 2;background-color: {%- if settings.body_bg != blank and settings.body_bg != 'rgba(0,0,0,0)' %}{{ settings.body_bg }}{% else %}#fff{% endif -%};}  .t4s-prefooter{z-index:1}#t4s-footer{position:sticky;position:-webkit-sticky;bottom:0;left:0;right:0;width:100%} }</style>{% endif -%}
+{%- endunless -%}
 {%- schema -%}
 {
   "name": "Footer",
@@ -98,7 +116,14 @@
   "settings": [
     {
       "type": "header",
-      "content": "1. Advance options"
+      "content": "TM-Advance options(26/2/12)"
+    },
+    {
+      "type": "text",
+      "id": "hidden_pages",
+      "label": "Hidden on pages",
+      "info": "Enter handles or template suffixes separated by commas. Works for products, pages, collections, articles. Example: card-studio, metal-studio, about-us",
+      "placeholder": "card-studio, metal-studio"
     },
     {
       "type": "checkbox",

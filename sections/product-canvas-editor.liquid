@@ -1,0 +1,486 @@
+{%- comment -%}
+  Product Canvas Editor Section
+  用于编辑商品卡片的 Canvas 编辑器
+{%- endcomment -%}
+
+{%- liquid
+  assign se_stts = section.settings
+  assign se_id = section.id
+  
+  # 使用当前产品
+  assign current_variant = product.selected_or_first_available_variant
+  assign pr_variants = product.variants
+  assign variants_size = pr_variants.size
+  
+  # 获取产品的第一张图片作为 Canvas 背景
+  assign card_image = product.featured_image
+  if card_image == blank and product.images.size > 0
+    assign card_image = product.images[0]
+  endif
+  
+  # 计算库存和数量限制
+  assign inventory_quantity = current_variant.inventory_quantity
+  assign inventory_management = current_variant.inventory_management
+  if inventory_quantity <= 0 and inventory_management == 'shopify' and current_variant.available
+    assign isPreorder = true
+  else
+    assign isPreorder = false
+  endif
+  
+  assign cus_qty = 1
+  if current_variant.quantity_rule.min
+    assign cus_qty = current_variant.quantity_rule.min
+  endif
+  
+  assign max_qty = 9999
+  if current_variant.inventory_management != null and inventory_quantity > 0 and current_variant.inventory_policy != 'continue'
+    assign max_qty = inventory_quantity
+  endif
+  if current_variant.quantity_rule.max and max_qty > current_variant.quantity_rule.max
+    assign max_qty = current_variant.quantity_rule.max
+  endif
+-%}
+
+<link rel="stylesheet" href="{{ 'product-canvas-editor.css' | asset_url }}">
+
+<div class="t4s-canvas-editor-wrapper" 
+     data-section-id="{{ se_id }}"
+     data-product-id="{{ product.id }}"
+     data-product-handle="{{ product.handle }}">
+  <div class="t4s-container">
+    <div class="t4s-canvas-editor-layout">
+      
+      {%- comment -%} 左侧：Canvas 编辑区域 {%- endcomment -%}
+      <div class="t4s-canvas-editor-left">
+        <div class="t4s-canvas-container">
+          <h2 class="t4s-canvas-title">{{ se_stts.canvas_title | default: 'TekMark Card Studio' }}</h2>
+
+          {%- comment -%} Canvas 画布 {%- endcomment -%}
+          <div class="t4s-canvas-wrapper">
+            <canvas id="canvas-{{ se_id }}" 
+                    data-card-image="{% if card_image %}https:{{ card_image | image_url: width: 1200 }}{% endif %}"
+                    data-card-width="{% if card_image %}{{ card_image.width }}{% else %}800{% endif %}"
+                    data-card-height="{% if card_image %}{{ card_image.height }}{% else %}500{% endif %}">
+            </canvas>
+          </div>
+
+          {%- comment -%} Canvas 工具栏 {%- endcomment -%}
+          <div class="t4s-canvas-toolbar">
+            <button type="button" class="t4s-tool-btn" data-action="delete" title="{{ se_stts.delete_text | default: 'Delete' }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M8 4V2H12V4H16V6H4V4H8ZM6 8H14V18H6V8Z" fill="currentColor"/>
+              </svg>
+              <span>Delete</span>
+            </button>
+            <button type="button" class="t4s-tool-btn" data-action="bring-forward" title="{{ se_stts.forward_text | default: 'Bring Forward' }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M8 4H12V8H16V12H12V16H8V12H4V8H8V4Z" fill="currentColor"/>
+              </svg>
+              <span>Forward</span>
+            </button>
+            <button type="button" class="t4s-tool-btn" data-action="send-backward" title="{{ se_stts.backward_text | default: 'Send Backward' }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M8 16H12V12H16V8H12V4H8V8H4V12H8V16Z" fill="currentColor"/>
+              </svg>
+              <span>Backward</span>
+            </button>
+            <button type="button" class="t4s-tool-btn" data-action="clear" title="{{ se_stts.clear_text | default: 'Clear All' }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <span>Clear</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} 右侧：操作面板 {%- endcomment -%}
+      <div class="t4s-canvas-editor-right">
+        <div class="t4s-editor-panel">
+          
+          {%- comment -%} 产品信息 {%- endcomment -%}
+          <div class="t4s-editor-section t4s-product-info">
+            <h2 class="t4s-product-title">{{ product.title }}</h2>
+            <div class="t4s-product-price">
+              {%- if current_variant.compare_at_price > current_variant.price -%}
+                <del>{{ current_variant.compare_at_price | money }}</del>
+                <ins>{{ current_variant.price | money }}</ins>
+              {%- else -%}
+                <span>{{ current_variant.price | money }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+
+          {%- comment -%} 文字编辑区域 {%- endcomment -%}
+          <div class="t4s-editor-section">
+            <h3 class="t4s-section-title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M4 4H16V6H4V4ZM4 8H16V10H4V8ZM4 12H12V14H4V12Z" fill="currentColor"/>
+              </svg>
+              {{ se_stts.text_section_title | default: 'Add Text' }}
+            </h3>
+            
+            <div class="t4s-form-group">
+              <label for="text-input-{{ se_id }}">{{ se_stts.text_input_label | default: 'Text Content' }}</label>
+              <textarea 
+                id="text-input-{{ se_id }}" 
+                class="t4s-text-input" 
+                placeholder="{{ se_stts.text_placeholder | default: 'Enter your text...' }}"
+                rows="3"
+              ></textarea>
+            </div>
+
+            <div class="t4s-form-row">
+              <div class="t4s-form-group">
+                <label for="font-family-{{ se_id }}">{{ se_stts.font_label | default: 'Font' }}</label>
+                <select id="font-family-{{ se_id }}" class="t4s-select">
+                  <option value="Arial">Arial</option>
+                  <option value="Helvetica">Helvetica</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="Verdana">Verdana</option>
+                </select>
+              </div>
+
+              <div class="t4s-form-group">
+                <label for="font-size-{{ se_id }}">{{ se_stts.size_label | default: 'Size' }}</label>
+                <input 
+                  type="number" 
+                  id="font-size-{{ se_id }}" 
+                  class="t4s-input" 
+                  value="24" 
+                  min="10" 
+                  max="200"
+                >
+              </div>
+            </div>
+
+            <div class="t4s-form-row">
+              <div class="t4s-form-group">
+                <label for="text-color-{{ se_id }}">{{ se_stts.color_label | default: 'Color' }}</label>
+                <input 
+                  type="color" 
+                  id="text-color-{{ se_id }}" 
+                  class="t4s-color-input" 
+                  value="#000000"
+                >
+              </div>
+
+              <div class="t4s-form-group">
+                <label>{{ se_stts.style_label | default: 'Style' }}</label>
+                <div class="t4s-text-style-btns">
+                  <button type="button" class="t4s-style-btn" data-style="bold" title="Bold">
+                    <strong>B</strong>
+                  </button>
+                  <button type="button" class="t4s-style-btn" data-style="italic" title="Italic">
+                    <em>I</em>
+                  </button>
+                  <button type="button" class="t4s-style-btn" data-style="underline" title="Underline">
+                    <u>U</u>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="t4s-btn t4s-btn-primary t4s-add-text-btn">
+              {{ se_stts.add_text_btn | default: 'Add Text to Canvas' }}
+            </button>
+          </div>
+
+          {%- comment -%} 图片上传区域 {%- endcomment -%}
+          <div class="t4s-editor-section">
+            <h3 class="t4s-section-title">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M4 4H16V16H4V4ZM6 14L8 11L10 13L13 9L14 14H6Z" fill="currentColor"/>
+              </svg>
+              {{ se_stts.image_section_title | default: 'Upload Image' }}
+            </h3>
+
+            <div class="t4s-upload-area">
+              <input 
+                type="file" 
+                id="image-upload-{{ se_id }}" 
+                class="t4s-file-input" 
+                accept="image/*"
+                hidden
+              >
+              <label for="image-upload-{{ se_id }}" class="t4s-upload-label">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                  <path d="M24 8V40M8 24H40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>{{ se_stts.upload_text | default: 'Click to upload image' }}</span>
+                <small>{{ se_stts.upload_hint | default: 'PNG, JPG up to 5MB' }}</small>
+              </label>
+            </div>
+
+            <div class="t4s-uploaded-preview" style="display: none;">
+              <img src="" alt="Preview" class="t4s-preview-img">
+              <button type="button" class="t4s-btn t4s-btn-secondary t4s-add-image-btn">
+                {{ se_stts.add_image_btn | default: 'Add to Canvas' }}
+              </button>
+            </div>
+          </div>
+
+          {%- comment -%} 变体选择 {%- endcomment -%}
+          {%- unless product.has_only_default_variant -%}
+            <div class="t4s-editor-section">
+              <h3 class="t4s-section-title">{{ se_stts.variant_title | default: 'Select Options' }}</h3>
+              
+              {%- for option in product.options_with_values -%}
+                <div class="t4s-form-group">
+                  <label>{{ option.name }}</label>
+                  <select class="t4s-select t4s-variant-select" data-option-index="{{ forloop.index0 }}">
+                    {%- for value in option.values -%}
+                      <option value="{{ value | escape }}">{{ value }}</option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+
+          {%- comment -%} 数量和添加购物车 {%- endcomment -%}
+          <div class="t4s-editor-section">
+            <form id="canvas-product-form-{{ se_id }}" class="t4s-canvas-product-form">
+              <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+              
+              <div class="t4s-form-group">
+                <label>{{ se_stts.quantity_label | default: 'Quantity' }}</label>
+                <div class="t4s-quantity-wrapper">
+                  <button type="button" class="t4s-qty-btn" data-action="decrease">-</button>
+                  <input 
+                    type="number" 
+                    class="t4s-qty-input" 
+                    name="quantity"
+                    value="{{ cus_qty }}" 
+                    min="{{ cus_qty }}" 
+                    max="{{ max_qty }}"
+                    step="{{ current_variant.quantity_rule.increment | default: 1 }}"
+                  >
+                  <button type="button" class="t4s-qty-btn" data-action="increase">+</button>
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                class="t4s-btn t4s-btn-add-cart"
+                data-product-id="{{ product.id }}"
+                data-variant-id="{{ current_variant.id }}"
+                {% unless current_variant.available %}disabled{% endunless %}
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M3 3H5L7 13H17L19 5H7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="8" cy="17" r="1" fill="currentColor"/>
+                  <circle cx="16" cy="17" r="1" fill="currentColor"/>
+                </svg>
+                <span class="t4s-btn-text">
+                  {%- if current_variant.available == false -%}
+                    {{ 'products.product.sold_out' | t }}
+                  {%- elsif isPreorder -%}
+                    {{ 'products.product.pre_order' | t }}
+                  {%- else -%}
+                    {{ se_stts.add_to_cart_text | default: 'Add to Cart' }}
+                  {%- endif -%}
+                </span>
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{%- comment -%} 产品数据 JSON {%- endcomment -%}
+<script type="application/json" id="canvas-product-data-{{ se_id }}">
+  {
+    "product": {
+      "id": {{ product.id | json }},
+      "title": {{ product.title | json }},
+      "handle": {{ product.handle | json }},
+      "available": {{ product.available | json }},
+      "variants": {{ product.variants | json }},
+      "options": {{ product.options_with_values | json }}
+    },
+    "currentVariant": {
+      "id": {{ current_variant.id | json }},
+      "title": {{ current_variant.title | json }},
+      "price": {{ current_variant.price | json }},
+      "compare_at_price": {{ current_variant.compare_at_price | json }},
+      "available": {{ current_variant.available | json }},
+      "sku": {{ current_variant.sku | json }}
+    },
+    "settings": {
+      "minQty": {{ cus_qty }},
+      "maxQty": {{ max_qty }},
+      "increment": {{ current_variant.quantity_rule.increment | default: 1 }}
+    }
+  }
+</script>
+
+{%- comment -%} 加载 Fabric.js - 不使用 defer 确保先加载 {%- endcomment -%}
+<script src="{{ 'fabric.min.js' | asset_url }}"></script>
+<script>
+  // 等待 Fabric.js 加载完成
+  if (typeof fabric === 'undefined') {
+    console.error('Fabric.js failed to load!');
+  } else {
+    console.log('Fabric.js loaded successfully, version:', fabric.version);
+  }
+</script>
+<script src="{{ 'product-canvas-editor.js' | asset_url }}" defer></script>
+
+{%- schema -%}
+{
+  "name": "Product Canvas Editor",
+  "tag": "section",
+  "class": "t4s-section t4s-canvas-editor-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Canvas Settings"
+    },
+    {
+      "type": "text",
+      "id": "canvas_title",
+      "label": "Canvas Title",
+      "default": "TekMark Card Studio",
+      "info": "Title displayed above the canvas"
+    },
+    {
+      "type": "text",
+      "id": "delete_text",
+      "label": "Delete Button Text",
+      "default": "Delete"
+    },
+    {
+      "type": "text",
+      "id": "forward_text",
+      "label": "Forward Button Text",
+      "default": "Bring Forward"
+    },
+    {
+      "type": "text",
+      "id": "backward_text",
+      "label": "Backward Button Text",
+      "default": "Send Backward"
+    },
+    {
+      "type": "text",
+      "id": "clear_text",
+      "label": "Clear Button Text",
+      "default": "Clear All"
+    },
+    {
+      "type": "header",
+      "content": "Text Section"
+    },
+    {
+      "type": "text",
+      "id": "text_section_title",
+      "label": "Section Title",
+      "default": "Add Text"
+    },
+    {
+      "type": "text",
+      "id": "text_input_label",
+      "label": "Input Label",
+      "default": "Text Content"
+    },
+    {
+      "type": "text",
+      "id": "text_placeholder",
+      "label": "Input Placeholder",
+      "default": "Enter your text..."
+    },
+    {
+      "type": "text",
+      "id": "font_label",
+      "label": "Font Label",
+      "default": "Font"
+    },
+    {
+      "type": "text",
+      "id": "size_label",
+      "label": "Size Label",
+      "default": "Size"
+    },
+    {
+      "type": "text",
+      "id": "color_label",
+      "label": "Color Label",
+      "default": "Color"
+    },
+    {
+      "type": "text",
+      "id": "style_label",
+      "label": "Style Label",
+      "default": "Style"
+    },
+    {
+      "type": "text",
+      "id": "add_text_btn",
+      "label": "Add Text Button",
+      "default": "Add Text to Canvas"
+    },
+    {
+      "type": "header",
+      "content": "Image Section"
+    },
+    {
+      "type": "text",
+      "id": "image_section_title",
+      "label": "Section Title",
+      "default": "Upload Image"
+    },
+    {
+      "type": "text",
+      "id": "upload_text",
+      "label": "Upload Text",
+      "default": "Click to upload image"
+    },
+    {
+      "type": "text",
+      "id": "upload_hint",
+      "label": "Upload Hint",
+      "default": "PNG, JPG up to 5MB"
+    },
+    {
+      "type": "text",
+      "id": "add_image_btn",
+      "label": "Add Image Button",
+      "default": "Add to Canvas"
+    },
+    {
+      "type": "header",
+      "content": "Cart Section"
+    },
+    {
+      "type": "text",
+      "id": "variant_title",
+      "label": "Variant Title",
+      "default": "Select Options"
+    },
+    {
+      "type": "text",
+      "id": "quantity_label",
+      "label": "Quantity Label",
+      "default": "Quantity"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to Cart Text",
+      "default": "Add to Cart"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Canvas Editor"
+    }
+  ]
+}
+{%- endschema -%}
