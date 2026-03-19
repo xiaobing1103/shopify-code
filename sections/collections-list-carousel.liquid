@@ -1,8 +1,8 @@
 <!-- sections/collections-list.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'collection-item-carousel.css' | asset_url | stylesheet_tag }}
-{{ 'custom-effect.css' | asset_url | stylesheet_tag }}
-{{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-item-carousel.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'custom-effect.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign image_fix = image_nt | image_tag
@@ -77,7 +77,7 @@
               </div>  
             </div>
           {%- endfor -%}
-          {%- if se_stts.scrollbar %}<div class="t4s-carousel-scrollbar t4s-carousel-scrollbar--{{ sid }} is--hidden">{{ 'carousel-scrollbar.css' | asset_url | stylesheet_tag }}<div class="t4s-carousel-scrollbar__bg"></div><div class="t4s-carousel-scrollbar__drag"></div></div>{% endif -%}
+          {%- if se_stts.scrollbar %}<div class="t4s-carousel-scrollbar t4s-carousel-scrollbar--{{ sid }} is--hidden">{{ 'carousel-scrollbar.s.min.css' | asset_url | stylesheet_tag }}<div class="t4s-carousel-scrollbar__bg"></div><div class="t4s-carousel-scrollbar__drag"></div></div>{% endif -%}
       {%- endif -%}
     {{- html_layout[1] -}}
   </div>

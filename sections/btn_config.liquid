@@ -7,8 +7,8 @@
   endif 
 -%}
 {%- if is_show_html -%}
-  {{ 'button-style.css' | asset_url | stylesheet_tag }}
-  <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+  {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+  <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
   <div class="t4s-container" style="margin-top:100px;margin-bottom: 100px;">
     <h3 class="t4s-text-center" style="margin-bottom: 30px;">Button config</h3>
     <div class="t4s-row t4s-row-cols-lg-4 t4s-row-cols-md-2 t4s-row-cols-1 t4s-gx-30 t4s-gy-30 t4s-align-items-center t4s-text-center">

@@ -5,7 +5,7 @@
     assign search_url = routes.search_url 
  -%}
 {%- if se_stts.enable_toolbar and section.blocks.size > 0 -%}
-{{ 'toolbar_mobile.css' | asset_url | stylesheet_tag }}
+{{ 'toolbar_mobile.s.min.css' | asset_url | stylesheet_tag }}
 <div class="t4s-toolbar t4s-toolbar-label-{{ show_txt }} t4s-pf t4s-r-0 t4s-l-0 t4s-b-0 t4s-d-flex t4s-align-items-center t4s-justify-content-between" style="--bg-color:{{ se_stts.bg_color }};--icon-color:{{ se_stts.icon_color }};--label-color:{{ se_stts.label_color }};--count-bg-color:{{ se_stts.count_bg_color }};--count-text-color:{{ se_stts.count_text_color }}">
     {%- for block in section.blocks -%}
         {%- assign bk_stts = block.settings -%}

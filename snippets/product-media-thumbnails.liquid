@@ -39,7 +39,7 @@
   endif
 -%}
 
-{{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+{{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 
 <div class="t4s-row t4s-g-0" timeline hdt-reveal="slide-in">
   <div data-product-single-media-group class="{{ class_main }}t4s-col-12 t4s-col-item t4s-pr">
@@ -72,7 +72,7 @@
       data-product-single-badge
       data-sort="sale,new,soldout,preOrder,custom"
       class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0"
-      data-rendert4s="css:{{ 'single-pr-badge.css' | asset_url }}"
+      data-rendert4s="css:{{ 'single-pr-badge.s.min.css' | asset_url }}"
     ></div>
     {%- if media_custom_img_enable and media_custom_img != blank -%}
       <div class="t4s-product-media-custom-img-{{ se_id }}">

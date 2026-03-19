@@ -1,6 +1,6 @@
 <!-- sections/video_featured.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'hero.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'hero.s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
 	assign sid = section.id
     assign se_blocks = section.blocks
@@ -32,14 +32,14 @@
             <div class="t4s-hero-inner t4s-col-item t4s-pr t4s-oh" timeline hdt-reveal="slide-in">
                 <div class="t4s_ratio">
                     {%- if se_stts.source == '2' and se_stts.video != blank -%}
-                        <video controls playsinline="playsinline" preload="metadata" aria-label="{{ se_stts.video.alt }}" poster="{{ image | default: se_stts.video.preview_image.src | image_url: width: se_stts.video.preview_image.width }}" muted {% if autoplay %} autoplay{% endif %}{% if loop %} loop{% endif %}>
+                        <video controls playsinline="playsinline" preload="metadata" aria-label="{{ se_stts.video.alt }}" poster="{{ image | default: se_stts.video.preview_image.src | image_url: width: se_stts.video.preview_image.width }}" muted {% if autoplay %} autoplay{% endif %}{% if loop %} loop{% endif %} class="lazyVdHide">
                             {%- for media in se_stts.video.sources -%}
-                                <source src="{{ media.url }}" type="{{ media.mime_type }}">
+                                <source data-src="{{ media.url }}" type="{{ media.mime_type }}">
                             {%- endfor -%}
                             <img src="{{ mb_image | default: se_stts.video.preview_image.src | image_url: width: 100 }}" width="100" height="100">
                     </video>
                     {%- elsif video_url.type == 'youtube' -%}
-                        <iframe src="https://www.youtube.com/embed/{{ video_url.id }}?controls=1{% if autoplay %}&autoplay=1{% endif %}{% if loop %}&playlist={{ video_url.id }}&loop=1{% endif %}&showinfo=0&rel=0&modestbranding=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe data-src="https://www.youtube.com/embed/{{ video_url.id }}?controls=1{% if autoplay %}&autoplay=1{% endif %}{% if loop %}&playlist={{ video_url.id }}&loop=1{% endif %}&showinfo=0&rel=0&modestbranding=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="lazyVdHide"></iframe>
                     {%- elsif video_url.type == 'vimeo' -%}
                         <iframe class="lazyloadt4s" data-src="//player.vimeo.com/video/{{ video_url.id }}?portrait=0{% if autoplay %}&autoplay=1{% endif %}{% if loop %}&loop=1{% endif %}&byline=0&color={{ settings.accent_color | remove_first: '#' }}" frameborder="0"></iframe>
                     {%- endif -%}              

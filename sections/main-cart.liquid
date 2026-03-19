@@ -1,5 +1,5 @@
-{{ 'button-style.css' | asset_url | stylesheet_tag }}
-<link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 
 <style>
 
@@ -90,7 +90,7 @@
 
   .t4s-cart-qty-marker-bottom {
     position: absolute;
-    transform: translateX(-50%);
+    transform: translateX(-90%);
     text-align: center;
   }
 
@@ -199,8 +199,8 @@
   endunless
 -%}
 
-<link rel="stylesheet" href="{{ 'main-cart.css' | asset_url }}" media="all">
-<link rel="stylesheet" href="{{ 'mini-cart-custom.css' | asset_url }}" media="all">
+<link rel="stylesheet" href="{{ 'main-cart.s.min.css' | asset_url }}" media="all">
+<link rel="stylesheet" href="{{ 'mini-cart-custom.s.min.css' | asset_url }}" media="all">
 <svg class="t4s-d-none">
 <symbol id="icon-cart-remove" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
@@ -377,7 +377,7 @@
                   {%- endstyle -%}
                {%- endif -%}
 
-               <link rel="stylesheet" href="{{ 'shipping_bar.css' | asset_url }}" media="all">
+               <link rel="stylesheet" href="{{ 'shipping_bar.s.min.css' | asset_url }}" media="all">
                <div data-cart-calc-shipping data-t4s-percent="{{ percent_class }}" class="t4s-cart__threshold">
                   {{- text_w_ship -}}
                   {%- if settings.enable_shipbar %}<div class="t4s-cart-thes__bar bgt4_svg{{ settings.des_shipbar }} t4s-pr"><span data-cart-ship-bar class="t4s-pr t4s-d-block t4s-h-100"{{ style_w }}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="22"><path class="fa-primary" d="M64 48C64 21.49 85.49 0 112 0H368C394.5 0 416 21.49 416 48V96H466.7C483.7 96 499.1 102.7 512 114.7L589.3 192C601.3 204 608 220.3 608 237.3V352C625.7 352 640 366.3 640 384C640 401.7 625.7 416 608 416H574.9C567.1 361.7 520.4 320 464 320C407.6 320 360.9 361.7 353.1 416H286.9C279.1 361.7 232.4 320 176 320C127.9 320 86.84 350.4 70.99 392.1C66.56 385.7 64 377.1 64 368V256H208C216.8 256 224 248.8 224 240C224 231.2 216.8 224 208 224H64V192H240C248.8 192 256 184.8 256 176C256 167.2 248.8 160 240 160H64V128H272C280.8 128 288 120.8 288 112C288 103.2 280.8 96 272 96H64L64 48zM544 256V237.3L466.7 160H416V256H544z"/><path class="t4s-ship-secondary" d="M272 128H16C7.164 128 0 120.8 0 112C0 103.2 7.164 96 16 96H272C280.8 96 288 103.2 288 112C288 120.8 280.8 128 272 128zM240 160C248.8 160 256 167.2 256 176C256 184.8 248.8 192 240 192H48C39.16 192 32 184.8 32 176C32 167.2 39.16 160 48 160H240zM208 224C216.8 224 224 231.2 224 240C224 248.8 216.8 256 208 256H16C7.164 256 0 248.8 0 240C0 231.2 7.164 224 16 224H208zM256 432C256 476.2 220.2 512 176 512C131.8 512 96 476.2 96 432C96 387.8 131.8 352 176 352C220.2 352 256 387.8 256 432zM544 432C544 476.2 508.2 512 464 512C419.8 512 384 476.2 384 432C384 387.8 419.8 352 464 352C508.2 352 544 387.8 544 432z"/></svg></span></div>{% endif -%}

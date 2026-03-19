@@ -728,22 +728,22 @@ For inquiries or permissions, contact daniel@section.store
           {%- if bg_video == null and bg_video_url != null -%}
             {%- if bg_video_url.type == 'youtube' -%}
               <iframe
-                {% if lazy %}data-{% endif %}src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&mute=1&autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0{{ loop }}"
+                {% if lazy %}data-{% endif %}data-src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&mute=1&autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0{{ loop }}"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
-                class="lazy"
+                class="lazy lazyVdHide"
               ></iframe>
               {%- else -%}
               <iframe
-                {% if lazy %}data-{% endif %}src="https://player.vimeo.com/video/{{ video_id }}?enablejsapi=1&mute=1&muted=1&autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0{{ loop }}"
+                {% if lazy %}data-{% endif %}data-src="https://player.vimeo.com/video/{{ video_id }}?enablejsapi=1&mute=1&muted=1&autoplay=1&controls=0&modestbranding=1&showinfo=0&rel=0{{ loop }}"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
-                class="lazy"
+                class="lazy lazyVdHide"
               ></iframe>
             {% endif %}
           {% else %}
             {% assign placeholder_video = 'https://cdn.shopify.com/videos/c/o/v/fbb140fd46e3429eba459e1549dbbe38.mp4' %}
-            <video {% if lazy %}data-{% endif %}src="{% if bg_video != blank %}{{ bg_video.sources[1].url }}{% else %}{{ placeholder_video }}{% endif %}" muted autoplay playsinline preload="none" loop class="lazy"></video>
+            <video {% if lazy %}data-{% endif %}data-src="{% if bg_video != blank %}{{ bg_video.sources[1].url }}{% else %}{{ placeholder_video }}{% endif %}" muted autoplay playsinline preload="none" loop class="lazy lazyVdHide"></video>
           {% endif %}
         {% elsif layout_bg_type == 'image' %}    
           {% if bg_image_mobile != blank %}                             

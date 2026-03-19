@@ -3,8 +3,8 @@
     continue
   endunless
 %}
-{{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'quick-order-list.js' | asset_url }}" defer="defer"></script>
+{{ 'quick-order-list.s.min.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'quick-order-list.s.min.js' | asset_url }}" defer="defer"></script>
 {%-liquid
   assign items_in_cart = cart | line_items_for: product | sum: 'quantity'
   if settings.currency_code_enabled

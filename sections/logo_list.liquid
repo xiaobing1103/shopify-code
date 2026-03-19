@@ -1,5 +1,5 @@
 <!-- sections/logo-list.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
     assign sid = section.id
     assign se_stts = section.settings
@@ -39,12 +39,12 @@
     endif 
  -%}    
 {%- if b_effect != "none" or img_effect != "none" -%}
-    {{ 't4s-animation.css' | asset_url | stylesheet_tag }}
-    {{ 'custom-effect.css' | asset_url | stylesheet_tag }}
+    {{ 't4s-animation.s.min.css' | asset_url | stylesheet_tag }}
+    {{ 'custom-effect.s.min.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 {%- if se_stts.layout_des == "2" -%}
     {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-    {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+    {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 <div class="t4s-section-inner {{ t4s_se_class }} t4s_nt_se_{{ sid }} {{ stt_layout }}{% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} t4s-has-imgbg lazyloadt4s{% endif %}" {% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto"  data-optimumx="2"{% endif %} {% render 'section_style', se_stts: se_stts -%} >
     {{- html_layout[0] -}}

@@ -14,8 +14,8 @@ assign countdown_overlay  = se_stts.countdown_overlay | divided_by: 100.0
  -%}
 
 {%- if isShowHTMl -%}
-{{ 'collection-products.css' | asset_url | stylesheet_tag }}
-{{ 'collection-products-list.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products-list.s.min.css' | asset_url | stylesheet_tag }}
 <div class="t4s-section-inner t4s_se_{{ sid }}">
 	<div class="t4s-container">
 		{%- paginate collection.products by 4 -%}

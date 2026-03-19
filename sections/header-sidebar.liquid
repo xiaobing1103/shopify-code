@@ -62,7 +62,7 @@
             {%- if source == '1' -%}<div class="t4s-rte">{{- se_stts.txt -}}</div>
             {%- elsif source == '2' or source == '3' -%}
               {%- if source == '3' %}{% assign follow_social = true %}{% endif -%}
-              {{ 'icon-social.css' | asset_url | stylesheet_tag }}
+              {{ 'icon-social.s.min.css' | asset_url | stylesheet_tag }}
               {%- render 'social_sharing', style: 1, use_color_set: false, size: 'small', space_h_item: 15, space_h_item_mb: 10, space_v_item: 0, space_v_item_mb: 0, share_permalink: shop.url, share_title: shop.name, share_image: share_image, follow_social: follow_social -%}
             {%- endif -%}
         </div>

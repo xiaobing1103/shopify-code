@@ -529,7 +529,7 @@
     <div class="t4s-container">
       <div data-header-height2 class="t4s-row t4s-g-0 t4s-align-items-center">
           {%- if se_stts.shop_cat -%}
-            <link rel="stylesheet" href="{{ 'categories-menu.css' | asset_url }}" media="print" onload="this.media='all'">
+            <link rel="stylesheet" href="{{ 'categories-menu.s.min.css' | asset_url }}" media="print" onload="this.media='all'">
             <div class="t4s-col-auto t4s-col-item t4s-h-cat t4s-h-cat-br__{{ se_stts.border_cate }} t4s-pr">
               <h5 class="t4s-d-flex t4s-align-items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" fill="currentColor"><path d="M 4 7 L 4 9 L 28 9 L 28 7 Z M 4 15 L 4 17 L 28 17 L 28 15 Z M 4 23 L 4 25 L 28 25 L 28 23 Z"/></svg><span class="t4s-d-inline-block t4s-truncate">{{ se_stts.txt_cat }}</span></h5>
               {%- if se_stts.arrow -%}

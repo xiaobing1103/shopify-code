@@ -5,9 +5,9 @@
     Example: http://shopname.myshopify.com/blogs/news/2022072-my-post?comment=3721372
 {%- endcomment -%}
 <!-- sections/main-article-portfolio.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'button-style.css' | asset_url | stylesheet_tag }}
-<link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- liquid
     assign sid = section.id
     assign se_stts = section.settings  
@@ -129,7 +129,7 @@
                             </div>
                         {%- endif -%}
                     {%- when 'socials' -%}
-                        {{ 'icon-social.css' | asset_url | stylesheet_tag }}  
+                        {{ 'icon-social.s.min.css' | asset_url | stylesheet_tag }}  
                         <div class="t4s-article-social-share t4s-text-center" style="--cl:{{ bk_stts.icon_cl }};--bg-cl:{{ bk_stts.bg_cl }};--bd-radius:{{ bk_stts.bd_radius }}px">
                             {%- if bk_stts.social_mode == '1' -%}{%- assign follow_social = true -%}{%- endif -%} 
                             {%- render 'social_sharing', style: bk_stts.social_style, use_color_set: bk_stts.use_color_set, size: bk_stts.social_size, space_h_item: bk_stts.space_h_item, space_h_item_mb: bk_stts.space_h_item_mb, space_v_item: bk_stts.space_v_item, space_v_item_mb: bk_stts.space_v_item_mb, follow_social: follow_social -%} 
@@ -178,7 +178,7 @@
                         </div>
                     {%- when 'related' -%}
                         {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-                        {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+                        {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
                         {%- liquid 
                             assign use_carousel = true
                             assign index = 0 

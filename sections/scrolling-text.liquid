@@ -1,6 +1,6 @@
 <!-- sections/scrolling-text.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-<link href="{{ 't4s-animation.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 't4s-animation.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- liquid
   assign sid = section.id
   assign se_stts = section.settings
@@ -8,7 +8,7 @@
   assign stt_image_bg = se_stts.image_bg
  -%} 
  <div class="t4s-section-inner t4s_nt_se_{{ sid }} t4s_se_{{ sid }} {{ stt_layout }}{% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} t4s-has-imgbg lazyloadt4s{% endif %}" {% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto"  data-optimumx="2"{% endif %} {% render 'section_style', se_stts: se_stts -%} >
-  {{ 't4s-scrolling-text.css' | asset_url | stylesheet_tag }}
+  {{ 't4s-scrolling-text.s.min.css' | asset_url | stylesheet_tag }}
   <div class="t4s-scrolling-text__wrap t4s-scrolling-text--marquee t4s-col t4s-col-item t4s-d-flex t4s-align-items-center t4s-oh" style="--text-color:{{ section.settings.cl }}">
     <div class="t4s-marquee t4s-marquee--{{ section.settings.direction }} t4s-marquee--pause{{ section.settings.pause_when_hover }}" style="--marquee-delay: {{ section.settings.speed }}s;">
       <div class="t4s-marquee__item">

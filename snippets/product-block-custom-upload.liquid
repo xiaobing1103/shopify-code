@@ -9,7 +9,7 @@
   - pr_se_id: product section id
 {%- endcomment -%}
 
-{{ 'custom-upload.css' | asset_url | stylesheet_tag }}
+{{ 'custom-upload.s.min.css' | asset_url | stylesheet_tag }}
 {%- assign upload_id = 'custom-upload-' | append: product.id | append: '-' | append: block.id -%}
 {%- assign note_input_id = 'design-note-' | append: product.id | append: '-' | append: block.id -%}
 {%- assign property_name = 'tm_customer_upload_image' -%}

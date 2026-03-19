@@ -1,7 +1,7 @@
 {%- comment -%}
 {%- if template == 'search.wishlist' %}{{ 'wishlist_page.meta' | t }}{%- elsif template == 'search.compare' %}{{ 'compare_page.meta' | t }}{%- endif -%}
 {%- endcomment -%}
-{{ 'section.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign sid = section.id
   assign se_stts = section.settings
@@ -41,7 +41,7 @@
   endif  
  -%}
 
-{{ 'main-compare.css' | asset_url | stylesheet_tag }}
+{{ 'main-compare.s.min.css' | asset_url | stylesheet_tag }}
 {%- paginate search.results by limit -%}
 {%- liquid
   unless request.design_mode
@@ -225,8 +225,8 @@
       <h4 class="t4s_empty_compare__heading t4s_empty_title">{{ 'compare_page.empty' | t }}</h4>
       <div class="t4s_empty_compare__txt t4s_empty_des">{{ 'compare_page.empty_html' | t }}</div>
       {%- if btn_blocks.size > 0 -%}
-        {{ 'button-style.css' | asset_url | stylesheet_tag }}
-        <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+        {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+        <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
         {%- for block in btn_blocks -%}
           {%- assign bk_stts = block.settings -%}
           {% if bk_stts.title != blank and bk_stts.url != blank %}

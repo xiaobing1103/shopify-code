@@ -1,11 +1,11 @@
   <!-- sections/collection-group.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'collection-products.css' | asset_url | stylesheet_tag }}
-{{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-<link href="{{ 'loading.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
-{{ 'button-style.css' | asset_url | stylesheet_tag }}
-      <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="{{ 'loading.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+      <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- liquid
   assign sid = section.id
   assign se_stts = section.settings
@@ -53,7 +53,7 @@
           {%- if bk_stts.head_btn_url != blank or bk_stts.head_slide_btn -%}
             <div class="t4s-head-btn">
               {% if bk_stts.head_btn_url != blank and bk_stts.head_btn_label != blank %}
-                {{ 'button-style.css' | asset_url | stylesheet_tag }}
+                {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
                 <a class="t4s-btn t4s-btn-base t4s-btn-style-{{ se_stts.head_btn_style }} t4s-btn-size-{{ se_stts.head_btn_size }} t4s-btn-icon-{{ se_stts.head_btn_icon }} t4s-btn-color-{{ se_stts.head_btn_cl }} t4s-btn-rounded-{{ se_stts.head_btn_rounded }} {% if se_stts.head_btn_style == 'default' or se_stts.head_btn_style == 'outline' %}t4s-btn-effect-{{ se_stts.head_btn_effect }}{% endif %}" href="{{ bk_stts.head_btn_url }}">{{ bk_stts.head_btn_label }}
                   {%- if se_stts.head_btn_icon -%}<svg class="t4s-btn-icon" width="14"><use xlink:href="#t4s-icon-btn"></use></svg>{%- endif -%}
                 </a>

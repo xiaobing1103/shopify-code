@@ -31,7 +31,7 @@
   
 {%- else -%}
   
-    {{ 't4s-currency-lang_drawer.css' | asset_url | stylesheet_tag }}
+    {{ 't4s-currency-lang_drawer.s.min.css' | asset_url | stylesheet_tag }}
     <div data-locale-wrap data-lang-pos="{{ settings.lang_pos }}">
       <button data-drawer-options='{ "id":"#drawer-languages-t4s-fixed" }' class="t4s-btn-languages-sidebar"><span data-flagst4s="{{ sz }}" data-current class="t4s-d-inline-block {{ fl }} lazyloadt4s flagst4s-{{ current_locale_iso_code }}">{% if show_short_label %}{{ current_locale_iso_code | upcase }}{% else %}{{ current_locale.endonym_name }}{% endif %}</span><svg class="t4s-ion-select-arrow " role="presentation" viewBox="0 0 19 12"><polyline fill="none" stroke="currentColor" points="17 2 9.5 10 2 2" fill-rule="evenodd" stroke-width="2" stroke-linecap="square"></polyline></svg></button>
       <div id="drawer-languages-t4s-fixed" class="t4s-drawer t4s-drawer__right" aria-hidden="true">

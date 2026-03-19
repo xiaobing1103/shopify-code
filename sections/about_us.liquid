@@ -1,7 +1,7 @@
 <!-- sections/about_us.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'about-us.css' | asset_url | stylesheet_tag }}
-{{ 'video-load.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'about-us.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'video-load.s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
     assign image_fix = image_nt | image_tag
     assign sid = section.id
@@ -88,8 +88,8 @@
     {{- html_layout[1] -}}
 </div>
 {%- if use_button -%}
-    {{ 'button-style.css' | asset_url | stylesheet_tag }}
-    <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+    {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+    <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- endif -%}
 {%- schema -%}
     {

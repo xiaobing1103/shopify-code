@@ -9,92 +9,6 @@
  */
 {
   "sections": {
-    "ss_scrolling_announcement_bar_2_4DaXc3": {
-      "type": "ss-scrolling-announcement-bar-2",
-      "blocks": {
-        "item_zVFVnh": {
-          "type": "item",
-          "settings": {
-            "icon": "airplane",
-            "text": "FREE Shipping Over $80"
-          }
-        },
-        "item_bPVJdm": {
-          "type": "item",
-          "settings": {
-            "icon": "mobile",
-            "text": "Lifetime Platform Access"
-          }
-        },
-        "item_dAgBAJ": {
-          "type": "item",
-          "settings": {
-            "icon": "globe",
-            "text": "No app required "
-          }
-        },
-        "item_iMzx6t": {
-          "type": "item",
-          "settings": {
-            "icon": "share",
-            "text": "Works with All Smartphones"
-          }
-        },
-        "item_TUnCjk": {
-          "type": "item",
-          "settings": {
-            "icon": "heart",
-            "text": "Design Service"
-          }
-        },
-        "item_zckeAB": {
-          "type": "item",
-          "settings": {
-            "icon": "time",
-            "text": "Unlimited Usage"
-          }
-        }
-      },
-      "block_order": [
-        "item_zVFVnh",
-        "item_bPVJdm",
-        "item_dAgBAJ",
-        "item_iMzx6t",
-        "item_TUnCjk",
-        "item_zckeAB"
-      ],
-      "name": "SS - Scrolling Announcement Bar #2",
-      "settings": {
-        "insert_css_class_target": "",
-        "url": "",
-        "layout_gap": 100,
-        "layout_gap_mobile": 30,
-        "animate_speed": 100,
-        "animate_direction": "right",
-        "animate_pause": true,
-        "icon_size": 20,
-        "icon_size_mobile": 20,
-        "text_custom": false,
-        "text_font": "josefin_sans_n4",
-        "text_size": 12,
-        "text_size_mobile": 12,
-        "text_height": 100,
-        "text_color": "#fbfbfd",
-        "icon_color": "#fbfbfd",
-        "background_color": "#1c1c1f",
-        "background_gradient": "linear-gradient(87deg, rgba(136, 136, 136, 1) 16%, rgba(0, 0, 0, 1) 87%)",
-        "border_color": "#000000",
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "padding_top": 12,
-        "padding_bottom": 12,
-        "padding_horizontal": 0,
-        "padding_horizontal_mobile": 0,
-        "full_width": true,
-        "content_width": 120,
-        "border_thickness": 0
-      }
-    },
     "ss_hero_33_QPhVN8": {
       "type": "ss-hero-33",
       "blocks": {
@@ -236,146 +150,151 @@
         "lazy": false
       }
     },
-    "ss_feature_12_q7zNtA": {
-      "type": "ss-feature-12",
+    "ss_testimonials_48_AGbPCe": {
+      "type": "ss-testimonials-48",
       "blocks": {
-        "item_Le9rQN": {
-          "type": "item",
+        "testimonial_ijqfab": {
+          "type": "testimonial",
           "settings": {
-            "icon": "shield",
-            "title": "Buy any product and unlock permanent platform access with no monthly fees.",
-            "text": "",
-            "url": "",
-            "icon_color": "#2168f2",
-            "icon_bg_color": "#e9f4ff",
-            "icon_shadow_color": "#f4fafe"
+            "stars_count": 5,
+            "text": "<p>I really like my new digital business card. It was delivered without any problems and the team worked with me to get the logo and information on the card. I'm looking forward to using this card for my business for years to come. I've already recommended this to a few of my clients for their businesses.</p>",
+            "author": "Robert Morgan",
+            "subcopy_author": "CEO",
+            "author_image": "shopify://shop_images/Robert_sitting_on_Bench.jpg"
           }
         },
-        "item_nHGc4j": {
-          "type": "item",
+        "testimonial_6HaFeG": {
+          "type": "testimonial",
           "settings": {
-            "icon": "chat-dots",
-            "title": "Customize your product with our design team to confirm your idea.",
-            "text": "",
-            "url": "",
-            "icon_color": "#6421f2",
-            "icon_bg_color": "#efe9ff",
-            "icon_shadow_color": "#f7f4fe"
+            "stars_count": 5,
+            "text": "<p>Absolutely <strong>great professional</strong> and rapid response to my order. I absolutely love my tekmark card. It is so <strong>stylish and futuristic</strong>. When I walk into a boardroom, I am the envy of everyone around the table. It makes it so easy to <strong>share my contact information instantly</strong>. This is definitely the future and tekmark is leading the way!!<br/>Thanks so much.</p>",
+            "author": "Peter V",
+            "subcopy_author": ""
           }
         },
-        "item_jwyTD6": {
-          "type": "item",
+        "testimonial_LXnMqm": {
+          "type": "testimonial",
           "settings": {
-            "icon": "truck_2",
-            "title": "Once you approve the design, we ship within 2 business days.",
-            "text": "",
-            "url": "",
-            "icon_color": "#2d7156",
-            "icon_bg_color": "#aef2d7",
-            "icon_shadow_color": "#e5fdf3"
+            "stars_count": 5,
+            "text": "<p>Very happy with everything! <strong>Customer service</strong> is grater then any other companies i have ever dealt with. Product speaks for itself.  This card is <strong>beyond my expectations</strong>. <br/>The customization process is very smooth and easy to work with. I would however like an app to see the analysis of traffic rather then logging into the web site. Overall experience<strong> 5 star without a doubt</strong>!</p>",
+            "author": "Benoit Charbonneau",
+            "subcopy_author": "Founder",
+            "author_image": "shopify://shop_images/e2142992-0b6a-40a7-8348-103536d7ae6c.jpg"
           }
         },
-        "item_mm93Yf": {
-          "type": "item",
+        "testimonial_7q3MHn": {
+          "type": "testimonial",
           "settings": {
-            "icon": "people",
-            "title": "Our support team will guide you step by step during setup if you need help.",
-            "text": "",
-            "url": "",
-            "icon_color": "#2168f2",
-            "icon_bg_color": "#e9f4ff",
-            "icon_shadow_color": "#f4fafe"
+            "stars_count": 5,
+            "text": "<p>The main purpose of the card is not just to <strong>share my information</strong> but to <strong>receive information</strong> and yours is the only digital card that doesn’t instantly send the person‘s contact to me when they exchange it.<br/><br/></p>",
+            "author": "Phil LeGree",
+            "subcopy_author": "Real Estate Agent",
+            "author_image": "shopify://shop_images/cbbd5503-ab79-4f5f-a63d-2a33476926a9.jpg"
           }
         },
-        "item_VW8Qpw": {
-          "type": "item",
+        "testimonial_ErCcbP": {
+          "type": "testimonial",
           "settings": {
-            "icon": "share",
-            "title": "Share your experience and earn up to $50 in store credit.",
-            "text": "",
-            "url": "",
-            "icon_color": "#f83062",
-            "icon_bg_color": "#ffe9f1",
-            "icon_shadow_color": "#fef4f6"
+            "stars_count": 5,
+            "text": "<p>I’m really happy with my gold tek mark card! People are impressed when they see it and it makes getting my info into their phone as a contact so easy. It makes networking easier and fun! Highly recommend !</p>",
+            "author": "John R",
+            "subcopy_author": ""
           }
         }
       },
       "block_order": [
-        "item_Le9rQN",
-        "item_nHGc4j",
-        "item_jwyTD6",
-        "item_mm93Yf",
-        "item_VW8Qpw"
+        "testimonial_ijqfab",
+        "testimonial_6HaFeG",
+        "testimonial_LXnMqm",
+        "testimonial_7q3MHn",
+        "testimonial_ErCcbP"
       ],
-      "name": "SS - Feature #12",
+      "name": "SS - Testimonials #48",
       "settings": {
-        "heading": "<h1>Even more reasons to shop with us</h1>",
-        "heading_custom": false,
-        "heading_font": "josefin_sans_n4",
-        "heading_size": 32,
-        "heading_size_mobile": 24,
-        "heading_height": 120,
-        "heading_align": "left",
-        "heading_align_mobile": "left",
-        "items_style": "grid",
-        "items_style_mobile": "slider",
-        "items_row": 5,
-        "items_row_mobile": 1.3,
-        "items_gap": 20,
-        "items_gap_mobile": 20,
-        "items_mt": 28,
-        "items_mt_mobile": 22,
-        "item_padding_vertical": 24,
-        "item_padding_vertical_mobile": 24,
-        "item_padding_horizontal": 24,
-        "item_padding_horizontal_mobile": 24,
-        "item_radius": 20,
-        "item_border_thickness": 1,
-        "item_shadow": true,
-        "item_hover": true,
-        "content_align": "start",
-        "content_align_mobile": "start",
-        "icon_size": 56,
-        "icon_size_mobile": 56,
-        "hide_icon": false,
-        "title_custom": false,
-        "title_font": "josefin_sans_n4",
-        "title_size": 18,
-        "title_size_mobile": 18,
-        "title_height": 130,
-        "title_mt": 28,
-        "title_mt_mobile": 28,
+        "content_align": "center",
+        "content_align_mobile": "center",
+        "scrolling_velocity": 110,
+        "scrolling_velocity_mobile": 110,
+        "reverse_direction": false,
+        "pause_hover": true,
+        "slider_advanced": true,
+        "scrolling_gap": 16,
+        "scrolling_gap_mobile": 16,
+        "cards_mt": 0,
+        "cards_mt_mobile": 0,
+        "card_padding_advanced": false,
+        "card_width": 290,
+        "card_width_mobile": 290,
+        "card_padding_horizontal": 16,
+        "card_padding_horizontal_mobile": 16,
+        "card_padding_vertical": 16,
+        "card_padding_vertical_mobile": 16,
+        "card_radius": 16,
+        "card_border_thickness": 0,
+        "card_shadow": true,
+        "card_shadow_color": "#585e64",
+        "card_content_align": "left",
+        "card_content_align_mobile": "left",
+        "author_image_size": 52,
+        "author_image_size_mobile": 52,
+        "author_image_radius": 40,
+        "author_image_border_thickness": 0,
+        "author_custom": false,
+        "author_font": "josefin_sans_n4",
+        "author_size": 14,
+        "author_size_mobile": 14,
+        "author_height": 130,
+        "subcopy_author_custom": false,
+        "subcopy_author_font": "josefin_sans_n4",
+        "subcopy_author_size": 12,
+        "subcopy_author_size_mobile": 12,
+        "subcopy_advanced": false,
+        "subcopy_author_height": 130,
+        "subcopy_author_mt": 4,
+        "subcopy_author_mt_mobile": 4,
+        "subcopy_text_length": 24,
+        "slide_stars_size": 18,
+        "slide_stars_size_mobile": 18,
+        "slide_stars_advanced": false,
+        "slide_stars_gap": 2,
+        "slide_stars_mt": 10,
+        "slide_stars_mt_mobile": 10,
         "text_custom": false,
         "text_font": "josefin_sans_n4",
-        "text_size": 16,
-        "text_size_mobile": 16,
+        "text_size": 14,
+        "text_size_mobile": 14,
+        "text_advanced": false,
         "text_height": 150,
-        "text_mt": 8,
-        "text_mt_mobile": 8,
-        "dots_size": 12,
-        "dots_size_mobile": 12,
-        "dots_mt": 32,
-        "dots_show_desktop": false,
-        "dots_show_mobile": false,
-        "item_bg": "#ffffff",
-        "item_border_color": "#f1f2f2",
-        "item_shadow_color": "#42474c",
-        "title_color": "#000000",
-        "text_color": "#52525b",
-        "dots_color": "#52525b",
-        "heading_color": "#1c1c1f",
+        "text_mt": 12,
+        "text_mt_mobile": 12,
+        "text_color": "#121212",
+        "text_bg_color": "#121212",
+        "author_color": "#121212",
+        "subcopy_author_color": "#afafaf",
+        "card_bg_color": "#ffffff",
+        "card_border_color": "#121212",
+        "slide_stars_color": "#ffffff",
+        "slide_stars_bg_color": "#ffca02",
+        "slide_stars_bg_half_color": "#dddddd",
+        "author_image_color": "#ffffff",
+        "author_image_bg_color": "#121212",
+        "author_image_border_color": "#121212",
+        "background_style": "solid",
         "background_color": "#fbfbfd",
-        "background_gradient": "",
-        "border_color": "#000000",
+        "background_gradient": "linear-gradient(180deg, #FFFFFF 0%, #F2F2F2 100%)",
+        "border_color": "#121212",
         "margin_top": 0,
         "margin_bottom": 0,
-        "padding_top": 36,
-        "padding_bottom": 36,
-        "padding_horizontal": 5,
-        "padding_horizontal_mobile": 1.5,
-        "full_width": false,
-        "content_width": 180,
+        "margin_horizontal": 0,
+        "margin_horizontal_mobile": 0,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "padding_horizontal": 0,
+        "padding_horizontal_mobile": 0,
+        "width": "page",
+        "content_width": 1200,
         "border_thickness": 0,
+        "section_radius": 0,
         "lazy": true
       }
     },
@@ -436,7 +355,7 @@
             "image": "shopify://shop_images/PVC_74384aa5-15a8-406b-8fc0-1e987a91009c.png",
             "image_url": "shopify://products/tekmark-digital-business-card",
             "title": "Classic",
-            "product": "digital-business-card",
+            "product": "tekmark-digital-business-card",
             "custom_price": "",
             "text": "<p>· Durable & waterproof matte PVC.</p><p>· Tap to share—no app needed.</p><p>· Unlimited taps & reusable forever.</p><p>· Update your info for free anytime.</p>",
             "text_line_height": 300,
@@ -728,10 +647,155 @@
         "lazy": true
       }
     },
-    "ss_video_grid_socials_3_Wy49XE": {
+    "ss_feature_12_q7zNtA": {
+      "type": "ss-feature-12",
+      "blocks": {
+        "item_Le9rQN": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/12_c86147e4-7cfb-48f1-8248-6bca33519bc2.png",
+            "icon": "shield",
+            "title": "Buy any product and unlock permanent platform access with no monthly fees.",
+            "text": "",
+            "url": "",
+            "icon_color": "#2168f2",
+            "icon_bg_color": "#e9f4ff",
+            "icon_shadow_color": "#f4fafe"
+          }
+        },
+        "item_nHGc4j": {
+          "type": "item",
+          "settings": {
+            "image": "shopify://shop_images/1_9c4c702c-b1d4-412b-8ca2-2ed08507a7c7.png",
+            "icon": "chat-dots",
+            "title": "Customize your product with our design team to confirm your idea.",
+            "text": "",
+            "url": "",
+            "icon_color": "#6421f2",
+            "icon_bg_color": "#efe9ff",
+            "icon_shadow_color": "#f7f4fe"
+          }
+        },
+        "item_jwyTD6": {
+          "type": "item",
+          "settings": {
+            "icon": "truck_2",
+            "title": "Once you approve the design, we ship within 2 business days.",
+            "text": "",
+            "url": "",
+            "icon_color": "#1c1c1f",
+            "icon_bg_color": "#aef2d7",
+            "icon_shadow_color": "#e5fdf3"
+          }
+        },
+        "item_mm93Yf": {
+          "type": "item",
+          "settings": {
+            "icon": "people",
+            "title": "Our support team will guide you step by step during setup if you need help.",
+            "text": "",
+            "url": "",
+            "icon_color": "#1c1c1f",
+            "icon_bg_color": "#e9f4ff",
+            "icon_shadow_color": "#f4fafe"
+          }
+        },
+        "item_VW8Qpw": {
+          "type": "item",
+          "settings": {
+            "icon": "share",
+            "title": "Share your experience and earn up to $50 in store credit.",
+            "text": "",
+            "url": "",
+            "icon_color": "#1c1c1f",
+            "icon_bg_color": "#ffe9f1",
+            "icon_shadow_color": "#fef4f6"
+          }
+        }
+      },
+      "block_order": [
+        "item_Le9rQN",
+        "item_nHGc4j",
+        "item_jwyTD6",
+        "item_mm93Yf",
+        "item_VW8Qpw"
+      ],
+      "name": "SS - Feature #12",
+      "settings": {
+        "heading": "<h2>Even more reasons to shop with us</h2>",
+        "heading_custom": false,
+        "heading_font": "josefin_sans_n4",
+        "heading_size": 32,
+        "heading_size_mobile": 24,
+        "heading_height": 120,
+        "heading_align": "left",
+        "heading_align_mobile": "left",
+        "items_style": "grid",
+        "items_style_mobile": "slider",
+        "items_row": 5,
+        "items_row_mobile": 1.3,
+        "items_gap": 20,
+        "items_gap_mobile": 20,
+        "items_mt": 28,
+        "items_mt_mobile": 22,
+        "item_padding_vertical": 24,
+        "item_padding_vertical_mobile": 24,
+        "item_padding_horizontal": 24,
+        "item_padding_horizontal_mobile": 24,
+        "item_radius": 20,
+        "item_border_thickness": 1,
+        "item_shadow": true,
+        "item_hover": true,
+        "content_align": "start",
+        "content_align_mobile": "start",
+        "icon_size": 56,
+        "icon_size_mobile": 56,
+        "hide_icon": false,
+        "title_custom": false,
+        "title_font": "josefin_sans_n4",
+        "title_size": 18,
+        "title_size_mobile": 18,
+        "title_height": 130,
+        "title_mt": 28,
+        "title_mt_mobile": 28,
+        "text_custom": false,
+        "text_font": "josefin_sans_n4",
+        "text_size": 16,
+        "text_size_mobile": 16,
+        "text_height": 150,
+        "text_mt": 8,
+        "text_mt_mobile": 8,
+        "dots_size": 12,
+        "dots_size_mobile": 12,
+        "dots_mt": 32,
+        "dots_show_desktop": false,
+        "dots_show_mobile": false,
+        "item_bg": "#ffffff",
+        "item_border_color": "#f1f2f2",
+        "item_shadow_color": "#42474c",
+        "title_color": "#000000",
+        "text_color": "#52525b",
+        "dots_color": "#52525b",
+        "heading_color": "#1c1c1f",
+        "background_color": "#fbfbfd",
+        "background_gradient": "",
+        "border_color": "#000000",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "padding_horizontal": 5,
+        "padding_horizontal_mobile": 1.5,
+        "full_width": false,
+        "content_width": 180,
+        "border_thickness": 0,
+        "lazy": true
+      }
+    },
+    "ss_video_grid_socials_3_hNTLBd": {
       "type": "ss-video-grid-socials-3",
       "blocks": {
-        "heading_U3nPpP": {
+        "heading_pbTMYD": {
           "type": "heading",
           "settings": {
             "heading": "<h3>See What Everyone’s Talking About</h3>",
@@ -747,7 +811,7 @@
             "heading_accent_color": "#afafaf"
           }
         },
-        "video_FQPgPA": {
+        "video_nkVV9N": {
           "type": "video",
           "settings": {
             "source": "uploaded",
@@ -757,7 +821,7 @@
             "url": ""
           }
         },
-        "video_wnJjKM": {
+        "video_CChfFY": {
           "type": "video",
           "settings": {
             "source": "uploaded",
@@ -767,7 +831,17 @@
             "url": ""
           }
         },
-        "video_bt8hjq": {
+        "video_aPPHqL": {
+          "type": "video",
+          "settings": {
+            "source": "uploaded",
+            "video": "shopify://files/videos/311304421ee3bf59fdf6d5b048f814c4.mp4",
+            "video_url": "",
+            "info": "",
+            "url": ""
+          }
+        },
+        "video_HBxyUT": {
           "type": "video",
           "settings": {
             "source": "uploaded",
@@ -777,7 +851,7 @@
             "url": ""
           }
         },
-        "video_RrMQdR": {
+        "video_iKgafn": {
           "type": "video",
           "settings": {
             "source": "uploaded",
@@ -786,25 +860,15 @@
             "info": "",
             "url": ""
           }
-        },
-        "video_FC4qT4": {
-          "type": "video",
-          "settings": {
-            "source": "uploaded",
-            "video": "shopify://files/videos/0473d3c669864b81afc5145cc92bc34e.mp4",
-            "video_url": "",
-            "info": "",
-            "url": ""
-          }
         }
       },
       "block_order": [
-        "heading_U3nPpP",
-        "video_FQPgPA",
-        "video_wnJjKM",
-        "video_bt8hjq",
-        "video_RrMQdR",
-        "video_FC4qT4"
+        "heading_pbTMYD",
+        "video_nkVV9N",
+        "video_CChfFY",
+        "video_aPPHqL",
+        "video_HBxyUT",
+        "video_iKgafn"
       ],
       "name": "SS - Video grid (social media) #3",
       "settings": {
@@ -1064,6 +1128,312 @@
         "lazy": true
       }
     },
+    "ss_bento_grid_Mm67Pf": {
+      "type": "ss-bento-grid",
+      "blocks": {
+        "item_bcPzA8": {
+          "type": "item",
+          "settings": {
+            "column_width": 2,
+            "row_width": 2,
+            "heading": "<p><strong>Share your info</strong></p>",
+            "heading_custom": false,
+            "heading_font": "josefin_sans_n4",
+            "heading_size": 30,
+            "heading_size_mobile": 20,
+            "heading_height": 150,
+            "heading_align": "left",
+            "heading_align_mobile": "left",
+            "text": "<p>Share your contact details, social media, website, maps, and more—always up to date.</p>",
+            "text_custom": false,
+            "text_font": "josefin_sans_n4",
+            "text_size": 16,
+            "text_size_mobile": 15,
+            "text_height": 180,
+            "text_mt": 8,
+            "text_align": "left",
+            "text_align_mobile": "left",
+            "button": "",
+            "button_url": "",
+            "button_custom": false,
+            "button_font": "josefin_sans_n4",
+            "button_size": 16,
+            "button_size_mobile": 16,
+            "button_height": 100,
+            "button_width": 200,
+            "button_width_mobile": 200,
+            "button_mt": 16,
+            "button_mt_mobile": 16,
+            "button_padding_vertical": 16,
+            "button_padding_vertical_mobile": 16,
+            "button_padding_horizontal": 24,
+            "button_padding_horizontal_mobile": 24,
+            "button_radius": 4,
+            "button_border_thickness": 1,
+            "button_align": "center",
+            "button_align_mobile": "center",
+            "button_style": "non_outline",
+            "image": "shopify://shop_images/1_1x_d7487869-7db4-4ca4-9253-b6871908765c.png",
+            "image_position": "bottom",
+            "image_position_mobile": "bottom",
+            "image_width": 100,
+            "image_width_mobile": 100,
+            "image_radius": 0,
+            "image_border_thickness": 0,
+            "image_ratio": "portrait",
+            "image_ratio_mobile": "landscape",
+            "hide_image": false,
+            "background_color": "#ffffff",
+            "background_gradient": "",
+            "item_border_color": "#000000",
+            "item_heading_color": "#121212",
+            "item_heading_gradient": "",
+            "item_text_color": "#878787",
+            "image_border_color": "#121212",
+            "button_color": "#ffffff",
+            "button_hover_color": "#ffffff",
+            "button_bg_color": "#000000",
+            "button_bg_hover_color": "#000000",
+            "button_border_color": "#000000",
+            "button_border_hover_color": "#000000"
+          }
+        },
+        "item_xwF7DN": {
+          "type": "item",
+          "settings": {
+            "column_width": 4,
+            "row_width": 1,
+            "heading": "<h2>Customize Your Profile</h2>",
+            "heading_custom": false,
+            "heading_font": "josefin_sans_n4",
+            "heading_size": 30,
+            "heading_size_mobile": 20,
+            "heading_height": 150,
+            "heading_align": "left",
+            "heading_align_mobile": "left",
+            "text": "<p>Built for every industry — customize your look with themes, colors, and styles that match your brand.</p>",
+            "text_custom": false,
+            "text_font": "josefin_sans_n4",
+            "text_size": 16,
+            "text_size_mobile": 15,
+            "text_height": 180,
+            "text_mt": 8,
+            "text_align": "left",
+            "text_align_mobile": "left",
+            "button": "",
+            "button_url": "",
+            "button_custom": false,
+            "button_font": "josefin_sans_n4",
+            "button_size": 16,
+            "button_size_mobile": 16,
+            "button_height": 100,
+            "button_width": 200,
+            "button_width_mobile": 200,
+            "button_mt": 16,
+            "button_mt_mobile": 16,
+            "button_padding_vertical": 16,
+            "button_padding_vertical_mobile": 16,
+            "button_padding_horizontal": 24,
+            "button_padding_horizontal_mobile": 24,
+            "button_radius": 4,
+            "button_border_thickness": 1,
+            "button_align": "center",
+            "button_align_mobile": "center",
+            "button_style": "non_outline",
+            "image": "shopify://shop_images/20260109-104239_a7c46d90-79f2-4b53-bff2-788d9c8d7707.png",
+            "image_position": "left",
+            "image_position_mobile": "bottom",
+            "image_width": 100,
+            "image_width_mobile": 100,
+            "image_radius": 0,
+            "image_border_thickness": 0,
+            "image_ratio": "original",
+            "image_ratio_mobile": "original",
+            "hide_image": false,
+            "background_color": "#0081cc",
+            "background_gradient": "radial-gradient(rgba(137, 143, 239, 1), rgba(120, 196, 245, 1) 100%)",
+            "item_border_color": "#000000",
+            "item_heading_color": "#fbfbfd",
+            "item_heading_gradient": "",
+            "item_text_color": "#fbfbfd",
+            "image_border_color": "#121212",
+            "button_color": "#ffffff",
+            "button_hover_color": "#ffffff",
+            "button_bg_color": "#000000",
+            "button_bg_hover_color": "#000000",
+            "button_border_color": "#000000",
+            "button_border_hover_color": "#000000"
+          }
+        },
+        "item_rygRFh": {
+          "type": "item",
+          "settings": {
+            "column_width": 2,
+            "row_width": 1,
+            "heading": "<h2><strong>Exchange Contact</strong></h2>",
+            "heading_custom": false,
+            "heading_font": "josefin_sans_n4",
+            "heading_size": 30,
+            "heading_size_mobile": 20,
+            "heading_height": 150,
+            "heading_align": "left",
+            "heading_align_mobile": "left",
+            "text": "<p>A business card that captures contacts as you network, keeps them organized, and helps you follow up</p>",
+            "text_custom": false,
+            "text_font": "josefin_sans_n4",
+            "text_size": 16,
+            "text_size_mobile": 15,
+            "text_height": 180,
+            "text_mt": 8,
+            "text_align": "left",
+            "text_align_mobile": "left",
+            "button": "",
+            "button_url": "",
+            "button_custom": false,
+            "button_font": "josefin_sans_n4",
+            "button_size": 16,
+            "button_size_mobile": 16,
+            "button_height": 100,
+            "button_width": 200,
+            "button_width_mobile": 200,
+            "button_mt": 16,
+            "button_mt_mobile": 16,
+            "button_padding_vertical": 16,
+            "button_padding_vertical_mobile": 16,
+            "button_padding_horizontal": 24,
+            "button_padding_horizontal_mobile": 24,
+            "button_radius": 4,
+            "button_border_thickness": 1,
+            "button_align": "center",
+            "button_align_mobile": "center",
+            "button_style": "non_outline",
+            "image": "shopify://shop_images/3_1x_02375fe7-34e2-4aec-b9fb-5c8a825297ae.png",
+            "image_position": "bottom",
+            "image_position_mobile": "bottom",
+            "image_width": 100,
+            "image_width_mobile": 74,
+            "image_radius": 0,
+            "image_border_thickness": 0,
+            "image_ratio": "square",
+            "image_ratio_mobile": "square",
+            "hide_image": false,
+            "background_color": "#ffffff",
+            "background_gradient": "",
+            "item_border_color": "#000000",
+            "item_heading_color": "#121212",
+            "item_heading_gradient": "",
+            "item_text_color": "#878787",
+            "image_border_color": "#121212",
+            "button_color": "#ffffff",
+            "button_hover_color": "#ffffff",
+            "button_bg_color": "#000000",
+            "button_bg_hover_color": "#000000",
+            "button_border_color": "#000000",
+            "button_border_hover_color": "#000000"
+          }
+        },
+        "item_JUpCQk": {
+          "type": "item",
+          "settings": {
+            "column_width": 2,
+            "row_width": 1,
+            "heading": "<p><strong>Direct Contact Download</strong></p>",
+            "heading_custom": false,
+            "heading_font": "josefin_sans_n4",
+            "heading_size": 30,
+            "heading_size_mobile": 20,
+            "heading_height": 150,
+            "heading_align": "left",
+            "heading_align_mobile": "left",
+            "text": "<p>No more typing — contacts can save everything in seconds</p>",
+            "text_custom": false,
+            "text_font": "josefin_sans_n4",
+            "text_size": 16,
+            "text_size_mobile": 15,
+            "text_height": 180,
+            "text_mt": 8,
+            "text_align": "left",
+            "text_align_mobile": "left",
+            "button": "",
+            "button_url": "",
+            "button_custom": false,
+            "button_font": "josefin_sans_n4",
+            "button_size": 16,
+            "button_size_mobile": 16,
+            "button_height": 100,
+            "button_width": 200,
+            "button_width_mobile": 200,
+            "button_mt": 16,
+            "button_mt_mobile": 16,
+            "button_padding_vertical": 16,
+            "button_padding_vertical_mobile": 16,
+            "button_padding_horizontal": 24,
+            "button_padding_horizontal_mobile": 24,
+            "button_radius": 4,
+            "button_border_thickness": 1,
+            "button_align": "center",
+            "button_align_mobile": "center",
+            "button_style": "non_outline",
+            "image": "shopify://shop_images/5_1x_d4f1c392-e608-4349-825f-b6d8f0266189.png",
+            "image_position": "bottom",
+            "image_position_mobile": "bottom",
+            "image_width": 100,
+            "image_width_mobile": 100,
+            "image_radius": 0,
+            "image_border_thickness": 0,
+            "image_ratio": "original",
+            "image_ratio_mobile": "original",
+            "hide_image": false,
+            "background_color": "#ffffff",
+            "background_gradient": "",
+            "item_border_color": "#000000",
+            "item_heading_color": "#121212",
+            "item_heading_gradient": "",
+            "item_text_color": "#878787",
+            "image_border_color": "#121212",
+            "button_color": "#ffffff",
+            "button_hover_color": "#ffffff",
+            "button_bg_color": "#000000",
+            "button_bg_hover_color": "#000000",
+            "button_border_color": "#000000",
+            "button_border_hover_color": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "item_bcPzA8",
+        "item_xwF7DN",
+        "item_rygRFh",
+        "item_JUpCQk"
+      ],
+      "name": "SS - Bento Grid",
+      "settings": {
+        "body_columns": "6",
+        "body_gap": 26,
+        "body_gap_mobile": 16,
+        "item_padding_vertical": 32,
+        "item_padding_vertical_mobile": 16,
+        "item_padding_horizontal": 32,
+        "item_padding_horizontal_mobile": 16,
+        "item_radius": 16,
+        "item_border_thickness": 0,
+        "item_opacity": 1,
+        "item_shadow": true,
+        "background_color": "#fbfbfd",
+        "background_gradient": "",
+        "border_color": "#000000",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "padding_horizontal": 5,
+        "padding_horizontal_mobile": 1.5,
+        "full_width": false,
+        "item_width": 140,
+        "border_thickness": 0,
+        "lazy": true
+      }
+    },
     "ss_product_ingredients_5_XAzprP": {
       "type": "ss-product-ingredients-5",
       "blocks": {
@@ -1320,6 +1690,8 @@
         "use_slider": true,
         "slider_view_mobile": 1.3,
         "slider_gap_mobile": 20,
+        "slider_offset_left_mobile": 0,
+        "slider_offset_right_mobile": 0,
         "image_radius": 16,
         "image_border_thickness": 2,
         "image_ratio": "square",
@@ -1461,44 +1833,17 @@
         "gradient_color_3": "#7ff6e8"
       }
     },
-    "1762368407d6dfcbd6": {
-      "type": "apps",
-      "blocks": {
-        "loox_reviews_loox_card_carousel_section_qttCUq": {
-          "type": "shopify://apps/loox-reviews/blocks/loox-card-carousel-section/5c3b337f-fd14-4df5-b1d6-80ec13e6e28e",
-          "settings": {
-            "maxWidth": 1100,
-            "borderRadius": 16,
-            "itemsPerView": 5,
-            "mobileItemsPerView": 2,
-            "maxNumberOfCharacters": 100,
-            "imageRatio": "1",
-            "reviewerNameColor": "#000000",
-            "textColor": "#000000",
-            "itemBackgroundColor": "#ffffff",
-            "starsColor": "",
-            "starsBackgroundColor": "#ffffff",
-            "arrows_backgroundColor": "#ffffff",
-            "arrows_iconColor": "#9a9a9a",
-            "shadow": "offset-dark",
-            "border_active": false,
-            "border_width": 2,
-            "border_color": "#000000",
-            "productIds": ""
-          }
-        }
-      },
-      "block_order": [
-        "loox_reviews_loox_card_carousel_section_qttCUq"
-      ],
-      "settings": {
-        "include_margins": true
-      }
-    },
     "177048159026a87c7c": {
       "type": "apps",
       "settings": {
-        "include_margins": true
+        "include_margins": true,
+        "enable_full_width": false,
+        "full_width_padding": 30,
+        "full_width_padding_tablet": 20,
+        "full_width_padding_mobile": 15,
+        "custom_container_width": 0,
+        "custom_container_width_tablet": 0,
+        "custom_container_width_mobile": 0
       }
     },
     "1770484799bad97907": {
@@ -1515,7 +1860,14 @@
         "powerful_form_builder_app_block_DkzQ6j"
       ],
       "settings": {
-        "include_margins": true
+        "include_margins": true,
+        "enable_full_width": false,
+        "full_width_padding": 30,
+        "full_width_padding_tablet": 20,
+        "full_width_padding_mobile": 15,
+        "custom_container_width": 0,
+        "custom_container_width_tablet": 0,
+        "custom_container_width_mobile": 0
       }
     },
     "1770485706f8bef3b5": {
@@ -1532,23 +1884,30 @@
         "powerful_form_builder_app_block_4bTPz9"
       ],
       "settings": {
-        "include_margins": true
+        "include_margins": true,
+        "enable_full_width": false,
+        "full_width_padding": 30,
+        "full_width_padding_tablet": 20,
+        "full_width_padding_mobile": 15,
+        "custom_container_width": 0,
+        "custom_container_width_tablet": 0,
+        "custom_container_width_mobile": 0
       }
     }
   },
   "order": [
-    "ss_scrolling_announcement_bar_2_4DaXc3",
     "ss_hero_33_QPhVN8",
-    "ss_feature_12_q7zNtA",
+    "ss_testimonials_48_AGbPCe",
     "ss_product_ingredients_5_kjnkgP",
     "ss_steps_7_xXxzCg",
-    "ss_video_grid_socials_3_Wy49XE",
+    "ss_feature_12_q7zNtA",
+    "ss_video_grid_socials_3_hNTLBd",
     "video_featured_BVi8hB",
     "ss_comparison_table_27_Q49dyM",
+    "ss_bento_grid_Mm67Pf",
     "ss_product_ingredients_5_XAzprP",
     "ss_steps_4_7AQ8Ra",
     "ss_glow_faq_9dUCTN",
-    "1762368407d6dfcbd6",
     "177048159026a87c7c",
     "1770484799bad97907",
     "1770485706f8bef3b5"

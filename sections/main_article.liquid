@@ -1,5 +1,5 @@
 <!-- sections/main_article.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
     assign sid = section.id
     assign se_blocks = section.blocks
@@ -217,12 +217,12 @@
     {{- html_layout[1] -}}
 </div>
 {%- if use_icon_social -%}
-    {{ 'icon-social.css' | asset_url | stylesheet_tag }}
+    {{ 'icon-social.s.min.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 {%- if use_carousel -%}
     {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-    {{ 'custom-effect.css' | asset_url | stylesheet_tag }}
-    {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+    {{ 'custom-effect.s.min.css' | asset_url | stylesheet_tag }}
+    {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 {%- style -%}
     .t4s-article-image{margin-bottom: 30px;}

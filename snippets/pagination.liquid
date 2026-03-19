@@ -13,8 +13,8 @@
 
 {%- if paginate.parts.size > 0 -%}
 
-  <link rel="stylesheet" href="{{ 'pagination.css' | asset_url }}" media="print" onload="this.media='all'">
-  <noscript>{{ 'pagination.css' | asset_url | stylesheet_tag }}</noscript>
+  <link rel="stylesheet" href="{{ 'pagination.s.min.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'pagination.s.min.css' | asset_url | stylesheet_tag }}</noscript>
 
   <div class="t4s-pagination-wrapper t4s-w-100">
     <nav class="t4s-pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">

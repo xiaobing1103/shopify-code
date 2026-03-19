@@ -1,7 +1,7 @@
 {% comment %} // CSS File In Here {% endcomment %}
-{{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+{{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-{{ 'product-video-section.css' | asset_url | stylesheet_tag }}
+{{ 'product-video-section.s.min.css' | asset_url | stylesheet_tag }}
 {% comment %} // End Added CSS {% endcomment %}
 
 {% comment %} ! HTML Code In Here {% endcomment %}
@@ -54,8 +54,8 @@
   {%- render 'section_tophead', se_stts: se_stts -%}
 
   {%- if layout_des == '1' -%}
-    {{ 'button-style.css' | asset_url | stylesheet_tag }}
-    <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+    {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+    <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
     <div
       style="--color-hover: {{ se_stts.color_hover }};"
       class="t4s_box_pr_grid t4s-products t4s-justify-content-center t4s-row t4s-row-cols-lg-{{ se_stts.col_dk }} t4s-row-cols-md-{{ se_stts.col_tb }} t4s-row-cols-{{ se_stts.col_mb }} t4s-gx-md-{{ se_stts.space_h_item }} t4s-gy-md-{{ se_stts.space_v_item }} t4s-gx-{{ se_stts.space_h_item_mb }} t4s-gy-{{ se_stts.space_v_item_mb }}"

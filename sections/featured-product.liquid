@@ -245,10 +245,10 @@
   {%- endcapture -%}
 {%- endif -%}
 
- {{ 'section.css' | asset_url | stylesheet_tag }}
+ {{ 'section.s.min.css' | asset_url | stylesheet_tag }}
   {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-  {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
-  {{ 'main-product.css' | asset_url | stylesheet_tag }}
+  {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
+  {{ 'main-product.s.min.css' | asset_url | stylesheet_tag }}
   {{ 'featured-product.css' | asset_url | stylesheet_tag }}
   <div class="t4s-product-featured t4s-product-media__{{ media_layout }} t4s-product-thumb-size__{{ se_stts.thumb_lr_size }} t4s-section-inner {{ t4s_se_class }} t4s_nt_se_{{ se_id }} {{ stt_layout }}{% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} t4s-has-imgbg lazyloadt4s{% endif %}" {% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto"  data-optimumx="2"{% endif %} {% render 'section_style', se_stts: se_stts -%} >
     {{- html_layout[0] -}}
@@ -270,7 +270,7 @@
                       <img data-master="{{ image | image_url }}" class="lazyloadt4s t4s-lz--fadeIn" data-src="{{ image | image_url: width: 1 }}" data-widths="[100,200,400,600,700,800,900,1000,1200,1400,1600]" data-optimumx="2" data-sizes="auto" src="{% render 'img_svg', w: image.width, h: image.height %}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ image.alt | escape }}"><span class="lazyloadt4s-loader"></span>
                     </div>
                   </div>
-                  <div data-product-single-badge data-sort="sale,new,soldout,preOrder,custom" class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0" data-rendert4s="css:{{ 'single-pr-badge.css' | asset_url }}"></div>
+                  <div data-product-single-badge data-sort="sale,new,soldout,preOrder,custom" class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0" data-rendert4s="css:{{ 'single-pr-badge.s.min.css' | asset_url }}"></div>
                   {%- render 'product-btns', se_stts: se_stts, product: product -%}
                 </div>
                 {%- endif -%}
@@ -280,7 +280,7 @@
                 <div data-t4s-gallery data-t4s-thumb-false data-main-media class="t4s-row t4s-g-0 t4s-product__media t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }}">
                   {%- render 'product-thumbnail', media: media, imgatt: imgatt, variant_images: variant_images, loop: enable_video_looping, mute: enable_video_muting, autoplay: enable_video_autoplaying, height: height, se_id: se_id, class_pswp_disable: class_pswp_disable, variants_size: 1 -%}
                 </div>
-                <div data-product-single-badge data-sort="sale,new,soldout,preOrder,custom" class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0" data-rendert4s="css:{{ 'single-pr-badge.css' | asset_url }}"></div>
+                <div data-product-single-badge data-sort="sale,new,soldout,preOrder,custom" class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0" data-rendert4s="css:{{ 'single-pr-badge.s.min.css' | asset_url }}"></div>
                 {%- render 'product-btns', se_stts: se_stts, product: product -%}
               </div>
 
@@ -297,7 +297,7 @@
               assign class_gx_lg = ' t4s-g-lg-10 '
             endif
           -%}
-          {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+          {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
           <div class="t4s-row t4s-g-0">
             <div data-product-single-media-group class="{{ class_main }}t4s-col-12 t4s-col-item t4s-pr">
               <div data-t4s-gallery data-main-media data-t4s-thumb-true class="t4s-row t4s-g-0 t4s-slide-eff-{{ se_stts.eff }} flickityt4s t4s_{{ image_ratio }} t4s_position_{{ se_stts.image_position }} t4s_{{ se_stts.image_size }} t4s-flicky-slider {% if se_stts.nav_btn %} t4s-slider-btn-{{ se_stts.nav_btn }} t4s-slider-btn-style-{{ se_stts.btn_owl }} t4s-slider-btn-{{ se_stts.btn_shape }} t4s-slider-btn-{{ se_stts.btn_size }} t4s-slider-btn-cl-{{ se_stts.btn_cl }} t4s-slider-btn-vi-{{ se_stts.btn_vi }} t4s-slider-btn-hidden-mobile-{{ se_stts.btn_hidden_mobile }}{% endif %}{% if se_stts.nav_dot %} t4s-dots-style-{{ se_stts.dot_owl }} t4s-dots-cl-{{ se_stts.dots_cl }} t4s-dots-round-{{ se_stts.dots_round }} t4s-dots-hidden-mobile-{{ se_stts.dots_hidden_mobile }} {% endif %}" data-flickityt4s-js='{"t4sid": "{{ se_id }}", "status": true, "checkVisibility": false, "cellSelector": "[data-main-slide]:not(.is--media-hide)","isFilter":{{ canMedia_group }},"imagesLoaded": 0,"adaptiveHeight": 1, "contain": 1, "groupCells": "100%", "dragThreshold" : {% if se_stts.eff == 'fade' %}6{% else %}5{% endif %}, "cellAlign": "left","wrapAround": true,"prevNextButtons": true,"percentPosition": 1,"pageDots": false, "autoPlay" : 0, "pauseAutoPlayOnHover" : true , "thumbNav": {% if media_layout != 'without_thumbnails' %}true{% else %}false{% endif %}, "thumbVertical": {% if media_layout != 'thumbnails_bottom' %}true{% else %}false{% endif %}, "isMedia": true }' style="--flickity-btn-pos: 0px;--flickity-btn-pos-mb: 0px;--space-dots: {{ se_stts.dots_space }}px;">
@@ -308,7 +308,7 @@
                   <div class="flickityt4s-page-dots t4s-dots-list carousel--status{{ se_id }}"><span data-current-slide></span> / <span data-total-number></span></div>
                 {%- endif -%}
               </div>
-              <div data-product-single-badge data-sort="sale,new,soldout,preOrder,custom" class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0" data-rendert4s="css:{{ 'single-pr-badge.css' | asset_url }}"></div>
+              <div data-product-single-badge data-sort="sale,new,soldout,preOrder,custom" class="t4s-single-product-badge lazyloadt4s t4s-pa t4s-pe-none t4s-op-0" data-rendert4s="css:{{ 'single-pr-badge.s.min.css' | asset_url }}"></div>
               {%- render 'product-btns', se_stts: se_stts, product: product -%}
             </div>
 
@@ -542,7 +542,7 @@
               
               <div class="t4s-product_social-share t4s-text-{{ bk_stts.socials_align }}" {{ block.shopify_attributes }}>
                 {%- if settings.share_source == '1' -%}
-                  {{ 'icon-social.css' | asset_url | stylesheet_tag }}
+                  {{ 'icon-social.s.min.css' | asset_url | stylesheet_tag }}
                   <div class="t4s-product__social t4s-socials-block t4s-setts-color-{{ bk_stts.use_color_set }} social-{{ block.id }}" style="--cl:{{ bk_stts.icon_cl }};--bg-cl:{{ bk_stts.bg_cl }};--mgb: {{ bk_stts.mgb }}px;--mgb-mb: {{ bk_stts.mgb_mb }}px; --bd-radius:{{ bk_stts.bd_radius }}px;">
  
                     {%- liquid
@@ -558,7 +558,7 @@
                     {%- render 'social_sharing', style: bk_stts.social_style, use_color_set: bk_stts.use_color_set, size: bk_stts.social_size, space_h_item: bk_stts.space_h_item, space_h_item_mb: bk_stts.space_h_item_mb, space_v_item: bk_stts.space_v_item, space_v_item_mb: bk_stts.space_v_item_mb, follow_social: follow_social, share_permalink: share_permalink, share_title: share_title, share_image: share_image -%} 
                   </div>
                 {%- else -%}
-                  {{ 'icon-social.css' | asset_url | stylesheet_tag }}
+                  {{ 'icon-social.s.min.css' | asset_url | stylesheet_tag }}
                   {%- capture the_snippet_share -%}{% render 'ssw-widget-share-links' with 1 %}{%- endcapture -%}
                   {%- unless the_snippet_share contains 'Liquid error' %}{{ the_snippet_share }}{%- endunless -%}
                 {%- endif -%}
@@ -642,7 +642,7 @@
                 </div>
   
               {%- when 'countdown' %}{% unless bk_stts.source == '1' or pr_tags contains 'has_stock_countdown' %}{% continue %}{% endunless -%}
-                {{ 'countdown.css' | asset_url | stylesheet_tag }}
+                {{ 'countdown.s.min.css' | asset_url | stylesheet_tag }}
                 {%- liquid 
                   assign meta = meta_theme.countdown
                   assign isCountdownMeta = false
@@ -697,7 +697,7 @@
 
                 {%- when 'store_pickup' %}{% comment %}{% if isProductAvailable == false %}{% continue %}{% endif -%}{% endcomment -%}
                   
-                  {{ 'pickup-availability.css' | asset_url | stylesheet_tag }}
+                  {{ 'pickup-availability.s.min.css' | asset_url | stylesheet_tag }}
                   <div class="t4s-pr__pickup-availability-container t4s-dn-" data-variant-id="{{ current_variant.id }}" data-pickup-availability-container data-has-only-default-variant="{{ isProductDefault }}" data-root-url="{{ routes.root_url }}" data-id-popup="popup{{ pr_se_id }}"></div>
                     
               {%- when 'tab_des' or 'tab_add' or 'tab_buy' or 'tab_rivui' or 'tab_liquid' or 'tab_html' -%}
@@ -716,8 +716,8 @@
                 {%- when 'btn_detail' -%}
                    {%- if bk_stts.button_label == blank -%}{% continue %}{%- endif -%}
                    {%- liquid assign button_style = bk_stts.button_style -%}
-                   {{ 'button-style.css' | asset_url | stylesheet_tag }}
-                   <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+                   {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+                   <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
                    <div class="t4s-pr__btn-detail" {{ block.shopify_attributes }}>
                        <a class="t4s-btn t4s-btn-base t4s-btn-style-{{ button_style }} t4s-btn-size-{{ bk_stts.btn_size }} t4s-btn-color-{{ bk_stts.btn_cl }} {% if button_style == 'default' or button_style == 'outline' %} t4s-btn-effect-{{ bk_stts.button_effect }}{% endif %}" href="{{ bk_stts.button_link | default: product.url }}" target="{{ bk_stts.open_link }}">{{ bk_stts.button_label }} {%- if bk_stts.btn_icon -%}<svg class="t4s-btn-icon" width="14"><use xlink:href="#t4s-icon-btn"></use></svg>{%- endif -%}</a>
                    </div>

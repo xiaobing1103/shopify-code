@@ -14,7 +14,7 @@
   <template class="t4s-d-none">
   [t4splitlz]
       {%- if section.blocks.size > 0 -%}
-        <link rel="stylesheet" href="{{ 't4s-widget.css' | asset_url }}" media="all">
+        <link rel="stylesheet" href="{{ 't4s-widget.s.min.css' | asset_url }}" media="all">
         <div class="t4s-sidebar-inner t4s-current-scrollbar">
           <div class="t4s-row t4s-row-cols-1">
               {%- for block in section.blocks -%}
@@ -152,7 +152,7 @@
                           {%- endstyle -%}
                        </div>
                     {%- when 'collection' -%}
-                      {{ 'collection-products.css' | asset_url | stylesheet_tag }}
+                      {{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
                       {%- liquid 
                       if settings.within_cat and collection
                        assign isHasCollection = true
@@ -236,7 +236,7 @@
                               <img class="lazyloadt4s t4s-obj-eff" data-src="{{ image | image_url: width: 1 }}" data-widths="[100,200,400,600,700,800,900,1000,1200,1400,1600]" data-optimumx="2" data-sizes="auto" src="{% render 'img_svg', w: image.width, h: image.height %}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ image.alt | escape }}">
                             {%- if bk_stts.b_link != blank -%}</a>{%- endif -%}
                             {%- if bk_stts.date != blank -%}
-                            {{ 'countdown.css' | asset_url | stylesheet_tag }}
+                            {{ 'countdown.s.min.css' | asset_url | stylesheet_tag }}
                             <div class="t4s-sidebar-countdown t4s-countdown t4s-countdown-des-{{ bk_stts.cdt_des }} t4s-countdown-size-{{ bk_stts.cdt_size }}" id="b_{{ block.id }}" {%- render 'bk_cus_style', type: 'countdown', bk_stts: bk_stts, ani_delay: ani_delay -%}>
                               <div class="time" data-countdown-t4s data-date='{{ bk_stts.date }}'>
                                 <span class="countdown-days">
@@ -262,7 +262,7 @@
                         {%- endif -%}
                       </div>
                     {%- when 'cus_socials' -%}
-                      {{ 'icon-social.css' | asset_url | stylesheet_tag }}
+                      {{ 'icon-social.s.min.css' | asset_url | stylesheet_tag }}
                       <div id="t4s-sidebar-{{ block.id }}" class="t4s-col-item t4s-widget t4s-widget-socials">
                         {%- if bk_stts.heading != blank -%}
                           <h5 class="t4s-widget-title">{{ bk_stts.heading }}</h5>
@@ -277,7 +277,7 @@
                         </div>
                       </div>
                     {%- when 'filter' -%}
-                      <link rel="stylesheet" href="{{ 'facets.css' | asset_url }}" media="all">
+                      <link rel="stylesheet" href="{{ 'facets.s.min.css' | asset_url }}" media="all">
                       <div data-replace-filter class="t4s-widget"></div>
                   {%- endcase -%}  
               {%- endfor -%}

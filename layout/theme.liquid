@@ -132,6 +132,17 @@ t4sp-theme t4s-wrapper__{{ settings.general_layout }}{% if settings.animations_r
 <h1 style="display:none">{{page.title}}</h1>
 {% endif %}
 
+{% if template.name =='collection' %}
+<h1 style="display:none">{{collection.title}}</h1>
+{% endif %}
+
+{% if template.name =='blog' %}
+<h1 style="display:none">{{blog.title}}</h1>
+{% endif %}
+
+{% if template.name =='article' %}
+<h1 style="display:none">{{article.title}}</h1>
+{% endif %}
 </body>
 </html>
 

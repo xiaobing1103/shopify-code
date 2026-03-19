@@ -89,7 +89,7 @@
               {%- endfor -%}
             </div>
           {%- else -%}
-            {{ 't4s-scrolling-text.css' | asset_url | stylesheet_tag }}
+            {{ 't4s-scrolling-text.s.min.css' | asset_url | stylesheet_tag }}
             <div class="t4s-announcement-bar__wrap t4s-announcement-bar--marquee t4s-col t4s-col-item t4s-d-flex t4s-align-items-center t4s-oh">
               <div class="t4s-marquee t4s-marquee--{{ section.settings.direction }} t4s-marquee--pause{{ section.settings.pause_when_hover }}" style="--marquee-delay: {{ section.settings.speed }}s;">
                 <div class="t4s-marquee__item">

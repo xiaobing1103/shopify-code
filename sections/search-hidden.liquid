@@ -32,7 +32,7 @@
  -%}
 
 {%- if request.design_mode -%}
-  <link rel="stylesheet" href="{{ 'search-hidden.css' | asset_url }}" media="all">
+  <link rel="stylesheet" href="{{ 'search-hidden.s.min.css' | asset_url }}" media="all">
 {%- endif -%}
 {%- if settings.predictive_search and predictive_search -%}
   {%- liquid

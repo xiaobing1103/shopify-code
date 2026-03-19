@@ -1,6 +1,6 @@
 <!-- sections/price-tables.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'price-tables.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'price-tables.s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
   assign sid = section.id
   assign se_stts = section.settings
@@ -104,8 +104,8 @@
                     </ul>
                   {%- endif -%}
                   {%- if bk_stts.button_text != blank and bk_stts.button_link != blank -%}
-                    {{ 'button-style.css' | asset_url | stylesheet_tag }}
-                    <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+                    {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+                    <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
                     <div class="t4s-price-tables-footer">
                       <a href="{{ bk_stts.button_link }}" class="t4s-price-tables-btn t4s-button t4s-btn-base t4s-btn t4s-btn-style-{{ bk_stts.button_style }} t4s-btn-size-{{ bk_stts.btns_size }} t4s-btn-color-{{ bk_stts.btns_cl }} {% if bk_stts.button_style == 'default' or bk_stts.button_style == 'outline' %}t4s-btn-effect-{{ bk_stts.button_effect }}{% endif %}">{{ bk_stts.button_text }}</a>
                     </div>

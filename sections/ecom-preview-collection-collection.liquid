@@ -13,8 +13,8 @@
 {%- assign headless = true -%}{%- render "ecom_theme_helper" -%}{%capture section_id %}ecom-preview-collection-collection{% endcapture%}{% if section and section_id == section.id and headless == true %}
 {{ content_for_header }}
 {% render 'ecom_header', ECOM_THEME: true %}{% endif %}
-{{'ecom-preview-template-collection.css' | asset_url | stylesheet_tag }}
-<script src="{{'ecom-preview-template-collection.js' | asset_url }}" defer="defer"></script>
+{{'ecom-preview-template-collection.s.min.css' | asset_url | stylesheet_tag }}
+<script src="{{'ecom-preview-template-collection.s.min.js' | asset_url }}" defer="defer"></script>
 <script type="text/javascript" class="ecom-page-info">
  window.EComposer = window.EComposer || {};
  window.EComposer.TEMPLATE_ID="preview-template-collection";

@@ -14,7 +14,7 @@
     <template class="t4s-d-none">
     [t4splitlz]
         {%- if section.blocks.size > 0 -%}
-            <link rel="stylesheet" href="{{ 't4s-widget.css' | asset_url }}" media="all">
+            <link rel="stylesheet" href="{{ 't4s-widget.s.min.css' | asset_url }}" media="all">
             <div class="t4s-sidebar-inner">
             <div class="t4s-row t4s-row-cols-1">
                 {%- for block in section.blocks -%}
@@ -109,7 +109,7 @@
                                 {%- endstyle -%}
                             </div>   
                         {%- when 'collection' -%}
-                            {{ 'collection-products.css' | asset_url | stylesheet_tag }}
+                            {{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
                             {%- liquid
                                 if settings.within_cat and collection
                                     assign isHasCollection = true
@@ -200,7 +200,7 @@
                             <div id="t4s-sidebar-{{ block.id }}" class="t4s-col-item t4s-widget t4s-sidebar-image">
                                 {%- assign image = bk_stts.image_sidebar -%}
                                 {%- if image -%}
-                                    {{ 'custom-effect.css' | asset_url | stylesheet_tag }}
+                                    {{ 'custom-effect.s.min.css' | asset_url | stylesheet_tag }}
                                     <div class="t4s-image t4s-pr t4s-eff-img-{{ bk_stts.img_effect }} t4s-countdown-pos-{{ bk_stts.countdown_pos }} t4s-text-{{ bk_stts.content_align }} id="b_{{ block.id }}">
                                         {%- if bk_stts.b_link != blank -%}
                                         <a class="t4s-oh t4s-d-block" href="{{ bk_stts.b_link }}" target="{{ bk_stts.open_link }}">
@@ -211,7 +211,7 @@
                                         </a>
                                         {%- endif -%}
                                         {%- if bk_stts.date != blank -%}
-                                            {{ 'countdown.css' | asset_url | stylesheet_tag }}
+                                            {{ 'countdown.s.min.css' | asset_url | stylesheet_tag }}
                                             <div class="t4s-sidebar-countdown t4s-countdown t4s-countdown-des-{{ bk_stts.cdt_des }} t4s-countdown-size-{{ bk_stts.cdt_size }}" id="b_{{ block.id }}" {%- render 'bk_cus_style', type: 'countdown', bk_stts: bk_stts, ani_delay: ani_delay -%}>
                                                 <div class="time" data-countdown-t4s data-date='{{ bk_stts.date }}'>
                                                 <span class="countdown-days">
@@ -237,7 +237,7 @@
                                 {%- endif -%}
                             </div>
                         {%- when 'cus_socials' -%}
-                            {{ 'icon-social.css' | asset_url | stylesheet_tag }}
+                            {{ 'icon-social.s.min.css' | asset_url | stylesheet_tag }}
                             <div id="t4s-sidebar-{{ block.id }}" class="t4s-col-item t4s-widget t4s-widget-socials">
                                 {%- if bk_stts.heading != blank -%}
                                   <h5 class="t4s-widget-title">{{ bk_stts.heading }}</h5>

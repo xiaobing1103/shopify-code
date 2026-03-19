@@ -1,7 +1,7 @@
 <!-- sections/counter.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'counter.css' | asset_url | stylesheet_tag }}
-<link href="{{ 't4s-animation.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'counter.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 't4s-animation.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- liquid
   assign sid = section.id
   assign se_stts = section.settings

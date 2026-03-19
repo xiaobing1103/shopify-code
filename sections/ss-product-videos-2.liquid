@@ -1013,7 +1013,7 @@ For inquiries or permissions, contact daniel@section.store
               <div class="video-slide-{{ section.id }} swiper-slide">
                   <div class="video-slide-video-{{ section.id }}" id="{{ section.id }}">
                   {% if block.settings.preload_video != blank %}
-                      <video {% if lazy %}data-{% endif %}src="{{ block.settings.preload_video.sources[1].url }}" muted playsinline autoplay preload="none" loop class="lazy"></video>
+                      <video {% if lazy %}data-{% endif %}data-src="{{ block.settings.preload_video.sources[1].url }}" muted playsinline autoplay preload="none" loop class="lazy lazyVdHide"></video>
                   {% elsif block.settings.poster != blank %}
                       <img src="{{ block.settings.poster | image_url }}" alt="{{ block.settings.poster.alt }}" {% if lazy %}loading="lazy"{% endif %}>
                   {% else %}
@@ -1025,8 +1025,8 @@ For inquiries or permissions, contact daniel@section.store
                       
                       {%- if block.settings.video_url.type == 'youtube' -%}
                           <iframe
-                          {% if lazy %}data-{% endif %}src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1{{ autoplay }}{{ loop }}"
-                          class="lazy"
+                          {% if lazy %}data-{% endif %}data-src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1{{ autoplay }}{{ loop }}"
+                          class="lazy lazyVdHide"
                           allow="autoplay; encrypted-media"
                           allowfullscreen
                           {% if lazy %}loading="lazy"{% endif %}
@@ -1034,8 +1034,8 @@ For inquiries or permissions, contact daniel@section.store
                           ></iframe>
                       {%- else -%}
                           <iframe
-                          {% if lazy %}data-{% endif %}src="https://player.vimeo.com/video/{{ video_id }}{{ autoplay }}{{ loop }}"
-                          class="lazy"
+                          {% if lazy %}data-{% endif %}data-src="https://player.vimeo.com/video/{{ video_id }}{{ autoplay }}{{ loop }}"
+                          class="lazy lazyVdHide"
                           allow="autoplay; encrypted-media"
                           allowfullscreen
                           {% if lazy %}loading="lazy"{% endif %}
@@ -1043,7 +1043,7 @@ For inquiries or permissions, contact daniel@section.store
                           ></iframe>
                       {% endif %}
                       {% else %}
-                        <video {% if lazy %}data-{% endif %}src="{{ block.settings.video.sources[1].url }}" muted playsinline autoplay preload="none" loop class="lazy"></video>
+                        <video {% if lazy %}data-{% endif %}data-src="{{ block.settings.video.sources[1].url }}" muted playsinline autoplay preload="none" loop class="lazy lazyVdHide"></video>
                       {% endif %}
                   {% endif %}
                   </div>
@@ -1113,7 +1113,7 @@ For inquiries or permissions, contact daniel@section.store
                             ></iframe>
                         {% endif %}
                         {% else %}                       
-                          <video {% if lazy %}data-{% endif %}src="{{ block.settings.video.sources[1].url }}" muted autoplay playsinline preload="none" loop class="lazy"></video>
+                          <video {% if lazy %}data-{% endif %}data-src="{{ block.settings.video.sources[1].url }}" muted autoplay playsinline preload="none" loop class="lazy lazyVdHide"></video>
                         {% endif %}
                         <div class="video-modal-action-{{ section.id }}">
                         <svg class="video-modal-mute-{{ section.id }}" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"></path><path d="M5.889 16H2a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h3.889l5.294-4.332a.5.5 0 0 1 .817.387v15.89a.5.5 0 0 1-.817.387L5.89 16zm14.525-4l3.536 3.536-1.414 1.414L19 13.414l-3.536 3.536-1.414-1.414L17.586 12 14.05 8.464l1.414-1.414L19 10.586l3.536-3.536 1.414 1.414L20.414 12z"></path></svg>  

@@ -112,6 +112,11 @@
     box-shadow: -3px 0 8px rgba(201,169,97,0.4) !important;
     white-space: nowrap !important;
   }
+  /* 空标签占位（无文本时保持布局） */
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-fold-tag:empty {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
   /* 手机端缩小 padding */
   @media (max-width: 767px) {
     .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-fold-tag {
@@ -132,6 +137,10 @@
     border-width: 0 0 10px 10px !important;
     border-color: transparent transparent #333 transparent !important;
     transform: scaleY(-1) !important;
+  }
+  /* 空标签时隐藏三角形 */
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-fold-tag:empty::after {
+    display: none !important;
   }
   /* 选中状态 */
   .t4s-bundle-option.is-selected .t4s-bundle-fold-tag {
@@ -318,11 +327,12 @@
                 {%- else -%}
                   <div class="t4s-bundle-option__badge">{{ bk_stts.pack1_title | default: 'Standard' }}</div>
                 {%- endif -%}
-                {%- if forloop.index == 1 and bk_stts.pack1_fold_tag_text != blank -%}
+                {%- comment -%} 始终渲染 fold tag，即使为空（保持布局一致） {%- endcomment -%}
+                {%- if forloop.index == 1 -%}
                   <div class="t4s-bundle-fold-tag">{{ bk_stts.pack1_fold_tag_text }}</div>
-                {%- elsif forloop.index == 2 and bk_stts.pack2_fold_tag_text != blank -%}
+                {%- elsif forloop.index == 2 -%}
                   <div class="t4s-bundle-fold-tag">{{ bk_stts.pack2_fold_tag_text }}</div>
-                {%- elsif forloop.index == 3 and bk_stts.pack3_fold_tag_text != blank -%}
+                {%- elsif forloop.index == 3 -%}
                   <div class="t4s-bundle-fold-tag">{{ bk_stts.pack3_fold_tag_text }}</div>
                 {%- endif -%}
                 
@@ -386,9 +396,8 @@
               {%- else -%}
                 <div class="t4s-bundle-option__badge">{{ bk_stts.pack1_title | default: 'Standard' }}</div>
               {%- endif -%}
-              {%- if bk_stts.pack1_fold_tag_text != blank -%}
-                <div class="t4s-bundle-fold-tag">{{ bk_stts.pack1_fold_tag_text }}</div>
-              {%- endif -%}
+              {%- comment -%} 始终渲染 fold tag，即使为空（保持布局一致） {%- endcomment -%}
+              <div class="t4s-bundle-fold-tag">{{ bk_stts.pack1_fold_tag_text }}</div>
               <div class="t4s-bundle-option__content">
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack1_qty }} {% if pack1_qty == 1 %}{{ bk_stts.unit_singular | default: 'Card' }}{% else %}{{ bk_stts.unit_plural | default: 'Cards' }}{% endif %}
@@ -437,9 +446,8 @@
           >
             <div class="t4s-bundle-option__inner">
               <div class="t4s-bundle-option__badge">SAVE {{ pack2_discount }}%</div>
-              {%- if bk_stts.pack2_fold_tag_text != blank -%}
-                <div class="t4s-bundle-fold-tag">{{ bk_stts.pack2_fold_tag_text }}</div>
-              {%- endif -%}
+              {%- comment -%} 始终渲染 fold tag，即使为空（保持布局一致） {%- endcomment -%}
+              <div class="t4s-bundle-fold-tag">{{ bk_stts.pack2_fold_tag_text }}</div>
               <div class="t4s-bundle-option__content">
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack2_qty }} {{ bk_stts.unit_plural | default: 'Cards' }}
@@ -488,9 +496,8 @@
           >
             <div class="t4s-bundle-option__inner">
               <div class="t4s-bundle-option__badge">SAVE {{ pack3_discount }}%</div>
-              {%- if bk_stts.pack3_fold_tag_text != blank -%}
-                <div class="t4s-bundle-fold-tag">{{ bk_stts.pack3_fold_tag_text }}</div>
-              {%- endif -%}
+              {%- comment -%} 始终渲染 fold tag，即使为空（保持布局一致） {%- endcomment -%}
+              <div class="t4s-bundle-fold-tag">{{ bk_stts.pack3_fold_tag_text }}</div>
               <div class="t4s-bundle-option__content">
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack3_qty }} {{ bk_stts.unit_plural | default: 'Cards' }}

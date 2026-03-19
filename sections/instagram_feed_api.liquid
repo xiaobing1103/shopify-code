@@ -1,6 +1,6 @@
 <!-- sections/instagram_feed_api.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'instagram.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'instagram.s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
     assign image_fix = image_nt | image_tag
     assign se_stts = section.settings
@@ -34,7 +34,7 @@
  -%}
 {%- if se_stts.layout_des == '2' -%}
     {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-    {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+    {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
   <div class="t4s-section-inner {{ t4s_se_class }} t4s-pr t4s_nt_se_{{ sid }} t4s-instagrams {{ stt_layout }}{% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} t4s-has-imgbg lazyloadt4s{% endif %}" {% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto"  data-optimumx="2"{% endif %} {% render 'section_style', se_stts: se_stts -%} >
       {{- html_layout[0] -}}

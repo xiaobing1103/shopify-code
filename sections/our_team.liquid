@@ -1,5 +1,5 @@
 <!-- sections/our_team.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
 {%- liquid
     assign sid = section.id
     assign se_stts = section.settings
@@ -79,7 +79,7 @@
 </div>
 {%- if use_slider -%}
     {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-    {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+    {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 <style>
 .t4s-member-name{margin-top:15px;}

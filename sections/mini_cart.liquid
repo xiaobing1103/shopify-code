@@ -1,7 +1,7 @@
-{{ 'button-style.css' | asset_url | stylesheet_tag }}
-<link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
-<link href="{{ 'mini-cart-custom.css' | asset_url }}" rel="stylesheet" media="all">
-<link href="{{ 'custom-upload.css' | asset_url }}" rel="stylesheet" media="all">
+{{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="{{ 'mini-cart-custom.s.min.css' | asset_url }}" rel="stylesheet" media="all">
+<link href="{{ 'custom-upload.s.min.css' | asset_url }}" rel="stylesheet" media="all">
 
 <style>
   /* ============================================
@@ -407,7 +407,7 @@
    {%- endif -%}
 {%- endcapture -%}
 
-  <link rel="stylesheet" href="{{ 'mini-cart.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'mini-cart.s.min.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- if request.design_mode -%}
 <div
   data-cart-wrapper
@@ -488,7 +488,7 @@
     {%- endstyle -%}
   {%- endif -%}
 
-  <link rel="stylesheet" href="{{ 'shipping_bar.css' | asset_url }}" media="all">
+  <link rel="stylesheet" href="{{ 'shipping_bar.s.min.css' | asset_url }}" media="all">
   <div data-cart-calc-shipping data-t4s-percent="{{ percent_class }}" class="t4s-cart__threshold">
     {{- text_w_ship -}}
     {%- if enable_shipbar %}

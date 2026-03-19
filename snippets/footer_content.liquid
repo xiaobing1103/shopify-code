@@ -38,8 +38,8 @@
     </div>
    {%- endif -%} 
 {%- when 'custom_button' -%}
-{{ 'button-style.css' | asset_url | stylesheet_tag }}
-<link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
   {%- if bk_stts.button_link != blank and bk_stts.button_text != blank -%}
     {%- assign  button_style = bk_stts.button_style -%}
     <a href="{{ bk_stts.button_link }}" target="{{ bk_stts.target_link }}" class="t4s-btn t4s-btn-custom t4s-pe-auto t4s-fnt-fm-{{ bk_stts.fontf }}  t4s-hidden-mobile-{{ bk_stts.hidden_mobile }} t4s-btn-style-{{ button_style }}  {%- if button_style == 'default' or button_style == 'outline' %}t4s-btn-effect-{{ bk_stts.button_effect }} {%- endif -%} " {%- render 'bk_cus_style', type: 'custom_button', bk_stts: bk_stts -%}>{{ bk_stts.button_text }} {%- if bk_stts.button_icon_w > 0 -%}<svg class="t4s-btn-icon" width="14"><use xlink:href="#t4s-icon-btn"></use></svg>{%- endif -%}</a>

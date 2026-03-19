@@ -12,7 +12,7 @@ if settings.header_design != 'sidebar'
 section 'mega-menu'
 endif
 assign mobile_nav_type = settings.mobile_nav_type -%}
-<link rel="stylesheet" href="{{ 'mobile_nav.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'mobile_nav.s.min.css' | asset_url }}" media="print" onload="this.media='all'">
 
 <div id="t4s-menu-drawer" class="t4s-drawer t4s-drawer__left t4s-dn{% if is_page_index %} t4s-page-index-{{page.id}}{% endif %}" aria-hidden="true">
  {%- if mobile_nav_type == '1' or mobile_nav_type == '2' -%}

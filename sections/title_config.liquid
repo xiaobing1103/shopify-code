@@ -7,7 +7,7 @@
 	assign se_blocks = section.blocks 
  -%}
 {%- if isShowHTMl -%}
-	{{ 'top-head.css' | asset_url | stylesheet_tag }}
+	{{ 'top-head.s.min.css' | asset_url | stylesheet_tag }}
 	<div timeline hdt-reveal="slide-in" class="t4s-top-heading t4s_des_title_{{ se_stts.design_heading }} {{ se_stts.heading_align }}" style="--tophead_mb: {{ se_stts.tophead_mb }}px;--tophead_mt: {{ se_stts.tophead_mt }}px;">
 		{%- if se_stts.top_heading != blank -%}<h3 class="t4s-section-title t4s-title"><span>{{ se_stts.top_heading }}</span></h3>{%- endif -%}
 		{% if se_stts.design_heading == "13" %}

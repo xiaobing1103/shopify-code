@@ -2,13 +2,13 @@
 {%- comment -%}
 {%- if template == 'search.wishlist' %}{{ 'wishlist_page.meta' | t }}{%- elsif template == 'search.wishlist' %}{{ 'wishlist_page.meta' | t }}{%- endif -%}
 {%- endcomment -%}
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'collection-pages.css' | asset_url | stylesheet_tag }}
-{{ 'collection-products.css' | asset_url | stylesheet_tag }}
-{{ 'collection-products-list.css' | asset_url | stylesheet_tag }}
-{{ 'button-style.css' | asset_url | stylesheet_tag }}
-<link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="{{ 'main-wishlist.css' | asset_url }}" media="all">
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-pages.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products-list.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'main-wishlist.s.min.css' | asset_url }}" media="all">
 <link href="{{ 't4s-loading.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- liquid
   assign sid = section.id
@@ -230,8 +230,8 @@
           <h4 class="t4s_empty_wishlist__heading t4s_empty_title">{{ 'wishlist_page.empty' | t }}</h4>
           <div class="t4s_empty_wishlist__txt t4s_empty_des">{{ 'wishlist_page.empty_html' | t }}</div>
           {%- if btn_blocks.size > 0 -%}
-            {{ 'button-style.css' | asset_url | stylesheet_tag }}
-            <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+            {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+            <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
             {%- for block in btn_blocks -%}
               {%- assign bk_stts = block.settings -%}
               {% if bk_stts.title != blank and bk_stts.url != blank %}

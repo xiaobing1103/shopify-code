@@ -1,5 +1,5 @@
 {%- if bk_stts.top_heading != blank or  bk_stts.top_subheading != blank -%}
-	{{ 'top-head.css' | asset_url | stylesheet_tag }}
+	{{ 'top-head.s.min.css' | asset_url | stylesheet_tag }}
 	<div timeline hdt-reveal="slide-in" class="t4s-top-heading t4s_des_title_{{ bk_stts.design_heading }} {{ bk_stts.heading_align }}" style="--tophead_mb: {{ bk_stts.tophead_mb }}px;">
 		{%- if bk_stts.top_heading != blank -%}<h3 class="t4s-section-title t4s-title"><span>{{ bk_stts.top_heading }}</span></h3>{%- endif -%}
 		{%- if bk_stts.design_heading == "13" -%}

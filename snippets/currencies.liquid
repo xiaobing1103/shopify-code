@@ -59,7 +59,7 @@ assign cart_iso_code = cart.currency.iso_code
 
   {%- else -%}
     
-    {{ 't4s-currency-lang_drawer.css' | asset_url | stylesheet_tag }}
+    {{ 't4s-currency-lang_drawer.s.min.css' | asset_url | stylesheet_tag }}
     <div data-currency-wrap data-currency-pos="{{ settings.currency_pos }}">
       <button data-drawer-options='{ "id":"#drawer-currency-t4s-fixed" }' class="t4s-btn-currencies-sidebar">
         <span data-flagst4s="{{ sz }}" class="t4s-d-inline-block {{ fl }}">
@@ -127,7 +127,7 @@ assign cart_iso_code = cart.currency.iso_code
 
   {%- else -%}
   
-    {{ 't4s-currency-lang_drawer.css' | asset_url | stylesheet_tag }}
+    {{ 't4s-currency-lang_drawer.s.min.css' | asset_url | stylesheet_tag }}
     <div data-currency-wrap data-currency-pos="{{ settings.currency_pos }}">
       <button data-drawer-options='{ "id":"#drawer-currency-t4s-fixed" }' class="t4s-btn-currencies-sidebar">
         <span data-flagst4s="{{ sz }}" class="t4s-d-inline-flex t4s-align-items-center {{ fl }}">

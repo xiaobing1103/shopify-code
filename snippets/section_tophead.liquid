@@ -1,5 +1,5 @@
 {%- if se_stts.top_heading != blank or se_stts.top_subheading != blank -%}
-	{{ 'top-head.css' | asset_url | stylesheet_tag }}
+	{{ 'top-head.s.min.css' | asset_url | stylesheet_tag }}
 	<div timeline hdt-reveal="slide-in" class="t4s-top-heading t4s_des_title_{{ se_stts.design_heading }} {{ se_stts.heading_align }} {% if se_stts.head_btn_url != blank and se_stts.head_btn_label != blank %} t4s-heading-has-btn {%- endif -%}" style="--heading-height: {{ heading_height }}px;--tophead_mb: {{ se_stts.tophead_mb }}px;--tophead_mt: {{ se_stts.tophead_mt }}px;">
 		{%- if se_stts.top_heading != blank -%}
 			<div class="heading-testimonials-star ">
@@ -28,7 +28,7 @@
 		{%- if se_stts.head_btn_url != blank or se_stts.head_slide_btn -%}
         <div class="t4s-head-btn">
           {% if se_stts.head_btn_url != blank and se_stts.head_btn_label != blank %}
-            {{ 'button-style.css' | asset_url | stylesheet_tag }}
+            {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
             <a class="t4s-btn t4s-btn-base t4s-btn-style-{{ se_stts.head_btn_style }} t4s-btn-size-{{ se_stts.head_btn_size }} t4s-btn-icon-{{ se_stts.head_btn_icon }} t4s-btn-color-{{ se_stts.head_btn_cl }} t4s-btn-rounded-{{ se_stts.head_btn_rounded }} {% if se_stts.head_btn_style == 'default' or se_stts.head_btn_style == 'outline' %}t4s-btn-effect-{{ se_stts.head_btn_effect }}{% endif %}" href="{{ se_stts.head_btn_url }}">{{ se_stts.head_btn_label }}
               {%- if se_stts.head_btn_icon -%}<svg class="t4s-btn-icon" width="14"><use xlink:href="#t4s-icon-btn"></use></svg>{%- endif -%}
             </a>

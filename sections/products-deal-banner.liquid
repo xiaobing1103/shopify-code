@@ -1,10 +1,10 @@
 <!-- section/products-deal-banner.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'content-position.css' | asset_url | stylesheet_tag }}
-{{ 'banner.css' | asset_url | stylesheet_tag }}
-{{ 'collection-products.css' | asset_url | stylesheet_tag }}
-{{ 'product-deal-banner.css' | asset_url | stylesheet_tag }}
-<link href="{{ 't4s-animation.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'content-position.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'banner.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'product-deal-banner.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 't4s-animation.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- liquid
   assign sid = section.id
   assign se_stts = section.settings
@@ -157,8 +157,8 @@
                       <h3 class="text2" style="--text-cl2 :{{ bk_stts.cl_t2 }}">{{ bk_stts.heading2 }}</h3>
                     {% endif %}
                     {%- if url != blank and bk_stts.button_text != blank -%}
-                      {{ 'button-style.css' | asset_url | stylesheet_tag }}
-                      <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+                      {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+                      <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
                       <a class="t4s-btn t4s-btn-base t4s-btn-style-{{ bk_stts.button_style }} t4s-btn-size-{{ bk_stts.btns_size }} t4s-btn-icon-{{ bk_stts.btn_icon }} t4s-btn-color-{{ bk_stts.btns_cl }} {% if bk_stts.button_style == 'default' or bk_stts.button_style == 'outline' %}t4s-btn-effect-{{ bk_stts.button_effect }}{% endif %}" href="{{ url }}">{{ bk_stts.button_text }}{%- if bk_stts.btn_icon -%} <svg class="t4s-btn-icon" viewBox="0 0 14 10"><use xlink:href="#t4s-icon-btn"></use></svg>{%- endif -%}</a>
                     {% endif %}
                 </div>
@@ -171,7 +171,7 @@
   {{- html_layout[1] -}}
 </div> 
 {%- if countdown -%} 
-  {{ 'countdown.css' | asset_url | stylesheet_tag }}
+  {{ 'countdown.s.min.css' | asset_url | stylesheet_tag }}
   <template id="countdown-{{ sid }}">
       <span class="countdown-days">
           <span class="cd_timet4 cd-number">%-D</span>

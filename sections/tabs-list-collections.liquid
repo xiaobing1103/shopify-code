@@ -25,13 +25,13 @@
     render 'se_cus_css', code_cus_css: se_stts.code_cus_css, t4s_se_class: t4s_se_class
   endif 
  -%}
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'top-head.css' | asset_url | stylesheet_tag }}
-{{ 'tabs-list-collections.css' | asset_url | stylesheet_tag }}
-{{ 'collection.css' | asset_url | stylesheet_tag }}
-{{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'top-head.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'tabs-list-collections.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-<link href="{{ 'loading.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="{{ 'loading.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- assign search_terms = search.terms | split: ' ' -%}
 {%- if search.terms and search_terms contains 'ntt4tag' -%}
   {%- liquid

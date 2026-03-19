@@ -17,7 +17,7 @@ assign txt_qv = 'products.product_card.quick_view' | t -%}
 	assign show_product_current = bk_stts.show_product_current
 -%}
 
-{{ 'grouped.css' | asset_url | stylesheet_tag }}
+{{ 'grouped.s.min.css' | asset_url | stylesheet_tag }}
 
 <div class="t4s-product-form__variants t4s-grouped-product is-btn-full-width__{{ bk_stts.btn_atc_full }} is-btn-atc-txt-{{ bk_stts.btn_txt }}" style="--wishlist-color: {{ bk_stts.wishlist_color }};--wishlist-hover-color: {{ bk_stts.wishlist_color_hover }};--wishlist-active-color: {{ bk_stts.wishlist_color_active }};--compare-color: {{ bk_stts.compare_color }};--compare-hover-color: {{ bk_stts.compare_color_hover }};--compare-active-color: {{ bk_stts.compare_color_active }};" {{ shopify_attributes }}>
 {%- form 'product', product, id: form_id, class: 't4s-grouped__frm', novalidate: 'novalidate', data-groups-pr-form: '' , data-type: 'add-to-cart-form' -%}

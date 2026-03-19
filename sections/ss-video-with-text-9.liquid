@@ -1009,7 +1009,7 @@
                 {% if lazy %}
                   data-
                 {% endif -%}
-                src="https://www.youtube.com/embed/{{ video_url_id }}?enablejsapi=1&mute=1&autoplay={% if video_autoplay %}1{% else %}0{% endif %}&controls=1&loop={% if video_loop %}1{% else %}0{% endif %}&modestbranding=1&showinfo=0&rel=0{{ loop_url }}"
+                data-src="https://www.youtube.com/embed/{{ video_url_id }}?enablejsapi=1&mute=1&autoplay={% if video_autoplay %}1{% else %}0{% endif %}&controls=1&loop={% if video_loop %}1{% else %}0{% endif %}&modestbranding=1&showinfo=0&rel=0{{ loop_url }}"
                 {% if lazy %}
                   data-
                 {% endif -%}
@@ -1020,14 +1020,14 @@
                 src2="https://www.youtube.com/embed/{{ video_url_id }}?enablejsapi=1&mute={% if video_autoplay %}1{% else %}0{% endif %}&autoplay=1&controls=0&loop={% if video_loop %}1{% else %}0{% endif %}&modestbranding=1&showinfo=0{{ loop_url }}"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
-                class="lazy"
+                class="lazy lazyVdHide"
               ></iframe>
             {% else %}
               <iframe
                 {% if lazy %}
                   data-
                 {% endif -%}
-                src="https://player.vimeo.com/video/{{ video_url_id }}?enablejsapi=1&mute=1&muted=1&autoplay={% if video_autoplay %}1{% else %}0{% endif %}&controls=1&loop={% if video_loop %}1{% else %}0{% endif %}&modestbranding=1&showinfo=0&rel=0{{ loop_url }}"
+                data-src="https://player.vimeo.com/video/{{ video_url_id }}?enablejsapi=1&mute=1&muted=1&autoplay={% if video_autoplay %}1{% else %}0{% endif %}&controls=1&loop={% if video_loop %}1{% else %}0{% endif %}&modestbranding=1&showinfo=0&rel=0{{ loop_url }}"
                 {% if lazy %}
                   data-
                 {% endif -%}
@@ -1038,7 +1038,7 @@
                 src2="https://player.vimeo.com/video/{{ video_url_id }}?enablejsapi=1&mute={% if video_autoplay %}1{% else %}0{% endif %}&muted={% if video_autoplay %}1{% else %}0{% endif %}&autoplay=1&controls=0&loop={% if video_loop %}1{% else %}0{% endif %}&modestbranding=1&showinfo=0{{ loop_url }}"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
-                class="lazy"
+                class="lazy lazyVdHide"
               ></iframe>
             {% endif %}
           {% else %}
@@ -1047,7 +1047,7 @@
               {% if lazy %}
                 data-
               {% endif -%}
-              src="{{ placeholder_video }}"
+              data-src="{{ placeholder_video }}"
               muted
               {% if video_autoplay %}
                 autoplay
@@ -1057,7 +1057,7 @@
               {% if video_loop %}
                 loop
               {% endif %}
-              class="lazy"
+              class="lazy lazyVdHide"
             ></video>
           {% endif %}
         {% else %}
@@ -1066,7 +1066,7 @@
             {% if lazy %}
               data-
             {% endif -%}
-            src="{% if video != blank %}{{ video.sources[1].url }}{% else %}{{ placeholder_video }}{% endif %}"
+            data-src="{% if video != blank %}{{ video.sources[1].url }}{% else %}{{ placeholder_video }}{% endif %}"
             {% if video_autoplay %}
               muted
             {% endif %}
@@ -1078,7 +1078,7 @@
             {% if video_loop %}
               loop
             {% endif %}
-            class="lazy"
+            class="lazy lazyVdHide"
           ></video>
           {% if use_controls %}
             <div class="video-with-text-controls-{{ section.id }}">

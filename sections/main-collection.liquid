@@ -1,12 +1,12 @@
 <!-- sections/main-collection.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'collection-pages.css' | asset_url | stylesheet_tag }}
-{{ 'collection-products.css' | asset_url | stylesheet_tag }}
-{{ 'collection-products-list.css' | asset_url | stylesheet_tag }}
-{{ 'pagination.css' | asset_url | stylesheet_tag }}
-{{ 'button-style.css' | asset_url | stylesheet_tag }}
-<link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
-<link href="{{ 'loading.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-pages.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products-list.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'pagination.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="{{ 'loading.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- liquid 
   assign se_blocks = section.blocks
   assign stt_layout = section.settings.layout
@@ -97,7 +97,7 @@
 -%}
 {%- if se_blocks_type contains "filter" -%}
 <link rel="stylesheet" href="{{ 'drawer.min.css' | asset_url }}" media="all">
-<link rel="stylesheet" href="{{ 'facets.css' | asset_url }}" media="all">
+<link rel="stylesheet" href="{{ 'facets.s.min.css' | asset_url }}" media="all">
 {%- endif -%}
 
 {%- paginate collection.products by limit -%}

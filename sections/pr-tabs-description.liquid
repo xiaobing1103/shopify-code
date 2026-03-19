@@ -26,9 +26,9 @@
   endif 
   assign tabs_des = se_stts.tabs_des
  -%}
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'tabs.css' | asset_url | stylesheet_tag }}
-{{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'tabs.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
 {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
 <div class="t4s-section-inner t4s_nt_se_{{ sid }} {{ stt_layout }}{% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} t4s-has-imgbg lazyloadt4s{% endif %}" {% if stt_image_bg != blank and stt_layout != 't4s-se-container' %} data-bgset="{{ stt_image_bg | image_url: width: 1 }}" data-sizes="auto"  data-optimumx="2"{% endif %} {% render 'section_style', se_stts: se_stts -%} >
     {{- html_layout[0] -}}
@@ -224,7 +224,7 @@
         </div>
       </div>
       {% else %}
-        {{ 'accordion.css' | asset_url | stylesheet_tag }}
+        {{ 'accordion.s.min.css' | asset_url | stylesheet_tag }}
         <div class="t4s-tabs t4s-type-accordion {{ se_stts.content_align }}" data-t4s-tabs style="--title-cl: {{ se_stts.item_cl }};--bg-title-cl: {{ se_stts.item_bg }};--title-active-cl: {{ se_stts.item_cl_active }};--bg-title-active-cl: {{ se_stts.item_bg_active }};">
           {%- for block in se_blocks -%}
             {%- assign bk_stts = block.settings -%} 

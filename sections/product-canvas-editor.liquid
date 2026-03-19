@@ -41,7 +41,7 @@
   endif
 -%}
 
-<link rel="stylesheet" href="{{ 'product-canvas-editor.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'product-canvas-editor.s.min.css' | asset_url }}">
 
 <div class="t4s-canvas-editor-wrapper" 
      data-section-id="{{ se_id }}"
@@ -331,7 +331,7 @@
     console.log('Fabric.js loaded successfully, version:', fabric.version);
   }
 </script>
-<script src="{{ 'product-canvas-editor.js' | asset_url }}" defer></script>
+<script src="{{ 'product-canvas-editor.s.min.js' | asset_url }}" defer></script>
 
 {%- schema -%}
 {

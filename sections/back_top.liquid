@@ -8,7 +8,7 @@
 -%}
 
 {%- if se_stts.enable_backtop -%}
-<link rel="stylesheet" href="{{ 'back-to-top.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ 'back-to-top.s.min.css' | asset_url }}" media="print" onload="this.media='all'">
 <a id="t4s-backToTop" data-t4sBackToTop class="t4s-back-to-top t4s-back-to-top__design{{ se_stts.backtop_des }} t4s-pf t4s-progress_bar_{{ se_stts.enable_progress_bar }} t4s-op-0" data-hidden-mobile="{{ se_stts.enable_hidden_mobile }}" data-scrollTop="{{ vertical_offset_for_trigger }}" rel="nofollow" href="#" aria-label="{{ 'general.aria.back_to_top' | t }}" style="--border-w:2px;--cricle-normal:{{ se_stts.border_cl }};--cricle-active:{{ se_stts.border_cl_active }};">
   {%- if se_stts.enable_progress_bar -%}
     <div class="t4s-circle-css" style="--border-w:2px;">

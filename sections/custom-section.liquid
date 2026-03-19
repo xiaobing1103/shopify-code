@@ -1,7 +1,7 @@
 <!-- sections/custom-section.liquid -->
-{{ 'section.css' | asset_url | stylesheet_tag }}
-{{ 'content-position.css' | asset_url | stylesheet_tag }}
-<link href="{{ 't4s-animation.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+{{ 'section.s.min.css' | asset_url | stylesheet_tag }}
+{{ 'content-position.s.min.css' | asset_url | stylesheet_tag }}
+<link href="{{ 't4s-animation.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- liquid
   assign sid = section.id
   assign se_stts = section.settings
@@ -93,8 +93,8 @@
                           {%- render 'newsletter', form_id: block.id, bk_stts: bk_stts, buttonIcon: bk_stts.btn_icon -%}
                         </div>
                       {%- when 'img_pin' -%}
-                        {{ 'lookbook.css' | asset_url | stylesheet_tag }} 
-                        {{ 'collection-products.css' | asset_url | stylesheet_tag }}
+                        {{ 'lookbook.s.min.css' | asset_url | stylesheet_tag }} 
+                        {{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
                         {{ 'base_drop.min.css' | asset_url | stylesheet_tag }}
                         {%- liquid 
                             assign image = bk_stts.image
@@ -162,7 +162,7 @@
                               <img class="lazyloadt4s t4s-lz--fadeIn t4s-obj-eff" data-src="{{ image | image_url: width: 1 }}" data-widths="[100,200,400,600,700,800,900,1000,1200,1400,1600]" data-optimumx="2" data-sizes="auto" src="{% render 'img_svg', w: image.width, h: image.height %}" width="{{ image.width }}" height="{{ image.height }}" alt="{{ image.alt | escape }}">
                               <span class="lazyloadt4s-loader is-bg-img" style="background: url({{ image | image_url: width: 1 }});"></span>
                               {%- if product != blank -%}
-                              {{ 'banner-product.css' | asset_url | stylesheet_tag }} 
+                              {{ 'banner-product.s.min.css' | asset_url | stylesheet_tag }} 
                                 <div class="t4s--product">
                                   <div class="t4s-row t4s-product-wrapper">
                                     <div class="t4s-col-item t4s-col t4s-product-img">
@@ -194,17 +194,17 @@
     {{- html_layout[1] -}}
 </div>
 {%- if general_block or custom_button or newsletter -%}
-  {{ 'general-block.css' | asset_url | stylesheet_tag }}
+  {{ 'general-block.s.min.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 {%- if custom_button -%}
-  {{ 'button-style.css' | asset_url | stylesheet_tag }}
-  <link href="{{ 'custom-effect.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+  {{ 'button-style.s.min.css' | asset_url | stylesheet_tag }}
+  <link href="{{ 'custom-effect.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
 {%- endif -%}
 {%- if newsletter -%}
-  {{ 'newsletter.css' | asset_url | stylesheet_tag }}
+  {{ 'newsletter.s.min.css' | asset_url | stylesheet_tag }}
 {%- endif -%}
 {%- if countdown -%} 
-  {{ 'countdown.css' | asset_url | stylesheet_tag }}
+  {{ 'countdown.s.min.css' | asset_url | stylesheet_tag }}
   <template id="countdown-{{ sid }}">
       <span class="countdown-days">
           <span class="cd_timet4 cd-number">%-D</span>

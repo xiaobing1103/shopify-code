@@ -741,10 +741,10 @@
           }
         {%- endstyle -%}
 			  <div id="t4s-popup__exit" data-block="{{ block.id }}" class="t4s-popup__exit_wrap t4s-container mfp-with-anim mfp-hide" data-stt='{ "pp_version": {{ bk_stts.pp_version | default: 1 }},"day_next": {{ bk_stts.day_next }} }'>
-          {{ 'collection-products.css' | asset_url | stylesheet_tag }}
-          {{ 'slider-settings.css' | asset_url | stylesheet_tag }}
+          {{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
+          {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
           {{ 'pre_flickityt4s.min.css' | asset_url | stylesheet_tag }}
-          <link href="{{ 'loading.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+          <link href="{{ 'loading.s.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
           {%- render 'section_tophead', se_stts: bk_stts -%}
 				<div data-t4s-resizeobserver class="t4s-flicky-slider t4s_box_pr_slider t4s-products t4s-text-{{ bk_stts.content_align }} t4s_{{ image_ratio }} t4s_position_{{ bk_stts.image_position }} t4s_{{ bk_stts.image_size }} {% if bk_stts.nav_btn %}  t4s-slider-btn-style-{{ bk_stts.btn_owl }} t4s-slider-btn-{{ bk_stts.btn_shape }} t4s-slider-btn-{{ bk_stts.btn_size }} t4s-slider-btn-cl-{{ bk_stts.btn_cl }} t4s-slider-btn-vi-{{ bk_stts.btn_vi }} t4s-slider-btn-hidden-mobile-{{ bk_stts.btn_hidden_mobile }} {% endif %} {% if bk_stts.nav_dot == true %}   t4s-dots-style-{{ bk_stts.dot_owl }} t4s-dots-cl-{{ bk_stts.dots_cl }} t4s-dots-round-{{ bk_stts.dots_round }} t4s-dots-hidden-mobile-{{ bk_stts.dots_hidden_mobile }} {% endif %}  t4s-row t4s-row-cols-{{ bk_stts.col_dk }} t4s-gx-{{ bk_stts.space_h_item }} flickityt4s" data-flickityt4s-js='{"setPrevNextButtons":true,"arrowIcon":"{{ arrow_icon }}","imagesLoaded": 0,"adaptiveHeight": 0, "contain": 1, "groupCells": "100%", "dragThreshold" : 5, "cellAlign": "left","wrapAround": {{ bk_stts.loop }},"prevNextButtons": {{ bk_stts.nav_btn }},"percentPosition": 1,"pageDots": {{ bk_stts.nav_dot }}, "autoPlay" : {{ bk_stts.au_time | times: 1000 }}, "pauseAutoPlayOnHover" : {{ bk_stts.au_hover }} }' style="--space-dots: {{ bk_stts.dots_space }}px;--flickity-btn-pos: {{ bk_stts.space_h_item }}px;--flickity-btn-pos-mb: {{ bk_stts.space_h_item_mb }}px;">
 					{%- case product_des -%} 
@@ -1130,7 +1130,7 @@
 				    </div>
 
 				    {% if product_list != blank %}
-				    	{{ 'collection-products.css' | asset_url | stylesheet_tag }}
+				    	{{ 'collection-products.s.min.css' | asset_url | stylesheet_tag }}
 					    <div class="t4s-col-item t4s-col-products">
 					    	<div class="t4s-products-recomend">
 					    		{% if bk_stts.heading_recomend != blank %}
