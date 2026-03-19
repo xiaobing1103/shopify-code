@@ -30,7 +30,7 @@
     position: relative !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
-    overflow: hidden !important;
+    {% comment %} overflow: hidden !important; {% endcomment %}
     border-radius: {{ bk_stts.bundle_border_radius | default: 8 }}px !important;
   }
   .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__inner {
@@ -43,7 +43,7 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
     transition: all 0.3s ease !important;
     position: relative !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
   .t4s-bundle-option:hover .t4s-bundle-option__inner {
     box-shadow: 0 3px 8px rgba(0,0,0,0.15) !important;
@@ -61,6 +61,7 @@
     {% else %}
       background: {{ bk_stts.bundle_selected_border_color | default: '#C9A961' }} !important;
     {% endif %}
+
   }
   .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__badge {
     width: 100% !important;
@@ -74,6 +75,7 @@
     font-size: 12px !important;
     font-weight: 600 !important;
     text-align: center !important;
+    border-radius: 7px 7px 0 0
   }
   .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__content {
     padding: {{ bk_stts.bundle_padding | default: 8 }}px !important;
@@ -82,6 +84,65 @@
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
+  }
+  /* 折叠广告标签效果 - 简单小标签 v2.0 - 自适应宽度 */
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-fold-tag {
+    width: fit-content !important;
+    max-width: 200px !important;
+    height: 25px !important;
+    {% if bk_stts.bundle_badge_use_gradient and bk_stts.bundle_badge_gradient != blank %}
+      background: {{ bk_stts.bundle_badge_gradient }} !important;
+    {% else %}
+      background: #555555 !important;
+    {% endif %}
+    color: #FFFFFF !important;
+    font-size: 9px !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 0 12px !important;
+    margin-top: 5px !important;
+    position: relative !important;
+    left: -10px !important;
+    border-radius: 5px 5px 5px 0px !important;
+    border: 1px solid #333 !important;
+    opacity: 1 !important;
+    box-shadow: -3px 0 8px rgba(201,169,97,0.4) !important;
+    white-space: nowrap !important;
+  }
+  /* 手机端缩小 padding */
+  @media (max-width: 767px) {
+    .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-fold-tag {
+      padding: 0 8px !important;
+      height: 20px !important;
+      font-size: 8px !important;
+    }
+  }
+  /* 左下角三角形 */
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-fold-tag::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: -11px !important;
+    left: -1px !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-style: solid !important;
+    border-width: 0 0 10px 10px !important;
+    border-color: transparent transparent #333 transparent !important;
+    transform: scaleY(-1) !important;
+  }
+  /* 选中状态 */
+  .t4s-bundle-option.is-selected .t4s-bundle-fold-tag {
+    {% if bk_stts.bundle_badge_selected_use_gradient and bk_stts.bundle_badge_selected_gradient != blank %}
+      background: {{ bk_stts.bundle_badge_selected_gradient }} !important;
+    {% else %}
+      background: {{ bk_stts.bundle_selected_border_color | default: '#303030' }} !important;
+    {% endif %}
+    border: 1px solid  #C9A961 !important;
+
+
   }
   .t4s-bundle-option__label {
     font-size: {{ bk_stts.bundle_quantity_size | default: 16 }}px !important;
@@ -104,6 +165,7 @@
     text-align: center !important;
     min-height: 24px !important;
     line-height: 1.2 !important;
+    border-radius: 0 0 6px 6px !important;
   }
   .t4s-bundle-option__shipping-placeholder {
     width: 100% !important;
@@ -256,6 +318,13 @@
                 {%- else -%}
                   <div class="t4s-bundle-option__badge">{{ bk_stts.pack1_title | default: 'Standard' }}</div>
                 {%- endif -%}
+                {%- if forloop.index == 1 and bk_stts.pack1_fold_tag_text != blank -%}
+                  <div class="t4s-bundle-fold-tag">{{ bk_stts.pack1_fold_tag_text }}</div>
+                {%- elsif forloop.index == 2 and bk_stts.pack2_fold_tag_text != blank -%}
+                  <div class="t4s-bundle-fold-tag">{{ bk_stts.pack2_fold_tag_text }}</div>
+                {%- elsif forloop.index == 3 and bk_stts.pack3_fold_tag_text != blank -%}
+                  <div class="t4s-bundle-fold-tag">{{ bk_stts.pack3_fold_tag_text }}</div>
+                {%- endif -%}
                 
                 <div class="t4s-bundle-option__content">
                   <div class="t4s-bundle-option__label" data-label>
@@ -317,6 +386,9 @@
               {%- else -%}
                 <div class="t4s-bundle-option__badge">{{ bk_stts.pack1_title | default: 'Standard' }}</div>
               {%- endif -%}
+              {%- if bk_stts.pack1_fold_tag_text != blank -%}
+                <div class="t4s-bundle-fold-tag">{{ bk_stts.pack1_fold_tag_text }}</div>
+              {%- endif -%}
               <div class="t4s-bundle-option__content">
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack1_qty }} {% if pack1_qty == 1 %}{{ bk_stts.unit_singular | default: 'Card' }}{% else %}{{ bk_stts.unit_plural | default: 'Cards' }}{% endif %}
@@ -365,6 +437,9 @@
           >
             <div class="t4s-bundle-option__inner">
               <div class="t4s-bundle-option__badge">SAVE {{ pack2_discount }}%</div>
+              {%- if bk_stts.pack2_fold_tag_text != blank -%}
+                <div class="t4s-bundle-fold-tag">{{ bk_stts.pack2_fold_tag_text }}</div>
+              {%- endif -%}
               <div class="t4s-bundle-option__content">
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack2_qty }} {{ bk_stts.unit_plural | default: 'Cards' }}
@@ -413,6 +488,9 @@
           >
             <div class="t4s-bundle-option__inner">
               <div class="t4s-bundle-option__badge">SAVE {{ pack3_discount }}%</div>
+              {%- if bk_stts.pack3_fold_tag_text != blank -%}
+                <div class="t4s-bundle-fold-tag">{{ bk_stts.pack3_fold_tag_text }}</div>
+              {%- endif -%}
               <div class="t4s-bundle-option__content">
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack3_qty }} {{ bk_stts.unit_plural | default: 'Cards' }}

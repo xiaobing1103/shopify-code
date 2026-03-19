@@ -167,6 +167,165 @@
   .t4s-drawer__bottom .t4s-btn:last-child {
     margin-bottom: 0;
   }
+
+  /* ============================================
+     Quantity Discount Progress Bar
+     ============================================ */
+  .t4s-cart-qty-discount-bar {
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+
+  .t4s-cart-qty-discount-progress {
+    position: relative;
+    margin-bottom: 8px;
+    padding:0px 25px 20px 20px;
+  }
+
+  /* Top markers - Icons and text above progress bar */
+  .t4s-cart-qty-discount-markers-top {
+    position: relative;
+    height: 39px;
+    margin-bottom: 0px;
+  }
+
+  .t4s-cart-qty-marker-top {
+    position: absolute;
+    transform: translateX(-50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .t4s-marker-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  .t4s-marker-text {
+    font-size:9px;
+    font-weight: 500;
+    color: #2990FF;
+    white-space: nowrap;
+  }
+
+  /* Progress track */
+  .t4s-cart-qty-discount-track {
+    height: 8px;
+    background: #D9D9D9;
+    border-radius: 10px;
+    overflow: visible;
+    position: relative;
+  }
+
+  .t4s-cart-qty-discount-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007BFF 0%, #007BFF 100%);
+    border-radius: 10px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  /* Diagonal stripes pattern */
+  .t4s-cart-qty-discount-fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(255, 255, 255, 0.15) 8px,
+      rgba(255, 255, 255, 0.15) 16px
+    );
+    border-radius: 10px;
+  }
+
+  /* Bottom markers - Dots and labels below progress bar */
+  .t4s-cart-qty-discount-markers-bottom {
+    position: relative;
+    height: 0px;
+    margin-top: 4px;
+  }
+
+  .t4s-cart-qty-marker-bottom {
+    position: absolute;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .t4s-cart-qty-marker-dot {
+    width: 12px;
+    height: 12px;
+    background: #D9D9D9;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    margin: 0 auto 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .t4s-cart-qty-marker-dot.active {
+    background: #2990FF;
+    transform: scale(1.1);
+    box-shadow: 0 0 0 3px rgba(41, 144, 255, 0.2);
+  }
+
+  .t4s-cart-qty-marker-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: #9CA3AF;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+  }
+
+  .t4s-cart-qty-marker-bottom:has(.t4s-cart-qty-marker-dot.active) .t4s-cart-qty-marker-label {
+    color: #1F2937;
+    font-weight: 600;
+  }
+
+  .t4s-cart-qty-discount-hint {
+    font-size: 10px;
+    color: #ef4444;
+    text-align: center;
+    font-weight: 600;
+    padding: 6px 8px;
+    background: #fef2f2;
+    border-radius: 6px;
+    border: 1px solid #fee2e2;
+    margin-top: 8px;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 767px) {
+    .t4s-marker-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .t4s-marker-text {
+      font-size: 10px;
+    }
+
+    .t4s-cart-qty-marker-label {
+      font-size: 10px;
+    }
+
+    .t4s-cart-qty-discount-hint {
+      font-size: 9px;
+    }
+
+    .t4s-cart-qty-discount-markers-top {
+      height: 45px;
+    }
+  }
 </style>
 {%- liquid
   assign section_blocks = section.blocks

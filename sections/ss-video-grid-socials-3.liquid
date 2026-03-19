@@ -142,6 +142,19 @@ For inquiries or permissions, contact daniel@section.store
     border: 0px;
   }
 
+  .video-thumbnail-placeholder {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .video-thumbnail-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .video-social-info-{{ section.id }} {
     display: block;
     width: 100%;
@@ -775,33 +788,23 @@ For inquiries or permissions, contact daniel@section.store
                     {%- if block.settings.video_url != blank -%}                    
                       {% assign loop = '&loop=1&playlist=' | append: video_id %}                    
                       {%- if block.settings.video_url.type == 'youtube' -%}
-                        <iframe
-                          {% if lazy %}data-{% endif %}src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&controls=0{{ loop }}"
-                          data-src1="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&controls=0&autoplay=1{{ loop }}"
-                          data-src2="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&controls=0{{ loop }}"
-                          class="lazy"
-                          allow="autoplay; encrypted-media"
-                          allowfullscreen
-                          title="Fixed Video"
-                        ></iframe>
+                        {%- comment -%} YouTube 缩略图占位 {%- endcomment -%}
+                        <div class="video-thumbnail-placeholder" data-video-type="youtube" data-video-id="{{ video_id }}" data-loop="{{ loop }}">
+                          <img src="https://img.youtube.com/vi/{{ video_id }}/maxresdefault.jpg" alt="Video thumbnail" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+                        </div>
                       {%- else -%}
-                        <iframe
-                          {% if lazy %}data-{% endif %}src="https://player.vimeo.com/video/{{ video_id }}?enablejsapi=1&controls=0{{ loop }}"
-                          data-src1="https://player.vimeo.com/video/{{ video_id }}?enablejsapi=1&controls=0&autoplay=1{{ loop }}"
-                          data-src2="https://player.vimeo.com/video/{{ video_id }}?enablejsapi=1&controls=0{{ loop }}"
-                          class="lazy"
-                          allow="autoplay; encrypted-media"
-                          allowfullscreen
-                          title="Fixed Video"
-                        ></iframe>
+                        {%- comment -%} Vimeo 使用轻量级加载 {%- endcomment -%}
+                        <div class="video-thumbnail-placeholder" data-video-type="vimeo" data-video-id="{{ video_id }}" data-loop="{{ loop }}">
+                          <img src="https://vumbnail.com/{{ video_id }}.jpg" alt="Video thumbnail" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+                        </div>
                       {% endif %}
                     {% else %}                
                       {% assign placeholder_video = 'https://cdn.shopify.com/videos/c/o/v/fbb140fd46e3429eba459e1549dbbe38.mp4' %}
-                      <video {% if lazy %}data-{% endif %}src="{{ placeholder_video }}" muted {% if video_autoplay %}autoplay{% endif %} playsinline preload="none" {% if video_loop %}loop{% endif %} class="lazy"></video>
+                      <video data-src="{{ placeholder_video }}" muted playsinline preload="none" loop class="lazy-video"></video>
                     {% endif %}
                   {% else %}
                     {% assign placeholder_video = 'https://cdn.shopify.com/videos/c/o/v/fbb140fd46e3429eba459e1549dbbe38.mp4' %}
-                    <video {% if lazy %}data-{% endif %}src="{% if block.settings.video != blank %}{{ block.settings.video.sources[1].url }}{% else %}{{ placeholder_video }}{% endif %} " {% if block.settings.poster != blank %}poster="{{ block.settings.poster | image_url }}"{% endif %} playsinline preload="none" loop class="lazy" disablepictureinpicture></video>
+                    <video data-src="{% if block.settings.video != blank %}{{ block.settings.video.sources[1].url }}{% else %}{{ placeholder_video }}{% endif %}" {% if block.settings.poster != blank %}poster="{{ block.settings.poster | image_url }}"{% endif %} muted playsinline preload="none" loop class="lazy-video" disablepictureinpicture></video>
                   {% endif %}
                   
             
@@ -825,33 +828,28 @@ For inquiries or permissions, contact daniel@section.store
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-{% if lazy %}
-<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
-{% endif %}
 
 <script>
   function initVideoFromSocial3() {
-
-    {% if lazy %}
-      let lazyLoadInstance = new LazyLoad();
+    const sectionId = '{{ section.id }}';
+    const sliderEl = document.querySelector('.video-social-slider-' + sectionId);
     
-      window.addEventListener(
-        "LazyLoad::Initialized",
-        function (event) {
-          window.lazyLoadInstance = event.detail.instance;
-        },
-        false
-      );
-    {% endif %}
-
-    document.querySelector('.video-social-slider-{{ section.id }}').classList.remove('preview');
-    const slider = new Swiper(".video-social-slider-{{ section.id }}", {
+    if (!sliderEl) return;
+    
+    sliderEl.classList.remove('preview');
+    
+    // 初始化 Swiper
+    const slider = new Swiper(".video-social-slider-" + sectionId, {
       speed: 300,
       spaceBetween: 20,
       loop: true,
+      lazy: {
+        loadPrevNext: true,
+        loadPrevNextAmount: 2
+      },
       navigation: {
-        nextEl: '.video-social-btn-next-{{ section.id }}',
-        prevEl: '.video-social-btn-prev-{{ section.id }}',
+        nextEl: '.video-social-btn-next-' + sectionId,
+        prevEl: '.video-social-btn-prev-' + sectionId,
       },
       breakpoints: {
         320: {
@@ -869,39 +867,93 @@ For inquiries or permissions, contact daniel@section.store
       }
     });
 
-    document.querySelectorAll('.video-social-card-{{ section.id }}').forEach(el => {
-      let btn = el.querySelector('.video-social-action-{{ section.id }}');
-      let frame = el.querySelector('iframe');
-      let src;
-      let src2;
-      if(frame) {
-        src = frame.getAttribute("data-src1");
-        src2 = frame.getAttribute("data-src2");
-      }
-      let video = el.querySelector('video');
-      if(btn) {
-         btn.addEventListener('click', () => {
-          btn.classList.toggle('active');
-          if(btn.classList.contains('active')) {
-            if(frame) {
-              frame.src = src;
-            }
-            if(video) {
-              video.play();
-              video.muted = false;
-              video.setAttribute("mute", "false"); 
+    // Intersection Observer 用于懒加载视频
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          
+          // 加载 YouTube/Vimeo 缩略图占位
+          const placeholder = card.querySelector('.video-thumbnail-placeholder');
+          if (placeholder && !placeholder.dataset.loaded) {
+            placeholder.dataset.loaded = 'true';
+            // 缩略图已经显示，只在点击时加载 iframe
+          }
+          
+          // 加载上传的视频
+          const video = card.querySelector('video.lazy-video');
+          if (video && !video.src && video.dataset.src) {
+            video.src = video.dataset.src;
+            video.load();
+          }
+          
+          videoObserver.unobserve(card);
+        }
+      });
+    }, {
+      rootMargin: '50px' // 提前 50px 开始加载
+    });
+
+    // 观察所有视频卡片
+    document.querySelectorAll('.video-social-card-' + sectionId).forEach(card => {
+      videoObserver.observe(card);
+      
+      const btn = card.querySelector('.video-social-action-' + sectionId);
+      if (!btn) return;
+      
+      // 点击播放/暂停按钮
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        
+        // 处理 YouTube/Vimeo
+        const placeholder = card.querySelector('.video-thumbnail-placeholder');
+        if (placeholder) {
+          const videoType = placeholder.dataset.videoType;
+          const videoId = placeholder.dataset.videoId;
+          const loop = placeholder.dataset.loop;
+          
+          let iframe = card.querySelector('iframe');
+          
+          if (btn.classList.contains('active')) {
+            // 创建并播放 iframe
+            if (!iframe) {
+              iframe = document.createElement('iframe');
+              iframe.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;border:0;';
+              iframe.allow = 'autoplay; encrypted-media';
+              iframe.allowFullscreen = true;
+              
+              if (videoType === 'youtube') {
+                iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&controls=0&autoplay=1${loop}`;
+              } else {
+                iframe.src = `https://player.vimeo.com/video/${videoId}?enablejsapi=1&controls=0&autoplay=1${loop}`;
+              }
+              
+              placeholder.style.display = 'none';
+              card.querySelector('.video-social-video-' + sectionId).appendChild(iframe);
             }
           } else {
-            if(frame) {
-              frame.src = src2;
-            }
-            if(video) {
-              video.pause();
+            // 暂停：移除 iframe 恢复缩略图
+            if (iframe) {
+              iframe.remove();
+              placeholder.style.display = 'block';
             }
           }
-        }) 
-      }
-    })
+          return;
+        }
+        
+        // 处理上传的视频
+        const video = card.querySelector('video');
+        if (video) {
+          if (btn.classList.contains('active')) {
+            video.play();
+            video.muted = false;
+          } else {
+            video.pause();
+            video.muted = true;
+          }
+        }
+      });
+    });
   }
 
   document.addEventListener('DOMContentLoaded', initVideoFromSocial3);

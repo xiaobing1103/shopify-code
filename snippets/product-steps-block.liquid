@@ -1,0 +1,74 @@
+{%- comment -%}
+  Product Steps Block - Simple image display (Desktop & Mobile)
+{%- endcomment -%}
+
+{%- liquid
+  assign steps_image_desktop = block.settings.steps_image_desktop
+  assign steps_image_mobile = block.settings.steps_image_mobile
+  assign block_id = block.id
+-%}
+
+{%- style -%}
+  .psb-steps-{{ block_id }} {
+    margin: 10px auto;
+    padding: 0 0px;
+    max-width: 1200px;
+  }
+  
+  .psb-steps-{{ block_id }} img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .psb-steps-desktop-{{ block_id }} {
+    display: block;
+  }
+  
+  .psb-steps-mobile-{{ block_id }} {
+    display: none;
+  }
+  
+  @media (max-width: 767px) {
+    .psb-steps-desktop-{{ block_id }} {
+      display: none;
+    }
+    
+    .psb-steps-mobile-{{ block_id }} {
+      display: block;
+    }
+  }
+{%- endstyle -%}
+
+<div class="psb-steps-{{ block_id }}">
+  {%- if steps_image_desktop -%}
+    <div class="psb-steps-desktop-{{ block_id }}">
+      <img 
+        src="{{ steps_image_desktop | image_url: width: 1200 }}" 
+        alt="{{ steps_image_desktop.alt | default: 'Product steps' }}"
+        width="1200"
+        height="auto"
+        loading="lazy">
+    </div>
+  {%- endif -%}
+  
+  {%- if steps_image_mobile -%}
+    <div class="psb-steps-mobile-{{ block_id }}">
+      <img 
+        src="{{ steps_image_mobile | image_url: width: 800 }}" 
+        alt="{{ steps_image_mobile.alt | default: 'Product steps mobile' }}"
+        width="800"
+        height="auto"
+        loading="lazy">
+    </div>
+  {%- elsif steps_image_desktop -%}
+    <div class="psb-steps-mobile-{{ block_id }}">
+      <img 
+        src="{{ steps_image_desktop | image_url: width: 800 }}" 
+        alt="{{ steps_image_desktop.alt | default: 'Product steps' }}"
+        width="800"
+        height="auto"
+        loading="lazy">
+    </div>
+  {%- endif -%}
+</div>
