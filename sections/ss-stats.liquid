@@ -543,7 +543,6 @@
 {% if number_animation %}
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('script tag');
       const animSection = document.querySelector('.style-text-{{ section.id }}');
 
       // Set up the intersection observer with a callback
@@ -566,12 +565,9 @@
       // Start observing the target element
       if (animSection) {
         intersectionObserver.observe(animSection);
-      } else {
-        console.log('Target section not found.');
       }
 
       function initStyleText() {
-        console.log('initStyleText called');
         const animFields = document.querySelectorAll('.style-text-animation-numbers');
 
         if (animFields) {

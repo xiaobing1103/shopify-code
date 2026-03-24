@@ -181,7 +181,6 @@ jQuery_T4NT(document).ready(function($) {
      *  data-variant-toggle="{{ variant.id }}"
      */
 	   $( document ).on( "variant:changed", function( evt ) {
-	     // console.log( evt.currentVariant );
 	     // $('[data-variant-toggle]').hide(0);
 	     // $('[data-variant-toggle="'+evt.currentVariant.id+'"']').show(0);
 	     
@@ -197,7 +196,7 @@ jQuery_T4NT(document).ready(function($) {
 	       try {
 	         return localStorage.getItem(key);
 	       } catch (e) {
-	         console.error('localStorage 读取失败:', e);
+	         // localStorage 读取失败
 	         return null;
 	       }
 	     }
@@ -208,27 +207,18 @@ jQuery_T4NT(document).ready(function($) {
 	     var isDiscountApplied = StorageUtil.get('bf_discount_applied') === 'true';
 	     var priceContainer = $('[data-bf-price-container]');
 	     
-	     console.log('Black Friday 价格更新:', {
-	       isDiscountApplied: isDiscountApplied,
-	       containerFound: priceContainer.length > 0,
-	       variant: variant
-	     });
+	     // Black Friday 价格更新
 	     
 	     if (priceContainer.length === 0) {
-	       console.warn('未找到价格容器 [data-bf-price-container]');
+	       // 未找到价格容器
 	       return;
 	     }
 	     
 	     var originalPriceEl = priceContainer.find('[data-bf-original-price]');
 	     var discountPriceEl = priceContainer.find('[data-bf-discount-price]');
 	     
-	     console.log('价格元素:', {
-	       originalPrice: originalPriceEl.length,
-	       discountPrice: discountPriceEl.length
-	     });
-	     
 	     if (isDiscountApplied) {
-	       console.log('显示折扣价格');
+	       // 显示折扣价格
 	       // 显示折扣价，隐藏原价
 	       originalPriceEl.hide();
 	       discountPriceEl.show();
@@ -238,7 +228,7 @@ jQuery_T4NT(document).ready(function($) {
 	         updateDiscountPriceHTML(discountPriceEl, variant.price);
 	       }
 	     } else {
-	       console.log('显示原始价格');
+	       // 显示原始价格
 	       // 显示原价，隐藏折扣价
 	       originalPriceEl.show();
 	       discountPriceEl.hide();

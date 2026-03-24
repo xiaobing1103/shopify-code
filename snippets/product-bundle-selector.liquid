@@ -542,8 +542,6 @@
           
           // 读取 Shopify Price Breaks 数据
           this.priceBreaks = this.parsePriceBreaks(container.dataset.priceBreaks);
-          console.log('Bundle Selector: Pricing Mode:', this.pricingMode);
-          console.log('Bundle Selector: Price Breaks from Shopify:', this.priceBreaks);
           
           this.init();
         }
@@ -557,7 +555,7 @@
               price: b.price
             }));
           } catch (e) {
-            console.error('Failed to parse price breaks:', e);
+            // Failed to parse price breaks
             return [];
           }
         }
@@ -635,7 +633,6 @@
           if (typeof jQuery !== 'undefined') {
             jQuery(document).on('variant:changed', function(evt) {
               if (evt.currentVariant && evt.currentVariant.price) {
-                console.log('Bundle Selector: Variant changed, updating prices', evt.currentVariant);
                 self.updateBasePrice(evt.currentVariant.price, evt.currentVariant);
               }
             });
@@ -644,7 +641,6 @@
           // 监听原生 JavaScript 事件（备用）
           document.addEventListener('variantChange', (evt) => {
             if (evt.detail && evt.detail.variant && evt.detail.variant.price) {
-              console.log('Bundle Selector: Variant changed (native), updating prices', evt.detail.variant);
               self.updateBasePrice(evt.detail.variant.price, evt.detail.variant);
             }
           });
@@ -661,7 +657,6 @@
               quantity: b.minimum_quantity,
               price: b.price
             }));
-            console.log('Bundle Selector: Updated price breaks', this.priceBreaks);
           }
           
           // 获取当前选中的数量
@@ -676,7 +671,6 @@
         }
         
         updateSelection(currentQty) {
-          console.log('更新选择，当前数量:', currentQty);
           
           // 找到应该被选中的 option（根据数量区间）
           let selectedOption = null;

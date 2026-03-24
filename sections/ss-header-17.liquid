@@ -2655,7 +2655,6 @@ For inquiries or permissions, contact daniel@section.store
     const buyButton = document.querySelector('form[action="/cart/add"] button[type="submit"]');
 
     if(buyButton) {
-      console.log(buyButton);
       buyButton.addEventListener('click', (event) => {
         updateCartCount();
       });
@@ -2667,7 +2666,6 @@ For inquiries or permissions, contact daniel@section.store
             .then(res => res.json())
             .then(cart => {
                 let count = cart.item_count;
-                console.log(count)
                 if (cartBubble) {
                     cartBubble.innerHTML = `<span aria-hidden="true">(${count})</span>`;
                 }

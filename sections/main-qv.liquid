@@ -464,7 +464,6 @@
 
                         if(!this.lm_btn || !this.content || this.m_h_content < 0 ) return;
                         setTimeout(() => {
-                          // console.dir(this.content.scrollHeight);
                           this.lm_btn.classList.toggle('is--show', parseInt(this.content.scrollHeight) > this.m_h_content);
                         },500)
                         this.lm_btn.addEventListener('click',()=>{

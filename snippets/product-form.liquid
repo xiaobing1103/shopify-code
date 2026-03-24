@@ -657,19 +657,19 @@
 
             var form = btn.closest('form');
             if (!form) {
-              console.error('Buy Now: Form not found');
+              // Buy Now: Form not found
               resetBuyNowState(btn, spinner);
               return;
             }
             
             var atcButton = form.querySelector('[data-atc-form], button[type="submit"][name="add"]');
             if (!atcButton) {
-              console.error('Buy Now: ADD TO CART button not found');
+              // Buy Now: ADD TO CART button not found
               resetBuyNowState(btn, spinner);
               return;
             }
             
-            console.log('Buy Now: 开始执行 - 触发 ADD TO CART，允许购物车打开');
+            // Buy Now: 开始执行 - 触发 ADD TO CART，允许购物车打开
             
             // 标记 Buy Now 流程
             document.body.classList.add('buy-now-in-progress');
@@ -680,7 +680,6 @@
             
             // 等待购物车完全渲染完成的函数
             var waitForCartRender = function() {
-              console.log('Buy Now: 等待购物车完全渲染...');
               
               // 检查购物车是否已打开并渲染
               var checkCartReady = function() {
@@ -691,12 +690,12 @@
                 if (cartDrawer && cartItems && 
                     (cartDrawer.classList.contains('is--open') || 
                      cartDrawer.getAttribute('aria-hidden') === 'false')) {
-                  console.log('Buy Now: 购物车已完全渲染，准备跳转');
+                  // Buy Now: 购物车已完全渲染，准备跳转
                   cartFullyRendered = true;
                   
                   // 再等待 800ms 确保所有动画和渲染完成
                   setTimeout(function() {
-                    console.log('Buy Now: 跳转到 checkout');
+                    // Buy Now: 跳转到 checkout
                     document.body.classList.remove('buy-now-in-progress');
                     window.location.href = '/checkout';
                   }, 800);
@@ -718,7 +717,7 @@
                   
                   // 如果 3 秒后还没渲染完成，强制跳转
                   if (!cartFullyRendered) {
-                    console.log('Buy Now: 购物车渲染超时，强制跳转');
+                    // Buy Now: 购物车渲染超时，强制跳转
                     document.body.classList.remove('buy-now-in-progress');
                     window.location.href = '/checkout';
                   }
@@ -730,7 +729,7 @@
               if (cartSuccessHandled) return;
               cartSuccessHandled = true;
               
-              console.log('Buy Now: 购物车添加成功事件触发');
+              // Buy Now: 购物车添加成功事件触发
               
               if ($) {
                 $(document).off('.buyNow');
@@ -743,20 +742,20 @@
             if ($) {
               // 监听多个可能的购物车事件
               $(document).on('add:cart:success.buyNow cart:updated.buyNow ajaxCart:afterRender.buyNow drawer:opened.buyNow', cartAddedHandler);
-              console.log('Buy Now: jQuery 事件监听已添加');
+              // Buy Now: jQuery 事件监听已添加
             } else {
-              console.warn('Buy Now: jQuery not found');
+              // Buy Now: jQuery not found
               document.addEventListener('cart:refresh', cartAddedHandler);
             }
             
             // 触发 ADD TO CART 按钮点击
-            console.log('Buy Now: 触发 ADD TO CART 按钮点击');
+            // Buy Now: 触发 ADD TO CART 按钮点击
             atcButton.click();
             
             // 超时保护 - 8 秒后强制跳转
             setTimeout(function() {
               if (!cartSuccessHandled && !cartFullyRendered) {
-                console.log('Buy Now: 总超时 - 强制跳转 checkout');
+                // Buy Now: 总超时 - 强制跳转 checkout
                 cartSuccessHandled = true;
                 document.body.classList.remove('buy-now-in-progress');
                 window.location.href = '/checkout';

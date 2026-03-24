@@ -90,10 +90,10 @@
       scriptPFAnalytic.async = true;
       scriptPFAnalytic.defer = false;
       scriptPFAnalytic.onload = () => {
-        console.log("load analytics new version successfully")
+        // Analytics loaded successfully
       };
       scriptPFAnalytic.onerror = () => {
-        console.log("load analytics new version unsuccessfully")
+        // Analytics failed to load
       };
       document.body.appendChild(scriptPFAnalytic);
     }

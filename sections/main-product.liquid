@@ -723,34 +723,25 @@
                         (function () {
                           try {
                             var isDiscountApplied = localStorage.getItem('bf_discount_applied');
-                            console.log('=== Black Friday 价格初始化 ===');
-                            console.log('localStorage bf_discount_applied:', isDiscountApplied);
-                            console.log('完整 localStorage:', localStorage);
 
                             var container = document.currentScript.closest('[data-bf-price-container]');
-                            console.log('价格容器:', container);
 
                             if (container) {
                               var originalPrice = container.querySelector('[data-bf-original-price]');
                               var discountPrice = container.querySelector('[data-bf-discount-price]');
 
-                              console.log('原价元素:', originalPrice);
-                              console.log('折扣价元素:', discountPrice);
-
                               if (isDiscountApplied === 'true') {
-                                console.log('✓ 显示折扣价格');
                                 // 显示折扣价，隐藏原价
                                 if (originalPrice) originalPrice.style.display = 'none';
                                 if (discountPrice) discountPrice.style.display = 'block';
                               } else {
-                                console.log('✓ 显示原始价格');
                                 // 显示原价，隐藏折扣价
                                 if (originalPrice) originalPrice.style.display = 'block';
                                 if (discountPrice) discountPrice.style.display = 'none';
                               }
                             }
                           } catch (e) {
-                            console.error('Black Friday 价格初始化错误:', e);
+                            // Black Friday 价格初始化错误
                           }
                         })();
                       </script>
@@ -937,7 +928,6 @@
 
                           if (!this.lm_btn || !this.content || this.m_h_content < 0) return;
                           setTimeout(() => {
-                            // console.dir(this.content.scrollHeight);
                             this.lm_btn.classList.toggle(
                               'is--show',
                               parseInt(this.content.scrollHeight) > this.m_h_content

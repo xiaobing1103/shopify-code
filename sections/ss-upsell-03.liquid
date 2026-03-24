@@ -1086,8 +1086,6 @@
           e.preventDefault();
           let id = document.getElementById('buy-with-modal-{{ product.id }}').querySelector('form').querySelector('.product-other-variant-id').value;
           CartJS.addItem(id);
-          console.log(CartJS.cart);
-          console.log(CartJS.cart.item_count);
           
           const headerCartCount{{ forloop.index }} = document.querySelector('.cart-count-bubble span');
           if(headerCartCount{{ forloop.index }}) {

@@ -717,7 +717,7 @@
         const endDateStr = element.dataset.countdown;
 
         if (!endDateStr || endDateStr.trim() === '') {
-          console.warn('倒计时：未设置结束时间');
+          // 倒计时：未设置结束时间
           return;
         }
 
@@ -733,11 +733,11 @@
         this.endDate = endDate.getTime();
 
         if (isNaN(this.endDate)) {
-          console.error('倒计时日期格式错误:', endDateStr);
+          // 倒计时日期格式错误，设置默认时间
           this.endDate = new Date().getTime() + 60 * 60 * 1000;
         }
 
-        console.log('倒计时初始化成功 - 结束时间:', new Date(this.endDate).toLocaleString());
+        // 倒计时初始化成功
         this.init();
       }
 
@@ -762,7 +762,7 @@
               clearInterval(this.interval);
             }
             this.setAllToZero();
-            console.log('倒计时已结束');
+            // 倒计时已结束
             return;
           }
 
@@ -790,7 +790,7 @@
           this.updateDisplay('seconds-tens', Math.floor(seconds / 10));
           this.updateDisplay('seconds-ones', seconds % 10);
         } catch (error) {
-          console.error('倒计时更新错误:', error);
+          // 倒计时更新错误
         }
       }
 
@@ -820,7 +820,7 @@
           document.cookie = name + '=' + (value || '') + expires + '; path=/';
           return true;
         } catch (e) {
-          console.error('Cookie 设置失败:', e);
+          // Cookie 设置失败
           return false;
         }
       },
@@ -835,7 +835,7 @@
           }
           return null;
         } catch (e) {
-          console.error('Cookie 读取失败:', e);
+          // Cookie 读取失败
           return null;
         }
       },
@@ -843,7 +843,7 @@
         try {
           document.cookie = name + '=; Max-Age=-99999999; path=/';
         } catch (e) {
-          console.error('Cookie 删除失败:', e);
+          // Cookie 删除失败
         }
       },
     };

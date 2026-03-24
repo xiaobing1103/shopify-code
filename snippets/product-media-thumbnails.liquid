@@ -145,7 +145,6 @@
     {%- comment -%} 缩略图箭头点击脚本 - 使用 jQuery 和 flickityt4s {%- endcomment -%}
     <script>
     (function() {
-      console.log('🎯 Arrow Script Start');
       
       function init() {
         const prev = document.querySelector('[data-thumb-prev-arrow]');
@@ -153,17 +152,13 @@
         const slider = document.querySelector('[data-main-media]');
         
         if (!prev || !next || !slider) {
-          console.log('❌ Elements not found');
           return;
         }
-        
-        console.log('✅ Elements found, slider:', slider);
         
         // 尝试多种方式获取 Flickity 实例
         function getFlickity() {
           // 方式1: flickityData
           if (slider.flickityData) {
-            console.log('✅ Found via flickityData');
             return slider.flickityData;
           }
           
@@ -171,7 +166,6 @@
           if (typeof jQuery !== 'undefined') {
             const jqData = jQuery(slider).data('flickityt4s');
             if (jqData) {
-              console.log('✅ Found via jQuery data');
               return jqData;
             }
           }
@@ -180,12 +174,10 @@
           if (window.Flickity) {
             const flkty = window.Flickity.data(slider);
             if (flkty) {
-              console.log('✅ Found via Flickity.data');
               return flkty;
             }
           }
           
-          console.log('⚠️ Flickity not found yet');
           return null;
         }
         
@@ -198,35 +190,23 @@
           
           if (flkty) {
             clearInterval(checkInterval);
-            console.log('✅ Flickity ready!', flkty);
             
             prev.onclick = function(e) {
               e.preventDefault();
               e.stopPropagation();
-              console.log('⬅️ PREV clicked');
               flkty.previous();
-              console.log('After prev, index:', flkty.selectedIndex);
               return false;
             };
             
             next.onclick = function(e) {
               e.preventDefault();
               e.stopPropagation();
-              console.log('➡️ NEXT clicked');
               flkty.next();
-              console.log('After next, index:', flkty.selectedIndex);
               return false;
             };
             
-            console.log('✅ Click events attached');
-            
           } else if (checkCount > 100) {
             clearInterval(checkInterval);
-            console.log('❌ Flickity not found after 10 seconds');
-            console.log('Slider classes:', slider.className);
-            console.log('Slider attributes:', slider.attributes);
-          } else if (checkCount % 10 === 0) {
-            console.log('Waiting... attempt', checkCount);
           }
         }, 100);
       }
@@ -246,7 +226,6 @@
     {%- comment -%} 缩略图同步脚本 {%- endcomment -%}
     <script>
       (function() {
-        console.log('=== Thumbnail Sync Script Started ===');
         
         function initThumbnailSync() {
           const mainSlider = document.querySelector('[data-main-media]');
@@ -254,13 +233,7 @@
           const thumbPrevArrow = document.querySelector('[data-thumb-prev-arrow]');
           const thumbNextArrow = document.querySelector('[data-thumb-next-arrow]');
           
-          console.log('Main slider:', mainSlider);
-          console.log('Thumbnail items:', thumbnailItems.length);
-          console.log('Prev arrow:', thumbPrevArrow);
-          console.log('Next arrow:', thumbNextArrow);
-          
           if (!mainSlider || !thumbnailItems.length) {
-            console.error('Required elements not found!');
             return;
           }
 
@@ -285,29 +258,22 @@
             
             if (flickityInstance && !isSetup) {
               clearInterval(checkFlickity);
-              console.log('✅ Flickity instance found!', flickityInstance);
               isSetup = true;
               setupSync();
             } else if (checkCount >= maxChecks) {
               clearInterval(checkFlickity);
-              console.error('❌ Flickity not found after', maxChecks, 'attempts');
-            } else if (checkCount % 10 === 0) {
-              console.log('Still waiting for Flickity... attempt', checkCount);
             }
           }, 100);
 
           function setupSync() {
-            console.log('Setting up thumbnail sync...');
             
             // 更新缩略图选中状态和箭头
             function updateUI(index) {
-              console.log('📍 Updating UI for index:', index);
               
               // 更新缩略图选中状态
               thumbnailItems.forEach((item, i) => {
                 if (i === index) {
                   item.classList.add('is-nav-selected');
-                  console.log('  ✓ Selected thumbnail', i);
                 } else {
                   item.classList.remove('is-nav-selected');
                 }
@@ -322,67 +288,54 @@
             // 更新箭头显示
             function updateArrows(index) {
               if (!thumbPrevArrow || !thumbNextArrow) {
-                console.log('  ⚠️ Arrows not found');
                 return;
               }
-
-              console.log('  📊 Arrow update - Index:', index, 'Total:', totalImages);
 
               // 左箭头
               if (index > 0) {
                 thumbPrevArrow.classList.remove('t4s-dn');
                 thumbPrevArrow.style.display = 'flex';
-                console.log('  ← Prev arrow shown');
               } else {
                 thumbPrevArrow.classList.add('t4s-dn');
                 thumbPrevArrow.style.display = 'none';
-                console.log('  ← Prev arrow hidden');
               }
 
               // 右箭头
               if (index < totalImages - 1) {
                 thumbNextArrow.classList.remove('t4s-dn');
                 thumbNextArrow.style.display = 'flex';
-                console.log('  → Next arrow shown');
               } else {
                 thumbNextArrow.classList.add('t4s-dn');
                 thumbNextArrow.style.display = 'none';
-                console.log('  → Next arrow hidden');
               }
             }
 
             // 监听Flickity的change事件
             try {
               flickityInstance.on('change', function(index) {
-                console.log('🔄 Flickity change event fired - index:', index);
                 updateUI(index);
               });
-              console.log('✅ Change event listener attached');
             } catch(e) {
-              console.error('❌ Failed to attach change listener:', e);
+              // Failed to attach change listener
             }
 
             // 监听Flickity的select事件（备用）
             try {
               flickityInstance.on('select', function(index) {
-                console.log('🎯 Flickity select event fired - index:', index);
                 updateUI(index);
               });
-              console.log('✅ Select event listener attached');
             } catch(e) {
-              console.error('❌ Failed to attach select listener:', e);
+              // Failed to attach select listener
             }
 
             // 监听Flickity的settle事件（最终确认）
             try {
               flickityInstance.on('settle', function(index) {
-                console.log('✔️ Flickity settle event fired - index:', index);
                 const currentIndex = flickityInstance.selectedIndex;
                 updateUI(currentIndex);
               });
-              console.log('✅ Settle event listener attached');
             } catch(e) {
-              console.error('❌ Failed to attach settle listener:', e);
+              // Failed to attach settle listener
             }
 
             // 点击缩略图
@@ -390,7 +343,6 @@
               item.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('👆 Thumbnail clicked:', index);
                 
                 if (flickityInstance) {
                   flickityInstance.select(index);
@@ -405,19 +357,16 @@
               thumbPrevArrow.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('⬅️ Prev arrow clicked');
                 
                 if (flickityInstance) {
                   flickityInstance.previous();
                   // 立即更新UI
                   setTimeout(() => {
                     const idx = flickityInstance.selectedIndex;
-                    console.log('After previous, index:', idx);
                     updateUI(idx);
                   }, 50);
                 }
               });
-              console.log('✅ Prev arrow listener attached');
             }
 
             // 右箭头点击
@@ -425,24 +374,20 @@
               thumbNextArrow.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('➡️ Next arrow clicked');
                 
                 if (flickityInstance) {
                   flickityInstance.next();
                   // 立即更新UI
                   setTimeout(() => {
                     const idx = flickityInstance.selectedIndex;
-                    console.log('After next, index:', idx);
                     updateUI(idx);
                   }, 50);
                 }
               });
-              console.log('✅ Next arrow listener attached');
             }
 
             // 初始化UI
             const currentIndex = flickityInstance.selectedIndex || 0;
-            console.log('Initial index:', currentIndex);
             updateUI(currentIndex);
 
             // 窗口大小改变
@@ -452,35 +397,28 @@
                 updateUI(idx);
               }
             });
-
-            console.log('✅ Thumbnail sync setup complete!');
           }
         }
 
         // 多次尝试初始化
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing...');
             setTimeout(initThumbnailSync, 500);
           });
         } else {
-          console.log('DOM already loaded, initializing...');
           setTimeout(initThumbnailSync, 500);
         }
 
         // 延迟初始化（以防万一）
         setTimeout(function() {
-          console.log('Delayed initialization (1s)...');
           initThumbnailSync();
         }, 1000);
 
         setTimeout(function() {
-          console.log('Delayed initialization (2s)...');
           initThumbnailSync();
         }, 2000);
 
         window.addEventListener('load', function() {
-          console.log('Window loaded, initializing...');
           setTimeout(initThumbnailSync, 1000);
         });
       })();
