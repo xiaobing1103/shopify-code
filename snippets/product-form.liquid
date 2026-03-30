@@ -571,37 +571,7 @@
         {%- endif -%}
 
         {%- if PR_buy_pr and type != 'main_sticky' %}{{- form | payment_button -}}{% endif -%}
-        
-        {%- comment -%} 按钮分隔符 - OR 文字 {%- endcomment -%}
-        {%- if bk_stts.show_custom_redirect_btn and bk_stts.custom_redirect_product and bk_stts.show_button_separator -%}
-          <div 
-            class="t4s-button-separator" 
-            style="display: flex; align-items: center; margin: {{ bk_stts.button_separator_margin_v | default: 16 }}px 0; text-align: center;"
-          >
-            <div style="flex: 1; height: 1px; background-color: {{ bk_stts.button_separator_line_color | default: '#e0e0e0' }};"></div>
-            <span style="padding: 0 16px; font-size: {{ bk_stts.button_separator_font_size | default: 14 }}px; color: {{ bk_stts.button_separator_color | default: '#999999' }}; font-weight: 500; white-space: nowrap;">
-              {{ bk_stts.button_separator_text | default: 'OR' }}
-            </span>
-            <div style="flex: 1; height: 1px; background-color: {{ bk_stts.button_separator_line_color | default: '#e0e0e0' }};"></div>
-          </div>
-        {%- endif -%}
-        
-        {%- comment -%} 自定义跳转按钮 - 与 ADD TO CART 样式完全相同 {%- endcomment -%}
-        {%- if bk_stts.show_custom_redirect_btn and bk_stts.custom_redirect_product -%}
-          <a
-            href="{{ bk_stts.custom_redirect_product.url }}"
-            class="t4s-product-form__submit t4s-product-form__custom-redirect t4s-btn t4s-btn-base t4s-btn-style-{{ bk_stts.button_style | default: 'default' }} t4s-btn-color-{{ bk_stts.button_color | default: 'primary' }} t4s-w-100 t4s-justify-content-center {% if bk_stts.button_style == 'default' or bk_stts.button_style == 'outline' %} t4s-btn-effect-{{ bk_stts.button_effect | default: 'default' }}{% endif %}"
-            style="{% if bk_stts.button_color == 'custom' %}--btn-color: {{ bk_stts.atc_btn_text_color | default: '#ffffff' }}; --btn-background: {{ bk_stts.atc_btn_bg_color | default: '#000000' }}; --btn-color-hover: {{ bk_stts.atc_btn_text_hover_color | default: '#ffffff' }}; --btn-background-hover: {{ bk_stts.atc_btn_bg_hover_color | default: '#333333' }};{% endif %} padding: {{ bk_stts.custom_redirect_btn_padding_v | default: 16 }}px {{ bk_stts.custom_redirect_btn_padding_h | default: 32 }}px !important; margin-top: {{ bk_stts.custom_redirect_btn_margin_top | default: 12 }}px !important;"
-          >
-            {%- if bk_stts.btn_icon -%}
-              <svg class="t4s-btn-icon" viewBox="0 0 24 24">
-                <use xlink:href="#t4s-icon-atc"></use>
-              </svg>
-            {%- endif -%}
-            <span class="t4s-btn-atc_text">{{ bk_stts.custom_redirect_btn_text | default: 'View Card Studio' }}</span>
-          </a>
-        {%- endif -%}
-        
+
         {%- if settings.use_notify_me -%}
           <button
             data-class="t4s-mfp-btn-close-inline"

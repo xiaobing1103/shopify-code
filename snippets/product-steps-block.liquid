@@ -1,74 +1,428 @@
 {%- comment -%}
-  Product Steps Block - Simple image display (Desktop & Mobile)
+  Product Steps Block - configurable 4-step process
 {%- endcomment -%}
 
 {%- liquid
-  assign steps_image_desktop = block.settings.steps_image_desktop
-  assign steps_image_mobile = block.settings.steps_image_mobile
   assign block_id = block.id
+  assign heading = block.settings.heading
+  assign step_1_image = block.settings.step_1_image
+  assign step_1_label = block.settings.step_1_label
+  assign step_1_note = block.settings.step_1_note
+  assign step_2_image = block.settings.step_2_image
+  assign step_2_label = block.settings.step_2_label
+  assign step_2_note = block.settings.step_2_note
+  assign step_3_image = block.settings.step_3_image
+  assign step_3_label = block.settings.step_3_label
+  assign step_3_note = block.settings.step_3_note
+  assign step_4_image = block.settings.step_4_image
+  assign step_4_label = block.settings.step_4_label
+  assign step_4_note = block.settings.step_4_note
+  assign accent_color = block.settings.accent_color | default: '#d8ab52'
+  assign card_bg_color = block.settings.card_bg_color | default: '#faf7f1'
+  assign text_color = block.settings.text_color | default: '#2e2b27'
+  assign note_bg_color = block.settings.note_bg_color | default: '#3c3c3c'
+  assign note_text_color = block.settings.note_text_color | default: '#ffffff'
+  assign icon_size = block.settings.icon_size | default: 58
+  assign heading_font_size = block.settings.heading_font_size | default: 32
+  assign step_text_size = block.settings.step_text_size | default: 16
+  assign hover_text_size = block.settings.hover_text_size | default: 13
+  assign card_padding_horizontal = block.settings.card_padding_horizontal | default: 8
 -%}
 
 {%- style -%}
   .psb-steps-{{ block_id }} {
-    margin: 10px auto;
-    padding: 0 0px;
-    max-width: 1200px;
-  }
-  
-  .psb-steps-{{ block_id }} img {
+    --psb-accent: {{ accent_color }};
+    --psb-card-bg: {{ card_bg_color }};
+    --psb-text: {{ text_color }};
+    --psb-note-bg: {{ note_bg_color }};
+    --psb-note-text: {{ note_text_color }};
+    --psb-icon-size: {{ icon_size }}px;
+    --psb-heading-size: {{ heading_font_size }}px;
+    --psb-step-size: {{ step_text_size }}px;
+    --psb-hover-size: {{ hover_text_size }}px;
+    --psb-card-pad-x: {{ card_padding_horizontal }}px;
+    --psb-connector-offset: 10px;
     width: 100%;
-    height: auto;
+    margin: 16px 0;
+    max-width: none;
+    color: var(--psb-text);
+  }
+
+  .psb-steps__header-{{ block_id }} {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .psb-steps__heading-{{ block_id }} {
+    margin: 0;
+    color: var(--psb-text);
+    font-size: var(--psb-heading-size);
+    line-height: 1.15;
+    font-weight: 700;
+  }
+
+  .psb-steps__card-{{ block_id }} {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 28px var(--psb-card-pad-x) 18px;
+    background: var(--psb-card-bg);
+    border-radius: 18px;
+    overflow: visible;
+  }
+
+  .psb-steps__flow-{{ block_id }} {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    width: 100%;
+    align-items: start;
+  }
+
+  .psb-step-{{ block_id }} {
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .psb-step__trigger-{{ block_id }} {
+    position: relative;
+    z-index: 2;
     display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
   }
-  
-  .psb-steps-desktop-{{ block_id }} {
+
+  .psb-step__trigger-{{ block_id }} > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .psb-step__trigger-{{ block_id }}.is-static {
+    cursor: default;
+  }
+
+  .psb-step__trigger-{{ block_id }}:hover,
+  .psb-step__trigger-{{ block_id }}:focus,
+  .psb-step__trigger-{{ block_id }}:active,
+  .psb-step__trigger-{{ block_id }}:visited {
+    color: inherit !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+  }
+
+  .psb-step__trigger-{{ block_id }}:focus-visible {
+    outline: 2px solid var(--psb-accent);
+    outline-offset: 6px;
+    border-radius: 12px;
+  }
+
+  .psb-step-{{ block_id }}:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--psb-icon-size) / 2);
+    left: calc(50% + (var(--psb-icon-size) / 2) + var(--psb-connector-offset));
+    width: calc(100% - var(--psb-icon-size) - (var(--psb-connector-offset) * 2));
+    border-top: 2px dashed var(--psb-accent);
+    opacity: 0.85;
+  }
+
+  .psb-step-{{ block_id }}:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: calc((var(--psb-icon-size) / 2) - 3px);
+    right: -4px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid var(--psb-accent);
+  }
+
+  .psb-step__icon-{{ block_id }} {
+    position: relative;
+    z-index: 1;
+    width: var(--psb-icon-size);
+    height: var(--psb-icon-size);
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease;
+  }
+
+  .psb-step__icon-{{ block_id }} img {
     display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
-  
-  .psb-steps-mobile-{{ block_id }} {
-    display: none;
+
+  .psb-step__fallback-{{ block_id }} {
+    color: var(--psb-accent);
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 700;
   }
-  
+
+  .psb-step__label-{{ block_id }} {
+    margin: 0;
+    color: var(--psb-text);
+    font-size: var(--psb-step-size);
+    line-height: 1.35;
+    font-weight: 600;
+  }
+
+  .psb-step__number-{{ block_id }} {
+    margin-right: 4px;
+  }
+
+  .psb-step__tooltip-{{ block_id }} {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 18px);
+    z-index: 5;
+    min-width: 180px;
+    max-width: 240px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: var(--psb-note-bg);
+    color: var(--psb-note-text);
+    font-size: var(--psb-hover-size);
+    line-height: 1.4;
+    font-weight: 600;
+    text-align: left;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(-50%, 8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+  }
+
+  .psb-step__tooltip-{{ block_id }}::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 10px solid var(--psb-note-bg);
+    transform: translateX(-50%);
+  }
+
+  .psb-step__trigger-{{ block_id }}:hover .psb-step__tooltip-{{ block_id }},
+  .psb-step__trigger-{{ block_id }}:focus .psb-step__tooltip-{{ block_id }},
+  .psb-step__trigger-{{ block_id }}:focus-visible .psb-step__tooltip-{{ block_id }} {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+  }
+
+  .psb-step__trigger-{{ block_id }}:hover .psb-step__icon-{{ block_id }},
+  .psb-step__trigger-{{ block_id }}:focus .psb-step__icon-{{ block_id }},
+  .psb-step__trigger-{{ block_id }}:focus-visible .psb-step__icon-{{ block_id }} {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 991px) {
+    .psb-step__tooltip-{{ block_id }} {
+      min-width: 160px;
+      max-width: 220px;
+    }
+  }
+
   @media (max-width: 767px) {
-    .psb-steps-desktop-{{ block_id }} {
+    .psb-steps-{{ block_id }} {
+      margin: 14px 0;
+    }
+
+    .psb-steps__header-{{ block_id }} {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .psb-steps__card-{{ block_id }} {
+      padding: 20px var(--psb-card-pad-x) 16px;
+    }
+
+    .psb-steps__flow-{{ block_id }} {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 8px;
+    }
+
+    .psb-step-{{ block_id }} {
+      padding: 0;
+    }
+
+    .psb-step-{{ block_id }}::after,
+    .psb-step-{{ block_id }}::before {
       display: none;
     }
-    
-    .psb-steps-mobile-{{ block_id }} {
-      display: block;
+
+    .psb-step__label-{{ block_id }} {
+      font-size: var(--psb-step-size);
+    }
+
+    .psb-step__tooltip-{{ block_id }} {
+      left: 50%;
+      bottom: calc(100% + 12px);
+      min-width: 150px;
+      max-width: 200px;
     }
   }
 {%- endstyle -%}
 
 <div class="psb-steps-{{ block_id }}">
-  {%- if steps_image_desktop -%}
-    <div class="psb-steps-desktop-{{ block_id }}">
-      <img 
-        src="{{ steps_image_desktop | image_url: width: 1200 }}" 
-        alt="{{ steps_image_desktop.alt | default: 'Product steps' }}"
-        width="1200"
-        height="auto"
-        loading="lazy">
+  {%- if heading != blank -%}
+    <div class="psb-steps__header-{{ block_id }}">
+      <h3 class="psb-steps__heading-{{ block_id }}">{{ heading }}</h3>
     </div>
   {%- endif -%}
-  
-  {%- if steps_image_mobile -%}
-    <div class="psb-steps-mobile-{{ block_id }}">
-      <img 
-        src="{{ steps_image_mobile | image_url: width: 800 }}" 
-        alt="{{ steps_image_mobile.alt | default: 'Product steps mobile' }}"
-        width="800"
-        height="auto"
-        loading="lazy">
+
+  <div class="psb-steps__card-{{ block_id }}">
+    <div class="psb-steps__flow-{{ block_id }}">
+      <div class="psb-step-{{ block_id }}">
+        <div
+          class="psb-step__trigger-{{ block_id }}{% if step_1_note == blank %} is-static{% endif %}"
+          {% if step_1_note != blank %}tabindex="0"{% endif %}
+          aria-label="{{ step_1_label | default: 'Step 1' | escape }}{% if step_1_note != blank %} - {{ step_1_note | strip_newlines | escape }}{% endif %}"
+        >
+          <div class="psb-step__icon-{{ block_id }}">
+            {%- if step_1_image != blank -%}
+              <img
+                src="{{ step_1_image | image_url: width: 160 }}"
+                alt="{{ step_1_image.alt | default: step_1_label | escape }}"
+                width="{{ step_1_image.width }}"
+                height="{{ step_1_image.height }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="psb-step__fallback-{{ block_id }}">1</span>
+            {%- endif -%}
+          </div>
+          {%- if step_1_label != blank -%}
+            <p class="psb-step__label-{{ block_id }}">
+              <span class="psb-step__number-{{ block_id }}">1,</span>
+              {{ step_1_label }}
+            </p>
+          {%- endif -%}
+          {%- if step_1_note != blank -%}
+            <div class="psb-step__tooltip-{{ block_id }}">{{ step_1_note | escape | newline_to_br }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="psb-step-{{ block_id }}">
+        <div
+          class="psb-step__trigger-{{ block_id }}{% if step_2_note == blank %} is-static{% endif %}"
+          {% if step_2_note != blank %}tabindex="0"{% endif %}
+          aria-label="{{ step_2_label | default: 'Step 2' | escape }}{% if step_2_note != blank %} - {{ step_2_note | strip_newlines | escape }}{% endif %}"
+        >
+          <div class="psb-step__icon-{{ block_id }}">
+            {%- if step_2_image != blank -%}
+              <img
+                src="{{ step_2_image | image_url: width: 160 }}"
+                alt="{{ step_2_image.alt | default: step_2_label | escape }}"
+                width="{{ step_2_image.width }}"
+                height="{{ step_2_image.height }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="psb-step__fallback-{{ block_id }}">2</span>
+            {%- endif -%}
+          </div>
+          {%- if step_2_label != blank -%}
+            <p class="psb-step__label-{{ block_id }}">
+              <span class="psb-step__number-{{ block_id }}">2,</span>
+              {{ step_2_label }}
+            </p>
+          {%- endif -%}
+          {%- if step_2_note != blank -%}
+            <div class="psb-step__tooltip-{{ block_id }}">{{ step_2_note | escape | newline_to_br }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="psb-step-{{ block_id }}">
+        <div
+          class="psb-step__trigger-{{ block_id }}{% if step_3_note == blank %} is-static{% endif %}"
+          {% if step_3_note != blank %}tabindex="0"{% endif %}
+          aria-label="{{ step_3_label | default: 'Step 3' | escape }}{% if step_3_note != blank %} - {{ step_3_note | strip_newlines | escape }}{% endif %}"
+        >
+          <div class="psb-step__icon-{{ block_id }}">
+            {%- if step_3_image != blank -%}
+              <img
+                src="{{ step_3_image | image_url: width: 160 }}"
+                alt="{{ step_3_image.alt | default: step_3_label | escape }}"
+                width="{{ step_3_image.width }}"
+                height="{{ step_3_image.height }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="psb-step__fallback-{{ block_id }}">3</span>
+            {%- endif -%}
+          </div>
+          {%- if step_3_label != blank -%}
+            <p class="psb-step__label-{{ block_id }}">
+              <span class="psb-step__number-{{ block_id }}">3,</span>
+              {{ step_3_label }}
+            </p>
+          {%- endif -%}
+          {%- if step_3_note != blank -%}
+            <div class="psb-step__tooltip-{{ block_id }}">{{ step_3_note | escape | newline_to_br }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="psb-step-{{ block_id }}">
+        <div
+          class="psb-step__trigger-{{ block_id }}{% if step_4_note == blank %} is-static{% endif %}"
+          {% if step_4_note != blank %}tabindex="0"{% endif %}
+          aria-label="{{ step_4_label | default: 'Step 4' | escape }}{% if step_4_note != blank %} - {{ step_4_note | strip_newlines | escape }}{% endif %}"
+        >
+          <div class="psb-step__icon-{{ block_id }}">
+            {%- if step_4_image != blank -%}
+              <img
+                src="{{ step_4_image | image_url: width: 160 }}"
+                alt="{{ step_4_image.alt | default: step_4_label | escape }}"
+                width="{{ step_4_image.width }}"
+                height="{{ step_4_image.height }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="psb-step__fallback-{{ block_id }}">4</span>
+            {%- endif -%}
+          </div>
+          {%- if step_4_label != blank -%}
+            <p class="psb-step__label-{{ block_id }}">
+              <span class="psb-step__number-{{ block_id }}">4,</span>
+              {{ step_4_label }}
+            </p>
+          {%- endif -%}
+          {%- if step_4_note != blank -%}
+            <div class="psb-step__tooltip-{{ block_id }}">{{ step_4_note | escape | newline_to_br }}</div>
+          {%- endif -%}
+        </div>
+      </div>
     </div>
-  {%- elsif steps_image_desktop -%}
-    <div class="psb-steps-mobile-{{ block_id }}">
-      <img 
-        src="{{ steps_image_desktop | image_url: width: 800 }}" 
-        alt="{{ steps_image_desktop.alt | default: 'Product steps' }}"
-        width="800"
-        height="auto"
-        loading="lazy">
-    </div>
-  {%- endif -%}
+  </div>
 </div>

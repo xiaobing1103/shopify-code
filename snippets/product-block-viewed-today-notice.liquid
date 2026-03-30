@@ -1,0 +1,222 @@
+{%- comment -%}
+  Product Block - Viewed Today Notice
+
+  Params:
+  - block: block object
+  - bk_stts: block settings
+  - instance_suffix: optional unique suffix for duplicated renders
+  - in_review_row: render a duplicated copy beside the review widget
+  - fallback_*: optional fallback values used when no viewed_today_notice block exists
+{%- endcomment -%}
+
+{%- assign notice_dom_id = 't4s-viewed-today' | append: block.id -%}
+{%- assign fire_main_id = 't4s-viewed-fire-main-' | append: block.id -%}
+{%- assign fire_bottom_id = 't4s-viewed-fire-bottom-' | append: block.id -%}
+{%- assign fire_core_id = 't4s-viewed-fire-core-' | append: block.id -%}
+{%- assign is_review_row_copy = in_review_row | default: false -%}
+{%- assign is_duplicate_render = false -%}
+{%- assign notice_count = bk_stts.count | default: fallback_count | default: '270' -%}
+{%- assign notice_text = bk_stts.text | default: fallback_text | default: '[count] people have viewed this card today' -%}
+{%- assign notice_font_size = bk_stts.font_size | default: fallback_font_size | default: 15 -%}
+{%- assign notice_font_size_mb = bk_stts.font_size_mb | default: fallback_font_size_mb | default: 14 -%}
+{%- assign notice_margin_top = bk_stts.margin_top | default: fallback_margin_top | default: 0 -%}
+{%- assign notice_padding_vertical = bk_stts.padding_vertical | default: fallback_padding_vertical | default: 14 -%}
+{%- assign notice_padding_horizontal = bk_stts.padding_horizontal | default: fallback_padding_horizontal | default: 18 -%}
+{%- assign notice_padding_vertical_mb = bk_stts.padding_vertical_mb | default: fallback_padding_vertical_mb | default: 12 -%}
+{%- assign notice_padding_horizontal_mb = bk_stts.padding_horizontal_mb | default: fallback_padding_horizontal_mb | default: 14 -%}
+{%- assign notice_border_radius = bk_stts.border_radius | default: fallback_border_radius | default: 10 -%}
+{%- assign notice_text_color = bk_stts.text_color | default: fallback_text_color | default: '#3C372F' -%}
+{%- assign notice_count_color = bk_stts.count_color | default: fallback_count_color | default: '#3C372F' -%}
+{%- assign notice_bg_color = bk_stts.bg_color | default: fallback_bg_color | default: '#FBF7EF' -%}
+{%- assign notice_bg_gradient = bk_stts.bg_gradient | default: fallback_bg_gradient | strip -%}
+{%- assign notice_bg_gradient_handle = notice_bg_gradient | downcase -%}
+{%- assign notice_border_color = bk_stts.border_color | default: fallback_border_color | default: '#F1E7D7' -%}
+{%- assign notice_min_height = bk_stts.min_height | default: fallback_min_height | default: 0 -%}
+{%- assign notice_justify_content = bk_stts.justify_content | default: fallback_justify_content | default: 'flex-start' -%}
+{%- assign notice_text_align = bk_stts.text_align | default: fallback_text_align | default: 'left' -%}
+{%- assign notice_random_count = bk_stts.enable_random_count -%}
+{%- if notice_random_count == blank -%}
+  {%- assign notice_random_count = fallback_enable_random_count -%}
+  {%- if notice_random_count == blank -%}
+    {%- assign notice_random_count = true -%}
+  {%- endif -%}
+{%- endif -%}
+{%- assign notice_overnight_min = bk_stts.overnight_min | default: fallback_overnight_min | default: 1 -%}
+{%- assign notice_overnight_max = bk_stts.overnight_max | default: fallback_overnight_max | default: 10 -%}
+{%- assign notice_daytime_min = bk_stts.daytime_min | default: fallback_daytime_min | default: 1 -%}
+{%- assign notice_daytime_max = bk_stts.daytime_max | default: fallback_daytime_max | default: 10 -%}
+{%- if instance_suffix != blank -%}
+  {%- assign notice_dom_id = notice_dom_id | append: instance_suffix -%}
+  {%- assign fire_main_id = fire_main_id | append: instance_suffix -%}
+  {%- assign fire_bottom_id = fire_bottom_id | append: instance_suffix -%}
+  {%- assign fire_core_id = fire_core_id | append: instance_suffix -%}
+  {%- assign is_duplicate_render = true -%}
+{%- endif -%}
+
+<style>
+  #{{ notice_dom_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: {% if is_review_row_copy %}auto{% else %}100%{% endif %};
+    max-width: 100%;
+    margin-top: {% if is_review_row_copy %}0{% else %}{{ notice_margin_top }}px{% endif %};
+    padding: {{ notice_padding_vertical }}px {{ notice_padding_horizontal }}px;
+    border: 1px solid {{ notice_border_color }};
+    border-radius: {{ notice_border_radius }}px;
+    {% if notice_bg_gradient != blank and notice_bg_gradient_handle != 'none' %}
+      background: {{ notice_bg_gradient }};
+    {% else %}
+      background: {{ notice_bg_color }};
+    {% endif %}
+    color: {{ notice_text_color }};
+    font-size: {{ notice_font_size }}px;
+    line-height: 1.35;
+    font-weight: 500;
+    justify-content: {{ notice_justify_content }};
+    box-shadow: 0 1px 4px rgba(45, 35, 20, 0.04);
+    {% if notice_min_height > 0 %}
+      min-height: {{ notice_min_height }}px;
+    {% endif %}
+  }
+
+  #{{ notice_dom_id }} .t4s-viewed-today__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+  }
+
+  #{{ notice_dom_id }} .t4s-viewed-today__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  #{{ notice_dom_id }} .t4s-viewed-today__text {
+    min-width: 0;
+    text-align: {{ notice_text_align }};
+  }
+
+  #{{ notice_dom_id }} .t4s-viewed-today__count {
+    color: {{ notice_count_color }};
+    font-weight: 700;
+  }
+
+  @media (max-width: 767px) {
+    #{{ notice_dom_id }} {
+      width: 100%;
+      padding: {{ notice_padding_vertical_mb }}px {{ notice_padding_horizontal_mb }}px;
+      gap: 10px;
+      font-size: {{ notice_font_size_mb }}px;
+    }
+
+    #{{ notice_dom_id }} .t4s-viewed-today__icon {
+      flex-basis: 26px;
+      width: 26px;
+      height: 26px;
+    }
+  }
+</style>
+
+{%- capture viewed_today_count -%}
+  <span class="t4s-viewed-today__count" data-viewed-today-count>{{ notice_count }}</span>
+{%- endcapture -%}
+
+<div
+  id="{{ notice_dom_id }}"
+  class="t4s-pr_viewed_today_notice"
+  data-random-count="{{ notice_random_count }}"
+  data-overnight-min="{{ notice_overnight_min }}"
+  data-overnight-max="{{ notice_overnight_max }}"
+  data-daytime-min="{{ notice_daytime_min }}"
+  data-daytime-max="{{ notice_daytime_max }}"
+  {% unless is_duplicate_render %}{{ block.shopify_attributes }}{% endunless %}
+>
+  <span class="t4s-viewed-today__icon" aria-hidden="true">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation">
+      <path d="M18.599 1.898c.418 4.14-1.206 6.793-3.954 9.687-1.774 1.868-2.874 3.861-2.874 6.094 0 3.84 2.977 6.414 6.606 6.414 4.373 0 7.401-3.118 7.401-7.73 0-4.435-2.263-7.743-7.179-14.465Z" fill="url(#{{ fire_main_id }})"/>
+      <path d="M12.597 11.046c-.81 2.653-4.883 4.104-4.883 9.053 0 5.323 3.738 9.103 8.963 9.103 4.894 0 8.61-3.48 8.61-8.532 0-2.337-.73-4.337-2.238-6.82.007 4.437-2.455 6.83-5.372 6.83-2.851 0-5.08-2.077-5.08-5.085 0-1.633.45-3.018 0-4.549Z" fill="url(#{{ fire_bottom_id }})"/>
+      <path d="M16.839 14.541c-1.69 1.58-3.62 3.564-3.62 6.54 0 2.766 2.02 4.67 4.55 4.67 2.882 0 4.774-2.031 4.774-5.03 0-2.219-.913-4.059-2.95-6.88.024 2.328-1.19 3.855-2.754 3.855-1.308 0-2.2-1.041-2.2-2.315 0-.584.11-.992.2-1.84Z" fill="url(#{{ fire_core_id }})"/>
+      <defs>
+        <linearGradient id="{{ fire_main_id }}" x1="18.626" y1="1.898" x2="18.626" y2="24.093" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FFB04B"/>
+          <stop offset="1" stop-color="#FF6A00"/>
+        </linearGradient>
+        <linearGradient id="{{ fire_bottom_id }}" x1="16.434" y1="11.046" x2="16.434" y2="29.202" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FF8C2A"/>
+          <stop offset="1" stop-color="#FF4F1F"/>
+        </linearGradient>
+        <linearGradient id="{{ fire_core_id }}" x1="17.884" y1="13.816" x2="17.884" y2="25.751" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#FFD86A"/>
+          <stop offset="1" stop-color="#FF8A00"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </span>
+  <div class="t4s-viewed-today__text">
+    {{ notice_text | replace: '[count]', viewed_today_count }}
+  </div>
+</div>
+
+<script>
+  (function() {
+    var root = document.getElementById('{{ notice_dom_id }}');
+    if (!root || root.dataset.randomCount !== 'true') return;
+
+    var countNode = root.querySelector('[data-viewed-today-count]');
+    if (!countNode) return;
+
+    function toInt(value, fallback) {
+      var parsed = parseInt(value, 10);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    }
+
+    function randomBetween(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    var now = new Date();
+    var currentHour = now.getHours();
+    var isOvernightHour = currentHour < 8;
+    var min = isOvernightHour
+      ? toInt(root.dataset.overnightMin, 1)
+      : toInt(root.dataset.daytimeMin, 1);
+    var max = isOvernightHour
+      ? toInt(root.dataset.overnightMax, 10)
+      : toInt(root.dataset.daytimeMax, 10);
+
+    if (min > max) {
+      var swap = min;
+      min = max;
+      max = swap;
+    }
+
+    var hourKey = [
+      now.getFullYear(),
+      now.getMonth() + 1,
+      now.getDate(),
+      currentHour
+    ].join('-');
+    var storageKey = 't4s-viewed-today:' + root.id + ':' + hourKey;
+    var stableCount = null;
+
+    try {
+      var savedValue = window.localStorage.getItem(storageKey);
+      var parsedSavedValue = parseInt(savedValue, 10);
+
+      if (Number.isFinite(parsedSavedValue) && parsedSavedValue >= min && parsedSavedValue <= max) {
+        stableCount = parsedSavedValue;
+      } else {
+        stableCount = randomBetween(min, max);
+        window.localStorage.setItem(storageKey, String(stableCount));
+      }
+    } catch (error) {
+      stableCount = randomBetween(min, max);
+    }
+
+    countNode.textContent = String(stableCount);
+  })();
+</script>

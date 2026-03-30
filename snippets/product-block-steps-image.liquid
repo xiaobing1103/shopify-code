@@ -1,0 +1,92 @@
+{%- comment -%}
+  Responsive image block for product info area.
+  Supports separate desktop/mobile images and adjustable heights.
+{%- endcomment -%}
+
+{%- liquid
+  assign steps_image_desktop = block.settings.steps_image_desktop
+  assign steps_image_mobile = block.settings.steps_image_mobile
+  assign desktop_image = steps_image_desktop | default: steps_image_mobile
+  assign mobile_image = steps_image_mobile | default: steps_image_desktop
+  assign desktop_height = block.settings.desktop_height | default: 0
+  assign mobile_height = block.settings.mobile_height | default: desktop_height
+  assign image_fit = block.settings.image_fit | default: 'contain'
+  assign margin_top = block.settings.margin_top | default: 10
+  assign margin_bottom = block.settings.margin_bottom | default: 10
+  assign block_id = block.id
+-%}
+
+{%- style -%}
+  .psb-steps-image-{{ block_id }} {
+    width: 100%;
+    margin-top: {{ margin_top }}px;
+    margin-bottom: {{ margin_bottom }}px;
+  }
+
+  .psb-steps-image-{{ block_id }} img {
+    width: 100%;
+    display: block;
+  }
+
+  .psb-steps-image-desktop-{{ block_id }} {
+    display: block;
+  }
+
+  .psb-steps-image-mobile-{{ block_id }} {
+    display: none;
+  }
+
+  .psb-steps-image-desktop-{{ block_id }} img {
+    {%- if desktop_height > 0 -%}
+      height: {{ desktop_height }}px;
+      object-fit: {{ image_fit }};
+    {%- else -%}
+      height: auto;
+    {%- endif -%}
+  }
+
+  @media (max-width: 767px) {
+    .psb-steps-image-desktop-{{ block_id }} {
+      display: none;
+    }
+
+    .psb-steps-image-mobile-{{ block_id }} {
+      display: block;
+    }
+
+    .psb-steps-image-mobile-{{ block_id }} img {
+      {%- if mobile_height > 0 -%}
+        height: {{ mobile_height }}px;
+        object-fit: {{ image_fit }};
+      {%- else -%}
+        height: auto;
+      {%- endif -%}
+    }
+  }
+{%- endstyle -%}
+
+<div class="psb-steps-image-{{ block_id }}" {{ block.shopify_attributes }}>
+  {%- if desktop_image != blank -%}
+    <div class="psb-steps-image-desktop-{{ block_id }}">
+      <img
+        src="{{ desktop_image | image_url: width: 2000 }}"
+        alt="{{ desktop_image.alt | escape | default: 'Product image' }}"
+        width="{{ desktop_image.width }}"
+        height="{{ desktop_image.height }}"
+        loading="lazy"
+      >
+    </div>
+  {%- endif -%}
+
+  {%- if mobile_image != blank -%}
+    <div class="psb-steps-image-mobile-{{ block_id }}">
+      <img
+        src="{{ mobile_image | image_url: width: 1200 }}"
+        alt="{{ mobile_image.alt | escape | default: 'Product image mobile' }}"
+        width="{{ mobile_image.width }}"
+        height="{{ mobile_image.height }}"
+        loading="lazy"
+      >
+    </div>
+  {%- endif -%}
+</div>
