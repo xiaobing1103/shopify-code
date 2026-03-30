@@ -90,8 +90,22 @@
 
   .t4s-cart-qty-marker-bottom {
     position: absolute;
-    transform: translateX(-90%);
+    transform: translateX(-50%);
     text-align: center;
+  }
+
+  .t4s-cart-qty-marker-bottom--start {
+    transform: translateX(0);
+    text-align: left;
+  }
+
+  .t4s-cart-qty-marker-bottom--center {
+    transform: translateX(-50%);
+  }
+
+  .t4s-cart-qty-marker-bottom--end {
+    transform: translateX(-100%);
+    text-align: right;
   }
 
   .t4s-cart-qty-marker-dot {
@@ -1080,7 +1094,7 @@
           var propertyItems = propertyList.querySelectorAll('.product-details__item');
           propertyItems.forEach(function(item) {
             var label = item.querySelector('.product-details__item-label');
-            if (label && (label.textContent.includes('Upload') || label.textContent.includes('Design'))) {
+            if (label && label.textContent.includes('Upload')) {
               hasUploadProperty = true;
               matchingProductId = productId;
             }
@@ -1111,6 +1125,7 @@
   function showUploadedImageInCartPage(cartItem, imageData) {
     var propertyList = cartItem.querySelector('.t4s-cart_meta_propertyList');
     if (!propertyList) return;
+    if (!imageData || !imageData.imageData) return;
     
     // 检查是否已经有上传图片显示
     var existingUploadDisplay = propertyList.querySelector('.t4s-cart-uploaded-image-display');
@@ -1123,7 +1138,7 @@
     var propertyItems = propertyList.querySelectorAll('.product-details__item');
     propertyItems.forEach(function(item) {
       var label = item.querySelector('.product-details__item-label');
-      if (label && (label.textContent.includes('Upload') || label.textContent.includes('Design'))) {
+      if (label && label.textContent.includes('Upload')) {
         uploadProperty = item;
       }
     });

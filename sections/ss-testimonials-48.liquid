@@ -58,6 +58,10 @@ For inquiries or permissions, contact daniel@section.store
 
   assign cards_mt = section.settings.cards_mt
   assign cards_mt_mobile = section.settings.cards_mt_mobile
+  assign cards_side_padding = section.settings.cards_side_padding
+  assign cards_side_padding_mobile = section.settings.cards_side_padding_mobile
+  assign cards_offset_top = section.settings.cards_offset_top
+  assign cards_offset_top_mobile = section.settings.cards_offset_top_mobile
 
   assign card_border_thickness = section.settings.card_border_thickness
   assign card_border_color = section.settings.card_border_color
@@ -73,6 +77,7 @@ For inquiries or permissions, contact daniel@section.store
   assign card_content_align_mobile = section.settings.card_content_align_mobile
   assign card_width = section.settings.card_width
   assign card_width_mobile = section.settings.card_width_mobile
+  assign card_height_mobile = section.settings.card_height_mobile
 
   assign card_content_horizontal_align = ""
   if card_content_align == "center"
@@ -144,6 +149,9 @@ For inquiries or permissions, contact daniel@section.store
 {%- style -%}
 
   .section-{{ section.id }} {
+    position: relative;
+    isolation: isolate;
+    z-index: 2;
     border-top: solid {{ border_color }} {{ border_thickness }}px;
     border-bottom: solid {{ border_color }} {{ border_thickness }}px;
     margin-top: {{ margin_top | times: 0.75 | round: 0 }}px;
@@ -151,13 +159,30 @@ For inquiries or permissions, contact daniel@section.store
     margin-left: {{ margin_horizontal_mobile }}rem;
     margin-right: {{ margin_horizontal_mobile }}rem;
     border-radius: {{ section_radius | times: 0.6 | round: 0 }}px;
-    overflow: hidden;
+    overflow: visible;
+    background: linear-gradient(180deg, #262626 0%, #4c4c4c 100%) !important;
+  }
+
+  .section-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 92px;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.52) 0%, rgba(0, 0, 0, 0) 100%),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.07) 100%);
+    pointer-events: none;
+    z-index: 0;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
   }
   
   .section-{{ section.id }}-settings {
+    position: relative;
+    z-index: 1;
     margin: 0 auto;
-    padding-top: {{ padding_top | times: 0.75 | round: 0 }}px;
-    padding-bottom: {{ padding_bottom | times: 0.75 | round: 0 }}px;
+    padding-top: 34px;
+    padding-bottom: 42px;
     padding-left: {{ padding_horizontal_mobile }}rem;
     padding-right: {{ padding_horizontal_mobile }}rem;
   }
@@ -165,120 +190,141 @@ For inquiries or permissions, contact daniel@section.store
   .testimonials-wrapper-{{ section.id }} {
     position: relative;
     z-index: 1;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    scrollbar-width: none;
-    -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-    margin-top: {{ cards_mt_mobile }}px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(280px, 88%);
+    gap: 16px;
+    margin-top: 18px;
     background-attachment: scroll !important;
-    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%);
-    mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,1) 92%, rgba(0,0,0,0) 100%);
-    padding-bottom: 30px;
-    padding-top: 25px;
+    align-items: start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+    top: -{{ cards_offset_top_mobile }}px;
+    margin-bottom: -{{ cards_offset_top_mobile }}px;
   }
 
-  .testimonials-list-{{ section.id }} {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    white-space: nowrap;
-    height: 100%;
-    background-attachment: scroll !important;
-    -webkit-animation: ticker{{ section.id | replace: '-', '' }} {{ scrolling_velocity_mobile }}s infinite linear;
-    animation: ticker{{ section.id | replace: '-', '' }} {{ scrolling_velocity_mobile }}s infinite linear;
-    flex-shrink: 0;
+  .testimonials-wrapper-{{ section.id }}::-webkit-scrollbar {
+    display: none;
   }
 
   .testimonials-card-{{ section.id }} {
     text-decoration: none;
-    width: {{ card_width_mobile }}px;
-    margin-right: {{ scrolling_gap_mobile }}px;
+    width: 100%;
+    min-width: 0;
     display: flex !important;
     flex-direction: column !important;
-    align-items: {{ card_content_horizontal_align_mobile }};
-    justify-content: space-between !important;
-    padding: {{ card_padding_vertical_mobile }}px {{ card_padding_horizontal_mobile }}px !important; 
-    border: {{ card_border_thickness }}px solid {{ card_border_color }} !important;
-    border-radius: {{ card_radius }}px !important;
-    background-color: {{ card_bg_color }} !important;
+    align-items: flex-start;
+    justify-content: flex-start !important;
+    gap: 18px;
+    padding: 18px 20px 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: 24px !important;
+    background: rgba(69, 69, 69, 0.92) !important;
     overflow: hidden !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+      0 14px 28px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    min-height: 100%;
+    height: {{ card_height_mobile }}px;
+    scroll-snap-align: start;
+  }
+
+  .testimonials-card-{{ section.id }}:first-child {
+    margin-left: {{ cards_side_padding_mobile }}px;
+  }
+
+  .testimonials-card-{{ section.id }}:last-child {
+    margin-right: {{ cards_side_padding_mobile }}px;
   }
 
   .testimonials-card-bottom-wrapper-{{ section.id }} {
-    flex: 1 1 0;
     display: flex !important;
     flex-direction: column !important;
-    align-items: {{ card_content_horizontal_align_mobile }};
-  }
- 
-  .testimonials-slide-stars-{{ section.id }} {
-    display: flex;
-    align-items: center;
-    margin-top: {{ slide_stars_mt_mobile }}px;
-    gap: {{ slide_stars_gap }}px;
-    justify-content: {{ card_content_horizontal_align_mobile }};
+    align-items: flex-start;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+    padding-right: 4px;
   }
 
-  .testimonials-slide-stars-{{ section.id }} svg,
-  .testimonials-slide-stars-{{ section.id }} img {
-    display: block;
-    width: {{ slide_stars_size_mobile }}px;
-    height: {{ slide_stars_size_mobile }}px;
-    object-fit: cover;
+  .testimonials-card-bottom-wrapper-{{ section.id }}::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .testimonials-card-bottom-wrapper-{{ section.id }}::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
   }
 
   .testimonials-card-text-{{ section.id }} {
-    text-align: {{ card_content_align_mobile }};
-    margin-top: {{ text_mt_mobile }}px;  
+    text-align: left;
+    margin-top: 0;
+    width: 100%;
   }
 
   .testimonials-card-text-{{ section.id }} * {
     margin: 0;
-    align-items: {{ card_content_horizontal_align_mobile }};
-    font-size: {{ text_size_mobile }}px;
-    color: {{ text_color }};
-    line-height: {{ text_height }}%;
+    align-items: flex-start;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.78;
     text-transform: unset;
     text-decoration: none;
     word-break: break-word;
     text-wrap: wrap;
-    font-weight: auto;
+    font-weight: 400;
+    letter-spacing: 0.01em;
   }
 
   .testimonials-card-text-{{ section.id }} strong {
     font-weight: 700;
   }
 
+  .testimonials-card-text-{{ section.id }} p {
+    margin: 0;
+  }
+
   .testimonials-card-text-{{ section.id }} em {
     font-style: normal;
-    background-color: {{ text_bg_color }};
+    background-color: transparent;
   }
 
   .testimonials-card-author-name-{{ section.id }} {
     margin: 0;
-    font-size: {{ author_size_mobile }}px;
-    color: {{ author_color }};
-    line-height: {{ author_height }}%;
+    font-size: 17px;
+    color: #ffffff;
+    line-height: 1.15;
     text-transform: unset;
     text-decoration: none;
     word-break: break-word;
     font-weight: 700;
-    text-align: {{ card_content_align_mobile }};
+    text-align: left;
+    letter-spacing: 0.01em;
   }
 
   .testimonials-card-author-subcopy-{{ section.id }} {
     margin: 0;
-    margin-top: {{ subcopy_author_mt_mobile }}px;
-    font-size: {{ subcopy_author_size_mobile }}px;
-    color: {{ subcopy_author_color }};
-    line-height: {{ subcopy_author_height }}%;
+    margin-top: 3px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.62);
+    line-height: 1.2;
     text-transform: unset;
     text-decoration: none;
     word-break: break-word;
     text-wrap: wrap;
-    text-align: {{ card_content_align_mobile }};
+    text-align: left;
   }
 
   .testimonials-author-image-{{ section.id }} {
@@ -289,11 +335,11 @@ For inquiries or permissions, contact daniel@section.store
     flex-direction: column;
     color: {{ author_image_color }};
     background-color: {{ author_image_bg_color }};
-    border: {{ author_image_border_thickness }}px solid {{ author_image_border_color }};
-    border-radius: {{ author_image_radius }}px;
+    border: 0;
+    border-radius: 999px;
     overflow: hidden;
     aspect-ratio: 1/1;
-    width: {{ author_image_size_mobile }}px;
+    width: 56px;
   }
 
   .testimonials-author-image-{{ section.id }} img,
@@ -310,14 +356,20 @@ For inquiries or permissions, contact daniel@section.store
 
   .testimonials-card-top-{{ section.id }} {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: {{ card_content_horizontal_align_mobile }};
+    align-items: flex-start;
+    gap: 14px;
+    justify-content: flex-start;
+    flex-shrink: 0;
     width: 100%;
   }
 
-  .testimonials-wrapper-{{ section.id }}.stop-animation .testimonials-list-{{ section.id }} {
-    animation-play-state: paused;
+  .testimonials-author-wrapper-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+    min-width: 0;
+    padding-top: 2px;
   }
   
   .testimonials-text-small-{{ section.id }},
@@ -342,6 +394,38 @@ For inquiries or permissions, contact daniel@section.store
     align-items: {{ content_horizontal_align_mobile }};
   }
 
+  @media(min-width: 768px) {
+    .testimonials-wrapper-{{ section.id }} {
+      overflow: visible;
+      scroll-snap-type: none;
+      padding-bottom: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
+      gap: 22px;
+      top: -{{ cards_offset_top }}px;
+      margin-bottom: -{{ cards_offset_top }}px;
+    }
+
+    .testimonials-card-{{ section.id }}:first-child {
+      margin-left: {{ cards_side_padding }}px;
+    }
+
+    .testimonials-card-{{ section.id }}:last-child {
+      margin-right: {{ cards_side_padding }}px;
+    }
+
+    .testimonials-card-{{ section.id }} {
+      height: auto;
+    }
+
+    .testimonials-card-bottom-wrapper-{{ section.id }} {
+      overflow: visible;
+      padding-right: 0;
+      scrollbar-width: auto;
+    }
+  }
+
   @media(min-width: 1024px) {
 
     .section-{{ section.id }} {
@@ -350,76 +434,59 @@ For inquiries or permissions, contact daniel@section.store
       margin-left: {{ margin_horizontal }}rem;
       margin-right: {{ margin_horizontal }}rem;
       border-radius: {{ section_radius }}px;
+      z-index: 2;
     }
     
     .section-{{ section.id }}-settings {
       padding: 0 5rem;
-      padding-top: {{ padding_top }}px;
-      padding-bottom: {{ padding_bottom }}px;
+      padding-top: 36px;
+      padding-bottom: 54px;
       padding-left: {{ padding_horizontal }}rem;
       padding-right: {{ padding_horizontal }}rem;
     }
 
     .testimonials-wrapper-{{ section.id }} {
-      margin-top: {{ cards_mt }}px;
-    }
-
-    .testimonials-list-{{ section.id }} {
-      -webkit-animation: ticker{{ section.id | replace: '-', '' }} {{ scrolling_velocity }}s infinite linear;
-      animation: ticker{{ section.id | replace: '-', '' }} {{ scrolling_velocity }}s infinite linear;
+      margin-top: 28px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
     }
 
     .testimonials-card-{{ section.id }} {
-      width: {{ card_width }}px;
-      margin-right: {{ scrolling_gap }}px;
-      align-items: {{ card_content_horizontal_align }};
-      padding: {{ card_padding_vertical }}px {{ card_padding_horizontal }}px !important; 
+      align-items: flex-start;
+      padding: 18px 20px 14px !important;
+      gap: 18px;
     }    
 
     .testimonials-card-bottom-wrapper-{{ section.id }} {
-      align-items: {{ card_content_horizontal_align }};
+      align-items: flex-start;
     }
 
     .testimonials-card-top-{{ section.id }} {
-      justify-content: {{ card_content_horizontal_align }};
-    }
-
-    .testimonials-slide-stars-{{ section.id }} {         
-      margin-top: {{ slide_stars_mt }}px; 
-      justify-content: {{ card_content_horizontal_align }};
-    }
-
-    .testimonials-slide-stars-{{ section.id }} svg,
-    .testimonials-slide-stars-{{ section.id }} img {
-      display: block;
-      width: {{ slide_stars_size }}px;
-      height: {{ slide_stars_size }}px;
-      object-fit: cover;
+      justify-content: flex-start;
     }
 
     .testimonials-card-text-{{ section.id }} {
-      margin-top: {{ text_mt }}px;
-      text-align: {{ card_content_align }};   
+      text-align: left;   
     }
 
     .testimonials-card-text-{{ section.id }} * {
-      align-items: {{ card_content_horizontal_align }};
-      font-size: {{ text_size }}px;
+      align-items: flex-start;
+      font-size: 15px;
     }
       
     .testimonials-card-author-name-{{ section.id }} {
-      text-align: {{ card_content_align }};
-      font-size: {{ author_size }}px;
+      text-align: left;
+      font-size: 18px;
     }
 
     .testimonials-card-author-subcopy-{{ section.id }} {
-      margin-top: {{ subcopy_author_mt }}px;
-      font-size: {{ subcopy_author_size }}px;     
-      text-align: {{ card_content_align }};
+      margin-top: 4px;
+      font-size: 14px;     
+      text-align: left;
     }
 
     .testimonials-author-image-{{ section.id }} {
-      width: {{ author_image_size }}px;
+      width: 56px;
     }
     
     .testimonials-top-content-{{ section.id }} {
@@ -562,125 +629,6 @@ For inquiries or permissions, contact daniel@section.store
   </style>
 {% endif %}
 
-
-{% if reverse_direction %}
-  <style>
-    @keyframes ticker{{ section.id | replace: '-', '' }} {
-      0% {
-        transform: translateX(-100%);
-      }
-      100% {
-        transform: translateX(0%);
-      }
-    }
-  </style>
-{% else %}
-  <style>
-    @keyframes ticker{{ section.id | replace: '-', '' }} {
-      0% {
-        transform: translateX(0%);
-      }
-      100% {
-        transform: translateX(-100%);
-      }
-    }
-  </style>
-{% endif %}
-
-{% if pause_hover %}
-	<style>
-    @media(min-width: 1024px) {
-      .testimonials-wrapper-{{ section.id }}:hover .testimonials-list-{{ section.id }} {
-        animation-play-state: paused;
-      }
-    } 
-	</style>
-{% endif %}
-
-{% capture list %}
-  <div class="testimonials-list-{{ section.id }}">
-    {% for i in (1..4) %}
-      {% for block in section.blocks %}
-        {% if block.type == 'testimonial' %}
-          <{% if block.settings.url != blank %}a href="{{ block.settings.url }}"{% else %}div{% endif %} class="testimonials-card-{{ section.id }}">    
-            <div class="testimonials-card-top-{{ section.id }}">
-              <div class="testimonials-author-image-{{ section.id }}">
-                {% if block.settings.author_image != blank %}
-                  <img src="{{ block.settings.author_image | img_url: "360x360" }}" alt="{{ block.settings.author_image.alt }}" {% if lazy %}loading="lazy"{% endif %}>
-                {% elsif block.settings.author != blank %}
-                  {{ block.settings.author | slice: 0, 1 }}
-                {% else %}
-                  {{ 'image' | placeholder_svg_tag }}
-                {% endif %}   
-              </div>
-              <div class="testimonials-author-wrapper-{{ section.id }}">                     
-                {% if block.settings.author != blank %}
-                  <p class="testimonials-card-author-name-{{ section.id }}">{{ block.settings.author }}</p>
-                {% endif %}           
-                {% if block.settings.subcopy_author != blank %}
-                  <p class="testimonials-card-author-subcopy-{{ section.id }}">{{ block.settings.subcopy_author | truncate: subcopy_text_length }}</p>
-                {% endif %}                
-              </div>                    
-            </div> 
-            <div class="testimonials-card-bottom-wrapper-{{ section.id }}">   
-              <div class="testimonials-card-stars-wrapper-{{ section.id }}">
-                <div class="testimonials-slide-stars-{{ section.id }} testimonials-slide-stars-{{ block.id }}">
-                  {% if slide_stars_icon != blank %}
-                    {% assign stars_count_round = block.settings.stars_count | round: 0 %}
-                    {% for item in (1..stars_count_round) %}
-                      <img src="{{ slide_stars_icon | image_url }}" alt="{{ slide_stars_icon.alt }}" {% if lazy %}loading="lazy"{% endif %}>
-                    {% endfor %}
-                  {% else %}
-                    <!-- Star 1 -->
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        {% if block.settings.stars_count == 0.5 %}<defs><linearGradient id="grad{{ section.id }}-{{ block.id }}-1"><stop offset="0%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_half_color }}" /><stop offset="100%" stop-color="{{ slide_stars_bg_half_color }}" /></linearGradient></defs>{% endif %}
-                        <rect width="32" height="32" fill="{% if block.settings.stars_count == 0.5 %}url(#grad{{ section.id }}-{{ block.id }}-1){% elsif block.settings.stars_count >= 1 %}{{ slide_stars_bg_color }}{% else %}{{ slide_stars_bg_half_color }}{% endif %}"/>
-                        <g clip-path="url(#clip{{ section.id }}_{{ block.id }}_1)"><path d="M9.20283 27L16.001 21.807L22.7972 27L20.2018 18.596L27 13.403H18.5984L16.001 5L13.4037 13.403H5L11.7982 18.596L9.20283 27Z" fill="{{ slide_stars_color }}"/></g><defs><clipPath id="clip{{ section.id }}_{{ block.id }}_1"><rect width="22" height="22" fill="{{ slide_stars_color }}" transform="translate(5 5)"/></clipPath></defs>
-                    </svg>
-
-                    <!-- Star 2 -->
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        {% if block.settings.stars_count == 1.5 %}<defs><linearGradient id="grad{{ section.id }}-{{ block.id }}-2"><stop offset="0%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_half_color }}" /><stop offset="100%" stop-color="{{ slide_stars_bg_half_color }}" /></linearGradient></defs>{% endif %}
-                        <rect width="32" height="32" fill="{% if block.settings.stars_count == 1.5 %}url(#grad{{ section.id }}-{{ block.id }}-2){% elsif block.settings.stars_count >= 2 %}{{ slide_stars_bg_color }}{% else %}{{ slide_stars_bg_half_color }}{% endif %}"/>
-                        <g clip-path="url(#clip{{ section.id }}_{{ block.id }}_2)"><path d="M9.20283 27L16.001 21.807L22.7972 27L20.2018 18.596L27 13.403H18.5984L16.001 5L13.4037 13.403H5L11.7982 18.596L9.20283 27Z" fill="{{ slide_stars_color }}"/></g><defs><clipPath id="clip{{ section.id }}_{{ block.id }}_2"><rect width="22" height="22" fill="{{ slide_stars_color }}" transform="translate(5 5)"/></clipPath></defs>
-                    </svg>
-
-                    <!-- Star 3 -->
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        {% if block.settings.stars_count == 2.5 %}<defs><linearGradient id="grad{{ section.id }}-{{ block.id }}-3"><stop offset="0%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_half_color }}" /><stop offset="100%" stop-color="{{ slide_stars_bg_half_color }}" /></linearGradient></defs>{% endif %}
-                        <rect width="32" height="32" fill="{% if block.settings.stars_count == 2.5 %}url(#grad{{ section.id }}-{{ block.id }}-3){% elsif block.settings.stars_count >= 3 %}{{ slide_stars_bg_color }}{% else %}{{ slide_stars_bg_half_color }}{% endif %}"/>
-                        <g clip-path="url(#clip{{ section.id }}_{{ block.id }}_3)"><path d="M9.20283 27L16.001 21.807L22.7972 27L20.2018 18.596L27 13.403H18.5984L16.001 5L13.4037 13.403H5L11.7982 18.596L9.20283 27Z" fill="{{ slide_stars_color }}"/></g><defs><clipPath id="clip{{ section.id }}_{{ block.id }}_3"><rect width="22" height="22" fill="{{ slide_stars_color }}" transform="translate(5 5)"/></clipPath></defs>
-                    </svg>
-
-                    <!-- Star 4 -->
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        {% if block.settings.stars_count == 3.5 %}<defs><linearGradient id="grad{{ section.id }}-{{ block.id }}-4"><stop offset="0%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_half_color }}" /><stop offset="100%" stop-color="{{ slide_stars_bg_half_color }}" /></linearGradient></defs>{% endif %}
-                        <rect width="32" height="32" fill="{% if block.settings.stars_count == 3.5 %}url(#grad{{ section.id }}-{{ block.id }}-4){% elsif block.settings.stars_count >= 4 %}{{ slide_stars_bg_color }}{% else %}{{ slide_stars_bg_half_color }}{% endif %}"/>
-                        <g clip-path="url(#clip{{ section.id }}_{{ block.id }}_4)"><path d="M9.20283 27L16.001 21.807L22.7972 27L20.2018 18.596L27 13.403H18.5984L16.001 5L13.4037 13.403H5L11.7982 18.596L9.20283 27Z" fill="{{ slide_stars_color }}"/></g><defs><clipPath id="clip{{ section.id }}_{{ block.id }}_4"><rect width="22" height="22" fill="{{ slide_stars_color }}" transform="translate(5 5)"/></clipPath></defs>
-                    </svg>
-
-                    <!-- Star 5 -->
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        {% if block.settings.stars_count == 4.5 %}<defs><linearGradient id="grad{{ section.id }}-{{ block.id }}-5"><stop offset="0%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_color }}" /><stop offset="50%" stop-color="{{ slide_stars_bg_half_color }}" /><stop offset="100%" stop-color="{{ slide_stars_bg_half_color }}" /></linearGradient></defs>{% endif %}
-                        <rect width="32" height="32" fill="{% if block.settings.stars_count == 4.5 %}url(#grad{{ section.id }}-{{ block.id }}-5){% elsif block.settings.stars_count >= 5 %}{{ slide_stars_bg_color }}{% else %}{{ slide_stars_bg_half_color }}{% endif %}"/>
-                        <g clip-path="url(#clip{{ section.id }}_{{ block.id }}_5)"><path d="M9.20283 27L16.001 21.807L22.7972 27L20.2018 18.596L27 13.403H18.5984L16.001 5L13.4037 13.403H5L11.7982 18.596L9.20283 27Z" fill="{{ slide_stars_color }}"/></g><defs><clipPath id="clip{{ section.id }}_{{ block.id }}_5"><rect width="22" height="22" fill="{{ slide_stars_color }}" transform="translate(5 5)"/></clipPath></defs>
-                    </svg>
-                  {% endif %}
-              </div>       
-              </div>                                    
-
-              {% if block.settings.text != blank %}
-                <div class="testimonials-card-text-{{ section.id }}">
-                  {{ block.settings.text }}                  
-                </div>  
-              {% endif %}   
-            </div>                                            
-          </{% if block.settings.url != blank %}a{% else %}div{% endif %}>
-        {% endif %}
-      {% endfor %}
-    {% endfor %}
-  </div>
-{% endcapture %}
 
 {% for block in section.blocks %}
   {% case block.type %}    
@@ -1024,76 +972,46 @@ For inquiries or permissions, contact daniel@section.store
         {% endfor %}
       </div>
       <div class="testimonials-wrapper-{{ section.id }}">
-        {{ list }}
-        {{ list }}
+        {% assign visible_testimonials = 0 %}
+        {% for block in section.blocks %}
+          {% if block.type == 'testimonial' and block.settings.author_image != blank %}
+            {% assign visible_testimonials = visible_testimonials | plus: 1 %}
+            <div class="testimonials-card-{{ section.id }}" {{ block.shopify_attributes }}>
+              <div class="testimonials-card-top-{{ section.id }}">
+                <div class="testimonials-author-image-{{ section.id }}">
+                  <img
+                    src="{{ block.settings.author_image | image_url: width: 360 }}"
+                    alt="{{ block.settings.author_image.alt | default: block.settings.author | escape }}"
+                    {% if lazy %}loading="lazy"{% endif %}
+                  >
+                </div>
+                <div class="testimonials-author-wrapper-{{ section.id }}">
+                  {% if block.settings.author != blank %}
+                    <p class="testimonials-card-author-name-{{ section.id }}">{{ block.settings.author }}</p>
+                  {% endif %}
+                  {% if block.settings.subcopy_author != blank %}
+                    <p class="testimonials-card-author-subcopy-{{ section.id }}">{{ block.settings.subcopy_author | truncate: subcopy_text_length }}</p>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if block.settings.text != blank %}
+                <div class="testimonials-card-bottom-wrapper-{{ section.id }}">
+                  <div class="testimonials-card-text-{{ section.id }}">
+                    {{ block.settings.text }}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+
+            {% if visible_testimonials >= 3 %}
+              {% break %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
 </div>
-
-<script>
-  function initTestimonials48() {
-    const wrapper = document.querySelector('.testimonials-wrapper-{{ section.id }}');
-    if (!wrapper) return;
-    
-    const lists = wrapper.querySelectorAll('.testimonials-list-{{ section.id }}');
-    
-    let isDragging = false;
-    let startX = 0;
-    let currentLeft = 0;
-    let prevLeft = 0;
-    
-    function getLeft(element) {
-      const style = window.getComputedStyle(element);
-      return parseFloat(style.left) || 0;
-    }
-    
-    wrapper.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      startX = e.pageX;
-      
-      lists.forEach(list => {
-        list.style.position = 'relative';
-        prevLeft = getLeft(list);
-      });
-      
-      wrapper.style.cursor = 'grabbing';
-      wrapper.style.userSelect = 'none';
-    });
-    
-    wrapper.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-      
-      const currentX = e.pageX;
-      const diff = currentX - startX;
-      currentLeft = prevLeft + diff;
-      
-      lists.forEach(list => {
-        list.style.left = `${currentLeft}px`;
-      });
-    });
-    
-    function endDrag() {
-      if (!isDragging) return;
-      isDragging = false;
-      wrapper.style.cursor = 'grab';
-      wrapper.style.userSelect = '';
-    }
-    
-    wrapper.addEventListener('mouseup', endDrag);
-    wrapper.addEventListener('mouseleave', endDrag);
-    wrapper.addEventListener('dragstart', (e) => e.preventDefault());
-    
-    wrapper.style.cursor = 'grab';
-  }
-
-  document.addEventListener('DOMContentLoaded', initTestimonials48);
-
-  if (Shopify.designMode) {
-    document.addEventListener('shopify:section:unload', initTestimonials48);
-    document.addEventListener('shopify:section:load', initTestimonials48);
-  }
-</script>
 
 {% schema %}
   {
@@ -1121,7 +1039,7 @@ For inquiries or permissions, contact daniel@section.store
       },      
       {
         "type": "header",
-        "content": "Scrolling",
+        "content": "Cards Layout",
          "info": "The theme editor may display incorrect scrolling speed; please verify on the live site."
       },
       {
@@ -1143,21 +1061,6 @@ For inquiries or permissions, contact daniel@section.store
         "label": "Speed - mobile",
         "info": "🐇 ———●——— 🐢",
         "default": 40
-      },
-      {
-        "type": "checkbox",
-        "id": "reverse_direction",
-        "label": "Reverse scrolling direction"
-      },
-      {
-        "type": "checkbox",
-        "id": "pause_hover",
-        "label": "Pause on hover",
-        "default": true
-      },
-      {
-        "type": "header",
-        "content": "Slider"
       },
       {
         "type": "checkbox",
@@ -1210,6 +1113,50 @@ For inquiries or permissions, contact daniel@section.store
         "visible_if": "{{ section.settings.slider_advanced }}"
       },
       {
+        "type": "range",
+        "id": "cards_side_padding",
+        "min": 0,
+        "max": 60,
+        "step": 2,
+        "unit": "px",
+        "label": "Side margin",
+        "default": 0,
+        "visible_if": "{{ section.settings.slider_advanced }}"
+      },
+      {
+        "type": "range",
+        "id": "cards_side_padding_mobile",
+        "min": 0,
+        "max": 60,
+        "step": 2,
+        "unit": "px",
+        "label": "Side margin - mobile",
+        "default": 12,
+        "visible_if": "{{ section.settings.slider_advanced }}"
+      },
+      {
+        "type": "range",
+        "id": "cards_offset_top",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Move up",
+        "default": 0,
+        "visible_if": "{{ section.settings.slider_advanced }}"
+      },
+      {
+        "type": "range",
+        "id": "cards_offset_top_mobile",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Move up - mobile",
+        "default": 0,
+        "visible_if": "{{ section.settings.slider_advanced }}"
+      },
+      {
         "type": "header",
         "content": "Card"
       },
@@ -1240,6 +1187,16 @@ For inquiries or permissions, contact daniel@section.store
         "label": "Width - mobile",
         "default": 290,
         "visible_if": "{{ section.settings.card_padding_advanced }}"
+      },
+      {
+        "type": "range",
+        "id": "card_height_mobile",
+        "min": 180,
+        "max": 600,
+        "step": 10,
+        "unit": "px",
+        "label": "Height - mobile",
+        "default": 320
       },
       {
         "type": "range",
