@@ -271,6 +271,11 @@
     z-index: 1;
     bottom: 20px;
 }
+.t4s-featured-product .t4s-product__media-wrapper .t4s-flicky-slider .flickityt4s-page-dots .dot,
+.t4s-main-product__content .t4s-flicky-slider .flickityt4s-page-dots .dot {
+    width: var(--product-slider-dot-size, var(--slider-dot-width));
+    height: var(--product-slider-dot-size, var(--slider-dot-height));
+}
 @media (min-width: 768px) {
   .t4s-featured-product .t4s-pr-group-btns,
    .t4s-section-main-product .t4s-pr-group-btns {
@@ -676,6 +681,9 @@ button.t4s-product-form__submit[disabled="disabled"]{
   line-height: var(--price-size);
   font-weight: var(--price-weight);
   color: var(--price-color);
+}
+.t4s-product__info-container .t4s-product-price del{
+  color: var(--price-compare-color, var(--price-color));
 }
 .t4s-product__info-container .t4s-product-price ins{
   color: var(--price-sale-color);

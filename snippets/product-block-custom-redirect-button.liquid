@@ -8,24 +8,50 @@
   assign button_style = form_stts.button_style | default: 'default'
   assign button_color = form_stts.button_color | default: 'primary'
   assign button_effect = form_stts.button_effect | default: 'default'
-  assign btn_icon = form_stts.btn_icon | default: false
   assign use_gradient = bk_stts.custom_redirect_use_gradient
   if use_gradient == blank
     assign use_gradient = true
   endif
+  assign redirect_btn_default_gradient = 'linear-gradient(90deg, #2f80e7 0%, #2a73da 100%)'
+  assign redirect_btn_default_gradient_hover = 'linear-gradient(90deg, #2a76dc 0%, #255fbe 100%)'
   assign redirect_btn_text_color = bk_stts.custom_redirect_btn_text_color | default: form_stts.atc_btn_text_color | default: '#ffffff'
   assign redirect_btn_text_hover_color = bk_stts.custom_redirect_btn_text_hover_color | default: form_stts.atc_btn_text_hover_color | default: '#ffffff'
   assign redirect_btn_gradient = bk_stts.custom_redirect_btn_gradient | default: 'linear-gradient(90deg, #5b5c61 0%, #2d2e31 100%)'
   assign redirect_btn_gradient_hover = bk_stts.custom_redirect_btn_gradient_hover | default: 'linear-gradient(90deg, #424348 0%, #212225 100%)'
+  assign redirect_btn_gradient_key = redirect_btn_gradient | replace: ' ', '' | downcase
+  assign redirect_btn_gradient_hover_key = redirect_btn_gradient_hover | replace: ' ', '' | downcase
+  if redirect_btn_gradient_key == 'linear-gradient(90deg,#5b5c610%,#2d2e31100%)'
+    assign redirect_btn_gradient = redirect_btn_default_gradient
+  endif
+  if redirect_btn_gradient_hover_key == 'linear-gradient(90deg,#4243480%,#212225100%)'
+    assign redirect_btn_gradient_hover = redirect_btn_default_gradient_hover
+  endif
   assign redirect_btn_padding_v = bk_stts.custom_redirect_btn_padding_v | default: 16
   assign redirect_btn_padding_h = bk_stts.custom_redirect_btn_padding_h | default: 32
   assign redirect_btn_radius = bk_stts.custom_redirect_btn_radius | default: 12
+  assign redirect_wrap_margin_top = bk_stts.custom_redirect_wrap_margin_top | default: 0
+  assign redirect_wrap_margin_bottom = bk_stts.custom_redirect_wrap_margin_bottom | default: 0
   assign redirect_btn_margin_top = bk_stts.custom_redirect_btn_margin_top | default: 12
-  assign redirect_btn_margin_x = bk_stts.custom_redirect_btn_margin_x | default: 0
+  assign redirect_btn_margin_left = bk_stts.custom_redirect_btn_margin_left | default: 0
+  assign redirect_btn_margin_right = bk_stts.custom_redirect_btn_margin_right | default: 0
   assign redirect_btn_font_size = bk_stts.custom_redirect_btn_font_size | default: 15
   assign redirect_btn_height = bk_stts.custom_redirect_btn_height | default: 52
-  assign redirect_btn_bg_color = 'var(--accent-color)'
-  assign redirect_btn_bg_hover_color = 'var(--accent-color-hover)'
+  assign redirect_btn_justify_content = bk_stts.custom_redirect_btn_justify_content | default: 'center'
+  if redirect_btn_radius == 12
+    assign redirect_btn_radius = 16
+  endif
+  if redirect_btn_font_size == 15
+    assign redirect_btn_font_size = 18
+  endif
+  if redirect_btn_height == 52
+    assign redirect_btn_height = 56
+  endif
+  assign redirect_btn_arrow_box_size = redirect_btn_font_size | plus: 8
+  assign redirect_btn_arrow_box_size_mobile = redirect_btn_font_size | plus: 4
+  assign redirect_btn_content_gap = redirect_btn_font_size | minus: 4 | at_least: 10
+  assign redirect_btn_content_gap_mobile = redirect_btn_font_size | minus: 6 | at_least: 8
+  assign redirect_btn_bg_color = '#2f80e7'
+  assign redirect_btn_bg_hover_color = '#255fbe'
   assign redirect_btn_border_color = redirect_btn_bg_color
   assign redirect_btn_border_hover_color = redirect_btn_bg_hover_color
 
@@ -52,27 +78,97 @@
       assign redirect_btn_border_color = redirect_btn_bg_color
       assign redirect_btn_border_hover_color = redirect_btn_bg_hover_color
     else
-      assign redirect_btn_text_color = 'var(--t4s-light-color)'
-      assign redirect_btn_text_hover_color = 'var(--t4s-light-color)'
-      assign redirect_btn_bg_color = 'var(--accent-color)'
-      assign redirect_btn_bg_hover_color = 'var(--accent-color-hover)'
+      assign redirect_btn_text_color = '#ffffff'
+      assign redirect_btn_text_hover_color = '#ffffff'
+      assign redirect_btn_bg_color = '#2f80e7'
+      assign redirect_btn_bg_hover_color = '#255fbe'
       assign redirect_btn_border_color = redirect_btn_bg_color
       assign redirect_btn_border_hover_color = redirect_btn_bg_hover_color
   endcase
-  assign title_size = bk_stts.custom_redirect_title_font_size | default: 28
-  assign title_weight = bk_stts.custom_redirect_title_font_weight | default: 600
-  assign title_color = bk_stts.custom_redirect_title_color | default: '#2b2b2b'
-  assign show_bottom_title = bk_stts.show_custom_redirect_bottom_title
-  assign bottom_title = bk_stts.custom_redirect_bottom_title | strip
   assign show_redirect_notice = bk_stts.show_custom_redirect_notice
   if show_redirect_notice == blank
     assign show_redirect_notice = true
   endif
+  assign redirect_notice_margin_top = bk_stts.custom_redirect_notice_margin_top | default: 14
+  assign redirect_notice_margin_left = bk_stts.custom_redirect_notice_margin_left | default: 0
+  assign redirect_notice_margin_right = bk_stts.custom_redirect_notice_margin_right | default: 0
+  assign redirect_notice_font_size = bk_stts.custom_redirect_notice_font_size | default: 15
+  assign redirect_notice_font_size_mb = bk_stts.custom_redirect_notice_font_size_mb | default: 14
+  assign redirect_notice_line_height = bk_stts.custom_redirect_notice_line_height | default: 120
+  assign redirect_notice_icon_gap = bk_stts.custom_redirect_notice_icon_gap | default: 2
+  assign redirect_notice_icon_gap_mb = bk_stts.custom_redirect_notice_icon_gap_mb | default: 2
+  assign redirect_notice_icon_size = 18
+  assign redirect_notice_icon_size_mb = 16
+  assign redirect_notice_min_height = bk_stts.custom_redirect_notice_min_height | default: 0
+  assign redirect_notice_padding_vertical = bk_stts.custom_redirect_notice_padding_vertical | default: 6
+  assign redirect_notice_padding_horizontal = bk_stts.custom_redirect_notice_padding_horizontal | default: 10
+  assign redirect_notice_padding_vertical_mb = bk_stts.custom_redirect_notice_padding_vertical_mb | default: 6
+  assign redirect_notice_padding_horizontal_mb = bk_stts.custom_redirect_notice_padding_horizontal_mb | default: 8
+  assign redirect_notice_border_radius = bk_stts.custom_redirect_notice_border_radius | default: 12
+  assign redirect_notice_justify_content = bk_stts.custom_redirect_notice_justify_content | default: 'center'
+  assign redirect_notice_text_align = bk_stts.custom_redirect_notice_text_align | default: 'center'
+  if redirect_notice_justify_content == 'center'
+    assign redirect_notice_text_align = 'center'
+  endif
+  assign redirect_notice_text_color = bk_stts.custom_redirect_notice_text_color | default: '#7B7B85'
+  assign redirect_notice_count_color = bk_stts.custom_redirect_notice_count_color | default: '#7B7B85'
+  assign redirect_notice_bg_color = bk_stts.custom_redirect_notice_bg_color | default: '#ffffff'
+  assign redirect_notice_bg_gradient = bk_stts.custom_redirect_notice_bg_gradient | default: 'linear-gradient(90deg, rgba(255, 237, 205, 0.6) 0%, rgba(255, 255, 255, 0) 90%)'
+  assign redirect_notice_bg_gradient_key = redirect_notice_bg_gradient | replace: ' ', '' | downcase
+  assign redirect_notice_border_color = bk_stts.custom_redirect_notice_border_color | default: '#ffffff'
+  if redirect_notice_text_color == '#7B7B85'
+    assign redirect_notice_text_color = '#d6dbe1'
+  endif
+  if redirect_notice_count_color == '#7B7B85'
+    assign redirect_notice_count_color = '#f3f6f9'
+  endif
+  if redirect_notice_bg_color == '#ffffff'
+    assign redirect_notice_bg_color = '#566271'
+  endif
+  if redirect_notice_bg_gradient_key == 'linear-gradient(90deg,rgba(255,237,205,0.6)0%,rgba(255,255,255,0)90%)'
+    assign redirect_notice_bg_gradient = 'linear-gradient(180deg, #5e6977 0%, #4b5562 100%)'
+  endif
+  if redirect_notice_border_color == '#ffffff'
+    assign redirect_notice_border_color = 'transparent'
+  endif
+  assign redirect_notice_surface = redirect_notice_bg_gradient
+  if redirect_notice_surface == blank or redirect_notice_surface == 'none'
+    assign redirect_notice_surface = redirect_notice_bg_color
+  endif
+  assign redirect_notice_padding_right = redirect_notice_padding_horizontal | plus: 18
+  assign redirect_notice_padding_right_mb = redirect_notice_padding_horizontal_mb | plus: 14
+  assign redirect_notice_visual_left = redirect_btn_margin_left | plus: redirect_notice_margin_left
+  assign redirect_notice_visual_left_mobile = redirect_notice_visual_left
+  assign redirect_notice_visual_right = redirect_btn_margin_right | plus: redirect_notice_margin_right
   assign redirect_notice_text = bk_stts.custom_redirect_notice_text | default: '[count] People Ordered In The Last 2 Hours' | strip
   assign redirect_notice_count = bk_stts.custom_redirect_notice_count | default: '17'
+  assign redirect_notice_count_raw = redirect_notice_count | plus: 0
+  if redirect_notice_count_raw > 0
+    assign redirect_notice_count = redirect_notice_count_raw | divided_by: 10 | times: 10
+    if redirect_notice_count < 10
+      assign redirect_notice_count = 10
+    endif
+  else
+    assign redirect_notice_count = 0
+  endif
+  assign redirect_notice_random_enabled = bk_stts.custom_redirect_notice_enable_random_count
+  if redirect_notice_random_enabled == blank
+    assign redirect_notice_random_enabled = false
+  endif
+  assign redirect_notice_overnight_min = bk_stts.custom_redirect_notice_overnight_min | default: 4
+  assign redirect_notice_overnight_max = bk_stts.custom_redirect_notice_overnight_max | default: 12
+  assign redirect_notice_daytime_min = bk_stts.custom_redirect_notice_daytime_min | default: 12
+  assign redirect_notice_daytime_max = bk_stts.custom_redirect_notice_daytime_max | default: 24
+  assign redirect_notice_dom_id = 't4s-viewed-today' | append: block.id | append: '-redirect-copy'
+  assign redirect_notice_overlap = 6
+  assign redirect_notice_overlap_mb = 4
   assign show_redirect_notice_block = false
   if show_redirect_notice and redirect_notice_text != blank
     assign show_redirect_notice_block = true
+  endif
+  assign redirect_btn_effective_margin_top = redirect_btn_margin_top
+  if show_redirect_notice_block
+    assign redirect_btn_effective_margin_top = 0
   endif
   assign show_block = false
   if request.design_mode or target_product_value != blank
@@ -83,37 +179,106 @@
 {%- if show_block -%}
   <style>
     .t4s-product-form__custom-redirect-wrap--{{ block.id }} {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
       width: 100%;
-      padding-left: {{ redirect_btn_margin_x }}px;
-      padding-right: {{ redirect_btn_margin_x }}px;
+      position: relative;
       box-sizing: border-box;
+    }
+
+    .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice {
+      position: relative;
+      z-index: 1;
+      display: flex !important;
+      align-items: center;
+      align-self: flex-start;
+      gap: {{ redirect_notice_icon_gap }}px !important;
+      width: fit-content !important;
+      max-width: calc(100% - {{ redirect_notice_visual_left }}px - {{ redirect_notice_visual_right }}px - 30px);
+      margin: {{ redirect_notice_margin_top }}px {{ redirect_notice_visual_right }}px -{{ redirect_notice_overlap }}px {{ redirect_notice_visual_left }}px !important;
+      padding: {{ redirect_notice_padding_vertical }}px {{ redirect_notice_padding_right }}px {{ redirect_notice_padding_vertical }}px
+        {{ redirect_notice_padding_horizontal }}px !important;
+      border: 0 !important;
+      border-radius: {{ redirect_notice_border_radius }}px {{ redirect_notice_border_radius }}px 0 0 !important;
+      background: {{ redirect_notice_surface }} !important;
+      color: {{ redirect_notice_text_color }} !important;
+      font-size: {{ redirect_notice_font_size }}px !important;
+      box-shadow: 0 8px 14px rgba(36, 45, 57, 0.12) !important;
+      overflow: visible;
+      min-height: {{ redirect_notice_min_height }}px !important;
+      justify-content: {{ redirect_notice_justify_content }} !important;
+    }
+
+    .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -26px;
+      width: 42px;
+      height: 100%;
+      background: {{ redirect_notice_surface }};
+      clip-path: polygon(0 0, 58% 0, 100% 100%, 0 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice .t4s-viewed-today__icon,
+    .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice .t4s-viewed-today__text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice .t4s-viewed-today__icon {
+      flex: 0 0 {{ redirect_notice_icon_size }}px !important;
+      width: {{ redirect_notice_icon_size }}px !important;
+      height: {{ redirect_notice_icon_size }}px !important;
+      margin-right: -1px !important;
+    }
+
+    .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice .t4s-viewed-today__text {
+      display: flex;
+      align-items: center;
+      color: {{ redirect_notice_text_color }} !important;
+      text-align: {{ redirect_notice_text_align }} !important;
+      line-height: {{ redirect_notice_line_height }}% !important;
+      justify-content: {{ redirect_notice_justify_content }} !important;
+      white-space: nowrap;
+    }
+
+    .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice .t4s-viewed-today__count {
+      color: {{ redirect_notice_count_color }} !important;
     }
 
     .t4s-product-form__custom-redirect--{{ block.id }} {
       display: flex;
-      width: 100%;
+      width: calc(100% - {{ redirect_btn_margin_left }}px - {{ redirect_btn_margin_right }}px);
       max-width: 100%;
-      margin: {{ redirect_btn_margin_top }}px 0 0 !important;
-      padding: {{ redirect_btn_padding_v }}px {{ redirect_btn_padding_h }}px !important;
+      margin: {{ redirect_btn_effective_margin_top }}px {{ redirect_btn_margin_right }}px 0 {{ redirect_btn_margin_left }}px !important;
+      padding-top: {{ redirect_btn_padding_v }}px !important;
+      padding-right: {{ redirect_btn_padding_h }}px !important;
+      padding-bottom: {{ redirect_btn_padding_v }}px !important;
+      padding-left: {{ redirect_btn_padding_h }}px !important;
       border: 1px solid {{ redirect_btn_border_color }} !important;
       border-radius: {{ redirect_btn_radius }}px !important;
       min-height: {{ redirect_btn_height }}px !important;
       height: auto !important;
       box-sizing: border-box;
-      line-height: 1.2;
+      line-height: 1.15;
       align-items: center;
       justify-content: center;
       position: relative;
-      overflow: visible;
+      z-index: 2;
+      overflow: hidden;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 500;
       font-size: {{ redirect_btn_font_size }}px;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
+      text-align: center;
       cursor: pointer;
       transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 6px 16px rgba(29, 29, 34, 0.16);
+      box-shadow: 0 12px 24px rgba(33, 76, 145, 0.18);
       {%- if use_gradient -%}
         background: {{ redirect_btn_gradient }} !important;
         color: {{ redirect_btn_text_color }} !important;
@@ -129,17 +294,44 @@
       {%- endif -%}
     }
 
-    .t4s-product-form__custom-redirect--{{ block.id }} .t4s-btn-atc_text {
-      height: auto;
-      text-align: center;
+    .t4s-product-form__custom-redirect--{{ block.id }} .t4s-product-form__custom-redirect-content {
+      display: flex;
+      align-items: center;
+      justify-content: {{ redirect_btn_justify_content }};
+      column-gap: {{ redirect_btn_content_gap }}px;
       width: 100%;
+      min-width: 0;
     }
 
-    .t4s-product-form__custom-redirect--{{ block.id }} .t4s-btn-icon {
-      width: 1em;
-      height: 1em;
-      margin-inline-end: 8px;
+    .t4s-product-form__custom-redirect--{{ block.id }} .t4s-btn-atc_text {
+      display: block;
+      height: auto;
+      min-width: 0;
+      line-height: inherit;
+      {%- if redirect_btn_justify_content == 'space-between' -%}
+        flex: 1 1 auto;
+        text-align: left;
+      {%- else -%}
+        flex: 0 1 auto;
+        text-align: center;
+      {%- endif -%}
+    }
+
+    .t4s-product-form__custom-redirect--{{ block.id }} .t4s-product-form__custom-redirect-arrow {
       flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: {{ redirect_btn_arrow_box_size }}px;
+      height: {{ redirect_btn_arrow_box_size }}px;
+      transition: transform 0.2s ease;
+      pointer-events: none;
+    }
+
+    .t4s-product-form__custom-redirect--{{ block.id }} .t4s-product-form__custom-redirect-arrow svg {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .t4s-product-form__custom-redirect--{{ block.id }}[aria-disabled='true'] {
@@ -149,11 +341,49 @@
     }
 
     @media (max-width: 767px) {
+      .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice {
+        gap: {{ redirect_notice_icon_gap_mb }}px;
+        max-width: calc(100% - {{ redirect_notice_visual_left_mobile }}px - {{ redirect_notice_visual_right }}px - 24px);
+        margin: {{ redirect_notice_margin_top }}px {{ redirect_notice_visual_right }}px -{{ redirect_notice_overlap_mb }}px {{ redirect_notice_visual_left_mobile }}px !important;
+        padding: {{ redirect_notice_padding_vertical_mb }}px {{ redirect_notice_padding_right_mb }}px
+          {{ redirect_notice_padding_vertical_mb }}px {{ redirect_notice_padding_horizontal_mb }}px !important;
+        font-size: {{ redirect_notice_font_size_mb }}px !important;
+      }
+
+      .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice::after {
+        right: -22px;
+        width: 36px;
+      }
+
+      .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice .t4s-viewed-today__icon {
+        flex-basis: {{ redirect_notice_icon_size_mb }}px !important;
+        width: {{ redirect_notice_icon_size_mb }}px !important;
+        height: {{ redirect_notice_icon_size_mb }}px !important;
+        margin-right: -1px !important;
+      }
+
+      .t4s-product-form__custom-redirect-wrap--{{ block.id }} .t4s-pr_viewed_today_notice .t4s-viewed-today__text {
+        white-space: normal;
+      }
+
       .t4s-product-form__custom-redirect--{{ block.id }} {
-        padding: {{ redirect_btn_padding_v }}px {{ redirect_btn_padding_h }}px !important;
+        padding-top: {{ redirect_btn_padding_v }}px !important;
+        padding-right: {{ redirect_btn_padding_h }}px !important;
+        padding-bottom: {{ redirect_btn_padding_v }}px !important;
+        padding-left: {{ redirect_btn_padding_h }}px !important;
         min-height: {{ redirect_btn_height }}px !important;
         height: auto !important;
-        font-size: {{ redirect_btn_font_size | minus: 1 | at_least: 13 }}px;
+        font-size: {{ redirect_btn_font_size | minus: 2 | at_least: 15 }}px;
+        letter-spacing: 0.04em;
+      }
+
+      .t4s-product-form__custom-redirect--{{ block.id }} .t4s-product-form__custom-redirect-content {
+        column-gap: {{ redirect_btn_content_gap_mobile }}px;
+      }
+
+      .t4s-product-form__custom-redirect--{{ block.id }} .t4s-product-form__custom-redirect-arrow {
+        width: {{ redirect_btn_arrow_box_size_mobile }}px;
+        height: {{ redirect_btn_arrow_box_size_mobile }}px;
       }
     }
 
@@ -164,7 +394,7 @@
           color: {{ redirect_btn_text_hover_color }} !important;
           border-color: transparent !important;
           transform: translateY(-1px);
-          box-shadow: 0 10px 24px rgba(29, 29, 34, 0.2);
+          box-shadow: 0 16px 30px rgba(33, 76, 145, 0.22);
         }
       {%- elsif button_style == 'outline' -%}
         .t4s-product-form__custom-redirect--{{ block.id }}:hover {
@@ -172,7 +402,7 @@
           color: {{ redirect_btn_text_hover_color }} !important;
           border-color: {{ redirect_btn_border_hover_color }} !important;
           transform: translateY(-1px);
-          box-shadow: 0 10px 24px rgba(29, 29, 34, 0.16);
+          box-shadow: 0 16px 30px rgba(33, 76, 145, 0.18);
         }
       {%- else -%}
         .t4s-product-form__custom-redirect--{{ block.id }}:hover {
@@ -180,9 +410,13 @@
           color: {{ redirect_btn_text_hover_color }} !important;
           border-color: {{ redirect_btn_border_hover_color }} !important;
           transform: translateY(-1px);
-          box-shadow: 0 10px 24px rgba(29, 29, 34, 0.16);
+          box-shadow: 0 16px 30px rgba(33, 76, 145, 0.18);
         }
       {%- endif -%}
+
+      .t4s-product-form__custom-redirect--{{ block.id }}:hover .t4s-product-form__custom-redirect-arrow {
+        transform: translateX(3px);
+      }
     }
 
     @media (hover: none), (pointer: coarse) {
@@ -190,7 +424,7 @@
       .t4s-product-form__custom-redirect--{{ block.id }}:focus,
       .t4s-product-form__custom-redirect--{{ block.id }}:active {
         transform: none !important;
-        box-shadow: 0 6px 16px rgba(29, 29, 34, 0.16) !important;
+        box-shadow: 0 12px 24px rgba(33, 76, 145, 0.18) !important;
         {%- if use_gradient -%}
           background: {{ redirect_btn_gradient }} !important;
           color: {{ redirect_btn_text_color }} !important;
@@ -210,23 +444,9 @@
 
   <div
     class="t4s-product-info__item t4s-product-form__custom-redirect-wrap t4s-product-form__custom-redirect-wrap--{{ block.id }}"
+    style="margin-top: {{ redirect_wrap_margin_top }}px; margin-bottom: {{ redirect_wrap_margin_bottom }}px;"
     {{ block.shopify_attributes }}
   >
-    <a
-      href="{{ target_url }}"
-      class="t4s-product-form__custom-redirect t4s-product-form__custom-redirect--{{ block.id }}"
-      {% if target_product == blank %}
-        aria-disabled="true"
-      {% endif %}
-    >
-      {%- if btn_icon -%}
-        <svg class="t4s-btn-icon" viewBox="0 0 24 24">
-          <use xlink:href="#t4s-icon-atc"></use>
-        </svg>
-      {%- endif -%}
-      <span class="t4s-btn-atc_text">{{ bk_stts.custom_redirect_btn_text | default: 'Customize With Card Studio' }}</span>
-    </a>
-
     {%- if show_redirect_notice_block -%}
       {%- render 'product-block-viewed-today-notice',
         block: block,
@@ -234,52 +454,139 @@
         instance_suffix: '-redirect-copy',
         fallback_count: redirect_notice_count,
         fallback_text: redirect_notice_text,
-        fallback_font_size: bk_stts.custom_redirect_notice_font_size,
-        fallback_font_size_mb: bk_stts.custom_redirect_notice_font_size_mb,
-        fallback_margin_top: bk_stts.custom_redirect_notice_margin_top,
+        fallback_font_size: redirect_notice_font_size,
+        fallback_font_size_mb: redirect_notice_font_size_mb,
+        fallback_line_height: redirect_notice_line_height,
+        fallback_margin_top: redirect_notice_margin_top,
+        fallback_margin_left: redirect_notice_margin_left,
+        fallback_margin_right: redirect_notice_margin_right,
         fallback_padding_vertical: bk_stts.custom_redirect_notice_padding_vertical,
         fallback_padding_horizontal: bk_stts.custom_redirect_notice_padding_horizontal,
         fallback_padding_vertical_mb: bk_stts.custom_redirect_notice_padding_vertical_mb,
         fallback_padding_horizontal_mb: bk_stts.custom_redirect_notice_padding_horizontal_mb,
+        fallback_icon_gap: redirect_notice_icon_gap,
+        fallback_icon_gap_mb: redirect_notice_icon_gap_mb,
+        fallback_icon_size: redirect_notice_icon_size,
+        fallback_icon_size_mb: redirect_notice_icon_size_mb,
         fallback_border_radius: bk_stts.custom_redirect_notice_border_radius,
-        fallback_text_color: bk_stts.custom_redirect_notice_text_color,
-        fallback_count_color: bk_stts.custom_redirect_notice_count_color,
-        fallback_bg_color: bk_stts.custom_redirect_notice_bg_color,
-        fallback_bg_gradient: bk_stts.custom_redirect_notice_bg_gradient,
-        fallback_border_color: bk_stts.custom_redirect_notice_border_color,
-        fallback_enable_random_count: bk_stts.custom_redirect_notice_enable_random_count,
-        fallback_overnight_min: bk_stts.custom_redirect_notice_overnight_min,
-        fallback_overnight_max: bk_stts.custom_redirect_notice_overnight_max,
-        fallback_daytime_min: bk_stts.custom_redirect_notice_daytime_min,
-        fallback_daytime_max: bk_stts.custom_redirect_notice_daytime_max,
+        fallback_text_color: redirect_notice_text_color,
+        fallback_count_color: redirect_notice_count_color,
+        fallback_bg_color: redirect_notice_bg_color,
+        fallback_bg_gradient: redirect_notice_bg_gradient,
+        fallback_border_color: redirect_notice_border_color,
+        fallback_enable_random_count: 'false',
+        fallback_overnight_min: redirect_notice_overnight_min,
+        fallback_overnight_max: redirect_notice_overnight_max,
+        fallback_daytime_min: redirect_notice_daytime_min,
+        fallback_daytime_max: redirect_notice_daytime_max,
         fallback_min_height: bk_stts.custom_redirect_notice_min_height,
         fallback_justify_content: bk_stts.custom_redirect_notice_justify_content,
         fallback_text_align: bk_stts.custom_redirect_notice_text_align
       -%}
     {%- endif -%}
+    {%- if show_redirect_notice_block -%}
+      <script>
+        (function() {
+          var root = document.getElementById('{{ redirect_notice_dom_id }}');
+          if (!root) return;
 
-    {%- if bk_stts.show_button_separator -%}
-      <div
-        class="t4s-button-separator"
-        style="display: flex; align-items: center; justify-content: center; margin: {{ bk_stts.button_separator_margin_v | default: 16 }}px 0 0; text-align: center;"
-      >
-        <div style="flex: 1; height: 1px; background-color: {{ bk_stts.button_separator_line_color | default: '#e0e0e0' }};"></div>
-        <span
-          style="padding: 0 16px; font-size: {{ bk_stts.button_separator_font_size | default: 14 }}px; color: {{ bk_stts.button_separator_color | default: '#999999' }}; font-weight: 500; white-space: nowrap;"
-        >
-          {{ bk_stts.button_separator_text | default: 'OR' }}
+          var countNode = root.querySelector('[data-viewed-today-count]');
+          if (!countNode) return;
+
+          function toInt(value, fallback) {
+            var parsed = parseInt(value, 10);
+            return Number.isFinite(parsed) ? parsed : fallback;
+          }
+
+          function normalizeToTens(value) {
+            var parsed = toInt(value, 0);
+
+            if (parsed <= 0) return 0;
+
+            var normalized = Math.floor(parsed / 10) * 10;
+            return normalized < 10 ? 10 : normalized;
+          }
+
+          function hashString(value) {
+            var hash = 0;
+
+            for (var index = 0; index < value.length; index += 1) {
+              hash = (hash * 31 + value.charCodeAt(index)) % 2147483647;
+            }
+
+            return Math.abs(hash);
+          }
+
+          function resolveDisplayCount() {
+            if (!{{ redirect_notice_random_enabled | json }}) {
+              return normalizeToTens('{{ redirect_notice_count }}');
+            }
+
+            var now = new Date();
+            var currentHour = now.getHours();
+            var isOvernightHour = currentHour < 8;
+            var min = isOvernightHour
+              ? toInt('{{ redirect_notice_overnight_min }}', 4)
+              : toInt('{{ redirect_notice_daytime_min }}', 12);
+            var max = isOvernightHour
+              ? toInt('{{ redirect_notice_overnight_max }}', 12)
+              : toInt('{{ redirect_notice_daytime_max }}', 24);
+
+            if (min > max) {
+              var swap = min;
+              min = max;
+              max = swap;
+            }
+
+            var rangeSize = Math.max(1, max - min + 1);
+            var hourKey = [
+              now.getFullYear(),
+              now.getMonth() + 1,
+              now.getDate(),
+              currentHour
+            ].join('-');
+            var seedSource = [
+              '{{ product.id | default: 0 }}',
+              '{{ block.id }}',
+              hourKey
+            ].join(':');
+            var schemaValue = min + (hashString(seedSource) % rangeSize);
+
+            return normalizeToTens(schemaValue);
+          }
+
+          function applyDisplayCount() {
+            countNode.textContent = String(resolveDisplayCount());
+          }
+
+          applyDisplayCount();
+
+          if (window.requestAnimationFrame) {
+            window.requestAnimationFrame(applyDisplayCount);
+          }
+
+          window.addEventListener('load', applyDisplayCount, { once: true });
+        })();
+      </script>
+    {%- endif -%}
+
+    <a
+      href="{{ target_url }}"
+      class="t4s-product-form__custom-redirect t4s-product-form__custom-redirect--{{ block.id }}"
+      {% if target_product == blank %}
+        aria-disabled="true"
+      {% endif %}
+    >
+      <span class="t4s-product-form__custom-redirect-content">
+        <span class="t4s-btn-atc_text">{{ bk_stts.custom_redirect_btn_text | default: 'Customize With Card Studio' }}</span>
+        <span class="t4s-product-form__custom-redirect-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation">
+            <path d="M4 12H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M13 5L20 12L13 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
         </span>
-        <div style="flex: 1; height: 1px; background-color: {{ bk_stts.button_separator_line_color | default: '#e0e0e0' }};"></div>
-      </div>
-    {%- endif -%}
+      </span>
+    </a>
 
-    {%- if show_bottom_title and bottom_title != blank -%}
-      <div
-        class="t4s-product-form__custom-redirect-title t4s-product-form__custom-redirect-title--bottom"
-        style="font-size: {{ title_size }}px; font-weight: {{ title_weight }}; color: {{ title_color }}; line-height: 1.3; margin: 12px 0 0;"
-      >
-        {{ bottom_title }}
-      </div>
-    {%- endif -%}
   </div>
 {%- endif -%}

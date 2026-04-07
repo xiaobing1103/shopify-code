@@ -20,6 +20,8 @@
 {%- assign notice_font_size = bk_stts.font_size | default: fallback_font_size | default: 15 -%}
 {%- assign notice_font_size_mb = bk_stts.font_size_mb | default: fallback_font_size_mb | default: 14 -%}
 {%- assign notice_margin_top = bk_stts.margin_top | default: fallback_margin_top | default: 0 -%}
+{%- assign notice_margin_left = bk_stts.margin_left | default: fallback_margin_left | default: 0 -%}
+{%- assign notice_margin_right = bk_stts.margin_right | default: fallback_margin_right | default: 0 -%}
 {%- assign notice_padding_vertical = bk_stts.padding_vertical | default: fallback_padding_vertical | default: 14 -%}
 {%- assign notice_padding_horizontal = bk_stts.padding_horizontal | default: fallback_padding_horizontal | default: 18 -%}
 {%- assign notice_padding_vertical_mb = bk_stts.padding_vertical_mb | default: fallback_padding_vertical_mb | default: 12 -%}
@@ -58,9 +60,11 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    width: {% if is_review_row_copy %}auto{% else %}100%{% endif %};
+    width: auto;
     max-width: 100%;
     margin-top: {% if is_review_row_copy %}0{% else %}{{ notice_margin_top }}px{% endif %};
+    margin-left: {% if is_review_row_copy %}0{% else %}{{ notice_margin_left }}px{% endif %};
+    margin-right: {% if is_review_row_copy %}0{% else %}{{ notice_margin_right }}px{% endif %};
     padding: {{ notice_padding_vertical }}px {{ notice_padding_horizontal }}px;
     border: 1px solid {{ notice_border_color }};
     border-radius: {{ notice_border_radius }}px;
@@ -73,6 +77,7 @@
     font-size: {{ notice_font_size }}px;
     line-height: 1.35;
     font-weight: 500;
+    box-sizing: border-box;
     justify-content: {{ notice_justify_content }};
     box-shadow: 0 1px 4px rgba(45, 35, 20, 0.04);
     {% if notice_min_height > 0 %}
@@ -107,7 +112,7 @@
 
   @media (max-width: 767px) {
     #{{ notice_dom_id }} {
-      width: 100%;
+      width: auto;
       padding: {{ notice_padding_vertical_mb }}px {{ notice_padding_horizontal_mb }}px;
       gap: 10px;
       font-size: {{ notice_font_size_mb }}px;

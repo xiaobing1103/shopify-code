@@ -1,0 +1,657 @@
+{%- comment -%}
+  Independent non-color option selector block.
+
+  Params:
+  - block
+  - bk_stts
+  - product
+  - current_variant
+  - pr_se_id
+  - isProductDefault
+  - form_stts
+  - option_name_filter
+  - get_color
+  - choose_an_option
+  - name_sizeg
+  - html_sizeg
+{%- endcomment -%}
+
+{%- liquid
+  assign selector_mode = form_stts.selector_mode | default: 'block'
+  assign color_mode = form_stts.color_mode | default: 'block'
+  assign color_size = form_stts.color_size | default: 'medium'
+  assign option_group_bg_color = form_stts.option_group_bg_color | default: '#F7F4EE'
+  assign option_group_text_color = form_stts.option_group_text_color | default: '#2E2B27'
+  assign use_custom_style = bk_stts.use_custom_style | default: false
+  assign normalized_option_name_filter = option_name_filter | default: '' | downcase | replace: ' ,', ',' | replace: ', ', ','
+  assign has_option_name_filter = false
+  assign has_non_color_options = false
+
+  assign block_bg_color = option_group_bg_color
+  assign title_text_color = option_group_text_color
+  assign item_bg_color = option_group_bg_color
+  assign item_text_color = option_group_text_color
+  assign item_border_color = option_group_text_color
+  assign selected_bg_color = option_group_bg_color
+  assign selected_text_color = option_group_text_color
+  assign selected_border_color = option_group_text_color
+  assign title_spacing = 10
+  assign option_gap = 12
+  assign option_radius = 12
+  assign block_radius = 16
+  assign block_padding_top = 14
+  assign block_padding_bottom = 14
+  assign block_padding_x = 16
+  assign option_padding_y = 12
+  assign option_padding_x = 16
+  assign option_margin = 0
+  assign option_min_height = 48
+  assign block_spacing = 14
+  assign selected_border_width = 2
+
+  if use_custom_style
+    assign block_bg_color = bk_stts.container_bg_color | default: option_group_bg_color
+    assign title_text_color = bk_stts.title_color | default: option_group_text_color
+    assign item_bg_color = bk_stts.option_bg_color | default: option_group_bg_color
+    assign item_text_color = bk_stts.option_text_color | default: option_group_text_color
+    assign item_border_color = bk_stts.option_border_color | default: option_group_text_color
+    assign selected_bg_color = bk_stts.option_selected_bg_color | default: option_group_bg_color
+    assign selected_text_color = bk_stts.option_selected_text_color | default: option_group_text_color
+    assign selected_border_color = bk_stts.option_selected_border_color | default: option_group_text_color
+    assign title_spacing = bk_stts.title_spacing | default: 10
+    assign option_gap = bk_stts.option_gap | default: 12
+    assign option_radius = bk_stts.option_radius | default: 12
+    assign block_radius = bk_stts.block_radius | default: 16
+    assign block_padding_top = bk_stts.block_padding_top
+    if block_padding_top == blank
+      assign block_padding_top = bk_stts.block_padding_y | default: 14
+    endif
+    assign block_padding_bottom = bk_stts.block_padding_bottom
+    if block_padding_bottom == blank
+      assign block_padding_bottom = bk_stts.block_padding_y | default: 14
+    endif
+    assign block_padding_x = bk_stts.block_padding_x | default: 16
+    assign option_padding_y = bk_stts.option_padding_y | default: 12
+    assign option_padding_x = bk_stts.option_padding_x | default: 16
+    assign option_margin = bk_stts.option_margin | default: 0
+    assign option_min_height = bk_stts.option_min_height | default: 48
+    assign block_spacing = bk_stts.block_spacing | default: 14
+    assign selected_border_width = bk_stts.selected_border_width | default: 2
+  endif
+
+  assign selected_strip_color = bk_stts.option_selected_strip_color | default: selected_border_color
+  assign mobile_selected_border_width = selected_border_width
+  assign mobile_option_font_size = 12
+  assign mobile_option_font_weight = '500'
+  assign mobile_block_radius = block_radius
+  assign mobile_option_radius = option_radius
+  assign mobile_block_padding_top = 10
+  assign mobile_block_padding_bottom = 10
+  assign mobile_block_padding_x = 12
+  assign mobile_option_padding_y = 6
+  assign mobile_option_padding_x = 8
+  assign mobile_option_margin = 0
+  assign mobile_option_gap = 6
+  assign mobile_option_min_height = 32
+  assign mobile_block_spacing = block_spacing
+
+  if use_custom_style
+    assign mobile_selected_border_width = bk_stts.selected_border_width_mb | default: selected_border_width
+    assign mobile_option_font_size = bk_stts.option_font_size_mb | default: 12
+    assign mobile_option_font_weight = bk_stts.option_font_weight_mb | default: bk_stts.option_font_weight | default: '500'
+    assign mobile_block_radius = bk_stts.block_radius_mb | default: block_radius
+    assign mobile_option_radius = bk_stts.option_radius_mb | default: option_radius
+    assign mobile_block_padding_top = bk_stts.block_padding_top_mb
+    if mobile_block_padding_top == blank
+      assign mobile_block_padding_top = bk_stts.block_padding_y_mb | default: 10
+    endif
+    assign mobile_block_padding_bottom = bk_stts.block_padding_bottom_mb
+    if mobile_block_padding_bottom == blank
+      assign mobile_block_padding_bottom = bk_stts.block_padding_y_mb | default: 10
+    endif
+    assign mobile_block_padding_x = bk_stts.block_padding_x_mb | default: 12
+    assign mobile_option_padding_y = bk_stts.option_padding_y_mb | default: 6
+    assign mobile_option_padding_x = bk_stts.option_padding_x_mb | default: 8
+    assign mobile_option_margin = bk_stts.option_margin_mb | default: 0
+    assign mobile_option_gap = bk_stts.option_gap_mb | default: 6
+    assign mobile_option_min_height = bk_stts.option_min_height_mb | default: 32
+    assign mobile_block_spacing = bk_stts.block_spacing_mb | default: block_spacing
+  endif
+
+  if normalized_option_name_filter != blank
+    assign has_option_name_filter = true
+    assign option_name_filters = normalized_option_name_filter | split: ',' | uniq
+  endif
+
+  for option in product.options_with_values
+    assign option_name_downcase = option.name | downcase
+    unless get_color contains option_name_downcase
+      if has_option_name_filter
+        if option_name_filters contains option_name_downcase
+          assign has_non_color_options = true
+          break
+        endif
+      else
+        assign has_non_color_options = true
+        break
+      endif
+    endunless
+  endfor
+-%}
+
+{%- if isProductDefault == false and has_non_color_options -%}
+  {{ 'swatch.css' | asset_url | append: '?v=20251201-v3' | stylesheet_tag }}
+
+  <style>
+    .t4s-option-selector-block-{{ block.id }} {
+      margin-top: {{ bk_stts.margin_top | default: 16 }}px;
+      margin-bottom: {{ bk_stts.margin_bottom | default: 16 }}px;
+      --t4s-option-group-bg: {{ block_bg_color }};
+      --t4s-option-group-surface: {{ item_bg_color }};
+      --t4s-option-group-title: {{ title_text_color }};
+      --t4s-option-group-text: {{ item_text_color }};
+      --t4s-option-group-border: {{ item_border_color }};
+      --t4s-option-group-accent: {{ selected_border_color }};
+      --t4s-option-group-hover-bg: {{ item_bg_color }};
+      --t4s-option-group-selected-bg: {{ selected_bg_color }};
+      --t4s-option-group-selected-text: {{ selected_text_color }};
+      --t4s-option-title-spacing: {{ title_spacing }}px;
+      --t4s-option-gap: {{ option_gap }}px;
+      --t4s-option-margin: {{ option_margin }}px;
+      --t4s-option-radius: {{ option_radius }}px;
+      --t4s-option-padding-y: {{ option_padding_y }}px;
+      --t4s-option-padding-x: {{ option_padding_x }}px;
+      --t4s-option-min-height: {{ option_min_height }}px;
+      --t4s-option-selected-strip-width: 10px;
+      --t4s-option-selected-badge-size: 24px;
+      --t4s-option-left-strip-bg: var(--t4s-option-group-border);
+      --t4s-option-selected-strip-bg: {{ selected_strip_color }};
+      --t4s-option-check-bg: var(--t4s-option-group-accent);
+      --t4s-option-check-color: #ffffff;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__option {
+      background: var(--t4s-option-group-bg) !important;
+      color: var(--t4s-option-group-title) !important;
+      border-radius: {{ block_radius }}px !important;
+      padding: {{ block_padding_top }}px {{ block_padding_x }}px {{ block_padding_bottom }}px !important;
+      margin-bottom: {{ block_spacing }}px !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title span,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__current,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button,
+    .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title,
+    .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title span {
+      color: var(--t4s-option-group-text) !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title span,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__current {
+      color: var(--t4s-option-group-title) !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list {
+      margin: calc(var(--t4s-option-title-spacing) - var(--t4s-option-margin)) calc(var(--t4s-option-margin) * -1)
+        calc(var(--t4s-option-margin) * -1) !important;
+      gap: var(--t4s-option-gap) !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button,
+    .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper {
+      background: var(--t4s-option-group-surface) !important;
+      border-color: var(--t4s-option-group-border) !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button {
+      position: relative !important;
+      overflow: hidden !important;
+      border-radius: var(--t4s-option-radius) !important;
+      margin: var(--t4s-option-margin) !important;
+      padding: var(--t4s-option-padding-y) var(--t4s-option-padding-x) !important;
+      padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + 10px) !important;
+      padding-right: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 8px) !important;
+      min-height: var(--t4s-option-min-height) !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item::before,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: var(--t4s-option-selected-strip-width);
+      background: var(--t4s-option-left-strip-bg);
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected::before,
+    .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected::before {
+      background: var(--t4s-option-selected-strip-bg);
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item {
+      box-shadow: inset 0 0 0 1px var(--t4s-option-group-border) !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected,
+    .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected {
+      background: var(--t4s-option-group-selected-bg) !important;
+      color: var(--t4s-option-group-selected-text) !important;
+      border-color: var(--t4s-option-group-accent) !important;
+      box-shadow: inset 0 0 0 {{ selected_border_width }}px var(--t4s-option-group-accent) !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected::after,
+    .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected::after {
+      content: '\2713';
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: var(--t4s-option-selected-badge-size);
+      height: var(--t4s-option-selected-badge-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--t4s-option-check-bg);
+      color: var(--t4s-option-check-color);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      border-top-left-radius: 10px;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} [data-swatch-item].is--soldout,
+    .t4s-option-selector-block-{{ block.id }} [data-swatch-item].is--unavailable,
+    .t4s-option-selector-block-{{ block.id }} [data-swatch-item].is--hidden {
+      display: none !important;
+    }
+
+    {%- if use_custom_style -%}
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title span,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__current {
+        font-size: {{ bk_stts.title_font_size | default: 18 }}px !important;
+        font-weight: {{ bk_stts.title_font_weight | default: 600 }} !important;
+        line-height: 1.35 !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title span {
+        font-size: {{ bk_stts.option_font_size | default: 16 }}px !important;
+        font-weight: {{ bk_stts.option_font_weight | default: 500 }} !important;
+        line-height: 1.2 !important;
+      }
+    {%- endif -%}
+
+    @media (max-width: 767px) {
+      .t4s-option-selector-block-{{ block.id }} {
+        --t4s-option-title-spacing: 8px;
+        --t4s-option-gap: {{ mobile_option_gap }}px;
+        --t4s-option-margin: {{ mobile_option_margin }}px;
+        --t4s-option-padding-y: {{ mobile_option_padding_y }}px;
+        --t4s-option-padding-x: {{ mobile_option_padding_x }}px;
+        --t4s-option-min-height: {{ mobile_option_min_height }}px;
+        --t4s-option-radius: {{ mobile_option_radius }}px;
+        --t4s-option-selected-strip-width: 6px;
+        --t4s-option-selected-badge-size: 16px;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__option,
+      .t4s-option-selector-block-{{ block.id }} [data-swatch-option] {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        border-radius: {{ mobile_block_radius }}px !important;
+        padding: {{ mobile_block_padding_top }}px {{ mobile_block_padding_x }}px {{ mobile_block_padding_bottom }}px !important;
+        margin-bottom: {{ mobile_block_spacing }}px !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+        flex: 0 0 auto !important;
+        margin: 0 0 8px !important;
+        font-size: 14px !important;
+        line-height: 1.2 !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title > span {
+        display: block;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title .t4s-btn__size-chart {
+        flex: 0 0 auto;
+        margin: 0 !important;
+        white-space: nowrap;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list {
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+        flex: 0 0 auto !important;
+        flex-wrap: nowrap !important;
+        margin: calc(0px - var(--t4s-option-margin)) calc(var(--t4s-option-margin) * -1)
+          calc(var(--t4s-option-margin) * -1) !important;
+        overflow: visible !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title span {
+        font-size: {{ mobile_option_font_size }}px !important;
+        font-weight: {{ mobile_option_font_weight }} !important;
+        line-height: 1.15 !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + 5px) !important;
+        padding-right: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 5px) !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button {
+        width: 100% !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + 5px) !important;
+        padding-right: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 5px) !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected::after,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected::after {
+        font-size: 11px;
+        border-top-left-radius: 8px;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected {
+        box-shadow: inset 0 0 0 {{ mobile_selected_border_width }}px var(--t4s-option-group-accent) !important;
+      }
+    }
+  </style>
+
+  <div
+    class="t4s-option-selector-block t4s-option-selector-block-{{ block.id }}"
+    data-option-selector-block="{{ block.id }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="t4s-swatch t4s-color-mode__{{ color_mode }} t4s-color-size__{{ color_size }} t4s-selector-mode__{{ selector_mode }}">
+      {%- for option in product.options_with_values -%}
+        {%- liquid
+          if option.values.size == 1
+            assign selected_value = option.values.first
+          else
+            assign option_index = 'option' | append: forloop.index
+            assign selected_value = current_variant[option_index]
+          endif
+          assign option_name = option.name
+          assign name_downcase = option_name | downcase
+          assign should_render_option = true
+
+          if get_color contains name_downcase
+            assign should_render_option = false
+          endif
+
+          if has_option_name_filter
+            unless option_name_filters contains name_downcase
+              assign should_render_option = false
+            endunless
+          endif
+        -%}
+
+        {%- if should_render_option -%}
+          <div
+            data-swatch-option
+            data-id="{{ forloop.index0 }}"
+            class="t4s-swatch__option is-t4s-name__{{ option_name | handle }}"
+          >
+            <h4 class="t4s-swatch__title">
+              <span>
+                {{- option_name }}:
+                <span data-current-value class="t4s-dib t4s-swatch__current">
+                  {{- selected_value | default: choose_an_option -}}
+                </span>
+              </span>
+              {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
+            </h4>
+            <div class="t4s-swatch__list">
+              {%- if selector_mode != 'dropdown' -%}
+                {%- for value in option.values -%}
+                  <div
+                    data-swatch-item
+                    class="t4s-swatch__item{% if selected_value == value %} is--selected{% endif %}"
+                    data-value="{{ value | escape }}"
+                  >
+                    {{ value }}
+                  </div>
+                {%- endfor -%}
+              {%- else -%}
+                <button
+                  type="button"
+                  data-dropdown-open
+                  data-position="bottom-end"
+                  data-id="t4s_nt_{{ pr_se_id }}{{ forloop.index }}"
+                >
+                  <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                  <svg class="t4s-icon-select-arrow" role="presentation" viewBox="0 0 19 12">
+                    <use xlink:href="#t4s-select-arrow"></use>
+                  </svg>
+                </button>
+                <div
+                  data-dropdown-wrapper
+                  class="t4s-dropdown__wrapper t4s-current-scrollbar"
+                  id="t4s_nt_{{ pr_se_id }}{{ forloop.index }}"
+                >
+                  <div class="t4s-drop-arrow"></div>
+                  <div class="t4s-dropdown__header">
+                    <span class="t4s-dropdown__title">
+                      {{- option_name }}:
+                      <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                    </span>
+                    <button type="button" data-dropdown-close aria-label="{{ 'general.aria.close' | t }}">
+                      <svg role="presentation" class="t4s-iconsvg-close" viewBox="0 0 16 14">
+                        <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="t4s-dropdown__content">
+                    {%- for value in option.values -%}
+                      <div
+                        data-swatch-item
+                        data-dropdown-off
+                        class="t4s-swatch__item t4s-truncate{% if selected_value == value %} is--selected{% endif %}"
+                        data-value="{{ value | escape }}"
+                      >
+                        {{ value }}
+                      </div>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var initIndependentOptionSelector = function() {
+        var blockRoot = document.querySelector('[data-option-selector-block="{{ block.id }}"]');
+        var mainWrapper = document.querySelector('[data-callBackVariant][id="t4s-callBackVariant{{ 'product-form-' | append: pr_se_id }}"]');
+
+        if (!blockRoot || !mainWrapper) {
+          setTimeout(initIndependentOptionSelector, 100);
+          return;
+        }
+
+        if (blockRoot.dataset.optionSelectorInitialized === 'true') {
+          return;
+        }
+        blockRoot.dataset.optionSelectorInitialized = 'true';
+
+        var syncScheduled = false;
+
+        function escapeAttributeValue(value) {
+          return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        }
+
+        function findMainOption(independentOption) {
+          var optionIndex = independentOption.getAttribute('data-id');
+          var byIndex = mainWrapper.querySelector(
+            '[data-swatch-option][data-id="' + optionIndex + '"]:not(.is-t4s-style__color)'
+          );
+          if (byIndex) return byIndex;
+
+          var optionClass = Array.from(independentOption.classList).find(function(className) {
+            return className.indexOf('is-t4s-name__') === 0;
+          });
+
+          if (optionClass) {
+            return mainWrapper.querySelector('[data-swatch-option].' + optionClass + ':not(.is-t4s-style__color)');
+          }
+
+          return null;
+        }
+
+        function syncFromMain() {
+          blockRoot.querySelectorAll('[data-swatch-option]').forEach(function(independentOption) {
+            var mainOption = findMainOption(independentOption);
+            if (!mainOption) return;
+
+            var currentValue = '';
+
+            independentOption.querySelectorAll('[data-swatch-item]').forEach(function(independentItem) {
+              var itemValue = independentItem.getAttribute('data-value');
+              var mainItem = mainOption.querySelector(
+                '[data-swatch-item][data-value="' + escapeAttributeValue(itemValue) + '"]'
+              );
+
+              if (!mainItem) {
+                independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
+                independentItem.style.display = 'none';
+                return;
+              }
+
+              var isHidden =
+                mainItem.style.display === 'none' ||
+                mainItem.classList.contains('is--hidden') ||
+                mainItem.classList.contains('is--soldout') ||
+                mainItem.classList.contains('is--unavailable');
+
+              independentItem.classList.remove('is--soldout', 'is--unavailable', 'is--hidden', 'is--selected');
+
+              if (isHidden) {
+                independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
+                independentItem.style.display = 'none';
+              } else {
+                independentItem.style.display = '';
+              }
+
+              if (mainItem.classList.contains('is--selected')) {
+                independentItem.classList.add('is--selected');
+                currentValue = itemValue;
+              }
+            });
+
+            var independentCurrentValue = independentOption.querySelector('[data-current-value]');
+            var mainCurrentValue = mainOption.querySelector('[data-current-value]');
+            if (independentCurrentValue) {
+              independentCurrentValue.textContent = currentValue || (mainCurrentValue ? mainCurrentValue.textContent : '');
+            }
+          });
+        }
+
+        function scheduleSync() {
+          if (syncScheduled) return;
+          syncScheduled = true;
+          requestAnimationFrame(function() {
+            syncScheduled = false;
+            syncFromMain();
+          });
+        }
+
+        blockRoot.addEventListener('click', function(event) {
+          var clickedItem = event.target.closest('[data-swatch-item]');
+          if (!clickedItem) return;
+
+          if (
+            clickedItem.classList.contains('is--soldout') ||
+            clickedItem.classList.contains('is--unavailable') ||
+            clickedItem.classList.contains('is--hidden')
+          ) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
+
+          var independentOption = clickedItem.closest('[data-swatch-option]');
+          if (!independentOption) return;
+
+          var mainOption = findMainOption(independentOption);
+          if (!mainOption) return;
+
+          var mainItem = mainOption.querySelector(
+            '[data-swatch-item][data-value="' + escapeAttributeValue(clickedItem.getAttribute('data-value')) + '"]'
+          );
+
+          if (!mainItem) return;
+
+          event.preventDefault();
+          event.stopPropagation();
+          mainItem.click();
+
+          setTimeout(scheduleSync, 60);
+          setTimeout(scheduleSync, 180);
+        });
+
+        var observer = new MutationObserver(function() {
+          scheduleSync();
+        });
+
+        observer.observe(mainWrapper, {
+          attributes: true,
+          childList: true,
+          subtree: true,
+          attributeFilter: ['class', 'style']
+        });
+
+        scheduleSync();
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initIndependentOptionSelector);
+      } else {
+        initIndependentOptionSelector();
+      }
+
+      document.addEventListener('shopify:section:load', initIndependentOptionSelector);
+    })();
+  </script>
+{%- endif -%}

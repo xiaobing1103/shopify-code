@@ -21,7 +21,7 @@
       // 创建图标 img 元素
       const icon = document.createElement('img');
       icon.className = 'upload-icon';
-      icon.src = '//tekmarkcard.com/cdn/shop/t/64/assets/Upload%20(2).png?v=15204';
+      icon.src = '//tekmarkcard.com/cdn/shop/t/71/assets/Upload%20(2).png?v=16032';
       icon.alt = 'Upload Icon';
 
       // 创建文字 span 元素

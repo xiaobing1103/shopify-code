@@ -18,6 +18,12 @@
 {%- assign note_display_label = bk_stts.note_label | default: 'Design Note' -%}
 
 <style>
+  .t4s-custom-upload--{{ block.id }} .t4s-custom-upload__label--upload {
+    color: {{ bk_stts.upload_label_color | default: '#000000' }} !important;
+  }
+  .t4s-custom-upload--{{ block.id }} .t4s-custom-upload__label--note {
+    color: {{ bk_stts.note_label_color | default: '#000000' }} !important;
+  }
   .t4s-custom-upload__container { width: 100%; }
   .t4s-custom-upload__button {
     width: 100% !important; display: flex; align-items: center; justify-content: center;
@@ -55,9 +61,9 @@
   }
 </style>
 
-<div class="t4s-custom-upload" data-custom-upload data-product-id="{{ product.id }}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+<div class="t4s-custom-upload t4s-custom-upload--{{ block.id }}" data-custom-upload data-product-id="{{ product.id }}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-    <label class="t4s-custom-upload__label" for="{{ upload_id }}" style="margin: 0;">
+    <label class="t4s-custom-upload__label t4s-custom-upload__label--upload" for="{{ upload_id }}" style="margin: 0;">
       {{ display_label }}
       {%- if bk_stts.required -%}<span style="color:#ef4444;margin-left:2px;">*</span>{%- endif -%}
     </label>
@@ -75,7 +81,7 @@
       data-upload-input {% if bk_stts.required %}required{% endif %}>
     
     <div class="t4s-custom-upload__button" data-upload-trigger
-      style="background:{{ bk_stts.btn_bg_color }};color:{{ bk_stts.btn_text_color }};border-color:{{ bk_stts.btn_border_color }};border-radius:{{ bk_stts.btn_border_radius }}px;">
+      style="background:{{ bk_stts.btn_bg_color }};color:{{ bk_stts.btn_text_color }};border-color:{{ bk_stts.btn_border_color }};border-style:{{ bk_stts.btn_border_style | default: 'solid' }};border-radius:{{ bk_stts.btn_border_radius }}px;">
       <svg class="t4s-custom-upload__icon" viewBox="0 0 24 24" width="20" height="20">
         <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/>
       </svg>
@@ -99,13 +105,16 @@
   
   {%- if bk_stts.show_note_input -%}
   <div class="t4s-custom-upload__note-section" style="margin-top: 16px;">
-    <label class="t4s-custom-upload__label" for="{{ note_input_id }}">
-      {{ note_display_label }}
-      {%- if bk_stts.note_required -%}<span style="color:#ef4444;margin-left:2px;">*</span>{%- endif -%}
-    </label>
+    {%- unless bk_stts.show_note_label == false -%}
+      <label class="t4s-custom-upload__label t4s-custom-upload__label--note" for="{{ note_input_id }}">
+        {{ note_display_label }}
+        {%- if bk_stts.note_required -%}<span style="color:#ef4444;margin-left:2px;">*</span>{%- endif -%}
+      </label>
+    {%- endunless -%}
     <input type="text" id="{{ note_input_id }}" class="t4s-custom-upload__note-input"
       form="product-form-{{ pr_se_id }}" name="properties[{{ note_property_name }}]"
       placeholder="{{ bk_stts.note_placeholder | default: 'Enter your personalization text...' }}"
+      aria-label="{{ note_display_label | escape }}"
       data-design-note-input maxlength="{{ bk_stts.note_max_length | default: 100 }}"
       {% if bk_stts.note_required %}required{% endif %}>
     {%- if bk_stts.note_description != blank -%}

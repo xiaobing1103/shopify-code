@@ -9,92 +9,6 @@
  */
 {
   "sections": {
-    "ss_scrolling_announcement_bar_2_bWFbAT": {
-      "type": "ss-scrolling-announcement-bar-2",
-      "blocks": {
-        "item_zpjmQ3": {
-          "type": "item",
-          "settings": {
-            "icon": "airplane",
-            "text": "FREE Shipping Over $80"
-          }
-        },
-        "item_GrYj9h": {
-          "type": "item",
-          "settings": {
-            "icon": "mobile",
-            "text": "Lifetime Platform Access"
-          }
-        },
-        "item_8bUWbD": {
-          "type": "item",
-          "settings": {
-            "icon": "globe",
-            "text": "No app required "
-          }
-        },
-        "item_abqCXc": {
-          "type": "item",
-          "settings": {
-            "icon": "share",
-            "text": "Works with All Smartphones"
-          }
-        },
-        "item_JyWndG": {
-          "type": "item",
-          "settings": {
-            "icon": "heart",
-            "text": "Design Service"
-          }
-        },
-        "item_BmngCg": {
-          "type": "item",
-          "settings": {
-            "icon": "time",
-            "text": "Unlimited Usage"
-          }
-        }
-      },
-      "block_order": [
-        "item_zpjmQ3",
-        "item_GrYj9h",
-        "item_8bUWbD",
-        "item_abqCXc",
-        "item_JyWndG",
-        "item_BmngCg"
-      ],
-      "name": "SS - Scrolling Announcement Bar #2",
-      "settings": {
-        "insert_css_class_target": "",
-        "url": "",
-        "layout_gap": 100,
-        "layout_gap_mobile": 30,
-        "animate_speed": 100,
-        "animate_direction": "right",
-        "animate_pause": true,
-        "icon_size": 20,
-        "icon_size_mobile": 20,
-        "text_custom": false,
-        "text_font": "josefin_sans_n4",
-        "text_size": 12,
-        "text_size_mobile": 12,
-        "text_height": 100,
-        "text_color": "#1c1c1f",
-        "icon_color": "#1c1c1f",
-        "background_color": "#007aff",
-        "background_gradient": "linear-gradient(266deg, rgba(132, 97, 244, 1) 14%, rgba(129, 216, 229, 1) 83%)",
-        "border_color": "#000000",
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "padding_top": 12,
-        "padding_bottom": 12,
-        "padding_horizontal": 0,
-        "padding_horizontal_mobile": 0,
-        "full_width": true,
-        "content_width": 120,
-        "border_thickness": 0
-      }
-    },
     "breadcrumb": {
       "type": "brc-nav-product",
       "settings": {
@@ -119,26 +33,11 @@
             "lh_pr": 0,
             "ls_pr": 0,
             "pr_title_color": "#222222",
-            "show_free_shipping": true,
+            "show_free_shipping": false,
             "free_shipping_text": "Free Shipping over $80",
             "free_shipping_text_color": "#8abd88",
             "free_shipping_bg_color": "#f5fff4",
             "free_shipping_border_color": "#7cb47a"
-          }
-        },
-        "loox_reviews_loox_rating_Vhiqbh": {
-          "type": "shopify://apps/loox-reviews/blocks/loox-rating/5c3b337f-fd14-4df5-b1d6-80ec13e6e28e",
-          "settings": {
-            "contentSize": 14,
-            "pattern": "[rating] | [count] reviews",
-            "hideText": false,
-            "alignment": "",
-            "layout": "",
-            "textColor": "",
-            "starColor": "",
-            "showAllReviews": true,
-            "looxOpenFloatingWidget": true,
-            "emptyRatingWidget": false
           }
         },
         "price_review": {
@@ -161,20 +60,6 @@
             "price_sale_color": "#ec0101"
           }
         },
-        "feature_item_tYLQgX": {
-          "type": "feature_item",
-          "settings": {
-            "icon": "3",
-            "icon_name": "las la-infinity",
-            "img": "shopify://shop_images/b2.png",
-            "img_width": 20,
-            "img_height": 20,
-            "svg_icon": "servies_icon.svg",
-            "ani": "none",
-            "txt": "Lifetime TekMark Platform Access",
-            "font_size": 14
-          }
-        },
         "form": {
           "type": "form",
           "settings": {
@@ -183,7 +68,7 @@
             "color_mode": "color is-sw-cl__round",
             "enable_fit_ratio_img": false,
             "color_size": "medium",
-            "show_qty": true,
+            "show_qty": false,
             "enable_wishlist": false,
             "enable_compare": false,
             "btn_atc_full": false,
@@ -228,9 +113,7 @@
       },
       "block_order": [
         "title",
-        "loox_reviews_loox_rating_Vhiqbh",
         "price_review",
-        "feature_item_tYLQgX",
         "form"
       ],
       "custom_css": [
@@ -238,7 +121,7 @@
       ],
       "settings": {
         "pr_layout": "default",
-        "media_custom_img_enable": true,
+        "media_custom_img_enable": false,
         "media_custom_img": "shopify://shop_images/Product_9b9adac5-03a8-4f86-963c-6b791c7331bf.png",
         "media_custom_img_show_desktop": true,
         "media_custom_img_show_mobile": true,
@@ -442,102 +325,6 @@
         "sidebar_pd": 10
       }
     },
-    "ss_feature_1_KCKTH6": {
-      "type": "ss-feature-1",
-      "blocks": {
-        "image_GC3hpy": {
-          "type": "image",
-          "settings": {
-            "feature_title": "Tap to share your details instantly",
-            "feature_text": "",
-            "feature_image": "shopify://shop_images/Your_Design1.png",
-            "feature_url": "https://section.store/",
-            "hide_image": false
-          }
-        },
-        "image_Krbgy4": {
-          "type": "image",
-          "settings": {
-            "feature_title": "Lifetime use and update your info anytime",
-            "feature_text": "",
-            "feature_image": "shopify://shop_images/inf.png",
-            "feature_url": "",
-            "hide_image": false
-          }
-        },
-        "image_7jFARE": {
-          "type": "image",
-          "settings": {
-            "feature_title": "Works on iPhone and Android with no app",
-            "feature_text": "",
-            "feature_image": "shopify://shop_images/Untitled_design_35d38368-e2bd-409c-b6af-8ba0e62dcce9.png",
-            "feature_url": "",
-            "hide_image": false
-          }
-        },
-        "image_mNeRpB": {
-          "type": "image",
-          "settings": {
-            "feature_title": "One card connects you with everyone",
-            "feature_text": "",
-            "feature_image": "shopify://shop_images/w.png",
-            "feature_url": "",
-            "hide_image": false
-          }
-        }
-      },
-      "block_order": [
-        "image_GC3hpy",
-        "image_Krbgy4",
-        "image_7jFARE",
-        "image_mNeRpB"
-      ],
-      "name": "SS - Feature #1",
-      "settings": {
-        "feature_row": 4,
-        "feature_row_mobile": 2,
-        "feature_gap": 20,
-        "feature_gap_mobile": 20,
-        "feature_padding_horizontal": 0,
-        "feature_padding_vertical": 0,
-        "feature_radius": 16,
-        "feature_border_thickness": 0,
-        "feature_shadow": false,
-        "feature_heading_custom": false,
-        "feature_heading_font": "josefin_sans_n4",
-        "feature_heading_size": 20,
-        "feature_heading_size_mobile": 16,
-        "feature_heading_height": 130,
-        "feature_heading_mt": 8,
-        "feature_text_custom": false,
-        "feature_text_font": "josefin_sans_n4",
-        "feature_text_size": 12,
-        "feature_text_size_mobile": 12,
-        "feature_text_height": 130,
-        "feature_text_mt": 4,
-        "feature_icon_size": 42,
-        "feature_icon_size_mobile": 42,
-        "feature_bg": "#fbfbfd",
-        "feature_border_color": "#000000",
-        "feature_shadow_color": "#000000",
-        "feature_heading_color": "#000000",
-        "feature_text_color": "#000000",
-        "feature_icon_color": "#000000",
-        "background_color": "#fbfbfd",
-        "background_gradient": "",
-        "border_color": "#000000",
-        "margin_top": 40,
-        "margin_bottom": 0,
-        "padding_top": 16,
-        "padding_bottom": 16,
-        "padding_horizontal": 5,
-        "padding_horizontal_mobile": 1.5,
-        "full_width": false,
-        "content_width": 120,
-        "border_thickness": 0,
-        "lazy": true
-      }
-    },
     "ss_trust_badges_emojis_YmmxDD": {
       "type": "ss-trust-badges-emojis",
       "blocks": {
@@ -611,442 +398,9 @@
         "border_thickness": 0
       }
     },
-    "ss_glow_faq_bmgjtM": {
-      "type": "ss-glow-faq",
-      "blocks": {
-        "card_pbrkTV": {
-          "type": "card",
-          "settings": {
-            "title": "Description",
-            "content": "Make every intro fast and polished—without designing from scratch. This standard TekMark card uses a clean, unified layout that looks great in any setting; you simply pick a color, add your details in the dashboard, and you’re ready to share. A light tap opens your TekHub profile on any modern phone—no apps, no typing—so people can call, email, save your contact, or exchange theirs with you. Edit once and your changes go live instantly for every future interaction."
-          }
-        },
-        "card_wdkmjh": {
-          "type": "card",
-          "settings": {
-            "title": "What's Included",
-            "content": "Lightweight Digital Business Card(s)\nBuilt-in NFC chip + QR code linked to your profile\nLifetime TekHub platform access"
-          }
-        }
-      },
-      "block_order": [
-        "card_pbrkTV",
-        "card_wdkmjh"
-      ],
-      "name": "SS - Glow FAQ",
-      "settings": {
-        "title": "",
-        "collapse_other": true,
-        "open_first": false,
-        "header_font_size": 12,
-        "header_mob_font_size": 28,
-        "question_color": "#1c1c1f",
-        "content_text_color": "#121212",
-        "blur_color": "rgba(0,0,0,0)",
-        "gradient_color_1": "#007aff",
-        "gradient_color_2": "#9292fd",
-        "gradient_color_3": "#007aff"
-      }
-    },
-    "ss_product_ingredients_5_WbU9J8": {
-      "type": "ss-product-ingredients-5",
-      "blocks": {
-        "card_YfQBDF": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/tyler-franta-iusJ25iYu1c-unsplash.jpg",
-            "image_url": "",
-            "title": "Business Owners",
-            "product": "",
-            "custom_price": "",
-            "text": "<p>As a business owner, I need to communicate value fast and drive action.  TekMark gives me one profile with my website and services in a single tap, making every introduction more likely to turn into business.</p><p></p>",
-            "text_line_height": 150,
-            "ingredients": "Lost leads,Slow follow-up,Info changes",
-            "show_button": false,
-            "button_text": "Buy Now",
-            "button_url": ""
-          }
-        },
-        "card_K6xqyX": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/linkedin-sales-solutions-i1MXZuHqD2k-unsplash.jpg",
-            "image_url": "",
-            "title": "Sales Manager",
-            "product": "",
-            "custom_price": "",
-            "text": "<p>Events move fast, and leads get cold fast—cards pile up and follow-ups slip. TekMark helps me capture contacts on the spot and guide prospects to the next step immediately, so I convert more from every event.</p>",
-            "text_line_height": 150,
-            "ingredients": "Leads go cold,Contacts scattered,Low conversion",
-            "show_button": false,
-            "button_text": "Buy Now",
-            "button_url": ""
-          }
-        },
-        "card_fMVXTp": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/markus-winkler-IrRbSND5EUc-unsplash.jpg",
-            "image_url": "",
-            "title": "Finance",
-            "product": "",
-            "custom_price": "",
-            "text": "<p>My work depends on long-term trust, but paper cards don’t help when clients need me months later. With TekMark, they tap once to see a clean profile with my contact, and I can update everything anytime without reprinting.</p>",
-            "text_line_height": 150,
-            "ingredients": "Trust matters,Long-term follow-up,Share docs fast",
-            "show_button": false,
-            "button_text": "Buy Now",
-            "button_url": ""
-          }
-        },
-        "card_cBqNiL": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/jay-wennington-N_Y88TWmGwA-unsplash.jpg",
-            "image_url": "",
-            "title": "Local Services",
-            "product": "",
-            "custom_price": "",
-            "text": "<p>Getting reviews and feedback is tough—even happy customers forget, and that hurts visibility. TekMark makes it effortless: one tap takes customers to leave a review and share feedback, helping me grow faster without extra work for my team.</p>",
-            "text_line_height": 150,
-            "ingredients": "Missed calls,Hard to get reviews,Hard to find you",
-            "show_button": false,
-            "button_text": "Buy Now",
-            "button_url": ""
-          }
-        },
-        "card_PTM4nR": {
-          "type": "card",
-          "settings": {
-            "image": "shopify://shop_images/tierra-mallorca-NpTbVOkkom8-unsplash.jpg",
-            "image_url": "",
-            "title": "Real Estate",
-            "product": "",
-            "custom_price": "",
-            "text": "<p>I meet new clients at showings and open houses all the time, but follow-up is the problem—people forget or lose paper cards. TekMark fixes that with one tap: my profile opens instantly with my contact info and listings, so conversations turn into real leads.</p>",
-            "text_line_height": 150,
-            "ingredients": "Leads forget,Too many listings,Follow-up slow",
-            "show_button": false,
-            "button_text": "Buy Now",
-            "button_url": ""
-          }
-        }
-      },
-      "block_order": [
-        "card_YfQBDF",
-        "card_K6xqyX",
-        "card_fMVXTp",
-        "card_cBqNiL",
-        "card_PTM4nR"
-      ],
-      "name": "SS - Product ingredients #5",
-      "settings": {
-        "layout_type": "slider",
-        "layout_type_mobile": "slider",
-        "heading": "<h2>How Professionals use it</h2>",
-        "heading_custom": false,
-        "heading_font": "josefin_sans_n4",
-        "heading_size": 44,
-        "heading_size_mobile": 24,
-        "heading_height": 130,
-        "heading_align": "left",
-        "heading_align_mobile": "left",
-        "cards_gap": 30,
-        "cards_gap_mobile": 20,
-        "cards_view": 3,
-        "cards_view_mobile": 1.2,
-        "cards_mt": 36,
-        "cards_mt_mobile": 24,
-        "card_padding_horizontal": 20,
-        "card_padding_horizontal_mobile": 20,
-        "card_padding_vertical": 20,
-        "card_padding_vertical_mobile": 20,
-        "card_radius": 12,
-        "card_border_thickness": 0,
-        "image_max_width": 500,
-        "image_max_width_mobile": 400,
-        "image_max_height": 300,
-        "image_max_height_mobile": 260,
-        "image_ratio": "landscape",
-        "image_ratio_mobile": "landscape",
-        "card_content_align": "left",
-        "card_content_align_mobile": "left",
-        "title_custom": false,
-        "title_font": "josefin_sans_n4",
-        "title_size": 20,
-        "title_size_mobile": 18,
-        "title_height": 130,
-        "text_custom": false,
-        "text_font": "josefin_sans_n4",
-        "text_size": 13,
-        "text_size_mobile": 13,
-        "text_height": 150,
-        "text_mt": 12,
-        "text_mt_mobile": 10,
-        "text_white_space": "normal",
-        "text_max_width": 0,
-        "use_read_more": false,
-        "read_more": "read more",
-        "read_less": "read less",
-        "small_text_size": 100,
-        "ingredients_gap": 8,
-        "ingredients_gap_mobile": 8,
-        "ingredients_mt": 16,
-        "ingredients_mt_mobile": 16,
-        "ingredient_padding_horizontal": 10,
-        "ingredient_padding_horizontal_mobile": 10,
-        "ingredient_padding_vertical": 6,
-        "ingredient_padding_vertical_mobile": 6,
-        "ingredient_radius": 100,
-        "ingredient_border_thickness": 1,
-        "ingredient_custom": false,
-        "ingredient_font": "josefin_sans_n4",
-        "ingredient_size": 11,
-        "ingredient_size_mobile": 11,
-        "ingredient_height": 100,
-        "arrow_size": 48,
-        "arrow_size_mobile": 38,
-        "arrow_icon_size": 10,
-        "arrow_icon_size_mobile": 8,
-        "arrow_border_thickness": 0,
-        "arrow_radius": 100,
-        "arrow_hover_effect": "color",
-        "arrow_show_desktop": true,
-        "arrow_show_mobile": true,
-        "title_color": "#121212",
-        "text_color": "#121212",
-        "card_bg_color": "#ffffff",
-        "card_border_color": "#121212",
-        "button_text_size": 16,
-        "button_text_size_mobile": 16,
-        "button_padding_horizontal": 40,
-        "button_padding_horizontal_mobile": 40,
-        "button_padding_vertical": 14,
-        "button_padding_vertical_mobile": 14,
-        "button_radius": 30,
-        "button_border_thickness": 2,
-        "button_mt": 16,
-        "button_mt_mobile": 16,
-        "button_text_color": "#ffffff",
-        "button_bg_color": "#0066cc",
-        "ingredient_color": "#121212",
-        "ingredient_bg_color": "rgba(0,0,0,0)",
-        "ingredient_border_color": "#121212",
-        "arrow_color": "#1c1c1f",
-        "arrow_hover_color": "#007aff",
-        "arrow_bg_color": "rgba(0,0,0,0)",
-        "arrow_bg_hover_color": "rgba(0,0,0,0)",
-        "arrow_border_color": "#c7c7c7",
-        "arrow_border_hover_color": "#c7c7c7",
-        "heading_color": "#1c1c1f",
-        "background_color": "#fbfbfd",
-        "background_gradient": "",
-        "border_color": "#121212",
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "margin_horizontal": 0,
-        "margin_horizontal_mobile": 0,
-        "padding_top": 36,
-        "padding_bottom": 36,
-        "padding_horizontal": 30,
-        "padding_horizontal_mobile": 1.5,
-        "full_width": true,
-        "content_width": 1200,
-        "border_thickness": 0,
-        "section_radius": 0,
-        "lazy": true
-      }
-    },
-    "ss_steps_4_DDgeYQ": {
-      "type": "ss-steps-4",
-      "blocks": {
-        "step_7Ct7dU": {
-          "type": "step",
-          "settings": {
-            "image": "shopify://shop_images/IMG_6382.jpg",
-            "text": "<h2><strong>Tap to Activate</strong></h2><p>Tap your Tekmark card on your phone to open the setup page -no app needed.<br/></p>"
-          }
-        },
-        "step_kMip8X": {
-          "type": "step",
-          "settings": {
-            "image": "shopify://shop_images/IMG_6402.jpg",
-            "text": "<p><strong>Create Your Profile</strong></p><p>Add your name, contact details, socials, website, and more. Edit your profile anytime.<br/><br/></p>"
-          }
-        },
-        "step_F3wKic": {
-          "type": "step",
-          "settings": {
-            "image": "shopify://shop_images/IMG_6431.jpg",
-            "text": "<p><strong>Start Networking</strong><br/>Share your profile with a single tap or scan, and let people save your contact instantly.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "step_7Ct7dU",
-        "step_kMip8X",
-        "step_F3wKic"
-      ],
-      "name": "SS - Steps #4",
-      "settings": {
-        "heading": "<p><strong>Easy Setup</strong></p>",
-        "heading_custom": false,
-        "heading_font": "josefin_sans_n4",
-        "heading_size": 40,
-        "heading_size_mobile": 32,
-        "heading_height": 130,
-        "heading_align": "left",
-        "heading_align_mobile": "left",
-        "body_gap": 64,
-        "body_gap_mobile": 56,
-        "body_mt": 40,
-        "body_mt_mobile": 50,
-        "use_slider": true,
-        "slider_view_mobile": 1.3,
-        "slider_gap_mobile": 20,
-        "image_radius": 16,
-        "image_border_thickness": 2,
-        "image_ratio": "square",
-        "image_ratio_mobile": "square",
-        "circle_number_size": 40,
-        "circle_number_size_mobile": 40,
-        "number_custom": false,
-        "number_font": "josefin_sans_n4",
-        "number_size": 18,
-        "number_size_mobile": 18,
-        "text_custom": false,
-        "text_font": "josefin_sans_n4",
-        "text_size": 18,
-        "text_size_mobile": 18,
-        "text_height": 130,
-        "text_mt": 24,
-        "text_align": "center",
-        "text_align_mobile": "center",
-        "button": "",
-        "button_url": "",
-        "button_custom": false,
-        "button_font": "josefin_sans_n4",
-        "button_size": 16,
-        "button_size_mobile": 16,
-        "button_height": 100,
-        "button_width": 200,
-        "button_width_mobile": 200,
-        "button_mt": 70,
-        "button_mt_mobile": 32,
-        "button_padding_vertical": 14,
-        "button_padding_vertical_mobile": 14,
-        "button_padding_horizontal": 22,
-        "button_padding_horizontal_mobile": 22,
-        "button_radius": 100,
-        "button_border_thickness": 0,
-        "button_align": "center",
-        "button_align_mobile": "center",
-        "button_style": "non_outline",
-        "image_border_color": "#000000",
-        "circle_number_bg_color": "#000000",
-        "number_color": "#ffffff",
-        "text_color": "#000000",
-        "button_color": "#ffffff",
-        "button_hover_color": "#ffffff",
-        "button_bg_color": "#000000",
-        "button_bg_hover_color": "#000000",
-        "button_border_color": "#000000",
-        "button_border_hover_color": "#000000",
-        "heading_color": "#000000",
-        "background_color": "#fbfbfd",
-        "background_gradient": "",
-        "border_color": "#000000",
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "padding_top": 36,
-        "padding_bottom": 32,
-        "padding_horizontal": 5,
-        "padding_horizontal_mobile": 1.5,
-        "full_width": false,
-        "content_width": 130,
-        "border_thickness": 0,
-        "lazy": true
-      }
-    },
-    "ss_glow_faq_VzXjpT": {
-      "type": "ss-glow-faq",
-      "blocks": {
-        "card_Ntd646": {
-          "type": "card",
-          "settings": {
-            "title": "How Does Our Digital Business Card Work?",
-            "content": "Your TekMark digital business card uses NFC technology to share your information instantly. When someone taps their phone on your TekMark card, it automatically opens your personalized profile, no apps or downloads needed.\n\nYour profile can include your contact details, social media links, website, payment links, files, and anything else you want to share. You control what’s on it, and you can update it anytime.\n\nJust tap → your info appears → you make the connection."
-          }
-        },
-        "card_jkPccr": {
-          "type": "card",
-          "settings": {
-            "title": "Do I need to install an app to use the digital business card?",
-            "content": "No app is required. With a quick tap, your digital profile opens directly in the visitor’s mobile browser, where they can call, email, save your contact, or share their details. It works on all modern iPhone and Android devices."
-          }
-        },
-        "card_T4waKz": {
-          "type": "card",
-          "settings": {
-            "title": "Is there a subscription fee?",
-            "content": "No. Your TekMark digital business card comes with lifetime access to your TekHub profile—no monthly or yearly fees. You pay once for your card or table tent."
-          }
-        },
-        "card_4VxQT4": {
-          "type": "card",
-          "settings": {
-            "title": "Does the other person need an app for the digital business card to work?",
-            "content": "No. The other person doesn’t need any app, account, or TekMark product. They just tap your card with their phone, and your profile opens instantly in their browser. From there, they can call, email, save your contact, or share their details."
-          }
-        },
-        "card_AxKHUt": {
-          "type": "card",
-          "settings": {
-            "title": "Do I need to put all my information on the physical card itself?",
-            "content": "No. You don’t have to print any personal details on the card itself. Most people only add their logo or a simple design. All your contact information lives in your TekMark digital profile, which others can access by tapping the card or scanning the QR code."
-          }
-        },
-        "card_rVxMPm": {
-          "type": "card",
-          "settings": {
-            "title": "Is there a way for someone to save or exchange contact information?",
-            "content": "Save Contact lets the visitor instantly save your details to their phone—no signup or sharing needed.\n\nExchange Contact allows both sides to share information. The visitor saves your details and can also send their own contact info back to you through the same page."
-          }
-        },
-        "card_peeAwC": {
-          "type": "card",
-          "settings": {
-            "title": "Can I link multiple cards to one account?",
-            "content": "Yes. Multiple cards/displays can be linked to a single account. Data stays in sync, and all collected contacts are automatically consolidated in the Platform"
-          }
-        }
-      },
-      "block_order": [
-        "card_Ntd646",
-        "card_jkPccr",
-        "card_T4waKz",
-        "card_4VxQT4",
-        "card_AxKHUt",
-        "card_rVxMPm",
-        "card_peeAwC"
-      ],
-      "name": "SS - Glow FAQ",
-      "settings": {
-        "title": "<p><em>Frequently</em> Asked Questions</p>",
-        "collapse_other": true,
-        "open_first": false,
-        "header_font_size": 40,
-        "header_mob_font_size": 28,
-        "question_color": "#1c1c1f",
-        "content_text_color": "#121212",
-        "blur_color": "#dbd7f2",
-        "gradient_color_1": "#2222de",
-        "gradient_color_2": "#659bff",
-        "gradient_color_3": "#7ff6e8"
-      }
-    },
     "product-recommendations": {
       "type": "product-recommendations",
+      "disabled": true,
       "settings": {
         "show": true,
         "design_heading": "1",
@@ -1101,33 +455,31 @@
     },
     "1763497567ab6251d8": {
       "type": "apps",
-      "blocks": {
-        "loox_reviews_loox_dynamic_section_KbK9bU": {
-          "type": "shopify://apps/loox-reviews/blocks/loox-dynamic-section/5c3b337f-fd14-4df5-b1d6-80ec13e6e28e",
-          "settings": {
-            "only_photos": false,
-            "aggregated": true,
-            "limit": 12,
-            "hide_thumbnails": true,
-            "maxwidth": 1080,
-            "is_sample": false
-          }
-        }
-      },
-      "block_order": [
-        "loox_reviews_loox_dynamic_section_KbK9bU"
-      ],
       "custom_css": [
         "{background-color: black;}"
       ],
       "settings": {
-        "include_margins": true
+        "include_margins": true,
+        "enable_full_width": false,
+        "full_width_padding": 30,
+        "full_width_padding_tablet": 20,
+        "full_width_padding_mobile": 15,
+        "custom_container_width": 0,
+        "custom_container_width_tablet": 0,
+        "custom_container_width_mobile": 0
       }
     },
     "176202644811cc5545": {
       "type": "apps",
       "settings": {
-        "include_margins": true
+        "include_margins": true,
+        "enable_full_width": false,
+        "full_width_padding": 30,
+        "full_width_padding_tablet": 20,
+        "full_width_padding_mobile": 15,
+        "custom_container_width": 0,
+        "custom_container_width_tablet": 0,
+        "custom_container_width_mobile": 0
       }
     },
     "recently-viewed-products": {
@@ -1189,7 +541,14 @@
     "17575325043fba429b": {
       "type": "apps",
       "settings": {
-        "include_margins": true
+        "include_margins": true,
+        "enable_full_width": false,
+        "full_width_padding": 30,
+        "full_width_padding_tablet": 20,
+        "full_width_padding_mobile": 15,
+        "custom_container_width": 0,
+        "custom_container_width_tablet": 0,
+        "custom_container_width_mobile": 0
       }
     },
     "ss_scrolling_features_3_RndCmd": {
@@ -1369,21 +728,22 @@
     "175512254590602016": {
       "type": "apps",
       "settings": {
-        "include_margins": true
+        "include_margins": true,
+        "enable_full_width": false,
+        "full_width_padding": 30,
+        "full_width_padding_tablet": 20,
+        "full_width_padding_mobile": 15,
+        "custom_container_width": 0,
+        "custom_container_width_tablet": 0,
+        "custom_container_width_mobile": 0
       }
     }
   },
   "order": [
-    "ss_scrolling_announcement_bar_2_bWFbAT",
     "breadcrumb",
     "main",
     "sidebar",
-    "ss_feature_1_KCKTH6",
     "ss_trust_badges_emojis_YmmxDD",
-    "ss_glow_faq_bmgjtM",
-    "ss_product_ingredients_5_WbU9J8",
-    "ss_steps_4_DDgeYQ",
-    "ss_glow_faq_VzXjpT",
     "product-recommendations",
     "1763497567ab6251d8",
     "176202644811cc5545",

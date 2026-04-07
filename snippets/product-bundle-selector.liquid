@@ -288,6 +288,7 @@
     <div class="t4s-bundle-selector" 
          data-bundle-selector 
          data-base-price="{{ base_price }}" 
+         data-base-compare-price="{{ current_variant.compare_at_price | default: current_variant.price }}"
          data-price-breaks='{{ price_breaks | json | escape }}'
          data-pricing-mode="{{ bk_stts.pricing_mode | default: 'manual' }}">
       <div class="t4s-bundle-selector__options">
@@ -536,6 +537,7 @@
           this.quantityInput = container.querySelector('[data-bundle-quantity-input]');
           this.tierInput = container.querySelector('[data-bundle-tier-input]');
           this.basePrice = parseInt(container.dataset.basePrice) || 0;
+          this.baseCompareAtPrice = parseInt(container.dataset.baseComparePrice) || this.basePrice;
           this.pricingMode = container.dataset.pricingMode || 'manual';
           this.productForm = this.findProductForm();
           this.formQuantityInput = this.productForm?.querySelector('input[name="quantity"]');
@@ -560,22 +562,63 @@
           }
         }
         
-        getPriceForQuantity(quantity) {
+        getApplicablePriceBreak(quantity) {
+          const safeQuantity = Math.max(parseInt(quantity, 10) || 1, 1);
           // 模式 1: 使用 Shopify Volume Pricing
           if (this.pricingMode === 'shopify' && this.priceBreaks.length > 0) {
             let applicableBreak = this.priceBreaks[0];
             for (let i = 0; i < this.priceBreaks.length; i++) {
-              if (this.priceBreaks[i].quantity <= quantity) {
+              if (this.priceBreaks[i].quantity <= safeQuantity) {
                 applicableBreak = this.priceBreaks[i];
               } else {
                 break;
               }
             }
-            return applicableBreak.price * quantity;
+            return applicableBreak;
           }
           
           // 模式 2: 使用手动折扣配置
-          return this.basePrice * quantity;
+          return {
+            quantity: safeQuantity,
+            price: this.basePrice
+          };
+        }
+
+        getPricingDetails(quantity, discount) {
+          const safeQuantity = Math.max(parseInt(quantity, 10) || 1, 1);
+          const safeDiscount = Math.max(parseInt(discount, 10) || 0, 0);
+          const baseCompareAtPrice = Math.max(this.basePrice, this.baseCompareAtPrice || 0);
+          let totalPrice = 0;
+          let unitPrice = this.basePrice;
+
+          if (this.pricingMode === 'shopify' && this.priceBreaks.length > 0) {
+            const applicableBreak = this.getApplicablePriceBreak(safeQuantity);
+            unitPrice = parseInt(applicableBreak.price, 10) || this.basePrice;
+            totalPrice = unitPrice * safeQuantity;
+          } else {
+            const baseTotal = this.basePrice * safeQuantity;
+            if (safeDiscount > 0) {
+              const discountedPrice = baseTotal * (100 - safeDiscount) / 100;
+              totalPrice = Math.ceil(discountedPrice / 100) * 100;
+            } else {
+              totalPrice = baseTotal;
+            }
+            unitPrice = Math.round(totalPrice / safeQuantity);
+          }
+
+          return {
+            quantity: safeQuantity,
+            discount: safeDiscount,
+            totalPrice,
+            unitPrice,
+            compareAtUnitPrice: baseCompareAtPrice,
+            basePrice: this.basePrice,
+            baseCompareAtPrice
+          };
+        }
+
+        getPriceForQuantity(quantity, discount) {
+          return this.getPricingDetails(quantity, discount).totalPrice;
         }
         
         init() {
@@ -650,6 +693,8 @@
           // 更新 base price
           this.basePrice = parseInt(newPrice) || 0;
           this.container.dataset.basePrice = this.basePrice;
+          this.baseCompareAtPrice = parseInt(variant && variant.compare_at_price) || this.basePrice;
+          this.container.dataset.baseComparePrice = this.baseCompareAtPrice;
           
           // 如果使用 Shopify Volume Pricing，更新 price breaks
           if (this.pricingMode === 'shopify' && variant.quantity_price_breaks) {
@@ -709,12 +754,24 @@
           if (selectedOption) {
             const tier = selectedOption.dataset.tier;
             const discount = parseInt(selectedOption.dataset.discount) || 0;
+            const pricingDetails = this.getPricingDetails(currentQty, discount);
             if (this.quantityInput) this.quantityInput.value = currentQty;
             if (this.tierInput) this.tierInput.value = tier;
             
             // 触发自定义事件
             this.container.dispatchEvent(new CustomEvent('bundleChanged', {
-              detail: { quantity: currentQty, discount, tier, option: selectedOption },
+              detail: {
+                quantity: currentQty,
+                discount,
+                tier,
+                option: selectedOption,
+                pricingMode: this.pricingMode,
+                totalPrice: pricingDetails.totalPrice,
+                unitPrice: pricingDetails.unitPrice,
+                compareAtUnitPrice: pricingDetails.compareAtUnitPrice,
+                basePrice: pricingDetails.basePrice,
+                baseCompareAtPrice: pricingDetails.baseCompareAtPrice
+              },
               bubbles: true
             }));
           }
@@ -743,7 +800,9 @@
               displayQty = currentQty; // 如果在区间内，显示当前数量
             }
             
-            let finalPrice;
+            const finalPrice = this.getPriceForQuantity(displayQty, optionDiscount);
+            priceElement.textContent = this.formatPrice(finalPrice);
+            return;
             
             // 根据定价模式计算价格
             if (this.pricingMode === 'shopify' && this.priceBreaks.length > 0) {

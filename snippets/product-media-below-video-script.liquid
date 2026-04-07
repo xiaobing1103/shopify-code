@@ -1,0 +1,183 @@
+<script>
+  (function() {
+    const videoWrapper = document.getElementById('{{ video_id }}-wrapper');
+    if (!videoWrapper) return;
+
+    const videoElement = videoWrapper.querySelector('[data-video-element]');
+    const loadingIndicator = videoWrapper.querySelector('[data-video-loading]');
+    const poster = videoWrapper.querySelector('[data-video-poster]');
+    const playBtn = videoWrapper.querySelector('[data-video-play-btn]');
+    const autoplay = {{ autoplay | json }};
+
+    let isLoaded = false;
+    let isPlaying = false;
+    let observer = null;
+
+    function hideLoading() {
+      if (loadingIndicator) {
+        loadingIndicator.style.display = 'none';
+      }
+    }
+
+    function showError(message) {
+      if (loadingIndicator) {
+        loadingIndicator.innerHTML = '<p style="color: #999; font-size: 14px; padding: 20px;">' + (message || 'Video failed to load') + '</p>';
+      }
+    }
+
+    const sources = videoElement.querySelectorAll('source');
+    if (sources.length === 0 || !sources[0].src || sources[0].src === 'VideoDrop') {
+      showError('Please upload a video file');
+      return;
+    }
+
+    function initVideo() {
+      if (isLoaded) return;
+
+      videoElement.load();
+
+      videoElement.addEventListener('loadedmetadata', function() {
+        console.log('Video metadata loaded');
+      }, { once: true });
+
+      videoElement.addEventListener('loadeddata', function() {
+        console.log('Video data loaded');
+        isLoaded = true;
+        hideLoading();
+
+        if (autoplay && !isPlaying) {
+          playVideo();
+        }
+      }, { once: true });
+
+      videoElement.addEventListener('canplay', function() {
+        console.log('Video can play');
+        hideLoading();
+      }, { once: true });
+
+      videoElement.addEventListener('error', function(e) {
+        console.error('Video error:', e);
+        const error = videoElement.error;
+        let errorMsg = 'Video failed to load';
+
+        if (error) {
+          switch (error.code) {
+            case error.MEDIA_ERR_ABORTED:
+              errorMsg = 'Video loading aborted';
+              break;
+            case error.MEDIA_ERR_NETWORK:
+              errorMsg = 'Network error';
+              break;
+            case error.MEDIA_ERR_DECODE:
+              errorMsg = 'Video decode error';
+              break;
+            case error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+              errorMsg = 'Video format not supported';
+              break;
+          }
+        }
+
+        showError(errorMsg);
+      }, { once: true });
+    }
+
+    function playVideo() {
+      if (isPlaying) return;
+
+      hideLoading();
+
+      const playPromise = videoElement.play();
+
+      if (playPromise !== undefined) {
+        playPromise.then(function() {
+          console.log('Video playing');
+          isPlaying = true;
+
+          if (poster) {
+            poster.classList.add('is-hidden');
+          }
+          if (playBtn) {
+            playBtn.classList.add('is-hidden');
+          }
+        }).catch(function(error) {
+          console.log('Play prevented:', error);
+          isPlaying = false;
+
+          if (autoplay && playBtn) {
+            playBtn.classList.remove('is-hidden');
+          }
+        });
+      }
+    }
+
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && !isLoaded) {
+            console.log('Video in viewport, loading...');
+            initVideo();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        rootMargin: '100px'
+      });
+
+      observer.observe(videoWrapper);
+    } else {
+      initVideo();
+    }
+
+    if (playBtn) {
+      playBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isLoaded) {
+          initVideo();
+          videoElement.addEventListener('canplay', function() {
+            playVideo();
+          }, { once: true });
+        } else {
+          playVideo();
+        }
+      });
+    }
+
+    if (poster) {
+      poster.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isLoaded) {
+          initVideo();
+          videoElement.addEventListener('canplay', function() {
+            playVideo();
+          }, { once: true });
+        } else {
+          playVideo();
+        }
+      });
+    }
+
+    videoElement.addEventListener('play', function() {
+      isPlaying = true;
+      if (poster) {
+        poster.classList.add('is-hidden');
+      }
+      if (playBtn) {
+        playBtn.classList.add('is-hidden');
+      }
+    });
+
+    videoElement.addEventListener('pause', function() {
+      isPlaying = false;
+    });
+
+    window.addEventListener('beforeunload', function() {
+      if (observer) {
+        observer.disconnect();
+      }
+    });
+  })();
+</script>

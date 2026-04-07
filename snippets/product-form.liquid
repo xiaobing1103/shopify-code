@@ -31,6 +31,7 @@
     assign color_swatch = 'is-sw__color '
   endif
   assign hide_color_selector = bk_stts.hide_color_selector | default: false
+  assign hide_non_color_selectors = bk_stts.hide_non_color_selectors | default: false
   assign current_variant_available = current_variant.available
   assign use_incoming_mess = settings.use_incoming_mess
   assign current_variant_incoming = false
@@ -66,10 +67,117 @@
 {%- if color_mode == 'dropdown' or selector_mode == 'dropdown' -%}
   <link rel="stylesheet" href="{{ 'base_drop.min.css' | asset_url }}" media="all">
 {%- endif -%}
+{%- assign option_group_bg_color = bk_stts.option_group_bg_color | default: '#F7F4EE' -%}
+{%- assign option_group_text_color = bk_stts.option_group_text_color | default: '#2E2B27' -%}
+{%- assign atc_btn_bg_color = bk_stts.atc_btn_bg_color | default: '#000000' -%}
+{%- assign atc_btn_text_color = bk_stts.atc_btn_text_color | default: '#ffffff' -%}
+{%- assign atc_btn_bg_hover_color = bk_stts.atc_btn_bg_hover_color | default: '#333333' -%}
+{%- assign atc_btn_text_hover_color = bk_stts.atc_btn_text_hover_color | default: '#ffffff' -%}
+{%- assign atc_btn_gradient_from = bk_stts.atc_btn_gradient_from | default: atc_btn_bg_color -%}
+{%- assign atc_btn_gradient_to = bk_stts.atc_btn_gradient_to | default: atc_btn_bg_hover_color -%}
+{%- assign atc_btn_gradient_hover_from = bk_stts.atc_btn_gradient_hover_from | default: atc_btn_bg_hover_color -%}
+{%- assign atc_btn_gradient_hover_to = bk_stts.atc_btn_gradient_hover_to | default: atc_btn_bg_color -%}
+{%- assign atc_btn_enable_gradient = bk_stts.atc_btn_enable_gradient | default: false -%}
+{%- assign atc_btn_padding_y = bk_stts.atc_btn_padding_y | default: 0 -%}
+{%- assign atc_btn_font_size = bk_stts.atc_btn_font_size | default: 14 -%}
+
+<style>
+  #{{ product_form_id }} {
+    --t4s-option-group-bg: {{ option_group_bg_color }};
+    --t4s-option-group-surface: {{ option_group_bg_color }};
+    --t4s-option-group-text: {{ option_group_text_color }};
+    --t4s-option-group-border: {{ option_group_text_color }};
+    --t4s-option-group-accent: {{ option_group_text_color }};
+    --t4s-option-group-hover-bg: {{ option_group_bg_color }};
+    --t4s-option-group-selected-bg: {{ option_group_bg_color }};
+    --t4s-option-group-selected-text: {{ option_group_text_color }};
+    --t4s-option-group-check-bg: {{ option_group_text_color }};
+    --t4s-option-group-check-color: {{ option_group_bg_color }};
+    --t4s-qty-bg: {{ option_group_bg_color }};
+    --t4s-qty-text: {{ option_group_text_color }};
+    --t4s-qty-border: {{ option_group_text_color }};
+    --t4s-qty-button-bg: {{ option_group_bg_color }};
+    --t4s-qty-button-hover-bg: {{ option_group_bg_color }};
+    --t4s-qty-icon-color: {{ option_group_text_color }};
+    --t4s-qty-icon-hover-color: {{ option_group_text_color }};
+    --t4s-atc-bg: {{ atc_btn_bg_color }};
+    --t4s-atc-text: {{ atc_btn_text_color }};
+    --t4s-atc-bg-hover: {{ atc_btn_bg_hover_color }};
+    --t4s-atc-text-hover: {{ atc_btn_text_hover_color }};
+    --t4s-atc-custom-background: {% if atc_btn_enable_gradient %}linear-gradient(135deg, {{ atc_btn_gradient_from }}, {{ atc_btn_gradient_to }}){% else %}{{ atc_btn_bg_color }}{% endif %};
+    --t4s-atc-custom-background-hover: {% if atc_btn_enable_gradient %}linear-gradient(135deg, {{ atc_btn_gradient_hover_from }}, {{ atc_btn_gradient_hover_to }}){% else %}{{ atc_btn_bg_hover_color }}{% endif %};
+  }
+
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) {
+    background: var(--t4s-option-group-bg) !important;
+    color: var(--t4s-option-group-text) !important;
+    border-radius: 16px !important;
+    padding: 14px 16px !important;
+    margin-bottom: 14px !important;
+  }
+
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__title,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__title span,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__current,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__item,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__list > button,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-dropdown__title,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-dropdown__title span {
+    color: var(--t4s-option-group-text) !important;
+  }
+
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__list {
+    margin: 10px 0 0 !important;
+  }
+
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__item,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__list > button,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-dropdown__wrapper {
+    background: var(--t4s-option-group-surface) !important;
+    border-color: var(--t4s-option-group-border) !important;
+  }
+
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__item {
+    box-shadow: inset 0 0 0 1px var(--t4s-option-group-border) !important;
+  }
+
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__item.is--selected,
+  #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-dropdown__wrapper .t4s-swatch__item.is--selected {
+    background: var(--t4s-option-group-selected-bg) !important;
+    color: var(--t4s-option-group-selected-text) !important;
+    border-color: var(--t4s-option-group-accent) !important;
+    box-shadow: inset 0 0 0 2px var(--t4s-option-group-accent) !important;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__submit.t4s-btn-color-custom[data-atc-form]:not(.t4s-btn-style-outline):not(.t4s-btn-style-bordered):not(.t4s-btn-style-link) {
+    color: var(--t4s-atc-text) !important;
+    background: var(--t4s-atc-custom-background) !important;
+    border-color: var(--t4s-atc-bg) !important;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__submit.t4s-btn-color-custom[data-atc-form]:not(.t4s-btn-style-outline):not(.t4s-btn-style-bordered):not(.t4s-btn-style-link)::before {
+    background: var(--t4s-atc-custom-background-hover) !important;
+    border-color: var(--t4s-atc-bg-hover) !important;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__submit.t4s-btn-color-custom[data-atc-form]:not(.t4s-btn-style-outline):not(.t4s-btn-style-bordered):not(.t4s-btn-style-link):hover {
+    color: var(--t4s-atc-text-hover) !important;
+    background: var(--t4s-atc-custom-background-hover) !important;
+    border-color: var(--t4s-atc-bg-hover) !important;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__submit[data-atc-form] {
+    --btn-size: {{ atc_btn_font_size }}px;
+    height: auto !important;
+    min-height: 0 !important;
+    padding-top: {{ atc_btn_padding_y }}px !important;
+    padding-bottom: {{ atc_btn_padding_y }}px !important;
+  }
+</style>
 
 <div
   class="t4s-product-form__variants is-no-pick__{{ PR_no_pick }}{% if PR_buy_pr %} is-payment-btn-true t4s-payment-button t4s-btn-color-{{ bk_stts.button_color_payment }}{% endif %}  is-remove-soldout-{{ remove_soldout }} is-btn-full-width__{{ bk_stts.btn_atc_full }} is-btn-atc-txt-{{ bk_stts.btn_txt }} is--fist-ratio-{{ is_fit_ratio_img }}"
-  style="{% if is_fit_ratio_img %};--fit-ratio-img:{{ first_ratio_img }};{% endif %} --wishlist-color: {{ bk_stts.wishlist_color }};--wishlist-hover-color: {{ bk_stts.wishlist_color_hover }};--wishlist-active-color: {{ bk_stts.wishlist_color_active }};--compare-color: {{ bk_stts.compare_color }};--compare-hover-color: {{ bk_stts.compare_color_hover }};--compare-active-color: {{ bk_stts.compare_color_active }};--btn-color: {{ bk_stts.atc_btn_text_color | default: '#ffffff' }};--btn-background: {{ bk_stts.atc_btn_bg_color | default: '#000000' }};--btn-color-hover: {{ bk_stts.atc_btn_text_hover_color | default: '#ffffff' }};--btn-background-hover: {{ bk_stts.atc_btn_bg_hover_color | default: '#333333' }};"
+  style="{% if is_fit_ratio_img %};--fit-ratio-img:{{ first_ratio_img }};{% endif %} --wishlist-color: {{ bk_stts.wishlist_color }};--wishlist-hover-color: {{ bk_stts.wishlist_color_hover }};--wishlist-active-color: {{ bk_stts.wishlist_color_active }};--compare-color: {{ bk_stts.compare_color }};--compare-hover-color: {{ bk_stts.compare_color_hover }};--compare-active-color: {{ bk_stts.compare_color_active }};--btn-color: {{ atc_btn_text_color }};--btn-background: {{ atc_btn_bg_color }};--btn-color-hover: {{ atc_btn_text_hover_color }};--btn-background-hover: {{ atc_btn_bg_hover_color }};"
   {{ shopify_attributes }}
 >
   <div data-callBackVariant id="t4s-callBackVariant{{ product_form_id }}">
@@ -135,7 +243,6 @@
             {%- render 'choose_style', advance_pr_type: advance_pr_type, title: advance_label, pid: product.id -%}
           {%- endif -%}
 
-          {%- comment -%} Render ONLY non-color options first {%- endcomment -%}
           {%- for option in product.options_with_values -%}
             {%- liquid
               if option.values.size == 1
@@ -149,19 +256,21 @@
             -%}
 
             {%- unless get_color contains name_downcase -%}
-              {%- comment -%} Render ONLY non-color options in this first loop {%- endcomment -%}
               <div
                 data-swatch-option
                 data-id="{{ forloop.index0 }}"
                 class="t4s-swatch__option is-t4s-name__{{ option_name | handle }}"
+                {% if hide_non_color_selectors %}
+                  style="position: absolute !important; left: -9999px !important; opacity: 0 !important; pointer-events: none !important; width: 0 !important; height: 0 !important; overflow: hidden !important;"
+                {% endif %}
               >
                 <h4 class="t4s-swatch__title">
                   <span>
                     {{- option_name }}:
                     <span data-current-value class="t4s-dib t4s-swatch__current">
                       {{- selected_value | default: choose_an_option -}}
-                    </span></span
-                  >
+                    </span>
+                  </span>
                   {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
                 </h4>
                 <div class="t4s-swatch__list">
@@ -175,7 +284,6 @@
                         {{ value }}
                       </div>
                     {%- endfor -%}
-
                   {%- else -%}
                     <button
                       type="button"
@@ -197,8 +305,8 @@
                       <div class="t4s-dropdown__header">
                         <span class="t4s-dropdown__title">
                           {{- option_name }}:
-                          <span data-current-value>{{ selected_value | default: choose_an_option }}</span></span
-                        >
+                          <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                        </span>
                         <button type="button" data-dropdown-close aria-label="{{ 'general.aria.close' | t }}">
                           <svg role="presentation" class="t4s-iconsvg-close" viewBox="0 0 16 14">
                             <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
@@ -495,7 +603,7 @@
               data-atc-form
               class="t4s-product-form__submit t4s-btn t4s-btn-base t4s-btn-style-{{ bk_stts.button_style | default: 'default' }} t4s-btn-color-{{ bk_stts.button_color | default: 'primary' }} t4s-w-100 t4s-justify-content-center {% if bk_stts.button_style == 'default' or bk_stts.button_style == 'outline' %} t4s-btn-effect-{{ bk_stts.button_effect | default: 'default' }}{% endif %} t4s-btn-loading__svg"
               {% if bk_stts.button_color == 'custom' %}
-                style="--btn-color: {{ bk_stts.atc_btn_text_color | default: '#ffffff' }}; --btn-background: {{ bk_stts.atc_btn_bg_color | default: '#000000' }}; --btn-color-hover: {{ bk_stts.atc_btn_text_hover_color | default: '#ffffff' }}; --btn-background-hover: {{ bk_stts.atc_btn_bg_hover_color | default: '#333333' }};"
+                style="--btn-color: {{ atc_btn_text_color }}; --btn-background: {{ atc_btn_bg_color }}; --btn-color-hover: {{ atc_btn_text_hover_color }}; --btn-background-hover: {{ atc_btn_bg_hover_color }};"
               {% endif %}
               {% unless current_variant_available %}
                 aria-disabled="true"

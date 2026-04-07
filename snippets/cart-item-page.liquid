@@ -364,86 +364,108 @@
       {%- comment -%}Quantity Discount Progress Bar{%- endcomment -%}
       {%- liquid
         assign current_qty = item_qty
-        assign max_qty_for_progress = 5
-        assign first_pack_position = 8
-        assign second_pack_position = 50
-        assign fifth_pack_position = 100
+        assign base_qty = 1
+        assign first_discount_qty = 2
+        assign final_discount_qty = 5
+        assign base_pack_label = base_qty | append: ' Pack'
+        assign first_discount_label = '10% OFF'
+        assign final_discount_label = '25% OFF'
+        assign progress_qty = current_qty
 
-        # Map progress to milestone positions so 1/2/5 pack markers stay visually aligned.
-        if current_qty >= max_qty_for_progress
-          assign progress_percent = 100
-        elsif current_qty >= 2
-          assign remaining_progress_range = fifth_pack_position | minus: second_pack_position
-          assign progress_percent = current_qty | minus: 2 | times: remaining_progress_range | divided_by: 3.0 | plus: second_pack_position
-        else
-          assign progress_percent = first_pack_position
+        if progress_qty > final_discount_qty
+          assign progress_qty = final_discount_qty
         endif
 
-        assign next_milestone = 0
-        if current_qty < 2
-          assign next_milestone = 2
-        elsif current_qty < 5
-          assign next_milestone = 5
+        # This bar represents progress toward the final discount threshold.
+        assign progress_percent = progress_qty | times: 100.0 | divided_by: final_discount_qty
+        assign base_node_position = base_qty | times: 100.0 | divided_by: final_discount_qty
+        assign first_discount_node_position = first_discount_qty | times: 100.0 | divided_by: final_discount_qty
+        assign final_discount_node_position = 100
+        assign marker_icon_size = 28
+        assign centered_node_transform = 'translateX(-50%)'
+        assign end_node_transform = 'translateX(-100%)'
+        assign first_discount_left_gap = first_discount_qty | minus: base_qty
+        assign first_discount_right_gap = final_discount_qty | minus: first_discount_qty
+        assign first_discount_icon_offset_px = 0
+        assign first_discount_text_offset_px = 0
+        assign first_discount_pack_label_offset_px = 0
+
+        if first_discount_left_gap > first_discount_right_gap
+          assign first_discount_icon_offset_px = -8
+          assign first_discount_text_offset_px = -18
+          assign first_discount_pack_label_offset_px = -16
+        elsif first_discount_left_gap < first_discount_right_gap
+          assign first_discount_icon_offset_px = 8
+          assign first_discount_text_offset_px = 18
+          assign first_discount_pack_label_offset_px = 16
         endif
+
+        assign first_discount_icon_offset_style = 'position: relative; left: ' | append: first_discount_icon_offset_px | append: 'px;'
+        assign first_discount_text_offset_style = 'position: relative; left: ' | append: first_discount_text_offset_px | append: 'px; white-space: nowrap;'
+        assign first_discount_pack_label_offset_style = 'position: relative; left: ' | append: first_discount_pack_label_offset_px | append: 'px; white-space: nowrap;'
+        assign final_discount_text_style = 'white-space: nowrap;'
+        assign final_discount_pack_label_style = 'white-space: nowrap;'
       -%}
 
       {%- unless hide_qty_discount_bar -%}
         <div class="t4s-cart-qty-discount-bar">
           <div class="t4s-cart-qty-discount-progress">
             <div class="t4s-cart-qty-discount-markers-top">
-              <div class="t4s-cart-qty-marker-top {% if current_qty >= 2 %}active{% endif %}" style="left: {{ second_pack_position }}%">
-                {%- if current_qty >= 2 -%}
+              <div class="t4s-cart-qty-marker-top {% if current_qty >= first_discount_qty %}active{% endif %}" style="left: {{ first_discount_node_position }}%; transform: {{ centered_node_transform }};">
+                {%- if current_qty >= first_discount_qty -%}
                   <img
                     src="{{ 'icon_yidacheng.png' | asset_url }}"
-                    alt="save 20%"
-                    width="32"
-                    height="32"
+                    alt="{{ first_discount_label }}"
+                    width="{{ marker_icon_size }}"
+                    height="{{ marker_icon_size }}"
                     class="t4s-marker-icon"
+                    style="{{ first_discount_icon_offset_style }}"
                   >
                 {%- else -%}
                   <img
                     src="{{ 'icon_weidacheng.png' | asset_url }}"
-                    alt="save 20%"
-                    width="32"
-                    height="32"
+                    alt="{{ first_discount_label }}"
+                    width="{{ marker_icon_size }}"
+                    height="{{ marker_icon_size }}"
                     class="t4s-marker-icon"
+                    style="{{ first_discount_icon_offset_style }}"
                   >
                 {%- endif -%}
-                <div class="t4s-marker-text">save 20%</div>
+                <div class="t4s-marker-text" style="{{ first_discount_text_offset_style }}">{{ first_discount_label }}</div>
               </div>
-              <div class="t4s-cart-qty-marker-top {% if current_qty >= 5 %}active{% endif %}" style="left: {{ fifth_pack_position }}%">
-                {%- if current_qty >= 5 -%}
+              <div class="t4s-cart-qty-marker-top {% if current_qty >= final_discount_qty %}active{% endif %}" style="left: {{ final_discount_node_position }}%; transform: {{ end_node_transform }}; text-align: right;">
+                {%- if current_qty >= final_discount_qty -%}
                   <img
                     src="{{ 'icon_yidacheng.png' | asset_url }}"
-                    alt="save 40%"
-                    width="32"
-                    height="32"
+                    alt="{{ final_discount_label }}"
+                    width="{{ marker_icon_size }}"
+                    height="{{ marker_icon_size }}"
                     class="t4s-marker-icon"
                   >
                 {%- else -%}
                   <img
                     src="{{ 'icon_weidacheng.png' | asset_url }}"
-                    alt="save 40%"
-                    width="32"
-                    height="32"
+                    alt="{{ final_discount_label }}"
+                    width="{{ marker_icon_size }}"
+                    height="{{ marker_icon_size }}"
                     class="t4s-marker-icon"
                   >
                 {%- endif -%}
-                <div class="t4s-marker-text">save 40%</div>
+                <div class="t4s-marker-text" style="{{ final_discount_text_style }}">{{ final_discount_label }}</div>
               </div>
             </div>
             <div class="t4s-cart-qty-discount-track">
               <div class="t4s-cart-qty-discount-fill" style="width: {{ progress_percent }}%"></div>
             </div>
             <div class="t4s-cart-qty-discount-markers-bottom">
-              <div class="t4s-cart-qty-marker-bottom t4s-cart-qty-marker-bottom--start" style="left: {{ first_pack_position }}%">
-                <div class="t4s-cart-qty-marker-label">1 Pack</div>
+              <div class="t4s-cart-qty-marker-bottom t4s-cart-qty-marker-bottom--start" style="left: {{ base_node_position }}%; transform: {{ centered_node_transform }};">
+                <div class="t4s-cart-qty-marker-label">{{ base_pack_label }}</div>
               </div>
-              <div class="t4s-cart-qty-marker-bottom t4s-cart-qty-marker-bottom--center" style="left: {{ second_pack_position }}%">
-                <div class="t4s-cart-qty-marker-label">2 Pack</div>
+              <div class="t4s-cart-qty-marker-bottom t4s-cart-qty-marker-bottom--center" style="left: {{ first_discount_node_position }}%; transform: {{ centered_node_transform }};">
+                <div class="t4s-cart-qty-marker-label" style="{{ first_discount_pack_label_offset_style }}">{{ first_discount_qty }} Pack</div>
               </div>
-              <div class="t4s-cart-qty-marker-bottom t4s-cart-qty-marker-bottom--end" style="left: {{ fifth_pack_position }}%">
-                <div class="t4s-cart-qty-marker-label">5 Pack</div>
+              <div class="t4s-cart-qty-marker-bottom t4s-cart-qty-marker-bottom--end" style="left: {{ final_discount_node_position }}%; transform: {{ end_node_transform }}; text-align: right;">
+                <div class="t4s-cart-qty-marker-label" style="{{ final_discount_pack_label_style }}">{{ final_discount_qty }} Pack</div>
               </div>
             </div>
           </div>

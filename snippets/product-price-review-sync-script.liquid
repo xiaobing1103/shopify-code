@@ -1,0 +1,406 @@
+<script>
+  (function () {
+    var rootId = 't4s-price-review-{{ block_id }}';
+    var targetId = 't4s-price-review-target-{{ block_id }}';
+    var sectionDomId = 'shopify-section-{{ section_id }}';
+    var initialVariantId = {{ current_variant.id | default: product.selected_or_first_available_variant.id | json }};
+    var initialPrice = {{ current_variant.price | default: product.price | json }};
+    var initialCompareAtPrice = {{ current_variant.compare_at_price | default: current_variant.price | default: product.price | json }};
+    var saleType = {{ sale_type | json }};
+    var salePercentTemplate = {{ 'products.badge.save_amount_2_html' | t: saved_amount: '[saved_amount]' | json }};
+    var saleFixedTemplate = {{ 'products.badge.save_amount_fixed_2_html' | t: saved_amount: '[saved_amount]' | json }};
+    var variantUnitPriceMap = {
+      {%- for variant in product.variants -%}
+        {{- variant.id | json -}}:
+        {%- if variant.unit_price_measurement -%}
+          {
+            price: {{ variant.price | json }},
+            unitPrice: {{ variant.unit_price | default: 0 | json }},
+            referenceValue: {{ variant.unit_price_measurement.reference_value | default: 1 | json }},
+            referenceUnit: {{ variant.unit_price_measurement.reference_unit | json }}
+          }
+        {%- else -%}
+          null
+        {%- endif -%}
+        {%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    };
+
+    function getRoot() {
+      return document.getElementById(rootId);
+    }
+
+    function getTarget() {
+      return document.getElementById(targetId);
+    }
+
+    function hasRenderedUnitPrice() {
+      var target = getTarget();
+      if (!target) return false;
+      return !!target.querySelector('[data-product-unit-price], .t4s-price__unit');
+    }
+
+    function getSection() {
+      var root = getRoot();
+      if (document.getElementById(sectionDomId)) return document.getElementById(sectionDomId);
+      if (root && root.closest('.shopify-section')) return root.closest('.shopify-section');
+      return document;
+    }
+
+    function getBundleSelector() {
+      return getSection().querySelector('[data-bundle-selector]');
+    }
+
+    function normalizeText(value) {
+      return String(value || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function detectCurrencySuffix(text) {
+      var normalizedText = normalizeText(text);
+      if (!normalizedText) return '';
+
+      var suffixMatch = normalizedText.match(/(?:\d[\d,.]*)(\s+[A-Za-z]{2,10})$/);
+      return suffixMatch ? suffixMatch[1] : '';
+    }
+
+    function getMoneyFormat() {
+      if (window.T4Sconfigs) {
+        if (window.T4Sconfigs.currencyCodeEnabled && window.T4Sconfigs.moneyWithCurrencyFormat) {
+          return window.T4Sconfigs.moneyWithCurrencyFormat;
+        }
+        if (window.T4Sconfigs.moneyFormat) return window.T4Sconfigs.moneyFormat;
+      }
+      if (window.theme && window.theme.moneyFormat) return window.theme.moneyFormat;
+      return '${{amount}}';
+    }
+
+    function getActiveCurrencyCode() {
+      if (window.T4Sconfigs) {
+        return window.T4Sconfigs.cartCurrency || window.T4Sconfigs.shopCurency || '';
+      }
+      return '';
+    }
+
+    var initialCurrencySuffix = detectCurrencySuffix(getTarget() ? getTarget().textContent : '');
+
+    function getCurrencySuffix() {
+      var target = getTarget();
+      var currentSuffix = detectCurrencySuffix(target ? target.textContent : '');
+      return currentSuffix || initialCurrencySuffix || '';
+    }
+
+    function formatMoney(cents) {
+      var normalizedCents = Math.max(parseInt(cents, 10) || 0, 0);
+      var formattedMoney = '';
+
+      if (typeof Shopify !== 'undefined' && typeof Shopify.formatMoney === 'function') {
+        formattedMoney = Shopify.formatMoney(normalizedCents, getMoneyFormat());
+      } else {
+        formattedMoney = '$' + (normalizedCents / 100).toFixed(2);
+      }
+
+      var activeCurrencyCode = getActiveCurrencyCode();
+      var currencySuffix = getCurrencySuffix();
+
+      if (currencySuffix && String(formattedMoney).indexOf(currencySuffix.trim()) === -1) {
+        formattedMoney = String(formattedMoney).trim() + currencySuffix;
+      }
+
+      if (
+        window.T4Sconfigs &&
+        window.T4Sconfigs.currencyCodeEnabled &&
+        activeCurrencyCode &&
+        String(formattedMoney).indexOf(activeCurrencyCode) === -1
+      ) {
+        formattedMoney = String(formattedMoney).trim() + ' ' + activeCurrencyCode;
+      }
+
+      return formattedMoney;
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function buildSaleBadge(compareAtPrice, price) {
+      if (!(compareAtPrice > price)) return '';
+
+      if (saleType === '1') {
+        var percent = Math.round(((compareAtPrice - price) * 100) / compareAtPrice);
+        return salePercentTemplate.replace('[saved_amount]', percent);
+      }
+
+      if (saleType === '2') {
+        return saleFixedTemplate.replace('[saved_amount]', formatMoney(compareAtPrice - price));
+      }
+
+      return '';
+    }
+
+    function buildPriceContent(price, compareAtPrice) {
+      if (!(price > 0)) return '';
+      if (compareAtPrice > price) {
+        return '<del>' + formatMoney(compareAtPrice) + '</del> <ins>' + formatMoney(price) + '</ins>' + buildSaleBadge(compareAtPrice, price);
+      }
+      return formatMoney(price);
+    }
+
+    function resolveVariantUnitPriceData(variantId, variantData) {
+      var resolvedVariantId = variantId || (variantData && variantData.id) || initialVariantId;
+      var measurement = variantData && variantData.unit_price_measurement ? variantData.unit_price_measurement : null;
+      var hasMappedUnitPriceData =
+        !!resolvedVariantId && Object.prototype.hasOwnProperty.call(variantUnitPriceMap, resolvedVariantId);
+      var mappedUnitPriceData =
+        hasMappedUnitPriceData && variantUnitPriceMap[resolvedVariantId]
+          ? variantUnitPriceMap[resolvedVariantId]
+          : null;
+
+      if (measurement && measurement.reference_unit) {
+        return {
+          status: 'known',
+          data: {
+            price: parseInt(variantData.price, 10) || (mappedUnitPriceData && parseInt(mappedUnitPriceData.price, 10)) || 0,
+            unitPrice: parseInt(variantData.unit_price, 10) || (mappedUnitPriceData && parseInt(mappedUnitPriceData.unitPrice, 10)) || 0,
+            referenceValue:
+              parseInt(measurement.reference_value, 10) || (mappedUnitPriceData && parseInt(mappedUnitPriceData.referenceValue, 10)) || 1,
+            referenceUnit: measurement.reference_unit || (mappedUnitPriceData && mappedUnitPriceData.referenceUnit) || ''
+          }
+        };
+      }
+
+      if (mappedUnitPriceData) {
+        return {
+          status: 'known',
+          data: mappedUnitPriceData
+        };
+      }
+
+      return {
+        status: hasMappedUnitPriceData ? 'none' : 'unknown',
+        data: null
+      };
+    }
+
+    function buildUnitBaseText(unitPriceData) {
+      if (!unitPriceData || !unitPriceData.referenceUnit) return '';
+
+      var referenceValue = parseInt(unitPriceData.referenceValue, 10) || 1;
+      return (referenceValue !== 1 ? referenceValue : '') + unitPriceData.referenceUnit;
+    }
+
+    function getDisplayedUnitPrice(state) {
+      var unitPriceData = state && state.unitPriceData;
+      if (!unitPriceData) return 0;
+
+      var baseUnitPrice = parseInt(unitPriceData.unitPrice, 10) || 0;
+      var basePrice = parseInt(unitPriceData.price, 10) || 0;
+      var displayedPrice = parseInt(state.price, 10) || 0;
+
+      if (!(baseUnitPrice > 0)) return 0;
+      if (!(displayedPrice > 0) || !(basePrice > 0) || displayedPrice === basePrice) return baseUnitPrice;
+
+      return Math.round((baseUnitPrice * displayedPrice) / basePrice);
+    }
+
+    function buildUnitPriceHtml(state) {
+      var unitPriceData = state && state.unitPriceData;
+      var unitBaseText = buildUnitBaseText(unitPriceData);
+      var displayedUnitPrice = getDisplayedUnitPrice(state);
+
+      if (!(displayedUnitPrice > 0) || !unitBaseText) return '';
+
+      return (
+        '<div class="t4s-price__unit">' +
+        '<span data-unit-price class="t4s-unit_price">' + formatMoney(displayedUnitPrice) + '</span>' +
+        '<span>/</span>' +
+        '<span data-unit-base class="t4s-unit_base">' + escapeHtml(unitBaseText) + '</span>' +
+        '</div>'
+      );
+    }
+
+    function buildPriceHtml(state) {
+      var content = buildPriceContent(state.price, state.compareAtPrice);
+      if (!content) return '';
+
+      var unitPriceHtml = buildUnitPriceHtml(state);
+      if (unitPriceHtml) {
+        return (
+          '<div class="t4s-product-price" data-product-unit-price>' +
+          '<span data-pr-price data-product-price data-saletype="' + saleType + '">' + content + '</span>' +
+          unitPriceHtml +
+          '</div>'
+        );
+      }
+
+      return '<div class="t4s-product-price" data-pr-price data-product-price data-saletype="' + saleType + '">' + content + '</div>';
+    }
+
+    function updateExistingPriceDom(state) {
+      var target = getTarget();
+      if (!target || !state) return false;
+
+      var unitWrapper = target.querySelector('[data-product-unit-price]');
+      if (unitWrapper) {
+        if (state.unitPriceStatus === 'none' && state.source !== 'bundle') {
+          return false;
+        }
+
+        var unitPriceNode = unitWrapper.querySelector('[data-pr-price][data-product-price]');
+        var unitValueNode = unitWrapper.querySelector('[data-unit-price]');
+        var unitBaseNode = unitWrapper.querySelector('[data-unit-base]');
+        var unitBaseText = buildUnitBaseText(state.unitPriceData);
+        var displayedUnitPrice = getDisplayedUnitPrice(state);
+
+        if (!unitPriceNode) return false;
+
+        unitPriceNode.innerHTML = buildPriceContent(state.price, state.compareAtPrice);
+
+        if (unitValueNode && displayedUnitPrice > 0) {
+          unitValueNode.textContent = formatMoney(displayedUnitPrice);
+        }
+
+        if (unitBaseNode && unitBaseText) {
+          unitBaseNode.textContent = unitBaseText;
+        }
+
+        return true;
+      }
+
+      var priceWrapper = target.querySelector('.t4s-product-price');
+      if (priceWrapper) {
+        if (state.unitPriceStatus === 'known') {
+          return false;
+        }
+        priceWrapper.innerHTML = buildPriceContent(state.price, state.compareAtPrice);
+        return true;
+      }
+
+      return false;
+    }
+
+    function createVariantState(variantId, price, compareAtPrice, variantData) {
+      var resolvedPrice = parseInt(price, 10) || 0;
+      var resolvedVariantId = variantId || (variantData && variantData.id) || initialVariantId;
+      var resolvedUnitPrice = resolveVariantUnitPriceData(resolvedVariantId, variantData);
+      return {
+        variantId: resolvedVariantId,
+        price: resolvedPrice,
+        compareAtPrice: parseInt(compareAtPrice, 10) || resolvedPrice || 0,
+        unitPriceData: resolvedUnitPrice.data,
+        unitPriceStatus: resolvedUnitPrice.status,
+        source: 'variant'
+      };
+    }
+
+    var currentVariantState = createVariantState(initialVariantId, initialPrice, initialCompareAtPrice, null);
+
+    function renderPrice(state) {
+      var target = getTarget();
+      if (!target || !state) return;
+      if (!updateExistingPriceDom(state)) {
+        target.innerHTML = buildPriceHtml(state);
+      }
+    }
+
+    function createBundleAdjustedState(price, compareAtPrice) {
+      var resolvedUnitPriceStatus = currentVariantState.unitPriceStatus;
+      if (resolvedUnitPriceStatus === 'none' && hasRenderedUnitPrice()) {
+        resolvedUnitPriceStatus = 'unknown';
+      }
+
+      return {
+        variantId: currentVariantState.variantId,
+        price: parseInt(price, 10) || currentVariantState.price,
+        compareAtPrice: parseInt(compareAtPrice, 10) || currentVariantState.compareAtPrice,
+        unitPriceData: currentVariantState.unitPriceData,
+        unitPriceStatus: resolvedUnitPriceStatus,
+        source: 'bundle'
+      };
+    }
+
+    function getBundleStateFromInstance() {
+      var selector = getBundleSelector();
+      if (!selector || !selector.bundleSelectorInstance || typeof selector.bundleSelectorInstance.getPricingDetails !== 'function') {
+        return null;
+      }
+
+      var instance = selector.bundleSelectorInstance;
+      var selectedOption = selector.querySelector('[data-bundle-option].is-selected');
+      var quantity = instance.formQuantityInput ? parseInt(instance.formQuantityInput.value, 10) || 1 : 1;
+      var discount = selectedOption ? parseInt(selectedOption.dataset.discount, 10) || 0 : 0;
+      var pricing = instance.getPricingDetails(quantity, discount);
+
+      if (!pricing) return null;
+
+      return createBundleAdjustedState(pricing.unitPrice, pricing.compareAtUnitPrice);
+    }
+
+    function syncDisplayedPrice(bundleDetail) {
+      var selector = getBundleSelector();
+      if (!selector) return;
+
+      if (bundleDetail && typeof bundleDetail.unitPrice !== 'undefined') {
+        renderPrice(createBundleAdjustedState(bundleDetail.unitPrice, bundleDetail.compareAtUnitPrice));
+        return;
+      }
+
+      var bundleState = getBundleStateFromInstance();
+      renderPrice(bundleState || currentVariantState);
+    }
+
+    document.addEventListener('bundleChanged', function (evt) {
+      var selector = getBundleSelector();
+      if (!selector || evt.target !== selector) return;
+      syncDisplayedPrice(evt.detail || null);
+    });
+
+    if (typeof jQuery !== 'undefined') {
+      jQuery(document).on('variant:changed.t4sBundlePriceReview{{ block_id }}', function (evt) {
+        if (!evt.currentVariant || !evt.currentVariant.price) return;
+
+        currentVariantState = createVariantState(
+          evt.currentVariant.id,
+          evt.currentVariant.price,
+          evt.currentVariant.compare_at_price,
+          evt.currentVariant
+        );
+
+        window.setTimeout(function () {
+          syncDisplayedPrice();
+        }, 0);
+      });
+    }
+
+    document.addEventListener('variantChange', function (evt) {
+      if (!evt.detail || !evt.detail.variant || !evt.detail.variant.price) return;
+
+      currentVariantState = createVariantState(
+        evt.detail.variant.id,
+        evt.detail.variant.price,
+        evt.detail.variant.compare_at_price,
+        evt.detail.variant
+      );
+
+      window.setTimeout(function () {
+        syncDisplayedPrice();
+      }, 0);
+    });
+
+    function initPriceSync() {
+      window.setTimeout(function () {
+        syncDisplayedPrice();
+      }, 0);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPriceSync, { once: true });
+    } else {
+      initPriceSync();
+    }
+  })();
+</script>

@@ -189,13 +189,13 @@
       "name": "Image with text",
       "settings": {
         "design_heading": "9",
-        "heading_align": "t4s-text-start",
+        "heading_align": "t4s-text-center",
         "top_heading": "Shop Business Cards",
         "heading_weight": "700",
         "heading_font_size": 28,
         "icon_heading": "las la-gem",
         "top_subheading": "One card. Infinite taps. Reusable forever.",
-        "tophead_mb": 10,
+        "tophead_mb": 40,
         "space_h_item": "0",
         "space_v_item": "0",
         "space_h_item_mb": "20",
@@ -204,7 +204,7 @@
         "cl_bg": "",
         "cl_bg_gradient": "",
         "mg": ",,,",
-        "pd": ",,,",
+        "pd": "20px,,,",
         "mg_tb": "",
         "pd_tb": "",
         "mg_mb": ",,30px,",
@@ -219,7 +219,7 @@
         "card_YgEnpF": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/47a8046703b33988f56974bd4cfa1392.png",
+            "image": "shopify://shop_images/20260319-105922.webp",
             "image_url": "shopify://products/metal-digital-business-card",
             "title": "Metal",
             "product": "metal-digital-business-card",
@@ -235,7 +235,7 @@
         "card_EYjkbg": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/ca0e6f99407aa61b226a61accef2e625.png",
+            "image": "shopify://shop_images/20260319-105933.webp",
             "image_url": "shopify://products/carbon-fiber-digital-business-card",
             "title": "Carbon Fiber",
             "product": "carbon-fiber-digital-business-card",
@@ -251,7 +251,7 @@
         "card_4DptDw": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/37c0392d126bbb9cd5c65b79bbe57bc5.png",
+            "image": "shopify://shop_images/20260319-105928.webp",
             "image_url": "shopify://products/wood-digital-business-card",
             "title": "Wood",
             "product": "wood-digital-business-card",
@@ -267,10 +267,26 @@
         "card_a44NmD": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/PVC_74384aa5-15a8-406b-8fc0-1e987a91009c.png",
-            "image_url": "shopify://products/tekmark-digital-business-card",
+            "image": "shopify://shop_images/20260319-105916.webp",
+            "image_url": "shopify://products/digital-business-card",
             "title": "Classic",
-            "product": "tekmark-digital-business-card",
+            "product": "digital-business-card",
+            "custom_price": "",
+            "text": "<p>· Durable & waterproof matte PVC.</p><p>· Tap to share—no app needed.</p><p>· Unlimited taps & reusable forever.</p><p>· Update your info for free anytime.</p>",
+            "text_line_height": 300,
+            "ingredients": "",
+            "show_button": true,
+            "button_text": "Buy Now",
+            "button_url": "shopify://products/digital-business-card"
+          }
+        },
+        "card_WpHw9P": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Gemini_Generated_Image_oev6i1oev6i1oev6.png",
+            "image_url": "shopify://products/digital-table-tent",
+            "title": "Table Tent",
+            "product": "digital-table-tent",
             "custom_price": "",
             "text": "<p>· Durable & waterproof matte PVC.</p><p>· Tap to share—no app needed.</p><p>· Unlimited taps & reusable forever.</p><p>· Update your info for free anytime.</p>",
             "text_line_height": 300,
@@ -285,13 +301,14 @@
         "card_YgEnpF",
         "card_EYjkbg",
         "card_4DptDw",
-        "card_a44NmD"
+        "card_a44NmD",
+        "card_WpHw9P"
       ],
       "custom_css": [],
       "name": "SS - Product ingredients #5",
       "settings": {
-        "layout_type": "slider",
-        "layout_type_mobile": "slider",
+        "layout_type": "grid",
+        "layout_type_mobile": "grid",
         "heading": "",
         "heading_custom": false,
         "heading_font": "josefin_sans_n4",
@@ -302,7 +319,7 @@
         "heading_align_mobile": "left",
         "cards_gap": 30,
         "cards_gap_mobile": 20,
-        "cards_view": 4,
+        "cards_view": 5,
         "cards_view_mobile": 1.2,
         "cards_mt": 10,
         "cards_mt_mobile": 0,
@@ -397,7 +414,7 @@
         "margin_horizontal_mobile": 0,
         "padding_top": 0,
         "padding_bottom": 0,
-        "padding_horizontal": 22,
+        "padding_horizontal": 8,
         "padding_horizontal_mobile": 1.5,
         "full_width": true,
         "content_width": 1200,
@@ -905,25 +922,25 @@
       "name": "SS - Scrolling features",
       "settings": {
         "scroll_on_desktop": true,
-        "scroll_speed": 76,
+        "scroll_speed": 70,
         "scroll_speed_mobile": 28,
         "scroll_direction": "left",
         "scroll_pause": true,
-        "items_gap": 132,
+        "items_gap": 130,
         "items_gap_mobile": 50,
         "border_bottom": false,
         "border_top": false,
         "text_custom": false,
         "text_font": "josefin_sans_n4",
-        "text_size": 22,
+        "text_size": 18,
         "text_size_mobile": 16,
-        "text_height": 200,
-        "icon_size": 43,
+        "text_height": 100,
+        "icon_size": 36,
         "icon_margin": 16,
         "background-color": "#06158f",
         "border_color": "#1c1c1f",
         "padding_top": 0,
-        "padding_bottom": 0
+        "padding_bottom": 28
       }
     }
   },

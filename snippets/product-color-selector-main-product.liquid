@@ -1,22 +1,7 @@
 {%- comment -%}
-  Product Color Selector Snippet - 独立的 Color Selector Block
-  
-  这个 snippet 创建一个独立的 color selector，它会：
-  1. 渲染一个隐藏的 product form（包含完整的 variant 逻辑）
-  2. 只显示 color 选项
-  3. 使用主题自带的 JavaScript 来处理 variant 切换
-  
-  Parameters:
-  - product: Product object
-  - current_variant: Current variant object
-  - pr_se_id: Product section ID
-  - bk_stts: Block settings
-  - isProductDefault: Boolean
-  - get_color: Array of color keywords
-  - choose_an_option: Translation string
-  - name_sizeg: Size guide name
-  - html_sizeg: Size guide HTML
-  - show_tooltip: Tooltip setting
+  Main Product Color Selector Snippet
+  独立复制 product-color-selector 的逻辑，只给 main-product 使用。
+  目的：避免通过 render 原 snippet + 外层 CSS 的方式影响原始样式。
 {%- endcomment -%}
 
 {%- liquid
@@ -24,13 +9,13 @@
   assign selector_mode = bk_stts.selector_mode | default: 'default'
   assign color_size = bk_stts.color_size | default: 'medium'
   assign title_spacing = bk_stts.title_spacing | default: 16
-  
+
   assign color_swatch = 'disabled-'
   assign color_mode_list = 'color, color is-sw-cl__round, variant_image, variant_image is-sw-cl__round' | split: ', '
   if color_mode_list contains color_mode
     assign color_swatch = 'is-sw__color '
   endif
-  
+
   if color_mode contains 'color' or color_mode contains 'variant'
     assign show_tooltip = ''
   else
@@ -40,193 +25,183 @@
 
 {%- if isProductDefault == false -%}
   {{ 'swatch.css' | asset_url | append: '?v=20251201-v3' | stylesheet_tag }}
-  
-  {%- comment -%} 创建一个独立的 form ID {%- endcomment -%}
-  {%- assign independent_form_id = 'product-form-independent-' | append: pr_se_id -%}
-  
-  {%- comment -%} 渲染一个独立的 product form，包含必要的包装器 {%- endcomment -%}
-  <div class="t4s-independent-color-selector-wrapper t4s-independent-color-selector-wrapper--title-split t4s-independent-color-selector-wrapper--main-product-title-right" style="--t4s-color-title-spacing: {{ title_spacing }}px;">
+
+  {%- assign independent_form_id = 'product-form-independent-main-' | append: pr_se_id -%}
+
+  <div class="t4s-independent-color-selector-wrapper t4s-independent-color-selector-wrapper--main-product-title-right" style="--t4s-color-title-spacing: {{ title_spacing }}px;">
     <div data-callBackVariant id="t4s-callBackVariant{{ independent_form_id }}">
-      {%- comment -%} 隐藏的 JSON 数据（主题 JS 需要）{%- endcomment -%}
       <script class="pr_variants_json" type="application/json">
         {{ product.variants | json }}
       </script>
       <script class="pr_options_json" type="application/json">
         {{ product.options_with_values | json }}
       </script>
-      
-      <form 
+
+      <form
         id="{{ independent_form_id }}"
         class="t4s-product-form"
         data-productid="{{ product.id }}"
         data-type="add-to-cart-form"
         style="display: contents;"
       >
-      {%- comment -%} 隐藏的 variant select（主题 JS 需要它来工作）{%- endcomment -%}
-      <select name="id" style="display: none;">
-        {%- for variant in product.variants -%}
-          <option 
-            value="{{ variant.id }}"
-            {% if variant == current_variant %}selected="selected"{% endif %}
-          >
-            {{ variant.title }}
-          </option>
-        {%- endfor -%}
-      </select>
-      
-      {%- comment -%} 只渲染 color selector {%- endcomment -%}
-      <div 
-        class="t4s-swatch t4s-color-mode__{{ color_mode }} t4s-color-size__{{ color_size }} t4s-selector-mode__{{ selector_mode }}"
-        data-independent-color-selector
-      >
-    {%- for option in product.options_with_values -%}
-      {%- liquid
-        if option.values.size == 1
-          assign selected_value = option.values.first
-        else
-          assign option_index = 'option' | append: forloop.index
-          assign selected_value = current_variant[option_index]
-        endif
-        assign option_name = option.name
-        assign name_downcase = option_name | downcase
-      -%}
+        <select name="id" style="display: none;">
+          {%- for variant in product.variants -%}
+            <option
+              value="{{ variant.id }}"
+              {% if variant == current_variant %}selected="selected"{% endif %}
+            >
+              {{ variant.title }}
+            </option>
+          {%- endfor -%}
+        </select>
 
-      {%- if get_color contains name_downcase -%}
         <div
-          data-swatch-option
-          data-id="{{ forloop.index0 }}"
-          class="t4s-swatch__option is-t4s-style__color is-t4s-name__{{ option_name | handle }}"
+          class="t4s-swatch t4s-color-mode__{{ color_mode }} t4s-color-size__{{ color_size }} t4s-selector-mode__{{ selector_mode }}"
+          data-independent-color-selector
         >
-          <h4 class="t4s-swatch__title">
-            <span class="t4s-swatch__title-left">
-              <span class="t4s-swatch__label">{{ option_name }}</span>
-              {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
-            </span>
-            <span class="t4s-swatch__title-right">
-              <span class="t4s-swatch__current-prefix">·</span>
-              <span data-current-value class="t4s-dib t4s-swatch__current">
-                {{- selected_value | default: choose_an_option -}}
-              </span>
-            </span>
-          </h4>
-          <div data-swatch-list class="t4s-swatch__list">
-            {%- if color_mode != 'dropdown' -%}
-              {%- for value in option.values -%}
-                {%- liquid
-                  assign swatch_focal_point = null
-                  if value.swatch.image
-                    assign image_url = value.swatch.image | image_url: width: 100, height: 100
-                    assign swatch_value = 'url(' | append: image_url | append: ')'
-                    assign swatch_focal_point = value.swatch.image.presentation.focal_point
-                  elsif value.swatch.color
-                    assign swatch_value = value.swatch.color
-                  else
-                    assign swatch_value = null
-                  endif
-                -%}
-                <div
-                  data-swatch-item
-                  data-tooltip{{ show_tooltip }}="top"
-                  title="{{ value | escape }}"
-                  class="t4s-swatch__item {{ color_swatch }}bg_color_{{ value | handle }} lazyloadt4s{% if selected_value == value %} is--selected{% endif %}"
-                  data-value="{{ value | escape }}"
-                  {% if swatch_value %}
-                    style="--swatch--background: {{ swatch_value }};{% if swatch_focal_point %} --swatch-focal-point: {{ swatch_focal_point }};{% endif %}"
-                  {% endif %}
-                >
-                  {{ value }}
-                </div>
-              {%- endfor -%}
+          {%- for option in product.options_with_values -%}
+            {%- liquid
+              if option.values.size == 1
+                assign selected_value = option.values.first
+              else
+                assign option_index = 'option' | append: forloop.index
+                assign selected_value = current_variant[option_index]
+              endif
+              assign option_name = option.name
+              assign name_downcase = option_name | downcase
+            -%}
 
-            {%- else -%}
-              <button
-                type="button"
-                data-dropdown-open
-                data-position="bottom-end"
-                data-id="t4s_nt_{{ pr_se_id }}{{ forloop.index }}"
-              >
-                <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
-                <svg class="t4s-icon-select-arrow" role="presentation" viewBox="0 0 19 12">
-                  <use xlink:href="#t4s-select-arrow"></use>
-                </svg>
-              </button>
+            {%- if get_color contains name_downcase -%}
               <div
-                data-dropdown-wrapper
-                class="t4s-dropdown__wrapper t4s-current-scrollbar"
-                id="t4s_nt_{{ pr_se_id }}{{ forloop.index }}"
+                data-swatch-option
+                data-id="{{ forloop.index0 }}"
+                class="t4s-swatch__option is-t4s-style__color is-t4s-name__{{ option_name | handle }}"
               >
-                <div class="t4s-drop-arrow"></div>
-                <div class="t4s-dropdown__header">
-                  <span class="t4s-dropdown__title">
-                    {{- option_name }}:
-                    <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                <h4 class="t4s-swatch__title">
+                  <span class="t4s-swatch__title-left">
+                    <span class="t4s-swatch__label">{{ option_name }}</span>
+                    {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
                   </span>
-                  <button type="button" data-dropdown-close aria-label="{{ 'general.aria.close' | t }}">
-                    <svg role="presentation" class="t4s-iconsvg-close" viewBox="0 0 16 14">
-                      <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
-                    </svg>
-                  </button>
-                </div>
-                <div class="t4s-dropdown__content">
-                  {%- for value in option.values -%}
-                    {%- liquid
-                      assign swatch_focal_point = null
-                      if value.swatch.image
-                        assign image_url = value.swatch.image | image_url: width: 100, height: 100
-                        assign swatch_value = 'url(' | append: image_url | append: ')'
-                        assign swatch_focal_point = value.swatch.image.presentation.focal_point
-                      elsif value.swatch.color
-                        assign swatch_value = value.swatch.color
-                      else
-                        assign swatch_value = null
-                      endif
-                    -%}
-                    <div
-                      data-swatch-item
-                      data-dropdown-off
-                      class="t4s-swatch__item t4s-truncate {{ color_swatch }}bg_color_{{ value | handle }} lazyloadt4s{% if selected_value == value %} is--selected{% endif %}"
-                      data-value="{{ value | escape }}"
-                      {% if swatch_value %}
-                        style="--swatch--background: {{ swatch_value }};{% if swatch_focal_point %} --swatch-focal-point: {{ swatch_focal_point }};{% endif %}"
-                      {% endif %}
+                  <span class="t4s-swatch__title-right">
+                    <span class="t4s-swatch__current-prefix">·</span>
+                    <span data-current-value class="t4s-dib t4s-swatch__current">
+                      {{- selected_value | default: choose_an_option -}}
+                    </span>
+                  </span>
+                </h4>
+                <div data-swatch-list class="t4s-swatch__list">
+                  {%- if color_mode != 'dropdown' -%}
+                    {%- for value in option.values -%}
+                      {%- liquid
+                        assign swatch_focal_point = null
+                        if value.swatch.image
+                          assign image_url = value.swatch.image | image_url: width: 100, height: 100
+                          assign swatch_value = 'url(' | append: image_url | append: ')'
+                          assign swatch_focal_point = value.swatch.image.presentation.focal_point
+                        elsif value.swatch.color
+                          assign swatch_value = value.swatch.color
+                        else
+                          assign swatch_value = null
+                        endif
+                      -%}
+                      <div
+                        data-swatch-item
+                        data-tooltip{{ show_tooltip }}="top"
+                        title="{{ value | escape }}"
+                        class="t4s-swatch__item {{ color_swatch }}bg_color_{{ value | handle }} lazyloadt4s{% if selected_value == value %} is--selected{% endif %}"
+                        data-value="{{ value | escape }}"
+                        {% if swatch_value %}
+                          style="--swatch--background: {{ swatch_value }};{% if swatch_focal_point %} --swatch-focal-point: {{ swatch_focal_point }};{% endif %}"
+                        {% endif %}
+                      >
+                        {{ value }}
+                      </div>
+                    {%- endfor -%}
+
+                  {%- else -%}
+                    <button
+                      type="button"
+                      data-dropdown-open
+                      data-position="bottom-end"
+                      data-id="t4s_nt_{{ pr_se_id }}{{ forloop.index }}"
                     >
-                      {{ value }}
+                      <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                      <svg class="t4s-icon-select-arrow" role="presentation" viewBox="0 0 19 12">
+                        <use xlink:href="#t4s-select-arrow"></use>
+                      </svg>
+                    </button>
+                    <div
+                      data-dropdown-wrapper
+                      class="t4s-dropdown__wrapper t4s-current-scrollbar"
+                      id="t4s_nt_{{ pr_se_id }}{{ forloop.index }}"
+                    >
+                      <div class="t4s-drop-arrow"></div>
+                      <div class="t4s-dropdown__header">
+                        <span class="t4s-dropdown__title">
+                          {{- option_name }}:
+                          <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                        </span>
+                        <button type="button" data-dropdown-close aria-label="{{ 'general.aria.close' | t }}">
+                          <svg role="presentation" class="t4s-iconsvg-close" viewBox="0 0 16 14">
+                            <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>
+                          </svg>
+                        </button>
+                      </div>
+                      <div class="t4s-dropdown__content">
+                        {%- for value in option.values -%}
+                          {%- liquid
+                            assign swatch_focal_point = null
+                            if value.swatch.image
+                              assign image_url = value.swatch.image | image_url: width: 100, height: 100
+                              assign swatch_value = 'url(' | append: image_url | append: ')'
+                              assign swatch_focal_point = value.swatch.image.presentation.focal_point
+                            elsif value.swatch.color
+                              assign swatch_value = value.swatch.color
+                            else
+                              assign swatch_value = null
+                            endif
+                          -%}
+                          <div
+                            data-swatch-item
+                            data-dropdown-off
+                            class="t4s-swatch__item t4s-truncate {{ color_swatch }}bg_color_{{ value | handle }} lazyloadt4s{% if selected_value == value %} is--selected{% endif %}"
+                            data-value="{{ value | escape }}"
+                            {% if swatch_value %}
+                              style="--swatch--background: {{ swatch_value }};{% if swatch_focal_point %} --swatch-focal-point: {{ swatch_focal_point }};{% endif %}"
+                            {% endif %}
+                          >
+                            {{ value }}
+                          </div>
+                        {%- endfor -%}
+                      </div>
                     </div>
-                  {%- endfor -%}
+                  {%- endif -%}
                 </div>
               </div>
             {%- endif -%}
-          </div>
+          {%- endfor -%}
         </div>
-      {%- endif -%}
-    {%- endfor -%}
-      </div>
       </form>
     </div>
   </div>
-  
-  {%- comment -%} JavaScript: 直接监听 swatch 点击，触发主 form 的对应 swatch，并实现多选项联动筛选 {%- endcomment -%}
+
   <script>
     (function() {
       function initIndependentColorSelector() {
         var independentWrapper = document.querySelector('[data-callBackVariant][id="t4s-callBackVariant{{ independent_form_id }}"]');
         var mainWrapper = document.querySelector('[data-callBackVariant][id="t4s-callBackVariant{{ 'product-form-' | append: pr_se_id }}"]');
-        
+
         if (!independentWrapper || !mainWrapper) {
           setTimeout(initIndependentColorSelector, 100);
           return;
         }
-        
+
         var independentSwatch = independentWrapper.querySelector('.t4s-swatch');
-        
-        // 🔧 关键修复：查找主 form 中所有的 swatch 容器
+
         var mainSwatches = mainWrapper.querySelectorAll('.t4s-swatch');
         var mainSwatch = null;
-        
-        // 如果有多个 swatch，找到包含选项的那个
+
         if (mainSwatches.length > 0) {
-          
-          // 优先查找包含 data-swatch-option 的 swatch
           for (var i = 0; i < mainSwatches.length; i++) {
             var swatchOptions = mainSwatches[i].querySelectorAll('[data-swatch-option]');
             if (swatchOptions.length > 0) {
@@ -234,26 +209,24 @@
               break;
             }
           }
-          
-          // 如果还没找到，使用第一个
+
           if (!mainSwatch) {
             mainSwatch = mainSwatches[0];
           }
         }
-        
+
         if (!independentSwatch) {
           setTimeout(initIndependentColorSelector, 100);
           return;
         }
-        
-        // 获取 variants 和 options 数据
+
         var variantsJson = independentWrapper.querySelector('.pr_variants_json');
         var optionsJson = independentWrapper.querySelector('.pr_options_json');
-        
+
         if (!variantsJson || !optionsJson) {
           return;
         }
-        
+
         var variants = JSON.parse(variantsJson.textContent);
         var options = JSON.parse(optionsJson.textContent);
 
@@ -328,12 +301,10 @@
             }
           }));
         }
-        
-        // 获取当前选中的值（包括主 form 中的其他选项）
+
         function getCurrentSelectedValues() {
           var selectedValues = {};
-          
-          // 首先从独立选择器获取值
+
           independentSwatch.querySelectorAll('[data-swatch-option]').forEach(function(option) {
             var optionIndex = option.getAttribute('data-id');
             var selectedItem = option.querySelector('[data-swatch-item].is--selected');
@@ -341,13 +312,11 @@
               selectedValues[optionIndex] = selectedItem.getAttribute('data-value');
             }
           });
-          
-          // 🔧 关键修复：从主 form 获取其他选项的值
+
           if (mainSwatch) {
             mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
               var mainOptionIndex = mainOption.getAttribute('data-id');
-              
-              // 如果独立选择器中没有这个选项，从主 form 获取
+
               if (!selectedValues.hasOwnProperty(mainOptionIndex)) {
                 var mainSelectedItem = mainOption.querySelector('[data-swatch-item].is--selected');
                 if (mainSelectedItem) {
@@ -356,31 +325,27 @@
               }
             });
           }
-          
+
           return selectedValues;
         }
-        
-        // 🔧 改进：通过选项名称匹配，而不是索引
+
         function findMainOption(independentOption) {
           var optionIndex = independentOption.getAttribute('data-id');
           var optionName = independentOption.className.match(/is-t4s-name__([^\s]+)/);
           var optionNameValue = optionName ? optionName[1] : null;
-          
-          // 首先尝试通过 data-id 匹配
+
           var mainOption = mainWrapper.querySelector('[data-swatch-option][data-id="' + optionIndex + '"]');
-          
+
           if (mainOption) {
             return mainOption;
           }
-          
-          // 如果通过 data-id 找不到，尝试通过 class 名称匹配
+
           if (optionNameValue) {
             mainOption = mainWrapper.querySelector('[data-swatch-option].is-t4s-name__' + optionNameValue);
             if (mainOption) {
               return mainOption;
             }
-            
-            // 🔧 额外尝试：查找包含颜色相关 class 的选项
+
             if (optionNameValue === 'color' || optionNameValue === 'colour') {
               mainOption = mainWrapper.querySelector('[data-swatch-option].is-t4s-style__color');
               if (mainOption) {
@@ -388,30 +353,25 @@
               }
             }
           }
-          
-          // 🔧 改进：如果独立选择器只有一个选项，尝试找主 form 中唯一的颜色选项
+
           var independentOptions = independentSwatch.querySelectorAll('[data-swatch-option]');
-          
+
           if (independentOptions.length === 1) {
-            
-            // 查找主 form 中所有颜色选项
             var mainColorOptions = mainWrapper.querySelectorAll('[data-swatch-option].is-t4s-style__color');
-            
+
             if (mainColorOptions.length === 1) {
               return mainColorOptions[0];
             }
-            
-            // 如果还是找不到，尝试找主 form 中唯一的选项
+
             var mainOptions = mainWrapper.querySelectorAll('[data-swatch-option]');
             if (mainOptions.length === 1) {
               return mainOptions[0];
             }
           }
-          
+
           return null;
         }
-        
-        // 更新可用选项（禁用/启用 swatch items）
+
         if (mainSelect) {
           mainSelect.addEventListener('change', function() {
             var selectedVariant = findVariantById(mainSelect.value);
@@ -448,36 +408,28 @@
         });
 
         function updateAvailableOptions() {
-          
-          // 🔧 关键修复：直接从主 form 同步状态，不要自己计算
           if (mainSwatch) {
             independentSwatch.querySelectorAll('[data-swatch-option]').forEach(function(independentOption) {
-              // 🔧 使用改进的查找函数
               var mainOption = findMainOption(independentOption);
-              
+
               if (!mainOption) {
                 return;
               }
-              
-              var optionIndex = independentOption.getAttribute('data-id');
-              
-              // 遍历独立选择器中的每个 item
+
               independentOption.querySelectorAll('[data-swatch-item]').forEach(function(independentItem) {
                 var itemValue = independentItem.getAttribute('data-value');
-                
-                // 查找主 form 中对应的 item
                 var mainItem = mainOption.querySelector('[data-swatch-item][data-value="' + itemValue + '"]');
-                
+
                 if (!mainItem) {
-                  // 主 form 中没有这个选项，隐藏它
                   independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
                   independentItem.setAttribute('disabled', 'disabled');
                   independentItem.style.display = 'none';
                 } else {
-                  // 直接复制主 form 的状态
-                  if (mainItem.classList.contains('is--soldout') || 
-                      mainItem.style.display === 'none' ||
-                      mainItem.classList.contains('is--hidden')) {
+                  if (
+                    mainItem.classList.contains('is--soldout') ||
+                    mainItem.style.display === 'none' ||
+                    mainItem.classList.contains('is--hidden')
+                  ) {
                     independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
                     independentItem.setAttribute('disabled', 'disabled');
                     independentItem.style.display = 'none';
@@ -490,20 +442,16 @@
               });
             });
           } else {
-            // 如果没有主 swatch，使用 variant 计算逻辑
             var selectedValues = getCurrentSelectedValues();
-            
+
             independentSwatch.querySelectorAll('[data-swatch-option]').forEach(function(option) {
               var optionIndex = option.getAttribute('data-id');
-              
+
               option.querySelectorAll('[data-swatch-item]').forEach(function(item) {
                 var itemValue = item.getAttribute('data-value');
-                
-                // 构建测试选项组合
                 var testValues = Object.assign({}, selectedValues);
                 testValues[optionIndex] = itemValue;
-                
-                // 检查是否有匹配的 variant
+
                 var hasMatchingVariant = variants.some(function(variant) {
                   var matches = true;
                   for (var idx in testValues) {
@@ -515,8 +463,7 @@
                   }
                   return matches;
                 });
-                
-                // 更新 item 状态
+
                 if (hasMatchingVariant) {
                   item.classList.remove('is--soldout', 'is--unavailable', 'is--hidden');
                   item.removeAttribute('disabled');
@@ -530,91 +477,66 @@
             });
           }
         }
-        
-        // 监听独立 swatch 的点击事件
+
         independentSwatch.addEventListener('click', function(e) {
           var clickedItem = e.target.closest('[data-swatch-item]');
           if (!clickedItem) return;
-          
-          // 如果点击的是禁用的选项，阻止操作
+
           if (clickedItem.classList.contains('is--soldout') || clickedItem.classList.contains('is--unavailable')) {
             e.preventDefault();
             e.stopPropagation();
             return;
           }
-          
-          // 阻止默认行为
+
           e.preventDefault();
           e.stopPropagation();
-          
+
           var swatchOption = clickedItem.closest('[data-swatch-option]');
           if (!swatchOption) return;
-          
+
           var optionIndex = swatchOption.getAttribute('data-id');
           var selectedValue = clickedItem.getAttribute('data-value');
-          
-          // 更新独立 selector 的选中状态
+
           swatchOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
             item.classList.remove('is--selected');
           });
           clickedItem.classList.add('is--selected');
-          
-          // 更新当前值显示
+
           var currentValueEl = swatchOption.querySelector('[data-current-value]');
           if (currentValueEl) {
             currentValueEl.textContent = selectedValue;
           }
-          
-          // 🔧 关键修复：判断是单层还是多层逻辑
-          var independentOptions = independentSwatch.querySelectorAll('[data-swatch-option]');
+
           dispatchIndependentSync(optionIndex, selectedValue);
-          var isSingleLayer = independentOptions.length === 1;
-          
-          // 🔧 尝试查找主 form 的 swatch
+
           var mainSwatchOption = findMainOption(swatchOption);
-          
-          // 🔧 决策逻辑：
-          // 1. 如果找到主 swatch 且有对应的 item → 使用多层逻辑（触发主 swatch）
-          // 2. 如果找不到主 swatch 或找不到对应 item → 使用单层逻辑（直接更新 variant）
-          
           var useMultiLayerLogic = false;
           var mainSwatchItem = null;
-          
+
           if (mainSwatchOption) {
             mainSwatchItem = mainSwatchOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
             if (mainSwatchItem) {
               useMultiLayerLogic = true;
             }
           }
-          
+
           if (useMultiLayerLogic) {
-            // ========== 多层逻辑：触发主 form 的 swatch ==========
-            
-            // 触发主 swatch 的点击事件
             mainSwatchItem.click();
-            
-            // 等待主题 JS 处理完成后，同步状态
+
             setTimeout(function() {
               updateAvailableOptions();
             }, 100);
-            
-            // 再等待一次，确保所有异步更新完成
+
             setTimeout(function() {
               updateAvailableOptions();
             }, 300);
-            
           } else {
-            // ========== 单层逻辑：直接更新 variant ==========
-            
-            // 查找匹配的 variant
             var selectedValues = getCurrentSelectedValues();
-            
-            // 🔧 从主 form 获取其他选项的值（如果有的话）
+
             if (mainSwatch) {
               mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
                 var mainOptionIndex = mainOption.getAttribute('data-id');
-                
-                // 如果独立选择器中没有这个选项，从主 form 获取
+
                 if (!selectedValues.hasOwnProperty(mainOptionIndex)) {
                   var mainSelectedItem = mainOption.querySelector('[data-swatch-item].is--selected');
                   if (mainSelectedItem) {
@@ -623,7 +545,7 @@
                 }
               });
             }
-            
+
             var matchedVariant = variants.find(function(variant) {
               var matches = true;
               for (var idx in selectedValues) {
@@ -635,42 +557,33 @@
               }
               return matches;
             });
-            
+
             if (matchedVariant) {
-              
-              // 更新主 form 的 select
               var mainForm = mainWrapper.querySelector('form');
               if (mainForm) {
                 var mainSelect = mainForm.querySelector('select[name="id"]');
                 if (mainSelect) {
                   mainSelect.value = matchedVariant.id;
-                  
-                  // 触发 change 事件
+
                   var changeEvent = new Event('change', { bubbles: true });
                   mainSelect.dispatchEvent(changeEvent);
-                  
-                  // 🔧 单层逻辑也需要同步主 form 的选中状态
+
                   if (mainSwatch) {
                     setTimeout(function() {
-                      
-                      // 更新主 form 中对应选项的选中状态
                       mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
                         var mainOptionIndex = mainOption.getAttribute('data-id');
-                        
+
                         if (selectedValues.hasOwnProperty(mainOptionIndex)) {
                           var valueToSelect = selectedValues[mainOptionIndex];
-                          
-                          // 移除所有选中状态
+
                           mainOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
                             item.classList.remove('is--selected');
                           });
-                          
-                          // 添加选中状态到对应的 item
+
                           var itemToSelect = mainOption.querySelector('[data-swatch-item][data-value="' + valueToSelect + '"]');
                           if (itemToSelect) {
                             itemToSelect.classList.add('is--selected');
-                            
-                            // 更新当前值显示
+
                             var mainCurrentValueEl = mainOption.querySelector('[data-current-value]');
                             if (mainCurrentValueEl) {
                               mainCurrentValueEl.textContent = valueToSelect;
@@ -685,8 +598,7 @@
             }
           }
         });
-        
-        // 监听主 swatch 的变化，同步到独立 swatch
+
         if (mainSwatch) {
           var observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
@@ -695,34 +607,27 @@
                 if (target.hasAttribute('data-swatch-item') && target.classList.contains('is--selected')) {
                   var swatchOption = target.closest('[data-swatch-option]');
                   if (!swatchOption) return;
-                  
+
                   var optionIndex = swatchOption.getAttribute('data-id');
                   var selectedValue = target.getAttribute('data-value');
-                  
-                  // 同步到独立 swatch（如果独立选择器中有这个选项）
                   var independentOption = independentSwatch.querySelector('[data-swatch-option][data-id="' + optionIndex + '"]');
+
                   if (independentOption) {
-                    // 移除所有选中状态
                     independentOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
                       item.classList.remove('is--selected');
                     });
-                    
-                    // 添加选中状态到对应的 item
+
                     var independentItem = independentOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
                     if (independentItem) {
                       independentItem.classList.add('is--selected');
-                      
-                      // 更新当前值显示
+
                       var currentValueEl = independentOption.querySelector('[data-current-value]');
                       if (currentValueEl) {
                         currentValueEl.textContent = selectedValue;
                       }
                     }
                   }
-                  
-                  // 🔧 关键修复：无论是哪个选项变化，都要更新所有选项的可用性
-                  
-                  // 延迟一下，等待主题 JS 更新完主 form 的其他选项
+
                   setTimeout(function() {
                     updateAvailableOptions();
                   }, 50);
@@ -730,74 +635,58 @@
               }
             });
           });
-          
-          // 监听主 swatch 中所有 items 的 class 变化
+
           mainSwatch.querySelectorAll('[data-swatch-item]').forEach(function(item) {
             observer.observe(item, { attributes: true, attributeFilter: ['class'] });
           });
-          
-          // 🔧 额外监听：监听主 swatch 中所有 items 的 style 和 class 变化（捕获 display: none）
+
           var displayObserver = new MutationObserver(function(mutations) {
             var needsUpdate = false;
             mutations.forEach(function(mutation) {
-              if (mutation.type === 'attributes' && 
-                  (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+              if (
+                mutation.type === 'attributes' &&
+                (mutation.attributeName === 'style' || mutation.attributeName === 'class')
+              ) {
                 needsUpdate = true;
               }
             });
-            
+
             if (needsUpdate) {
               setTimeout(function() {
                 updateAvailableOptions();
               }, 50);
             }
           });
-          
-          // 监听主 swatch 中所有 items 的 style 和 class 变化
+
           mainSwatch.querySelectorAll('[data-swatch-item]').forEach(function(item) {
-            displayObserver.observe(item, { 
-              attributes: true, 
-              attributeFilter: ['style', 'class'] 
+            displayObserver.observe(item, {
+              attributes: true,
+              attributeFilter: ['style', 'class']
             });
           });
         }
-        
-        // 初始化时更新可用选项
-        
-        // 🔧 关键修复：初始化时直接从主 form 同步状态，而不是自己计算
+
         var initialVariant = mainSelect ? findVariantById(mainSelect.value) : null;
         if (initialVariant) {
           syncIndependentFromVariant(initialVariant);
         }
 
         if (mainSwatch || mainWrapper) {
-          
-          // 遍历独立选择器中的所有选项
           independentSwatch.querySelectorAll('[data-swatch-option]').forEach(function(independentOption) {
-            // 🔧 使用改进的查找函数
             var mainOption = findMainOption(independentOption);
-            
+
             if (!mainOption) {
               return;
             }
-            
-            var optionIndex = independentOption.getAttribute('data-id');
-            
-            // 遍历独立选择器中的每个 item
+
             independentOption.querySelectorAll('[data-swatch-item]').forEach(function(independentItem) {
               var itemValue = independentItem.getAttribute('data-value');
-              
-              // 查找主 form 中对应的 item
               var mainItem = mainOption.querySelector('[data-swatch-item][data-value="' + itemValue + '"]');
-              
+
               if (!mainItem) {
-                // 主 form 中没有这个选项，隐藏它
                 independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
                 independentItem.style.display = 'none';
               } else {
-                // 🔧 关键：直接复制主 form 的状态
-                
-                // 复制 soldout 状态
                 if (mainItem.classList.contains('is--soldout')) {
                   independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
                   independentItem.style.display = 'none';
@@ -805,12 +694,10 @@
                   independentItem.classList.remove('is--soldout', 'is--unavailable', 'is--hidden');
                   independentItem.style.display = '';
                 }
-                
-                // 复制选中状态
+
                 if (mainItem.classList.contains('is--selected')) {
                   independentItem.classList.add('is--selected');
-                  
-                  // 更新当前值显示
+
                   var currentValueEl = independentOption.querySelector('[data-current-value]');
                   if (currentValueEl) {
                     currentValueEl.textContent = itemValue;
@@ -818,8 +705,7 @@
                 } else {
                   independentItem.classList.remove('is--selected');
                 }
-                
-                // 复制 display 状态
+
                 if (mainItem.style.display === 'none') {
                   independentItem.style.display = 'none';
                   independentItem.classList.add('is--hidden');
@@ -828,12 +714,10 @@
             });
           });
         } else {
-          // 如果没有主 swatch，使用原来的逻辑
           updateAvailableOptions();
         }
       }
-      
-      // 页面加载后初始化
+
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initIndependentColorSelector);
       } else {
@@ -841,12 +725,11 @@
       }
     })();
   </script>
-  
-  {%- comment -%} CSS: 禁用状态样式 - 不可用的选项直接隐藏 {%- endcomment -%}
+
   <style>
-    [data-independent-color-selector] [data-swatch-item].is--soldout,
-    [data-independent-color-selector] [data-swatch-item].is--unavailable,
-    [data-independent-color-selector] [data-swatch-item].is--hidden {
+    .t4s-independent-color-selector-wrapper--main-product-title-right [data-independent-color-selector] [data-swatch-item].is--soldout,
+    .t4s-independent-color-selector-wrapper--main-product-title-right [data-independent-color-selector] [data-swatch-item].is--unavailable,
+    .t4s-independent-color-selector-wrapper--main-product-title-right [data-independent-color-selector] [data-swatch-item].is--hidden {
       display: none !important;
     }
 

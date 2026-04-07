@@ -721,15 +721,15 @@ kaching-bundles-block {
 }
 
 /* 变体选择按钮样式 - 像素级还原图片样式 - 只针对非颜色选择器 */
-.t4s-swatch__item:not(.is-sw__color) {
+.t4s-product-form__variants .t4s-swatch__item:not(.is-sw__color) {
     min-width: 100px !important;
     height: 56px !important;
     padding: 16px 24px !important;
     padding-left: 32px !important;
-    border: 2px solid #e5e7eb !important;
+    border: 2px solid var(--t4s-option-group-border, #e5e7eb) !important;
     border-radius: 12px !important;
-    background: #ffffff !important;
-    color: #000000 !important;
+    background: var(--t4s-option-group-surface, #ffffff) !important;
+    color: var(--t4s-option-group-text, #000000) !important;
     font-size: 16px !important;
     font-weight: 500 !important;
     display: flex !important;
@@ -743,47 +743,47 @@ kaching-bundles-block {
 }
 
 /* 左侧渐变蓝色背景条 - 只针对非颜色选择器 */
-.t4s-swatch__item:not(.is-sw__color)::before {
+.t4s-product-form__variants .t4s-swatch__item:not(.is-sw__color)::before {
     content: '' !important;
     position: absolute !important;
     left: 0 !important;
     top: 0 !important;
     bottom: 0 !important;
     width: 20px !important;
-    background: linear-gradient(90deg, #DFF0FF 0%, #D0E9FF 50%, #CEDDFF 100%) !important;
+    background: var(--t4s-option-group-accent, #3b82f6) !important;
     border-radius: 10px 0 0 10px !important;
     z-index: 0 !important;
 }
 
 /* 悬停效果 - 只针对非颜色选择器 */
-.t4s-swatch__item:not(.is-sw__color):hover {
-    border-color: #3b82f6 !important;
-    background: #f8faff !important;
+.t4s-product-form__variants .t4s-swatch__item:not(.is-sw__color):hover {
+    border-color: var(--t4s-option-group-accent, #3b82f6) !important;
+    background: var(--t4s-option-group-hover-bg, #f8faff) !important;
 }
 
 /* 选中状态 - 蓝色边框 - 只针对非颜色选择器 */
-.t4s-swatch__item:not(.is-sw__color).is--selected {
-    border-color: #3b82f6 !important;
+.t4s-product-form__variants .t4s-swatch__item:not(.is-sw__color).is--selected {
+    border-color: var(--t4s-option-group-accent, #3b82f6) !important;
     border-width: 2px !important;
-    background: #ffffff !important;
-    color: #000000 !important;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15) !important;
+    background: var(--t4s-option-group-selected-bg, #ffffff) !important;
+    color: var(--t4s-option-group-selected-text, #000000) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* 选中状态 - 右下角白色✔图标 - 只针对非颜色选择器 */
-.t4s-swatch__item:not(.is-sw__color).is--selected::after {
-    content: "✔" !important;
+.t4s-product-form__variants .t4s-swatch__item:not(.is-sw__color).is--selected::after {
+    content: "\2713" !important;
     position: absolute !important;
     bottom: 0 !important;
     right: 0 !important;
     width: 24px !important;
     height: 24px !important;
-    background: #007BFF !important;
+    background: var(--t4s-option-group-check-bg, #007BFF) !important;
     border-radius: 8px 0 8px 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    color: #ffffff !important;
+    color: var(--t4s-option-group-check-color, #ffffff) !important;
     font-size: 14px !important;
     font-weight: bold !important;
     line-height: 1 !important;
@@ -792,7 +792,7 @@ kaching-bundles-block {
 
 /* 移动端优化 - 只针对非颜色选择器 */
 @media (max-width: 767px) {
-    .t4s-swatch__item:not(.is-sw__color) {
+    .t4s-product-form__variants .t4s-swatch__item:not(.is-sw__color) {
         min-width: 85px !important;
         height: 48px !important;
         padding: 12px 20px !important;
@@ -800,11 +800,11 @@ kaching-bundles-block {
         font-size: 14px !important;
     }
 
-    .t4s-swatch__item:not(.is-sw__color)::before {
+    .t4s-product-form__variants .t4s-swatch__item:not(.is-sw__color)::before {
         width: 16px !important;
     }
 
-    .t4s-swatch__item:not(.is-sw__color).is--selected::after {
+    .t4s-product-form__variants .t4s-swatch__item:not(.is-sw__color).is--selected::after {
         width: 20px !important;
         height: 20px !important;
         font-size: 12px !important;
@@ -833,9 +833,9 @@ kaching-bundles-block {
     align-items: center !important;
     justify-content: flex-start !important;
     gap: 0 !important;
-    background: #ffffff !important;
+    background: var(--t4s-qty-bg, #ffffff) !important;
     border-radius: 8px !important;
-    border: 1px solid #e5e7eb !important;
+    border: 1px solid var(--t4s-qty-border, #e5e7eb) !important;
 
     padding: 0 !important;
     min-height: 48px !important;
@@ -850,7 +850,7 @@ kaching-bundles-block {
     content: 'Quantity :' !important;
     font-size: 14px !important;
     font-weight: 400 !important;
-    color: #000000 !important;
+    color: var(--t4s-qty-text, #000000) !important;
     padding-left: 16px !important;
     padding-right: 16px !important;
     white-space: nowrap !important;
@@ -864,7 +864,7 @@ kaching-bundles-block {
     min-width: 40px !important;
     border: none !important;
     border-radius: 10px !important;
-    background: #ffffff !important;
+    background: var(--t4s-qty-button-bg, var(--t4s-qty-bg, #ffffff)) !important;
     padding: 0 !important;
     margin: 0 0 0 auto !important;
     display: flex !important;
@@ -884,8 +884,8 @@ kaching-bundles-block {
     text-align: center !important;
     font-size: 14px !important;
     font-weight: 400 !important;
-    color: #000000 !important;
-    background: #ffffff !important;
+    color: var(--t4s-qty-text, #000000) !important;
+    background: var(--t4s-qty-bg, #ffffff) !important;
     padding: 0 8px !important;
     margin: 0 8px !important;
     appearance: textfield !important;
@@ -912,7 +912,7 @@ kaching-bundles-block {
     min-width: 40px !important;
     border: none !important;
     border-radius: 10px !important;
-    background: #ffffff !important;
+    background: var(--t4s-qty-button-bg, var(--t4s-qty-bg, #ffffff)) !important;
     padding: 0 !important;
     margin: 0 16px 0 0 !important;
     display: flex !important;
@@ -927,17 +927,17 @@ kaching-bundles-block {
 .t4s-quantity-selector svg {
     width: 12px !important;
     height: 12px !important;
-    color: #6b7280 !important;
+    color: var(--t4s-qty-icon-color, #6b7280) !important;
 }
 
 /* 按钮悬停效果 */
 .t4s-quantity-selector:hover {
-    background: #f9fafb !important;
+    background: var(--t4s-qty-button-hover-bg, var(--t4s-qty-button-bg, #f9fafb)) !important;
     box-shadow: 0px 3px 8px 0px rgba(53, 53, 57, 0.2) !important;
 }
 
 .t4s-quantity-selector:hover svg {
-    color: #000000 !important;
+    color: var(--t4s-qty-icon-hover-color, var(--t4s-qty-text, #000000)) !important;
 }
 
 /* 按钮禁用状态 */

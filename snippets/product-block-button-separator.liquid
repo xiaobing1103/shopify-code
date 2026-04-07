@@ -1,0 +1,32 @@
+{%- liquid
+  assign separator_text = block.settings.button_separator_text | default: '' | strip
+  assign separator_margin_top = block.settings.button_separator_margin_top | default: block.settings.button_separator_margin_v | default: 16
+  assign separator_margin_bottom = block.settings.button_separator_margin_bottom | default: 0
+  assign separator_font_size = block.settings.button_separator_font_size | default: 14
+  assign separator_text_color = block.settings.button_separator_color | default: '#999999'
+  assign separator_line_color = block.settings.button_separator_line_color | default: '#e0e0e0'
+-%}
+
+<div class="t4s-product-info__item t4s-button-separator-block" {{ block.shopify_attributes }}>
+  {%- if separator_text != blank -%}
+    <div
+      class="t4s-button-separator"
+      style="display: flex; align-items: center; justify-content: center; margin: {{ separator_margin_top }}px 0 {{ separator_margin_bottom }}px; text-align: center;"
+    >
+      <div style="flex: 1; height: 1px; background-color: {{ separator_line_color }};"></div>
+      <span
+        style="padding: 0 16px; font-size: {{ separator_font_size }}px; color: {{ separator_text_color }}; font-weight: 500; white-space: nowrap;"
+      >
+        {{ separator_text }}
+      </span>
+      <div style="flex: 1; height: 1px; background-color: {{ separator_line_color }};"></div>
+    </div>
+  {%- else -%}
+    <div
+      class="t4s-button-separator"
+      style="margin: {{ separator_margin_top }}px 0 {{ separator_margin_bottom }}px;"
+    >
+      <div style="width: 100%; height: 1px; background-color: {{ separator_line_color }};"></div>
+    </div>
+  {%- endif -%}
+</div>

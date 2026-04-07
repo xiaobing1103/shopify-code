@@ -147,7 +147,11 @@
     border-radius: {{ se_stts.info_wrapper_border_radius | default: 12 }}px !important;
     box-shadow: {{ se_stts.info_wrapper_shadow | default: '0 4px 12px rgba(0, 0, 0, 0.08)' }} !important;
     padding: {{ se_stts.info_wrapper_padding | default: 24 }}px !important;
+    {% if se_stts.info_wrapper_bg_gradient != blank %}
+    background: {{ se_stts.info_wrapper_bg_gradient }} !important;
+    {% else %}
     background: {{ se_stts.info_wrapper_bg_color | default: '#ffffff' }} !important;
+    {% endif %}
   }
 
   @media (max-width: 767px) {
