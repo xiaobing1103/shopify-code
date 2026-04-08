@@ -20,6 +20,25 @@
 {%- endif -%}
 
 {%- if customization_group_enable -%}
+  {%- liquid
+    assign customization_group_content_background = se_stts.customization_group_bg_color
+    if se_stts.customization_group_bg_gradient != blank
+      assign customization_group_content_background = se_stts.customization_group_bg_gradient
+    endif
+
+    assign customization_group_button_background = se_stts.customization_group_button_bg_color
+    if customization_group_button_background == blank
+      assign customization_group_button_background = customization_group_content_background
+    endif
+
+    if se_stts.customization_group_button_bg_gradient != blank
+      assign customization_group_button_background = se_stts.customization_group_button_bg_gradient
+    endif
+
+    assign customization_group_button_shadow = se_stts.customization_group_button_shadow | default: '0 8px 24px rgba(0, 0, 0, 0.08)'
+    assign customization_group_accordion_radius = se_stts.customization_group_accordion_radius | default: 24
+    assign customization_group_accordion_radius_mobile = se_stts.customization_group_accordion_radius_mobile | default: 20
+  -%}
   <style>
     .t4s-product__customization-group--{{ se_id }} {
       --t4s-customization-group-text-color: {{ se_stts.customization_group_text_color }};
@@ -29,7 +48,7 @@
       width: 100%;
       padding: {{ se_stts.customization_group_padding }}px;
       border-radius: {{ se_stts.customization_group_radius }}px;
-      background: {{ se_stts.customization_group_bg_color }};
+      background: {{ customization_group_content_background }};
       color: var(--t4s-customization-group-text-color);
       box-sizing: border-box;
     }
@@ -44,11 +63,16 @@
 
     .t4s-product__customization-group--{{ se_id }}.is-accordion-group {
       padding: 0;
-      background: #ffffff;
+      background: {{ customization_group_content_background }};
       border: 1px solid #e7e0d5;
-      border-radius: 24px;
+      border-radius: {{ customization_group_accordion_radius }}px;
       box-shadow: none;
       overflow: hidden;
+      transition: box-shadow 0.25s ease;
+    }
+
+    .t4s-product__customization-group--{{ se_id }}.is-accordion-group:not([open]) {
+      box-shadow: {{ customization_group_button_shadow }};
     }
 
     .t4s-product__customization-group-summary--{{ se_id }} {
@@ -57,12 +81,12 @@
       padding: 0;
       cursor: pointer;
       color: var(--t4s-customization-group-heading-color);
-      background: #ffffff;
+      background: {{ customization_group_button_background }};
       font-size: var(--t4s-customization-group-heading-size);
       font-weight: var(--t4s-customization-group-heading-weight);
       line-height: 1.2;
       box-sizing: border-box;
-      border-radius: 24px;
+      border-radius: {{ customization_group_accordion_radius }}px;
     }
 
     .t4s-product__customization-group-summary-main--{{ se_id }} {
@@ -71,10 +95,22 @@
       justify-content: space-between;
       gap: 16px;
       padding: 20px 28px;
+      position: relative;
     }
 
     .t4s-product__customization-group-summary-text--{{ se_id }} {
+      flex: 1 1 auto;
       min-width: 0;
+    }
+
+    .t4s-product__customization-group-summary-main--{{ se_id }}.is-center {
+      justify-content: center;
+    }
+
+    .t4s-product__customization-group-summary-main--{{ se_id }}.is-center
+      .t4s-product__customization-group-summary-text--{{ se_id }} {
+      padding: 0 38px;
+      text-align: center;
     }
 
     .t4s-product__customization-group-summary-icon--{{ se_id }} {
@@ -88,12 +124,21 @@
       transition: transform 0.25s ease;
     }
 
+    .t4s-product__customization-group-summary-main--{{ se_id }}.is-center
+      .t4s-product__customization-group-summary-icon--{{ se_id }} {
+      position: absolute;
+      top: 50%;
+      right: 28px;
+      transform: translateY(-50%);
+    }
+
     .t4s-product__customization-group-collapsed-note--{{ se_id }} {
       display: flex;
       align-items: center;
       gap: 14px;
       padding: 20px 28px;
       border-top: 1px solid #efe7da;
+      background: {{ customization_group_button_background }};
       color: {{ se_stts.customization_group_collapsed_note_color | default: '#5A9CFF' }};
       font-size: {{ se_stts.customization_group_collapsed_note_size | default: 16 }}px;
       font-weight: 500;
@@ -123,10 +168,22 @@
       transform: rotate(180deg);
     }
 
+    .t4s-product__customization-group--{{ se_id }}[open]
+      .t4s-product__customization-group-summary--{{ se_id }} {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .t4s-product__customization-group--{{ se_id }}[open]
+      .t4s-product__customization-group-summary-main--{{ se_id }}.is-center
+      .t4s-product__customization-group-summary-icon--{{ se_id }} {
+      transform: translateY(-50%) rotate(180deg);
+    }
+
     .t4s-product__customization-group-content--{{ se_id }} {
       padding: {{ se_stts.customization_group_padding }}px;
       border-top: 1px solid #efe7da;
-      background: #ffffff;
+      background: {{ customization_group_content_background }};
       box-sizing: border-box;
     }
 
@@ -170,15 +227,25 @@
 
       .t4s-product__customization-group--{{ se_id }}.is-accordion-group {
         padding: 0;
-        border-radius: 20px;
+        border-radius: {{ customization_group_accordion_radius_mobile }}px;
       }
 
       .t4s-product__customization-group-summary--{{ se_id }} {
-        border-radius: 20px;
+        border-radius: {{ customization_group_accordion_radius_mobile }}px;
       }
 
       .t4s-product__customization-group-summary-main--{{ se_id }} {
         padding: 18px 20px;
+      }
+
+      .t4s-product__customization-group-summary-main--{{ se_id }}.is-center
+        .t4s-product__customization-group-summary-text--{{ se_id }} {
+        padding: 0 34px;
+      }
+
+      .t4s-product__customization-group-summary-main--{{ se_id }}.is-center
+        .t4s-product__customization-group-summary-icon--{{ se_id }} {
+        right: 20px;
       }
 
       .t4s-product__customization-group-collapsed-note--{{ se_id }} {
