@@ -1,0 +1,159 @@
+{% comment %}TekMark AI Support v7 — No header, no reviews{% endcomment %}
+<style>
+.page-content,.t4s-page-content,.main-content .container,.main-content .page-width,.shopify-section .container{padding:0!important;margin:0!important;max-width:100%!important}
+#tk-app *{box-sizing:border-box!important;font-family:system-ui,-apple-system,sans-serif!important;text-transform:none!important;letter-spacing:normal!important}
+#tk-app h1,#tk-app h2,#tk-app h3{font-size:inherit!important;font-weight:inherit!important;line-height:inherit!important;color:inherit!important}
+@keyframes tkd{0%,60%,100%{opacity:.2;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+@keyframes tku{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+#tk-app{width:100%;height:calc(100vh - var(--nh,80px) - var(--fh,60px));min-height:420px;display:flex;flex-direction:column;overflow:hidden;background:#f7f7f5;color:#1a1a1a;font-size:14px}
+.tk-msgs{flex:1;overflow-y:auto;padding:20px 0;background:#f7f7f5}
+.tk-msgs::-webkit-scrollbar{width:3px}
+.tk-msgs::-webkit-scrollbar-thumb{background:#e0e0dc;border-radius:2px}
+.tk-wel{max-width:660px;margin:24px auto 0;padding:0 24px}
+.tk-tag{display:inline-block;padding:4px 12px;background:#f0f0ec;border-radius:20px;font-size:11px;color:#666;font-weight:500;margin-bottom:14px}
+.tk-wtitle{font-size:24px;font-weight:700;line-height:1.2;letter-spacing:-.4px;color:#111;margin-bottom:8px}
+.tk-wtitle em{font-style:normal;color:#2563eb}
+.tk-wdesc{font-size:13px;color:#999;line-height:1.6;margin-bottom:20px}
+.tk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tk-card{padding:13px 14px;background:#fff;border:1px solid #ebebeb;border-radius:12px;cursor:pointer;transition:all .15s;text-align:left;width:100%}
+.tk-card:hover{border-color:#2563eb!important;box-shadow:0 2px 12px rgba(37,99,235,.1)!important;transform:translateY(-1px)!important}
+.tk-ct{font-size:12.5px;font-weight:600;color:#111;margin-bottom:3px;display:block}
+.tk-cs{font-size:11px;color:#bbb;display:block}
+.tk-div{max-width:660px;margin:0 auto 14px;padding:0 24px;display:none;align-items:center;gap:10px}
+.tk-dl{flex:1;height:1px;background:#ebebeb}
+.tk-dt{font-size:10px;color:#ccc;letter-spacing:1.5px;text-transform:uppercase}
+.tk-mw{padding:3px 24px;max-width:660px;margin:0 auto;width:100%}
+.tk-m{display:flex;gap:10px;margin-bottom:12px;animation:tku .25s ease forwards;opacity:0}
+.tk-m.u{flex-direction:row-reverse}
+.tk-av{width:27px;height:27px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:1px}
+.tk-av.a{background:#111;color:#fff}
+.tk-av.u{background:#e8e8e4;color:#666}
+.tk-b{max-width:calc(100% - 38px);padding:10px 14px;border-radius:14px;line-height:1.65;font-size:13.5px}
+.tk-m.a .tk-b{background:#fff;border:1px solid #ebebeb;color:#111;border-top-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.tk-m.u .tk-b{background:#2563eb;color:#fff;border-top-right-radius:4px}
+.tk-tw{display:none;padding:3px 24px;max-width:660px;margin:0 auto;width:100%}
+.tk-dots{display:inline-flex;gap:5px;align-items:center;padding:11px 14px;background:#fff;border:1px solid #ebebeb;border-radius:14px;border-top-left-radius:4px}
+.tk-dots s{width:4px;height:4px;background:#ccc;border-radius:50%;display:inline-block;animation:tkd 1.4s ease-in-out infinite}
+.tk-dots s:nth-child(2){animation-delay:.2s}.tk-dots s:nth-child(3){animation-delay:.4s}
+.tk-err{display:none;max-width:660px;margin:0 auto 8px;padding:0 24px;width:100%}
+.tk-erri{padding:10px 14px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:12px;color:#ef4444}
+.tk-iw{flex-shrink:0;background:#fff;border-top:1px solid #ebebeb;padding:14px 24px}
+.tk-ir{max-width:660px;margin:0 auto;display:flex;gap:10px;align-items:flex-end}
+.tk-inp{flex:1;background:#f4f4f0!important;border:1px solid #e0e0dc!important;border-radius:12px!important;padding:11px 15px!important;color:#111!important;font-size:13.5px!important;font-family:system-ui,-apple-system,sans-serif!important;resize:none!important;outline:none!important;box-shadow:none!important;min-height:44px;max-height:120px;line-height:1.5!important;transition:all .15s}
+.tk-inp::placeholder{color:#ccc!important}
+.tk-inp:focus{background:#fff!important;border-color:#2563eb!important;box-shadow:0 0 0 3px rgba(37,99,235,.08)!important}
+.tk-btn{width:44px;height:44px;background:#111!important;border:none!important;border-radius:12px!important;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;padding:0!important}
+.tk-btn:hover{background:#333!important;transform:scale(1.04)!important}
+.tk-btn:disabled{opacity:.3!important;cursor:not-allowed!important;transform:none!important}
+.tk-hint{max-width:660px;margin:7px auto 0;font-size:11px;color:#ccc}
+@media(max-width:600px){.tk-iw{padding:12px 16px}.tk-mw,.tk-tw,.tk-wel,.tk-div,.tk-err{padding:0 16px}.tk-wtitle{font-size:20px}.tk-grid{grid-template-columns:1fr}}
+</style>
+
+<div id="tk-app">
+  <div class="tk-msgs" id="tk-msgs">
+    <div class="tk-wel" id="tk-wel">
+      <div class="tk-tag">⚡ AI-powered · Available 24/7</div>
+      <div class="tk-wtitle">Hi there 👋<br>How can we <em>help you?</em></div>
+      <div class="tk-wdesc">Ask about your NFC card, orders, setup, or anything else.</div>
+      <div class="tk-grid">
+        <button class="tk-card" onclick="tkGo('My NFC card isn\'t working')"><span class="tk-ct">Card not working</span><span class="tk-cs">NFC & QR troubleshooting</span></button>
+        <button class="tk-card" onclick="tkGo('How do I activate my card?')"><span class="tk-ct">Activate my card</span><span class="tk-cs">Setup & onboarding</span></button>
+        <button class="tk-card" onclick="tkGo('Track my order')"><span class="tk-ct">Track my order</span><span class="tk-cs">Shipping & delivery</span></button>
+        <button class="tk-card" onclick="tkGo('What products do you offer?')"><span class="tk-ct">Browse products</span><span class="tk-cs">Metal, wood, PVC & more</span></button>
+        <button class="tk-card" onclick="tkGo('Bulk / B2B pricing')"><span class="tk-ct">B2B & bulk orders</span><span class="tk-cs">Enterprise pricing</span></button>
+        <button class="tk-card" onclick="tkGo('How to update my profile?')"><span class="tk-ct">Update my profile</span><span class="tk-cs">Edit links & contact info</span></button>
+      </div>
+    </div>
+    <div class="tk-div" id="tk-div">
+      <div class="tk-dl"></div><div class="tk-dt">Conversation</div><div class="tk-dl"></div>
+    </div>
+  </div>
+
+  <div class="tk-tw" id="tk-tw">
+    <div style="display:flex;gap:10px;align-items:flex-start">
+      <div class="tk-av a">TM</div>
+      <div class="tk-dots"><s></s><s></s><s></s></div>
+    </div>
+  </div>
+
+  <div class="tk-err" id="tk-err"><div class="tk-erri" id="tk-errt"></div></div>
+
+  <div class="tk-iw">
+    <div class="tk-ir">
+      <textarea class="tk-inp" id="tk-inp" rows="1" placeholder="Type your question..."></textarea>
+      <button class="tk-btn" id="tk-btn" onclick="tkGo()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="tk-hint">Enter to send · Shift+Enter for new line</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function gh(s){var e=document.querySelector(s);return e?e.offsetHeight:0}
+  function sh(){
+    var n=gh('header.site-header,header#header,.site-header,.t4s-header,.header,#shopify-section-header > *');
+    var f=gh('footer.site-footer,footer#footer,.site-footer,.t4s-footer,.footer');
+    if(n<20)n=80;if(f<20)f=60;
+    document.getElementById('tk-app').style.height='calc(100vh - '+n+'px - '+f+'px)';
+  }
+  sh();window.addEventListener('resize',sh);
+
+  var API='https://pcmrw5ufsgdcrtrshwcst2jhtu0fwais.lambda-url.us-east-2.on.aws/api/v1/chat';
+  var sid=sessionStorage.getItem('tk_s7');
+  if(!sid){sid='s'+Math.random().toString(36).substr(2,10);sessionStorage.setItem('tk_s7',sid);}
+  var hist=JSON.parse(sessionStorage.getItem('tk_h7')||'[]');
+  var flds=JSON.parse(sessionStorage.getItem('tk_f7')||'{}');
+  var busy=false;
+  var msgs=document.getElementById('tk-msgs'),inp=document.getElementById('tk-inp'),btn=document.getElementById('tk-btn');
+  var tw=document.getElementById('tk-tw'),wel=document.getElementById('tk-wel'),div=document.getElementById('tk-div');
+  var err=document.getElementById('tk-err'),errt=document.getElementById('tk-errt');
+
+  if(hist.length>0){
+    wel.style.display='none';div.style.display='flex';
+    hist.forEach(function(m){add(m.role==='user'?'u':'a',m.content);});
+  }
+
+  function add(role,text){
+    var w=document.createElement('div');w.className='tk-mw';
+    var m=document.createElement('div');m.className='tk-m '+role;
+    var av=document.createElement('div');av.className='tk-av '+role;av.textContent=role==='a'?'TM':'You';
+    var b=document.createElement('div');b.className='tk-b';
+    b.innerHTML=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/`(.*?)`/g,'<code style="background:#f0f0ec;padding:1px 5px;border-radius:3px;font-size:12px">$1</code>')
+      .replace(/\n/g,'<br>');
+    m.appendChild(av);m.appendChild(b);w.appendChild(m);msgs.appendChild(w);
+    setTimeout(function(){msgs.scrollTop=msgs.scrollHeight;},50);
+  }
+
+  window.tkGo=function(preset){
+    var text=preset||inp.value.trim();if(!text||busy)return;
+    wel.style.display='none';div.style.display='flex';
+    inp.value='';inp.style.height='auto';
+    add('u',text);busy=true;btn.disabled=true;tw.style.display='block';err.style.display='none';
+    setTimeout(function(){msgs.scrollTop=msgs.scrollHeight;},50);
+    hist.push({role:'user',content:text});
+    fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({session_id:sid,message:text,language:'en',
+        conversation_history:hist.slice(-10),collected_fields:flds})})
+    .then(function(r){if(!r.ok)throw r.status;return r.json();})
+    .then(function(d){
+      var rep=d.reply||'Sorry, something went wrong.';
+      hist.push({role:'assistant',content:rep});
+      sessionStorage.setItem('tk_h7',JSON.stringify(hist));
+      if(d.collected_fields){flds=Object.assign(flds,d.collected_fields);sessionStorage.setItem('tk_f7',JSON.stringify(flds));}
+      busy=false;btn.disabled=false;tw.style.display='none';add('a',rep);
+    })
+    .catch(function(){
+      busy=false;btn.disabled=false;tw.style.display='none';
+      errt.textContent='Unable to connect. Please try again.';
+      err.style.display='block';setTimeout(function(){err.style.display='none';},5000);
+    });
+  };
+
+  inp.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();tkGo();}});
+})();
+</script>

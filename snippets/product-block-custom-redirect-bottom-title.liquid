@@ -2,6 +2,8 @@
   assign bottom_title = block.settings.bottom_title | strip
   assign title_size = block.settings.title_font_size | default: 28
   assign title_weight = block.settings.title_font_weight | default: 600
+  assign title_size_mobile = block.settings.title_font_size_mobile | default: title_size
+  assign title_weight_mobile = block.settings.title_font_weight_mobile | default: title_weight
   assign title_color = block.settings.title_color | default: '#2b2b2b'
   assign title_margin_top = block.settings.title_margin_top | default: 12
   assign show_block = false
@@ -11,10 +13,23 @@
 -%}
 
 {%- if show_block -%}
-  <div class="t4s-product-info__item t4s-custom-redirect-bottom-title-block" {{ block.shopify_attributes }}>
+  <style>
+    .t4s-custom-redirect-bottom-title-block--{{ block.id }} .t4s-product-form__custom-redirect-title--bottom {
+      font-size: {{ title_size }}px;
+      font-weight: {{ title_weight }};
+    }
+
+    @media (max-width: 767px) {
+      .t4s-custom-redirect-bottom-title-block--{{ block.id }} .t4s-product-form__custom-redirect-title--bottom {
+        font-size: {{ title_size_mobile }}px;
+        font-weight: {{ title_weight_mobile }};
+      }
+    }
+  </style>
+  <div class="t4s-product-info__item t4s-custom-redirect-bottom-title-block t4s-custom-redirect-bottom-title-block--{{ block.id }}" {{ block.shopify_attributes }}>
     <div
       class="t4s-product-form__custom-redirect-title t4s-product-form__custom-redirect-title--bottom"
-      style="font-size: {{ title_size }}px; font-weight: {{ title_weight }}; color: {{ title_color }}; line-height: 1.3; margin: {{ title_margin_top }}px 0 0;"
+      style="color: {{ title_color }}; line-height: 1.3; margin: {{ title_margin_top }}px 0 0;"
     >
       {{ bottom_title | default: 'Bottom title' }}
     </div>

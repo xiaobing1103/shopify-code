@@ -35,6 +35,11 @@
       assign customization_group_button_background = se_stts.customization_group_button_bg_gradient
     endif
 
+    assign customization_group_collapsed_note_background = se_stts.customization_group_collapsed_note_bg_color
+    if customization_group_collapsed_note_background == blank
+      assign customization_group_collapsed_note_background = customization_group_button_background
+    endif
+
     assign customization_group_button_shadow = se_stts.customization_group_button_shadow | default: '0 8px 24px rgba(0, 0, 0, 0.08)'
     assign customization_group_accordion_radius = se_stts.customization_group_accordion_radius | default: 24
     assign customization_group_accordion_radius_mobile = se_stts.customization_group_accordion_radius_mobile | default: 20
@@ -45,6 +50,8 @@
       --t4s-customization-group-heading-color: {{ customization_group_heading_color }};
       --t4s-customization-group-heading-size: {{ customization_group_heading_size }}px;
       --t4s-customization-group-heading-weight: {{ customization_group_heading_weight }};
+      --t4s-customization-group-heading-size-mobile: {{ customization_group_heading_size_mobile | default: customization_group_heading_size }}px;
+      --t4s-customization-group-heading-weight-mobile: {{ customization_group_heading_weight_mobile | default: customization_group_heading_weight }};
       width: 100%;
       padding: {{ se_stts.customization_group_padding }}px;
       border-radius: {{ se_stts.customization_group_radius }}px;
@@ -138,10 +145,10 @@
       gap: 14px;
       padding: 20px 28px;
       border-top: 1px solid #efe7da;
-      background: {{ customization_group_button_background }};
+      background: {{ customization_group_collapsed_note_background }};
       color: {{ se_stts.customization_group_collapsed_note_color | default: '#5A9CFF' }};
       font-size: {{ se_stts.customization_group_collapsed_note_size | default: 16 }}px;
-      font-weight: 500;
+      font-weight: {{ se_stts.customization_group_collapsed_note_weight | default: 500 }};
       line-height: 1.45;
       box-sizing: border-box;
     }
@@ -225,6 +232,11 @@
         border-radius: {{ se_stts.customization_group_radius_mobile }}px;
       }
 
+      .t4s-product__customization-group-summary--{{ se_id }} {
+        font-size: var(--t4s-customization-group-heading-size-mobile);
+        font-weight: var(--t4s-customization-group-heading-weight-mobile);
+      }
+
       .t4s-product__customization-group--{{ se_id }}.is-accordion-group {
         padding: 0;
         border-radius: {{ customization_group_accordion_radius_mobile }}px;
@@ -251,7 +263,7 @@
       .t4s-product__customization-group-collapsed-note--{{ se_id }} {
         gap: 10px;
         padding: 16px 20px 18px;
-        font-size: {{ se_stts.customization_group_collapsed_note_size | default: 16 | at_most: 15 }}px;
+        font-size: {{ se_stts.customization_group_collapsed_note_size_mobile | default: se_stts.customization_group_collapsed_note_size | default: 16 }}px;
       }
 
       .t4s-product__customization-group-content--{{ se_id }} {
