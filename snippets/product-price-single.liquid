@@ -8,6 +8,7 @@
     - type_sale: '1', '2' (optional)
     - price_varies_style: {String} Product price varies (optional)
     - style_inline: {CSS} Product price var css (optional)
+    - hide_compare_price: {Boolean} Hide compare-at price/strike-through price (optional)
 
     Usage:
     {%- render 'product-price-single', variant: current_variant, product: product, PR_no_pick:true -%}
@@ -45,6 +46,11 @@ endif
 assign on_sale = false 
 if compare_at_price > price
    assign on_sale = true 
+endif
+
+if hide_compare_price
+  assign on_sale = false
+  assign compare_at_price = price
 endif
 
 assign cur_code_enabled = settings.currency_code_enabled
