@@ -1,0 +1,51 @@
+{%- if bk_stts.image != blank -%}
+  {%- liquid
+    assign bk_id = block.id
+    assign image_height = bk_stts.image_height | default: 0
+    assign image_height_mobile = bk_stts.image_height_mobile | default: image_height
+    assign image_fit = bk_stts.image_fit | default: 'cover'
+  -%}
+
+  <style>
+    .t4s-custom-liquid-image_{{ bk_id }} {
+      margin-top: {{ bk_stts.margin_top | default: 16 }}px;
+      margin-bottom: {{ bk_stts.margin_bottom | default: 16 }}px;
+    }
+
+    .t4s-custom-liquid-image_{{ bk_id }} img {
+      display: block;
+      width: 100%;
+      {% if image_height > 0 %}
+        height: {{ image_height }}px;
+        object-fit: {{ image_fit }};
+      {% else %}
+        height: auto;
+      {% endif %}
+    }
+
+    @media (max-width: 767px) {
+      .t4s-custom-liquid-image_{{ bk_id }} img {
+        {% if image_height_mobile > 0 %}
+          height: {{ image_height_mobile }}px;
+          object-fit: {{ image_fit }};
+        {% else %}
+          height: auto;
+        {% endif %}
+      }
+    }
+  </style>
+
+  <div
+    class="t4s-custom-liquid-image_{{ bk_id }} t4s-pr__custom-liquid-image"
+    {{ block.shopify_attributes }}
+  >
+    {{
+      bk_stts.image
+      | image_url: width: 1600
+      | image_tag:
+        loading: 'lazy',
+        widths: '375, 550, 750, 1100, 1500, 1600',
+        sizes: '(min-width: 768px) 50vw, 100vw'
+    }}
+  </div>
+{%- endif -%}

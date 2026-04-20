@@ -24,6 +24,9 @@
   if item_title_lower contains 'studio'
     assign hide_qty_discount_bar = true
   endif
+  if show_qty_discount_progress == false
+    assign hide_qty_discount_bar = true
+  endif
 -%}
 
 <div
@@ -315,6 +318,31 @@
                 </li>
               {%- endfor -%}
             </ul>
+          {%- endif -%}
+
+          {%- liquid
+            assign discount_badge_base_price = item.original_price
+            if item_variant.compare_at_price > discount_badge_base_price
+              assign discount_badge_base_price = item_variant.compare_at_price
+            endif
+            assign discount_badge_percent = 0
+            if discount_badge_base_price > item.final_price
+              assign discount_badge_percent = discount_badge_base_price | minus: item.final_price | times: 100.0 | divided_by: discount_badge_base_price | round
+            endif
+          -%}
+
+          {%- if show_discount_percent_badge and discount_badge_percent > 0 -%}
+            <div class="t4s-cart-discount-percent-badge-wrap">
+              <span
+                class="t4s-cart-discount-percent-badge"
+                style="--discount-badge-bg: {{ discount_percent_badge_bg | default: '#EAF3FF' }};"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-cart-tag"/>
+                </svg>
+                <span>Save {{ discount_badge_percent }}%</span>
+              </span>
+            </div>
           {%- endif -%}
 
           {%- comment -%}Quantity Discount Progress Bar{%- endcomment -%}

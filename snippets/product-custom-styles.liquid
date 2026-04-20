@@ -5,9 +5,51 @@
 {%- endcomment -%}
 
 {%- comment -%} 自定义缩略图样式 {%- endcomment -%}
+{%- liquid
+  assign thumb_lr_px = se_stts.thumb_lr_size_px | default: 0
+  if thumb_lr_px == 0
+    assign thumb_lr_px = 48
+    case se_stts.thumb_lr_size
+      when 'medium'
+        assign thumb_lr_px = 56
+      when 'large'
+        assign thumb_lr_px = 64
+    endcase
+  endif
+  assign thumb_lr_px_mobile = se_stts.thumb_lr_size_mobile_px | default: 0
+  if thumb_lr_px_mobile == 0
+    assign thumb_lr_px_mobile = thumb_lr_px
+  endif
+-%}
 <style>
   /* 桌面端 - 保持原有布局，只添加样式 */
   @media (min-width: 768px) {
+    .t4s-main-product__content.t4s-product-media__thumbnails_left .t4s-col-thumb,
+    .t4s-main-product__content.t4s-product-media__thumbnails_right .t4s-col-thumb {
+      --t4s-thumb-w: {{ thumb_lr_px }}px !important;
+      flex: 0 0 {{ thumb_lr_px }}px !important;
+      width: {{ thumb_lr_px }}px !important;
+      min-width: {{ thumb_lr_px }}px !important;
+      max-width: {{ thumb_lr_px }}px !important;
+    }
+
+    .t4s-main-product__content.t4s-product-media__thumbnails_left .t4s-col-thumb .t4s-product__thumb-item,
+    .t4s-main-product__content.t4s-product-media__thumbnails_right .t4s-col-thumb .t4s-product__thumb-item {
+      flex: 0 0 {{ thumb_lr_px }}px !important;
+      width: {{ thumb_lr_px }}px !important;
+      max-width: {{ thumb_lr_px }}px !important;
+    }
+
+    .t4s-main-product__content.t4s-product-media__thumbnails_left [data-thumb__frame],
+    .t4s-main-product__content.t4s-product-media__thumbnails_right [data-thumb__frame],
+    .t4s-main-product__content.t4s-product-media__thumbnails_left .t4s-product__thumb,
+    .t4s-main-product__content.t4s-product-media__thumbnails_right .t4s-product__thumb,
+    .t4s-main-product__content.t4s-product-media__thumbnails_left .t4s_ratio,
+    .t4s-main-product__content.t4s-product-media__thumbnails_right .t4s_ratio {
+      width: {{ thumb_lr_px }}px !important;
+      max-width: {{ thumb_lr_px }}px !important;
+    }
+
     .t4s-product-thumbnails-custom .t4s_ratio {
       border-radius: {{ se_stts.thumb_border_radius | default: 8 }}px !important;
       overflow: hidden !important;
@@ -50,16 +92,38 @@
     .t4s-product-thumbnails-custom-wrapper {
       position: relative !important;
       margin-top: {{ se_stts.thumb_margin_top_mobile | default: 15 }}px !important;
-      width: calc(100% - {{ se_stts.thumb_arrow_container_padding_mobile | default: 30 }}px) !important;
+      width: 100% !important;
       max-width: 100% !important;
-      padding: 0 !important;
+      box-sizing: border-box !important;
+      padding: 0 26px !important;
       margin-left: auto !important;
       margin-right: auto !important;
-      overflow: visible !important;
+      overflow-x: hidden !important;
+      overflow-y: visible !important;
     }
 
     .t4s-product-thumbnails-custom-wrapper .t4s-carousel__nav-scroller {
-      overflow: {{ se_stts.thumb_scroller_overflow_mobile | default: 'visible' }} !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior-x: contain !important;
+      touch-action: pan-x !important;
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+
+    .t4s-product-thumbnails-custom-wrapper .t4s-carousel__nav-scroller::-webkit-scrollbar {
+      display: none !important;
+    }
+
+    .t4s-product-thumbnails-custom-wrapper .btn_pnav_prev,
+    .t4s-product-thumbnails-custom-wrapper .btn_pnav_next {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
     }
 
     .t4s-product-thumbnails-custom {
@@ -70,9 +134,16 @@
     }
 
     .t4s-product-thumbnails-custom .t4s-col-item {
-      flex: 0 0 calc(25% - {{ se_stts.thumb_gap_mobile | default: 8 }}px * 3 / 4) !important;
-      max-width: calc(25% - {{ se_stts.thumb_gap_mobile | default: 8 }}px * 3 / 4) !important;
-      width: calc(25% - {{ se_stts.thumb_gap_mobile | default: 8 }}px * 3 / 4) !important;
+      flex: 0 0 {{ thumb_lr_px_mobile }}px !important;
+      max-width: {{ thumb_lr_px_mobile }}px !important;
+      width: {{ thumb_lr_px_mobile }}px !important;
+    }
+
+    .t4s-product-thumbnails-custom .t4s-product__thumb,
+    .t4s-product-thumbnails-custom .t4s_ratio {
+      width: {{ thumb_lr_px_mobile }}px !important;
+      min-width: {{ thumb_lr_px_mobile }}px !important;
+      max-width: {{ thumb_lr_px_mobile }}px !important;
     }
 
     .t4s-product-thumbnails-custom .t4s_ratio {
@@ -92,9 +163,9 @@
       position: absolute !important;
       top: 50% !important;
       transform: translateY(-50%) !important;
-      width: {{ se_stts.thumb_arrow_size_mobile | default: 36 }}px !important;
-      height: {{ se_stts.thumb_arrow_size_mobile | default: 36 }}px !important;
-      background: {{ se_stts.thumb_arrow_bg_color | default: 'rgba(255, 255, 255, 0.95)' }} !important;
+      width: 22px !important;
+      height: 22px !important;
+      background: rgba(255, 255, 255, 0.98) !important;
       border: {{ se_stts.thumb_arrow_border_width | default: 1 }}px solid {{ se_stts.thumb_arrow_border_color | default: 'rgba(0, 0, 0, 0.1)' }} !important;
       border-radius: 50% !important;
       align-items: center !important;
@@ -102,23 +173,25 @@
       cursor: pointer !important;
       z-index: 21 !important;
       transition: all 0.3s ease !important;
-      font-size: {{ se_stts.thumb_arrow_icon_size_mobile | default: 16 }}px !important;
+      font-size: 12px !important;
       color: {{ se_stts.thumb_arrow_color | default: '#333' }} !important;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+      line-height: 1 !important;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+      user-select: none !important;
     }
 
     .t4s-thumb-nav-arrow:hover {
       background: {{ se_stts.thumb_arrow_bg_hover_color | default: 'rgba(255, 255, 255, 1)' }} !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-      transform: translateY(-50%) scale(1.05) !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16) !important;
+      transform: translateY(-50%) scale(1.04) !important;
     }
 
     .t4s-thumb-nav-arrow-prev {
-      left: {{ se_stts.thumb_arrow_offset_mobile | default: -10 }}px !important;
+      left: 2px !important;
     }
 
     .t4s-thumb-nav-arrow-next {
-      right: {{ se_stts.thumb_arrow_offset_mobile | default: -10 }}px !important;
+      right: 2px !important;
     }
 
     /* 主图箭头样式 */

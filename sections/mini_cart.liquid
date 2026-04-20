@@ -176,6 +176,29 @@
     padding-top: 0px;
   }
 
+  .t4s-cart-discount-percent-badge-wrap {
+    margin-bottom: 8px;
+  }
+
+  .t4s-cart-discount-percent-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: var(--discount-badge-bg, #eaf3ff);
+    color: #2d63a8;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .t4s-cart-discount-percent-badge svg {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 auto;
+  }
+
   .t4s-cart-qty-discount-progress {
     position: relative;
     margin-bottom: 8px;
@@ -522,7 +545,10 @@
               edit_item: edit_item,
               cur_code_enabled: cur_code_enabled,
               atc_ajax_enable: atc_ajax_enable,
-              cart_ajax_enable: cart_ajax_enable
+              cart_ajax_enable: cart_ajax_enable,
+              show_qty_discount_progress: se_stts.show_qty_discount_progress,
+              show_discount_percent_badge: se_stts.show_discount_percent_badge,
+              discount_percent_badge_bg: se_stts.discount_percent_badge_bg
             -%}
           {%- endfor -%}
 
@@ -1180,6 +1206,24 @@
       "label": "Enable calc shipping",
       "info": "Free shipping minimum amount.",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_qty_discount_progress",
+      "label": "Show quantity discount progress",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_percent_badge",
+      "label": "Show discount percent badge",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "discount_percent_badge_bg",
+      "label": "Discount percent badge background",
+      "default": "#EAF3FF"
     },
     {
       "type": "checkbox",

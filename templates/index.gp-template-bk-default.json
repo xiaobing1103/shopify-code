@@ -120,7 +120,7 @@
       "settings": {
         "layout_height": "fixed_height",
         "layout_fixed_height": 600,
-        "layout_fixed_height_mobile": 580,
+        "layout_fixed_height_mobile": 550,
         "content_maxwidth": 55,
         "content_align": "left",
         "content_align_mobile": "left",

@@ -28,6 +28,21 @@
 {%- endcomment -%}
 
 {%- liquid
+  assign thumb_lr_px = se_stts.thumb_lr_size_px | default: 0
+  if thumb_lr_px == 0
+    assign thumb_lr_px = 48
+    case se_stts.thumb_lr_size
+      when 'medium'
+        assign thumb_lr_px = 56
+      when 'large'
+        assign thumb_lr_px = 64
+    endcase
+  endif
+  assign thumb_lr_px_mobile = se_stts.thumb_lr_size_mobile_px | default: 0
+  if thumb_lr_px_mobile == 0
+    assign thumb_lr_px_mobile = thumb_lr_px
+  endif
+
   if media_layout == 'thumbnails_left'
     assign class_main = 't4s-col-lg t4s-order-lg-last '
     assign class_thumb = 't4s-col-lg-auto t4s-order-lg-first '
@@ -40,6 +55,51 @@
 -%}
 
 {{ 'slider-settings.s.min.css' | asset_url | stylesheet_tag }}
+
+<style>
+  @media (min-width: 768px) {
+    .t4s-product-media__thumbnails_left [data-thumb__scroller="{{ se_id }}"],
+    .t4s-product-media__thumbnails_right [data-thumb__scroller="{{ se_id }}"] {
+      width: {{ thumb_lr_px }}px !important;
+      min-width: {{ thumb_lr_px }}px !important;
+      max-width: {{ thumb_lr_px }}px !important;
+    }
+
+    .t4s-product-media__thumbnails_left [data-thumb__scroller="{{ se_id }}"] .t4s-carousel__nav,
+    .t4s-product-media__thumbnails_right [data-thumb__scroller="{{ se_id }}"] .t4s-carousel__nav,
+    [data-thumb__scroller="{{ se_id }}"] .t4s-product-thumbnails-custom {
+      gap: {{ se_stts.thumb_gap | default: 10 }}px !important;
+    }
+
+    [data-thumb__scroller="{{ se_id }}"] .t4s-product__thumb-item,
+    [data-thumb__scroller="{{ se_id }}"] .t4s-carousel__nav-item,
+    [data-thumb__scroller="{{ se_id }}"] [data-thumb__frame],
+    [data-thumb__scroller="{{ se_id }}"] .t4s-product__thumb,
+    [data-thumb__scroller="{{ se_id }}"] .t4s_ratio {
+      width: {{ thumb_lr_px }}px !important;
+      min-width: {{ thumb_lr_px }}px !important;
+      max-width: {{ thumb_lr_px }}px !important;
+      flex: 0 0 {{ thumb_lr_px }}px !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    [data-thumb__scroller="{{ se_id }}"] .t4s-product-thumbnails-custom {
+      gap: {{ se_stts.thumb_gap_mobile | default: 8 }}px !important;
+    }
+
+    [data-thumb__scroller="{{ se_id }}"] .t4s-product__thumb-item,
+    [data-thumb__scroller="{{ se_id }}"] .t4s-carousel__nav-item,
+    [data-thumb__scroller="{{ se_id }}"] [data-thumb__frame],
+    [data-thumb__scroller="{{ se_id }}"] .t4s-product__thumb,
+    [data-thumb__scroller="{{ se_id }}"] .t4s_ratio {
+      width: {{ thumb_lr_px_mobile }}px !important;
+      min-width: {{ thumb_lr_px_mobile }}px !important;
+      max-width: {{ thumb_lr_px_mobile }}px !important;
+      flex: 0 0 {{ thumb_lr_px_mobile }}px !important;
+    }
+  }
+</style>
 
 <div class="t4s-row t4s-g-0" timeline hdt-reveal="slide-in">
   <div data-product-single-media-group class="{{ class_main }}t4s-col-12 t4s-col-item t4s-pr">
@@ -86,7 +146,10 @@
   </div>
 
   {%- if media_layout != 'without_thumbnails' -%}
-    <div class="{{ class_thumb }}t4s-col-12 t4s-col-item t4s-col-thumb t4s-pr t4s-oh t4s-product-thumbnails-custom-wrapper">
+    <div
+      class="{{ class_thumb }}t4s-col-12 t4s-col-item t4s-col-thumb t4s-pr t4s-oh t4s-product-thumbnails-custom-wrapper"
+      style="--t4s-thumb-size: {{ thumb_lr_px }}px; --t4s-thumb-size-mobile: {{ thumb_lr_px_mobile }}px;"
+    >
       <div
         data-thumb__scroller="{{ se_id }}"
         class="t4s-carousel__nav-scroller is__position-{{ media_layout | remove: 'thumbnails_' }}"
@@ -98,7 +161,10 @@
               {%- continue -%}
             {%- endif -%}
             {%- assign image = media.preview_image -%}
-            <div class="t4s-col-item t4s-product__thumb-item t4s-product__thumb-item-custom" data-thumb-index="{{ thumb_count }}">
+            <div
+              class="t4s-col-item t4s-product__thumb-item t4s-product__thumb-item-custom"
+              data-thumb-index="{{ thumb_count }}"
+            >
               <div
                 class="t4s_ratio t4s-product__thumb"
                 {{ imgatt }}style="--aspect-ratioapt:{{ image.aspect_ratio }}"
