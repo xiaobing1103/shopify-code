@@ -150,6 +150,94 @@
         "lazy": false
       }
     },
+    "ss_scrolling_logo_cloud_gYweyf": {
+      "type": "ss-scrolling-logo-cloud",
+      "blocks": {
+        "slide_mxYjiC": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/LG-Logo.webp",
+            "link": ""
+          }
+        },
+        "slide_VJJNxF": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/ebe59440-bd9b-4f18-a5b4-33ee9ebd9861.pdf.png",
+            "link": ""
+          }
+        },
+        "slide_iGKN7Y": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/45345345.png",
+            "link": ""
+          }
+        },
+        "slide_A6DNTJ": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/AMD-Logo.png",
+            "link": ""
+          }
+        },
+        "slide_bmmbJh": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/454.png",
+            "link": ""
+          }
+        },
+        "slide_MBMTJz": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Mercedes-Benz_logo_2_svg.png",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_mxYjiC",
+        "slide_VJJNxF",
+        "slide_iGKN7Y",
+        "slide_A6DNTJ",
+        "slide_bmmbJh",
+        "slide_MBMTJz"
+      ],
+      "name": "SS - Scrolling logo cloud",
+      "settings": {
+        "ss_title": "Trusted by leaders at",
+        "heading_custom": false,
+        "heading_font": "assistant_n4",
+        "header_size": 26,
+        "header_align": "center",
+        "scrolling_velocity": 25,
+        "slider_direction": "left",
+        "pause_hover": false,
+        "shadow": false,
+        "slider_advanced": false,
+        "sliders_mt": 24,
+        "logo_padding_top": 0,
+        "logo_padding_bottom": 0,
+        "slider_gap": 30,
+        "slider_gap_mobile": 30,
+        "icon_width": 150,
+        "slider_background_color": "#fbfbfd",
+        "header_color": "#121212",
+        "background_style": "solid",
+        "background_color": "#fbfbfd",
+        "background_gradient": "linear-gradient(180deg, #FFFFFF 0%, #F2F2F2 100%)",
+        "border_color": "#121212",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "width": "custom",
+        "content_width": 1000,
+        "border_thickness": 0,
+        "lazy": true
+      }
+    },
     "ss_steps_4_7AQ8Ra": {
       "type": "ss-steps-4",
       "blocks": {
@@ -1960,6 +2048,7 @@
   },
   "order": [
     "ss_hero_33_QPhVN8",
+    "ss_scrolling_logo_cloud_gYweyf",
     "ss_steps_4_7AQ8Ra",
     "ss_feature_12_q7zNtA",
     "ss_testimonials_48_AGbPCe",

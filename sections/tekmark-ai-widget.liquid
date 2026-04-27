@@ -1,0 +1,307 @@
+{% comment %}TekMark AI Widget — Floating chat button + popup panel (site-wide){% endcomment %}
+
+{%- if section.settings.enabled -%}
+
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ── Reset inside widget ─────────────────────────────────── */
+#tkw *{box-sizing:border-box!important;text-transform:none!important;letter-spacing:normal!important}
+#tkw,#tkw div,#tkw p,#tkw span,#tkw button,#tkw textarea{font-family:'Inter',sans-serif!important}
+@keyframes tkwd{0%,60%,100%{opacity:.2;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+@keyframes tkwu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tkwpop{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes tkwbtnin{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+/* ── Floating button ─────────────────────────────────────── */
+.tkw-fab{position:fixed!important;bottom:24px!important;right:24px!important;width:60px!important;height:60px!important;border-radius:50%!important;background:#111!important;border:none!important;cursor:pointer!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:999998!important;transition:all .2s ease!important;animation:tkwbtnin .3s ease!important;padding:0!important}
+.tkw-fab:hover{transform:translateY(-2px) scale(1.05)!important;box-shadow:0 12px 32px rgba(0,0,0,.25)!important}
+.tkw-fab svg{width:28px;height:28px;color:#fff;stroke:#fff}
+.tkw-fab .tkw-close-icon{display:none}
+#tkw.open .tkw-fab .tkw-bot-icon{display:none}
+#tkw.open .tkw-fab .tkw-close-icon{display:block}
+
+/* ── Popup panel ─────────────────────────────────────────── */
+.tkw-panel{position:fixed!important;bottom:100px!important;right:24px!important;width:400px!important;max-width:calc(100vw - 48px)!important;height:640px!important;max-height:calc(100vh - 140px)!important;background:#fbfaf7!important;border-radius:20px!important;box-shadow:0 20px 60px rgba(0,0,0,.25)!important;z-index:999997!important;display:none!important;flex-direction:column!important;overflow:hidden!important;color:#1a1a1a!important;font-family:'Inter',sans-serif!important;font-size:14px!important}
+#tkw.open .tkw-panel{display:flex!important;animation:tkwpop .25s ease}
+
+/* ── Panel header (small, just close hint) ───────────────── */
+.tkw-header{flex-shrink:0;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ebe9e1;background:#fbfaf7}
+.tkw-header-title{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:#111}
+.tkw-header-title svg{width:18px;height:18px}
+.tkw-header-reset{background:none!important;border:none!important;cursor:pointer;color:#888;font-size:12px;padding:4px 8px;border-radius:6px;transition:all .15s}
+.tkw-header-reset:hover{background:#ebe9e1;color:#333}
+
+/* ── Welcome screen ──────────────────────────────────────── */
+.tkw-welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.tkw-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.tkw-logo-mark{width:24px;height:24px;color:#111;flex-shrink:0}
+.tkw-welcome-title{font-family:'Instrument Serif',serif!important;font-size:28px!important;font-weight:400!important;color:#111!important;letter-spacing:-.3px!important;line-height:1!important}
+.tkw-welcome-title em{font-style:italic!important}
+
+.tkw-search-card{width:100%;background:#fff;border:1px solid #e5e3dc;border-radius:14px;padding:12px 14px;box-shadow:0 2px 12px rgba(0,0,0,.03);transition:border-color .15s;margin-bottom:12px}
+.tkw-search-card:focus-within{border-color:#c4c1b4}
+.tkw-search-inp{width:100%;border:none!important;outline:none!important;resize:none!important;font-family:'Inter',sans-serif!important;font-size:14px!important;color:#111!important;background:transparent!important;min-height:40px;max-height:120px;line-height:1.5!important;padding:2px 0!important;box-shadow:none!important}
+.tkw-search-inp::placeholder{color:#a8a59a!important;font-style:italic!important}
+.tkw-search-actions{display:flex;align-items:center;justify-content:flex-end;margin-top:10px}
+.tkw-send-btn{width:30px;height:30px;background:#ebe9e1!important;border:none!important;border-radius:50%!important;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0!important}
+.tkw-send-btn:hover{background:#111!important}
+.tkw-send-btn:hover svg{stroke:#fff}
+.tkw-send-btn svg{width:13px;height:13px;transition:stroke .15s}
+
+.tkw-lang-hint{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:18px;font-size:11px;color:#999;font-weight:400}
+.tkw-lang-hint svg{width:11px;height:11px}
+
+.tkw-examples{width:100%}
+.tkw-ex-label{font-size:11px;color:#888;font-weight:500;margin-bottom:8px}
+.tkw-ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tkw-ex-card{padding:10px 12px;background:#fff;border:1px solid #e5e3dc;border-radius:10px;cursor:pointer;transition:all .15s;text-align:left;position:relative;min-height:54px;width:100%}
+.tkw-ex-card:hover{border-color:#c4c1b4!important;background:#fdfcf9!important;transform:translateY(-1px)!important}
+.tkw-ex-text{font-size:12px;color:#333;line-height:1.35;font-weight:500;padding-right:14px}
+.tkw-ex-arrow{position:absolute;right:8px;bottom:8px;color:#c4c1b4}
+.tkw-ex-arrow svg{width:10px;height:10px}
+
+/* ── Chat mode ───────────────────────────────────────────── */
+.tkw-msgs{flex:1;overflow-y:auto;padding:16px 0;background:#fbfaf7;display:none}
+.tkw-msgs::-webkit-scrollbar{width:3px}
+.tkw-msgs::-webkit-scrollbar-thumb{background:#e5e3dc;border-radius:2px}
+.tkw-mw{padding:3px 16px;width:100%}
+.tkw-m{display:flex;gap:8px;margin-bottom:12px;animation:tkwu .25s ease forwards;opacity:0}
+.tkw-m.u{flex-direction:row-reverse}
+.tkw-av{width:26px;height:26px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:1px}
+.tkw-av.a{background:#111;color:#fff}
+.tkw-av.u{background:#ebe9e1;color:#666}
+.tkw-av svg{width:15px;height:15px}
+.tkw-b{max-width:calc(100% - 36px);padding:10px 13px;border-radius:12px;line-height:1.55;font-size:13px}
+.tkw-m.a .tkw-b{background:#fff;border:1px solid #e5e3dc;color:#111;border-top-left-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.tkw-m.u .tkw-b{background:#111;color:#fff;border-top-right-radius:4px}
+
+.tkw-tw{padding:3px 16px;width:100%;display:none}
+.tkw-dots{display:inline-flex;gap:4px;align-items:center;padding:10px 13px;background:#fff;border:1px solid #e5e3dc;border-radius:12px;border-top-left-radius:4px}
+.tkw-dots s{width:4px;height:4px;background:#c4c1b4;border-radius:50%;display:inline-block;animation:tkwd 1.4s ease-in-out infinite}
+.tkw-dots s:nth-child(2){animation-delay:.2s}.tkw-dots s:nth-child(3){animation-delay:.4s}
+
+.tkw-err{display:none;margin:0 16px 8px;width:calc(100% - 32px)}
+.tkw-erri{padding:8px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:11px;color:#ef4444}
+
+/* ── Bottom input (chat mode) ────────────────────────────── */
+.tkw-bottom{display:none;flex-shrink:0;background:#fbfaf7;padding:12px 16px 16px;border-top:1px solid #ebe9e1}
+.tkw-bottom-inner{background:#fff;border:1px solid #e5e3dc;border-radius:12px;padding:10px 12px;display:flex;align-items:flex-end;gap:8px;transition:border-color .15s}
+.tkw-bottom-inner:focus-within{border-color:#c4c1b4}
+.tkw-bottom-inp{flex:1;border:none!important;outline:none!important;resize:none!important;font-family:'Inter',sans-serif!important;font-size:13px!important;color:#111!important;background:transparent!important;min-height:24px;max-height:100px;line-height:1.5!important;box-shadow:none!important;padding:0!important}
+.tkw-bottom-inp::placeholder{color:#a8a59a!important}
+.tkw-bottom-send{width:28px;height:28px;background:#ebe9e1!important;border:none!important;border-radius:50%!important;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;padding:0!important}
+.tkw-bottom-send:hover{background:#111!important}
+.tkw-bottom-send:hover svg{stroke:#fff}
+.tkw-bottom-send svg{width:12px;height:12px;transition:stroke .15s}
+
+#tkw.chatting .tkw-welcome{display:none}
+#tkw.chatting .tkw-msgs{display:block}
+#tkw.chatting .tkw-bottom{display:block}
+
+/* ── Mobile ─────────────────────────────────────────────── */
+@media(max-width:500px){
+  .tkw-fab{bottom:16px!important;right:16px!important;width:54px!important;height:54px!important}
+  .tkw-panel{width:calc(100vw - 24px)!important;height:calc(100vh - 200px)!important;max-height:560px!important;right:12px!important;bottom:80px!important;top:auto!important}
+  .tkw-ex-grid{grid-template-columns:1fr}
+}
+</style>
+
+<div id="tkw">
+  <!-- Floating Button -->
+  <button class="tkw-fab" id="tkw-fab" aria-label="Open TekMark Support">
+    <svg class="tkw-bot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <svg class="tkw-close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+
+  <!-- Panel -->
+  <div class="tkw-panel" id="tkw-panel">
+    <div class="tkw-header">
+      <div class="tkw-header-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><path d="M9 17h6"/></svg>
+        TekMark AI Support
+      </div>
+      <button class="tkw-header-reset" id="tkw-reset" title="Start new conversation">Reset</button>
+    </div>
+
+    <!-- Welcome -->
+    <div class="tkw-welcome" id="tkw-welcome">
+      <div class="tkw-logo-row">
+        <div class="tkw-logo-mark">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="24" height="24" rx="5" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="16" cy="16" r="3" fill="currentColor"/></svg>
+        </div>
+        <div class="tkw-welcome-title">How can I <em>help?</em></div>
+      </div>
+
+      <div class="tkw-search-card">
+        <textarea class="tkw-search-inp" id="tkw-search" rows="1" placeholder="Ask anything…"></textarea>
+        <div class="tkw-search-actions">
+          <button class="tkw-send-btn" onclick="tkwGo()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="tkw-lang-hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Supports any language
+      </div>
+
+      <div class="tkw-examples">
+        <div class="tkw-ex-label">Prompt examples</div>
+        <div class="tkw-ex-grid">
+          <button class="tkw-ex-card" onclick="tkwGo('Track my order')">
+            <div class="tkw-ex-text">Track my order</div>
+            <div class="tkw-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+          </button>
+          <button class="tkw-ex-card" onclick="tkwGo('I\'d like to inquire about a bulk order')">
+            <div class="tkw-ex-text">Bulk order inquiry</div>
+            <div class="tkw-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+          </button>
+          <button class="tkw-ex-card" onclick="tkwGo('How does TekMark work?')">
+            <div class="tkw-ex-text">How does TekMark work</div>
+            <div class="tkw-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+          </button>
+          <button class="tkw-ex-card" onclick="tkwGo('How do I customize my card?')">
+            <div class="tkw-ex-text">How to customize my card</div>
+            <div class="tkw-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+          </button>
+          <button class="tkw-ex-card" onclick="tkwGo('How do I set up my card?')">
+            <div class="tkw-ex-text">How to set up my card</div>
+            <div class="tkw-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+          </button>
+          <button class="tkw-ex-card" onclick="tkwGo('What is your shipping and return policy?')">
+            <div class="tkw-ex-text">Shipping & return policy</div>
+            <div class="tkw-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="tkw-msgs" id="tkw-msgs"></div>
+
+    <!-- Typing -->
+    <div class="tkw-tw" id="tkw-tw">
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div class="tkw-av a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><path d="M9 17h6"/></svg></div>
+        <div class="tkw-dots"><s></s><s></s><s></s></div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="tkw-err" id="tkw-err"><div class="tkw-erri" id="tkw-errt"></div></div>
+
+    <!-- Bottom input -->
+    <div class="tkw-bottom">
+      <div class="tkw-bottom-inner">
+        <textarea class="tkw-bottom-inp" id="tkw-bottom" rows="1" placeholder="Ask a follow-up…"></textarea>
+        <button class="tkw-bottom-send" onclick="tkwGo()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var API='https://pcmrw5ufsgdcrtrshwcst2jhtu0fwais.lambda-url.us-east-2.on.aws/api/v1/chat';
+  var sid='w'+Math.random().toString(36).substr(2,10)+'_'+Date.now();
+  var hist=[];
+  var busy=false;
+
+  var root=document.getElementById('tkw');
+  var fab=document.getElementById('tkw-fab');
+  var msgs=document.getElementById('tkw-msgs');
+  var search=document.getElementById('tkw-search');
+  var bottom=document.getElementById('tkw-bottom');
+  var tw=document.getElementById('tkw-tw');
+  var err=document.getElementById('tkw-err');
+  var errt=document.getElementById('tkw-errt');
+  var resetBtn=document.getElementById('tkw-reset');
+
+  // Robot SVG for assistant avatar
+  var BOT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><path d="M9 17h6"/></svg>';
+
+  // Toggle open/close
+  fab.addEventListener('click',function(){
+    root.classList.toggle('open');
+  });
+
+  // Reset conversation
+  resetBtn.addEventListener('click',function(){
+    hist=[];
+    sid='w'+Math.random().toString(36).substr(2,10)+'_'+Date.now();
+    msgs.innerHTML='';
+    root.classList.remove('chatting');
+    search.value='';bottom.value='';
+  });
+
+  function add(role,text){
+    var w=document.createElement('div');w.className='tkw-mw';
+    var m=document.createElement('div');m.className='tkw-m '+role;
+    var av=document.createElement('div');av.className='tkw-av '+role;
+    if(role==='a'){av.innerHTML=BOT;}else{av.textContent='You';}
+    var b=document.createElement('div');b.className='tkw-b';
+    b.innerHTML=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/`(.*?)`/g,'<code style="background:#f3f1ea;padding:1px 5px;border-radius:3px;font-size:11px">$1</code>')
+      .replace(/\n/g,'<br>');
+    m.appendChild(av);m.appendChild(b);w.appendChild(m);msgs.appendChild(w);
+    setTimeout(function(){msgs.scrollTop=msgs.scrollHeight;},50);
+  }
+
+  window.tkwGo=function(preset){
+    var text=preset||search.value.trim()||bottom.value.trim();
+    if(!text||busy)return;
+    root.classList.add('chatting');
+    search.value='';bottom.value='';
+    search.style.height='auto';bottom.style.height='auto';
+    add('u',text);busy=true;tw.style.display='block';err.style.display='none';
+    setTimeout(function(){msgs.scrollTop=msgs.scrollHeight;},50);
+    hist.push({role:'user',content:text});
+
+    fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        session_id:sid,message:text,language:'en',
+        conversation_history:hist.slice(-10),
+        collected_fields:{}
+      })})
+    .then(function(r){if(!r.ok)throw r.status;return r.json();})
+    .then(function(d){
+      var rep=d.reply||'Sorry, something went wrong.';
+      hist.push({role:'assistant',content:rep});
+      busy=false;tw.style.display='none';add('a',rep);
+    })
+    .catch(function(){
+      busy=false;tw.style.display='none';
+      errt.textContent='Unable to connect. Please try again.';
+      err.style.display='block';setTimeout(function(){err.style.display='none';},5000);
+    });
+  };
+
+  function ar(el,max){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,max)+'px';}
+  search.addEventListener('input',function(){ar(this,120);});
+  bottom.addEventListener('input',function(){ar(this,100);});
+  search.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();tkwGo();}});
+  bottom.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();tkwGo();}});
+})();
+</script>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "TekMark AI Widget",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable AI Widget",
+      "info": "Show the floating chat button on all pages. Uncheck to hide site-wide.",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

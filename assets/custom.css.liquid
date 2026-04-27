@@ -1347,3 +1347,64 @@ body.template-product[class*="metal-studio"] iframe[id*="kickflip"]::-webkit-scr
         width: 100% !important;
     }
 }
+
+/* Product form: make the "Enable full width button" setting authoritative. */
+.t4s-product-form__variants.is-btn-full-width__true .t4s-product-form__buttons,
+.t4s-product-form__variants.is-btn-full-width__true .t4s-product-form__buttons > .t4s-d-flex {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.t4s-product-form__variants.is-btn-full-width__true .t4s-product-form__submit,
+.t4s-product-form__variants.is-btn-full-width__true .shopify-payment-button,
+.t4s-product-form__variants.is-btn-full-width__true .shopify-payment-button__button,
+.t4s-product-form__variants.is-btn-full-width__true .t4s-pr__notify-stock {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+}
+
+@media (min-width: 1025px) {
+    .t4s-product-form__variants.is-btn-full-width__false .t4s-product-form__buttons {
+        display: inline-flex !important;
+        width: auto !important;
+        min-width: 160px !important;
+        max-width: 100% !important;
+    }
+
+    .t4s-product-form__variants.is-btn-full-width__false .t4s-product-form__buttons > .t4s-d-flex {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        width: auto !important;
+        max-width: 100% !important;
+    }
+
+    .t4s-product-form__variants.is-btn-full-width__false .t4s-product-form__submit,
+    .t4s-product-form__variants.is-btn-full-width__false .shopify-payment-button,
+    .t4s-product-form__variants.is-btn-full-width__false .shopify-payment-button__button,
+    .t4s-product-form__variants.is-btn-full-width__false .t4s-pr__notify-stock {
+        width: auto !important;
+        min-width: 160px !important;
+        max-width: 100% !important;
+        flex: 0 0 auto !important;
+    }
+}
+
+.t4s-product-form__variants.is-qty-full-width__true .t4s-quantity-wrapper.t4s-product-form__qty,
+.t4s-product-form__variants .t4s-quantity-wrapper.t4s-product-form__qty.is-qty-full-width {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+}
+
+.t4s-product-form__variants.is-qty-full-width__true .t4s-product-form__buttons,
+.t4s-product-form__variants.is-qty-full-width__true .t4s-product-form__buttons > .t4s-d-flex {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.t4s-product-form__variants.is-qty-full-width__true .t4s-product-form__buttons > .t4s-d-flex {
+    flex-wrap: wrap !important;
+}

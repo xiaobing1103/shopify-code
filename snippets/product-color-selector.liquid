@@ -23,7 +23,16 @@
   assign color_mode = bk_stts.color_mode | default: 'color'
   assign selector_mode = bk_stts.selector_mode | default: 'default'
   assign color_size = bk_stts.color_size | default: 'medium'
+  assign title_label = bk_stts.title_label | default: ''
   assign title_spacing = bk_stts.title_spacing | default: 16
+  assign title_gap = bk_stts.title_gap | default: 2
+  assign title_layout = bk_stts.title_layout | default: 'space-between'
+  assign title_justify = title_layout
+  if title_layout == 'left'
+    assign title_justify = 'flex-start'
+  elsif title_layout == 'right'
+    assign title_justify = 'flex-end'
+  endif
   
   assign color_swatch = 'disabled-'
   assign color_mode_list = 'color, color is-sw-cl__round, variant_image, variant_image is-sw-cl__round' | split: ', '
@@ -45,7 +54,7 @@
   {%- assign independent_form_id = 'product-form-independent-' | append: pr_se_id -%}
   
   {%- comment -%} 渲染一个独立的 product form，包含必要的包装器 {%- endcomment -%}
-  <div class="t4s-independent-color-selector-wrapper t4s-independent-color-selector-wrapper--title-split t4s-independent-color-selector-wrapper--main-product-title-right" style="--t4s-color-title-spacing: {{ title_spacing }}px;">
+  <div class="t4s-independent-color-selector-wrapper t4s-independent-color-selector-wrapper--title-split t4s-independent-color-selector-wrapper--title-{{ title_layout | handle }} t4s-independent-color-selector-wrapper--main-product-title-right" style="--t4s-color-title-spacing: {{ title_spacing }}px; --t4s-color-title-gap: {{ title_gap }}px; --t4s-color-title-justify: {{ title_justify }};">
     <div data-callBackVariant id="t4s-callBackVariant{{ independent_form_id }}">
       {%- comment -%} 隐藏的 JSON 数据（主题 JS 需要）{%- endcomment -%}
       <script class="pr_variants_json" type="application/json">
@@ -88,6 +97,7 @@
           assign selected_value = current_variant[option_index]
         endif
         assign option_name = option.name
+        assign title_text = title_label | default: option_name
         assign name_downcase = option_name | downcase
       -%}
 
@@ -97,13 +107,12 @@
           data-id="{{ forloop.index0 }}"
           class="t4s-swatch__option is-t4s-style__color is-t4s-name__{{ option_name | handle }}"
         >
-          <h4 class="t4s-swatch__title">
+          <h4 class="t4s-swatch__title t4s-swatch__title--layout-{{ title_layout | handle }}" style="--t4s-color-title-justify: {{ title_justify }}; --t4s-color-title-gap: {{ title_gap }}px; display: flex !important; align-items: center !important; justify-content: {{ title_justify }} !important; gap: {{ title_gap }}px; width: 100%; margin: 0 0 {{ title_spacing }}px !important;">
             <span class="t4s-swatch__title-left">
-              <span class="t4s-swatch__label">{{ option_name }}</span>
+              <span class="t4s-swatch__label">{{ title_text }}:</span>
               {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
             </span>
-            <span class="t4s-swatch__title-right">
-              <span class="t4s-swatch__current-prefix">·</span>
+            <span class="t4s-swatch__title-right" style="{% if title_layout == 'space-between' %}margin-left: auto !important;{% else %}margin-left: 0 !important;{% endif %}">
               <span data-current-value class="t4s-dib t4s-swatch__current">
                 {{- selected_value | default: choose_an_option -}}
               </span>
@@ -854,11 +863,12 @@
       display: block;
     }
 
-    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__title {
+    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__title,
+    [data-independent-color-selector] .t4s-swatch__title[class*="t4s-swatch__title--layout-"] {
       display: flex !important;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      justify-content: var(--t4s-color-title-justify, space-between) !important;
+      gap: var(--t4s-color-title-gap, 2px);
       width: 100%;
       margin: 0 0 var(--t4s-color-title-spacing, 16px) !important;
       text-align: left;
@@ -879,14 +889,18 @@
       display: inline-flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 6px;
+      gap: var(--t4s-color-title-gap, 2px);
       min-width: 0;
-      margin-left: auto;
       text-align: right;
     }
 
-    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__current-prefix {
-      flex: 0 0 auto;
+    [data-independent-color-selector] .t4s-swatch__title[class*="t4s-swatch__title--layout-"] .t4s-swatch__title-right {
+      margin-left: 0 !important;
+    }
+
+    .t4s-independent-color-selector-wrapper--title-space-between .t4s-swatch__title-right,
+    [data-independent-color-selector] .t4s-swatch__title--layout-space-between .t4s-swatch__title-right {
+      margin-left: auto !important;
     }
 
     .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__current {

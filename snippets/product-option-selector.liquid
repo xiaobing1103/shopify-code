@@ -36,6 +36,10 @@
   assign selected_text_color = option_group_text_color
   assign selected_border_color = option_group_text_color
   assign title_spacing = 10
+  assign title_margin_top = 0
+  assign title_margin_bottom = title_spacing
+  assign title_font_size = 18
+  assign title_font_weight = 600
   assign option_gap = 12
   assign option_radius = 12
   assign block_radius = 16
@@ -59,6 +63,13 @@
     assign selected_text_color = bk_stts.option_selected_text_color | default: option_group_text_color
     assign selected_border_color = bk_stts.option_selected_border_color | default: option_group_text_color
     assign title_spacing = bk_stts.title_spacing | default: 10
+    assign title_margin_top = bk_stts.title_margin_top | default: 0
+    assign title_margin_bottom = bk_stts.title_margin_bottom
+    if title_margin_bottom == blank
+      assign title_margin_bottom = title_spacing
+    endif
+    assign title_font_size = bk_stts.title_font_size | default: 18
+    assign title_font_weight = bk_stts.title_font_weight | default: 600
     assign option_gap = bk_stts.option_gap | default: 12
     assign option_radius = bk_stts.option_radius | default: 12
     assign block_radius = bk_stts.block_radius | default: 16
@@ -79,8 +90,60 @@
     assign selected_border_width = bk_stts.selected_border_width | default: 2
   endif
 
+  assign title_display_mode = bk_stts.title_display_mode | default: 'option_value'
+  assign title_label_override = bk_stts.title_label_override | strip
+  assign title_value_gap = bk_stts.title_value_gap | default: 0
+  assign show_option_title = true
+  if bk_stts.show_option_label == false
+    assign show_option_title = false
+  endif
+  if show_option_title == false
+    assign title_display_mode = 'hidden'
+  endif
+  assign render_option_label = false
+  if title_display_mode == 'option_value'
+    assign render_option_label = true
+  endif
   assign selected_strip_color = bk_stts.option_selected_strip_color | default: selected_border_color
+  assign show_left_strip = true
+  if bk_stts.show_left_strip == false
+    assign show_left_strip = false
+  endif
+  assign center_option_text = false
+  if bk_stts.center_option_text
+    assign center_option_text = true
+  endif
+  assign option_items_half_width = false
+  if bk_stts.option_items_half_width
+    assign option_items_half_width = true
+  endif
+  assign selected_strip_width = 10
+  assign selected_strip_gap = 10
+  assign selected_check_badge_size = bk_stts.selected_check_badge_size | default: 24
+  assign selected_check_font_size = selected_check_badge_size | times: 0.58 | round
+  assign selected_check_radius = selected_check_badge_size | times: 0.42 | round
+  assign mobile_selected_strip_width = 6
+  assign mobile_selected_strip_gap = 5
+  assign mobile_selected_check_badge_size = bk_stts.selected_check_badge_size_mb | default: 16
+  assign mobile_selected_check_font_size = mobile_selected_check_badge_size | times: 0.65 | round
+  assign mobile_selected_check_radius = mobile_selected_check_badge_size | times: 0.5 | round
+  if show_left_strip == false
+    assign selected_strip_width = 0
+    assign selected_strip_gap = 0
+    assign mobile_selected_strip_width = 0
+    assign mobile_selected_strip_gap = 0
+  endif
+  if title_display_mode == 'hidden'
+    assign title_spacing = 0
+    assign title_margin_top = 0
+    assign title_margin_bottom = 0
+  endif
+
   assign mobile_selected_border_width = selected_border_width
+  assign mobile_title_font_size = 14
+  assign mobile_title_font_weight = title_font_weight
+  assign mobile_title_margin_top = title_margin_top
+  assign mobile_title_margin_bottom = title_margin_bottom
   assign mobile_option_font_size = 12
   assign mobile_option_font_weight = '500'
   assign mobile_block_radius = block_radius
@@ -97,6 +160,13 @@
 
   if use_custom_style
     assign mobile_selected_border_width = bk_stts.selected_border_width_mb | default: selected_border_width
+    assign mobile_title_font_size = bk_stts.title_font_size_mobile | default: 14
+    assign mobile_title_font_weight = bk_stts.title_font_weight_mobile | default: title_font_weight
+    assign mobile_title_margin_top = bk_stts.title_margin_top_mb | default: title_margin_top
+    assign mobile_title_margin_bottom = bk_stts.title_margin_bottom_mb
+    if mobile_title_margin_bottom == blank
+      assign mobile_title_margin_bottom = title_margin_bottom
+    endif
     assign mobile_option_font_size = bk_stts.option_font_size_mb | default: 12
     assign mobile_option_font_weight = bk_stts.option_font_weight_mb | default: bk_stts.option_font_weight | default: '500'
     assign mobile_block_radius = bk_stts.block_radius_mb | default: block_radius
@@ -117,6 +187,9 @@
     assign mobile_option_min_height = bk_stts.option_min_height_mb | default: 32
     assign mobile_block_spacing = bk_stts.block_spacing_mb | default: block_spacing
   endif
+
+  assign option_half_gap = option_gap | divided_by: 2.0
+  assign mobile_option_half_gap = mobile_option_gap | divided_by: 2.0
 
   if normalized_option_name_filter != blank
     assign has_option_name_filter = true
@@ -144,8 +217,10 @@
 
   <style>
     .t4s-option-selector-block-{{ block.id }} {
-      margin-top: {{ bk_stts.margin_top | default: 16 }}px;
-      margin-bottom: {{ bk_stts.margin_bottom | default: 16 }}px;
+      display: flow-root !important;
+      width: 100% !important;
+      margin-top: {{ bk_stts.margin_top | default: 16 }}px !important;
+      margin-bottom: {{ bk_stts.margin_bottom | default: 16 }}px !important;
       --t4s-option-group-bg: {{ block_bg_color }};
       --t4s-option-group-surface: {{ item_bg_color }};
       --t4s-option-group-title: {{ title_text_color }};
@@ -156,14 +231,19 @@
       --t4s-option-group-selected-bg: {{ selected_bg_color }};
       --t4s-option-group-selected-text: {{ selected_text_color }};
       --t4s-option-title-spacing: {{ title_spacing }}px;
+      --t4s-option-title-margin-top: {{ title_margin_top }}px;
+      --t4s-option-title-margin-bottom: {{ title_margin_bottom }}px;
+      --t4s-option-title-value-gap: {{ title_value_gap }}px;
       --t4s-option-gap: {{ option_gap }}px;
+      --t4s-option-half-gap: {{ option_half_gap }}px;
       --t4s-option-margin: {{ option_margin }}px;
       --t4s-option-radius: {{ option_radius }}px;
       --t4s-option-padding-y: {{ option_padding_y }}px;
       --t4s-option-padding-x: {{ option_padding_x }}px;
       --t4s-option-min-height: {{ option_min_height }}px;
-      --t4s-option-selected-strip-width: 10px;
-      --t4s-option-selected-badge-size: 24px;
+      --t4s-option-selected-strip-width: {{ selected_strip_width }}px;
+      --t4s-option-selected-strip-gap: {{ selected_strip_gap }}px;
+      --t4s-option-selected-badge-size: {{ selected_check_badge_size }}px;
       --t4s-option-left-strip-bg: var(--t4s-option-group-border);
       --t4s-option-selected-strip-bg: {{ selected_strip_color }};
       --t4s-option-check-bg: var(--t4s-option-group-accent);
@@ -175,6 +255,10 @@
       color: var(--t4s-option-group-title) !important;
       border-radius: {{ block_radius }}px !important;
       padding: {{ block_padding_top }}px {{ block_padding_x }}px {{ block_padding_bottom }}px !important;
+      margin-bottom: 0 !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__option:not(:last-child) {
       margin-bottom: {{ block_spacing }}px !important;
     }
 
@@ -194,11 +278,38 @@
       color: var(--t4s-option-group-title) !important;
     }
 
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title {
+      margin: var(--t4s-option-title-margin-top) 0 var(--t4s-option-title-margin-bottom) !important;
+    }
+
     .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list {
-      margin: calc(var(--t4s-option-title-spacing) - var(--t4s-option-margin)) calc(var(--t4s-option-margin) * -1)
+      margin: calc(var(--t4s-option-margin) * -1) calc(var(--t4s-option-margin) * -1)
         calc(var(--t4s-option-margin) * -1) !important;
       gap: var(--t4s-option-gap) !important;
     }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-option-title-text {
+      display: inline-flex !important;
+      align-items: baseline !important;
+      column-gap: var(--t4s-option-title-value-gap) !important;
+      gap: var(--t4s-option-title-value-gap) !important;
+      min-width: 0 !important;
+    }
+
+    {%- if option_items_half_width -%}
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        width: 100% !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > .t4s-swatch__item {
+        flex: 0 0 calc(50% - var(--t4s-option-half-gap)) !important;
+        max-width: calc(50% - var(--t4s-option-half-gap)) !important;
+        width: calc(50% - var(--t4s-option-half-gap)) !important;
+        box-sizing: border-box !important;
+      }
+    {%- endif -%}
 
     .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
     .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button,
@@ -214,32 +325,50 @@
       border-radius: var(--t4s-option-radius) !important;
       margin: var(--t4s-option-margin) !important;
       padding: var(--t4s-option-padding-y) var(--t4s-option-padding-x) !important;
-      padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + 10px) !important;
+      padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + var(--t4s-option-selected-strip-gap)) !important;
       padding-right: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 8px) !important;
       min-height: var(--t4s-option-min-height) !important;
       display: flex !important;
       align-items: center !important;
     }
 
-    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item::before,
-    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      width: var(--t4s-option-selected-strip-width);
-      background: var(--t4s-option-left-strip-bg);
-    }
+    {%- if show_left_strip -%}
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item::before,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: var(--t4s-option-selected-strip-width) !important;
+        background: var(--t4s-option-left-strip-bg) !important;
+      }
 
-    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected::before,
-    .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected::before {
-      background: var(--t4s-option-selected-strip-bg);
-    }
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected::before,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected::before {
+        background: var(--t4s-option-selected-strip-bg) !important;
+      }
+    {%- else -%}
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item::before,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button::before {
+        content: none !important;
+        display: none !important;
+      }
+    {%- endif -%}
 
     .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item {
       box-shadow: inset 0 0 0 1px var(--t4s-option-group-border) !important;
     }
+
+    {%- if center_option_text -%}
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button {
+        justify-content: center !important;
+        text-align: center !important;
+        padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 8px) !important;
+        padding-right: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 8px) !important;
+      }
+    {%- endif -%}
 
     .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected,
     .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected {
@@ -262,10 +391,10 @@
       justify-content: center;
       background: var(--t4s-option-check-bg);
       color: var(--t4s-option-check-color);
-      font-size: 14px;
+      font-size: {{ selected_check_font_size }}px;
       font-weight: 700;
       line-height: 1;
-      border-top-left-radius: 10px;
+      border-top-left-radius: {{ selected_check_radius }}px;
     }
 
     .t4s-option-selector-block-{{ block.id }} [data-swatch-item].is--soldout,
@@ -278,8 +407,8 @@
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title,
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title span,
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__current {
-        font-size: {{ bk_stts.title_font_size | default: 18 }}px !important;
-        font-weight: {{ bk_stts.title_font_weight | default: 600 }} !important;
+        font-size: {{ title_font_size }}px !important;
+        font-weight: {{ title_font_weight }} !important;
         line-height: 1.35 !important;
       }
 
@@ -295,15 +424,19 @@
 
     @media (max-width: 767px) {
       .t4s-option-selector-block-{{ block.id }} {
-        --t4s-option-title-spacing: 8px;
+        --t4s-option-title-spacing: {%- if title_display_mode == 'hidden' -%}0{%- else -%}{{ title_spacing }}{%- endif -%}px;
+        --t4s-option-title-margin-top: {%- if title_display_mode == 'hidden' -%}0{%- else -%}{{ mobile_title_margin_top }}{%- endif -%}px;
+        --t4s-option-title-margin-bottom: {%- if title_display_mode == 'hidden' -%}0{%- else -%}{{ mobile_title_margin_bottom }}{%- endif -%}px;
         --t4s-option-gap: {{ mobile_option_gap }}px;
+        --t4s-option-half-gap: {{ mobile_option_half_gap }}px;
         --t4s-option-margin: {{ mobile_option_margin }}px;
         --t4s-option-padding-y: {{ mobile_option_padding_y }}px;
         --t4s-option-padding-x: {{ mobile_option_padding_x }}px;
         --t4s-option-min-height: {{ mobile_option_min_height }}px;
         --t4s-option-radius: {{ mobile_option_radius }}px;
-        --t4s-option-selected-strip-width: 6px;
-        --t4s-option-selected-badge-size: 16px;
+        --t4s-option-selected-strip-width: {{ mobile_selected_strip_width }}px;
+        --t4s-option-selected-strip-gap: {{ mobile_selected_strip_gap }}px;
+        --t4s-option-selected-badge-size: {{ mobile_selected_check_badge_size }}px;
       }
 
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__option,
@@ -313,6 +446,10 @@
         align-items: stretch !important;
         border-radius: {{ mobile_block_radius }}px !important;
         padding: {{ mobile_block_padding_top }}px {{ mobile_block_padding_x }}px {{ mobile_block_padding_bottom }}px !important;
+        margin-bottom: 0 !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} [data-swatch-option]:not(:last-child) {
         margin-bottom: {{ mobile_block_spacing }}px !important;
       }
 
@@ -322,13 +459,14 @@
         gap: 6px !important;
         width: 100% !important;
         flex: 0 0 auto !important;
-        margin: 0 0 8px !important;
-        font-size: 14px !important;
+        margin: var(--t4s-option-title-margin-top) 0 var(--t4s-option-title-margin-bottom) !important;
+        font-size: {{ mobile_title_font_size }}px !important;
+        font-weight: {{ mobile_title_font_weight }} !important;
         line-height: 1.2 !important;
       }
 
-      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title > span {
-        display: block;
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title > .t4s-option-title-text {
+        display: inline-flex !important;
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -347,10 +485,24 @@
         width: 100% !important;
         flex: 0 0 auto !important;
         flex-wrap: nowrap !important;
-        margin: calc(0px - var(--t4s-option-margin)) calc(var(--t4s-option-margin) * -1)
+        margin: calc(var(--t4s-option-margin) * -1) calc(var(--t4s-option-margin) * -1)
           calc(var(--t4s-option-margin) * -1) !important;
         overflow: visible !important;
       }
+
+      {%- if option_items_half_width -%}
+        .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list {
+          flex-wrap: wrap !important;
+          width: 100% !important;
+        }
+
+        .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > .t4s-swatch__item {
+          flex: 0 0 calc(50% - var(--t4s-option-half-gap)) !important;
+          max-width: calc(50% - var(--t4s-option-half-gap)) !important;
+          width: calc(50% - var(--t4s-option-half-gap)) !important;
+          box-sizing: border-box !important;
+        }
+      {%- endif -%}
 
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button,
@@ -368,7 +520,7 @@
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
-        padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + 5px) !important;
+        padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + var(--t4s-option-selected-strip-gap)) !important;
         padding-right: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 5px) !important;
       }
 
@@ -378,14 +530,24 @@
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
-        padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + 5px) !important;
+        padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-strip-width) + var(--t4s-option-selected-strip-gap)) !important;
         padding-right: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 5px) !important;
       }
 
+      {%- if center_option_text -%}
+        .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
+        .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button {
+          justify-content: center !important;
+          text-align: center !important;
+          padding-left: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 5px) !important;
+          padding-right: calc(var(--t4s-option-padding-x) + var(--t4s-option-selected-badge-size) + 5px) !important;
+        }
+      {%- endif -%}
+
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected::after,
       .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__wrapper .t4s-swatch__item.is--selected::after {
-        font-size: 11px;
-        border-top-left-radius: 8px;
+        font-size: {{ mobile_selected_check_font_size }}px;
+        border-top-left-radius: {{ mobile_selected_check_radius }}px;
       }
 
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item.is--selected,
@@ -422,6 +584,11 @@
               assign should_render_option = false
             endunless
           endif
+
+          assign display_option_label = option_name
+          if title_label_override != blank
+            assign display_option_label = title_label_override
+          endif
         -%}
 
         {%- if should_render_option -%}
@@ -430,15 +597,19 @@
             data-id="{{ forloop.index0 }}"
             class="t4s-swatch__option is-t4s-name__{{ option_name | handle }}"
           >
-            <h4 class="t4s-swatch__title">
-              <span>
-                {{- option_name }}:
-                <span data-current-value class="t4s-dib t4s-swatch__current">
-                  {{- selected_value | default: choose_an_option -}}
+            {%- unless title_display_mode == 'hidden' -%}
+              <h4 class="t4s-swatch__title">
+                <span class="t4s-option-title-text">
+                  {%- if render_option_label -%}
+                    <span class="t4s-option-title-label">{{- display_option_label | escape }}:</span>
+                  {%- endif -%}
+                  <span data-current-value class="t4s-dib t4s-swatch__current">
+                    {{- selected_value | default: choose_an_option -}}
+                  </span>
                 </span>
-              </span>
-              {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
-            </h4>
+                {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
+              </h4>
+            {%- endunless -%}
             <div class="t4s-swatch__list">
               {%- if selector_mode != 'dropdown' -%}
                 {%- for value in option.values -%}
@@ -469,10 +640,16 @@
                 >
                   <div class="t4s-drop-arrow"></div>
                   <div class="t4s-dropdown__header">
-                    <span class="t4s-dropdown__title">
-                      {{- option_name }}:
-                      <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
-                    </span>
+                    {%- unless title_display_mode == 'hidden' -%}
+                      <span class="t4s-dropdown__title">
+                        <span class="t4s-option-title-text">
+                          {%- if render_option_label -%}
+                            <span class="t4s-option-title-label">{{- display_option_label | escape }}:</span>
+                          {%- endif -%}
+                          <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                        </span>
+                      </span>
+                    {%- endunless -%}
                     <button type="button" data-dropdown-close aria-label="{{ 'general.aria.close' | t }}">
                       <svg role="presentation" class="t4s-iconsvg-close" viewBox="0 0 16 14">
                         <path d="M15 0L1 14m14 0L1 0" stroke="currentColor" fill="none" fill-rule="evenodd"></path>

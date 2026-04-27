@@ -8,7 +8,22 @@
   assign color_mode = bk_stts.color_mode | default: 'color'
   assign selector_mode = bk_stts.selector_mode | default: 'default'
   assign color_size = bk_stts.color_size | default: 'medium'
+  assign title_label = bk_stts.title_label | default: ''
   assign title_spacing = bk_stts.title_spacing | default: 16
+  assign title_spacing_mobile = bk_stts.title_spacing_mobile | default: title_spacing
+  assign title_gap = bk_stts.title_gap | default: 2
+  assign title_gap_mobile = bk_stts.title_gap_mobile | default: title_gap
+  assign title_font_size = bk_stts.title_font_size | default: 14
+  assign title_font_size_mobile = bk_stts.title_font_size_mobile | default: title_font_size
+  assign title_font_weight = bk_stts.title_font_weight | default: 400
+  assign title_font_weight_mobile = bk_stts.title_font_weight_mobile | default: title_font_weight
+  assign title_layout = bk_stts.title_layout | default: 'space-between'
+  assign title_justify = title_layout
+  if title_layout == 'left'
+    assign title_justify = 'flex-start'
+  elsif title_layout == 'right'
+    assign title_justify = 'flex-end'
+  endif
 
   assign color_swatch = 'disabled-'
   assign color_mode_list = 'color, color is-sw-cl__round, variant_image, variant_image is-sw-cl__round' | split: ', '
@@ -28,7 +43,28 @@
 
   {%- assign independent_form_id = 'product-form-independent-main-' | append: pr_se_id -%}
 
-  <div class="t4s-independent-color-selector-wrapper t4s-independent-color-selector-wrapper--main-product-title-right" style="--t4s-color-title-spacing: {{ title_spacing }}px;">
+  <style>
+    #t4s-callBackVariant{{ independent_form_id }} .t4s-swatch__title,
+    #t4s-callBackVariant{{ independent_form_id }} .t4s-swatch__title span,
+    #t4s-callBackVariant{{ independent_form_id }} .t4s-swatch__title a,
+    #t4s-callBackVariant{{ independent_form_id }} .t4s-swatch__current,
+    #t4s-callBackVariant{{ independent_form_id }} .t4s-dropdown__title,
+    #t4s-callBackVariant{{ independent_form_id }} .t4s-dropdown__title span {
+      font-size: var(--t4s-color-title-font-size) !important;
+      font-weight: var(--t4s-color-title-font-weight) !important;
+    }
+
+    @media (max-width: 767px) {
+      #t4s-callBackVariant{{ independent_form_id }} {
+        --t4s-color-title-spacing: {{ title_spacing_mobile }}px;
+        --t4s-color-title-gap: {{ title_gap_mobile }}px;
+        --t4s-color-title-font-size: {{ title_font_size_mobile }}px;
+        --t4s-color-title-font-weight: {{ title_font_weight_mobile }};
+      }
+    }
+  </style>
+
+  <div class="t4s-independent-color-selector-wrapper t4s-independent-color-selector-wrapper--title-{{ title_layout | handle }} t4s-independent-color-selector-wrapper--main-product-title-right" style="--t4s-color-title-spacing: {{ title_spacing }}px; --t4s-color-title-gap: {{ title_gap }}px; --t4s-color-title-font-size: {{ title_font_size }}px; --t4s-color-title-font-weight: {{ title_font_weight }}; --t4s-color-title-justify: {{ title_justify }};">
     <div data-callBackVariant id="t4s-callBackVariant{{ independent_form_id }}">
       <script class="pr_variants_json" type="application/json">
         {{ product.variants | json }}
@@ -68,6 +104,7 @@
                 assign selected_value = current_variant[option_index]
               endif
               assign option_name = option.name
+              assign title_text = title_label | default: option_name
               assign name_downcase = option_name | downcase
             -%}
 
@@ -77,13 +114,12 @@
                 data-id="{{ forloop.index0 }}"
                 class="t4s-swatch__option is-t4s-style__color is-t4s-name__{{ option_name | handle }}"
               >
-                <h4 class="t4s-swatch__title">
+                <h4 class="t4s-swatch__title t4s-swatch__title--layout-{{ title_layout | handle }}" style="--t4s-color-title-justify: {{ title_justify }}; display: flex !important; align-items: center !important; justify-content: {{ title_justify }} !important; gap: var(--t4s-color-title-gap); width: 100%; margin: 0 0 var(--t4s-color-title-spacing) !important; font-size: var(--t4s-color-title-font-size) !important; font-weight: var(--t4s-color-title-font-weight) !important;">
                   <span class="t4s-swatch__title-left">
-                    <span class="t4s-swatch__label">{{ option_name }}</span>
+                    <span class="t4s-swatch__label">{{ title_text }}:</span>
                     {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
                   </span>
-                  <span class="t4s-swatch__title-right">
-                    <span class="t4s-swatch__current-prefix">·</span>
+                  <span class="t4s-swatch__title-right" style="{% if title_layout == 'space-between' %}margin-left: auto !important;{% else %}margin-left: 0 !important;{% endif %}">
                     <span data-current-value class="t4s-dib t4s-swatch__current">
                       {{- selected_value | default: choose_an_option -}}
                     </span>
@@ -203,10 +239,20 @@
 
         if (mainSwatches.length > 0) {
           for (var i = 0; i < mainSwatches.length; i++) {
-            var swatchOptions = mainSwatches[i].querySelectorAll('[data-swatch-option]');
-            if (swatchOptions.length > 0) {
+            var colorSwatchOptions = mainSwatches[i].querySelectorAll('[data-swatch-option].is-t4s-style__color');
+            if (colorSwatchOptions.length > 0) {
               mainSwatch = mainSwatches[i];
               break;
+            }
+          }
+
+          if (!mainSwatch) {
+            for (var j = 0; j < mainSwatches.length; j++) {
+              var swatchOptions = mainSwatches[j].querySelectorAll('[data-swatch-option]');
+              if (swatchOptions.length > 0) {
+                mainSwatch = mainSwatches[j];
+                break;
+              }
             }
           }
 
@@ -250,6 +296,10 @@
           }) || null;
         }
 
+        function escapeAttributeValue(value) {
+          return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        }
+
         function syncIndependentOption(optionIndex, selectedValue) {
           var independentOption = independentSwatch.querySelector('[data-swatch-option][data-id="' + optionIndex + '"]');
           if (!independentOption || !selectedValue) {
@@ -260,7 +310,9 @@
             item.classList.remove('is--selected');
           });
 
-          var independentItem = independentOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
+          var independentItem = independentOption.querySelector(
+            '[data-swatch-item][data-value="' + escapeAttributeValue(selectedValue) + '"]'
+          );
           if (independentItem) {
             independentItem.classList.add('is--selected');
           }
@@ -313,20 +365,76 @@
             }
           });
 
-          if (mainSwatch) {
-            mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
-              var mainOptionIndex = mainOption.getAttribute('data-id');
+          mainWrapper.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
+            var mainOptionIndex = mainOption.getAttribute('data-id');
 
-              if (!selectedValues.hasOwnProperty(mainOptionIndex)) {
-                var mainSelectedItem = mainOption.querySelector('[data-swatch-item].is--selected');
-                if (mainSelectedItem) {
-                  selectedValues[mainOptionIndex] = mainSelectedItem.getAttribute('data-value');
-                }
+            if (!selectedValues.hasOwnProperty(mainOptionIndex)) {
+              var mainSelectedItem = mainOption.querySelector('[data-swatch-item].is--selected');
+              if (mainSelectedItem) {
+                selectedValues[mainOptionIndex] = mainSelectedItem.getAttribute('data-value');
               }
-            });
-          }
+            }
+          });
 
           return selectedValues;
+        }
+
+        function findMatchedVariant(selectedValues) {
+          return variants.find(function(variant) {
+            for (var idx in selectedValues) {
+              var optionKey = 'option' + (parseInt(idx, 10) + 1);
+              if (variant[optionKey] !== selectedValues[idx]) {
+                return false;
+              }
+            }
+            return true;
+          }) || null;
+        }
+
+        function syncMainSelections(selectedValues) {
+          mainWrapper.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
+            var mainOptionIndex = mainOption.getAttribute('data-id');
+            if (!selectedValues.hasOwnProperty(mainOptionIndex)) {
+              return;
+            }
+
+            var valueToSelect = selectedValues[mainOptionIndex];
+
+            mainOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
+              item.classList.remove('is--selected');
+            });
+
+            var itemToSelect = mainOption.querySelector(
+              '[data-swatch-item][data-value="' + escapeAttributeValue(valueToSelect) + '"]'
+            );
+            if (itemToSelect) {
+              itemToSelect.classList.add('is--selected');
+            }
+
+            mainOption.querySelectorAll('[data-current-value]').forEach(function(currentValueEl) {
+              currentValueEl.textContent = valueToSelect;
+            });
+          });
+        }
+
+        function applySelectionToMainForm(selectedValues) {
+          var matchedVariant = findMatchedVariant(selectedValues);
+
+          if (!matchedVariant || !mainSelect) {
+            return false;
+          }
+
+          if (String(mainSelect.value) !== String(matchedVariant.id)) {
+            mainSelect.value = matchedVariant.id;
+            mainSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+
+          setTimeout(function() {
+            syncMainSelections(selectedValues);
+            updateAvailableOptions();
+          }, 50);
+
+          return true;
         }
 
         function findMainOption(independentOption) {
@@ -418,7 +526,9 @@
 
               independentOption.querySelectorAll('[data-swatch-item]').forEach(function(independentItem) {
                 var itemValue = independentItem.getAttribute('data-value');
-                var mainItem = mainOption.querySelector('[data-swatch-item][data-value="' + itemValue + '"]');
+                var mainItem = mainOption.querySelector(
+                  '[data-swatch-item][data-value="' + escapeAttributeValue(itemValue) + '"]'
+                );
 
                 if (!mainItem) {
                   independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
@@ -509,18 +619,22 @@
 
           dispatchIndependentSync(optionIndex, selectedValue);
 
-          var mainSwatchOption = findMainOption(swatchOption);
-          var useMultiLayerLogic = false;
-          var mainSwatchItem = null;
+          var selectedValues = getCurrentSelectedValues();
+          var selectionApplied = applySelectionToMainForm(selectedValues);
 
-          if (mainSwatchOption) {
-            mainSwatchItem = mainSwatchOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
-            if (mainSwatchItem) {
-              useMultiLayerLogic = true;
+          if (!selectionApplied) {
+            var mainSwatchOption = findMainOption(swatchOption);
+            if (!mainSwatchOption) {
+              return;
             }
-          }
 
-          if (useMultiLayerLogic) {
+            var mainSwatchItem = mainSwatchOption.querySelector(
+              '[data-swatch-item][data-value="' + escapeAttributeValue(selectedValue) + '"]'
+            );
+            if (!mainSwatchItem) {
+              return;
+            }
+
             mainSwatchItem.click();
 
             setTimeout(function() {
@@ -530,72 +644,6 @@
             setTimeout(function() {
               updateAvailableOptions();
             }, 300);
-          } else {
-            var selectedValues = getCurrentSelectedValues();
-
-            if (mainSwatch) {
-              mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
-                var mainOptionIndex = mainOption.getAttribute('data-id');
-
-                if (!selectedValues.hasOwnProperty(mainOptionIndex)) {
-                  var mainSelectedItem = mainOption.querySelector('[data-swatch-item].is--selected');
-                  if (mainSelectedItem) {
-                    selectedValues[mainOptionIndex] = mainSelectedItem.getAttribute('data-value');
-                  }
-                }
-              });
-            }
-
-            var matchedVariant = variants.find(function(variant) {
-              var matches = true;
-              for (var idx in selectedValues) {
-                var optionKey = 'option' + (parseInt(idx) + 1);
-                if (variant[optionKey] !== selectedValues[idx]) {
-                  matches = false;
-                  break;
-                }
-              }
-              return matches;
-            });
-
-            if (matchedVariant) {
-              var mainForm = mainWrapper.querySelector('form');
-              if (mainForm) {
-                var mainSelect = mainForm.querySelector('select[name="id"]');
-                if (mainSelect) {
-                  mainSelect.value = matchedVariant.id;
-
-                  var changeEvent = new Event('change', { bubbles: true });
-                  mainSelect.dispatchEvent(changeEvent);
-
-                  if (mainSwatch) {
-                    setTimeout(function() {
-                      mainSwatch.querySelectorAll('[data-swatch-option]').forEach(function(mainOption) {
-                        var mainOptionIndex = mainOption.getAttribute('data-id');
-
-                        if (selectedValues.hasOwnProperty(mainOptionIndex)) {
-                          var valueToSelect = selectedValues[mainOptionIndex];
-
-                          mainOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
-                            item.classList.remove('is--selected');
-                          });
-
-                          var itemToSelect = mainOption.querySelector('[data-swatch-item][data-value="' + valueToSelect + '"]');
-                          if (itemToSelect) {
-                            itemToSelect.classList.add('is--selected');
-
-                            var mainCurrentValueEl = mainOption.querySelector('[data-current-value]');
-                            if (mainCurrentValueEl) {
-                              mainCurrentValueEl.textContent = valueToSelect;
-                            }
-                          }
-                        }
-                      });
-                    }, 50);
-                  }
-                }
-              }
-            }
           }
         });
 
@@ -617,7 +665,9 @@
                       item.classList.remove('is--selected');
                     });
 
-                    var independentItem = independentOption.querySelector('[data-swatch-item][data-value="' + selectedValue + '"]');
+                    var independentItem = independentOption.querySelector(
+                      '[data-swatch-item][data-value="' + escapeAttributeValue(selectedValue) + '"]'
+                    );
                     if (independentItem) {
                       independentItem.classList.add('is--selected');
 
@@ -681,7 +731,9 @@
 
             independentOption.querySelectorAll('[data-swatch-item]').forEach(function(independentItem) {
               var itemValue = independentItem.getAttribute('data-value');
-              var mainItem = mainOption.querySelector('[data-swatch-item][data-value="' + itemValue + '"]');
+              var mainItem = mainOption.querySelector(
+                '[data-swatch-item][data-value="' + escapeAttributeValue(itemValue) + '"]'
+              );
 
               if (!mainItem) {
                 independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
@@ -737,11 +789,12 @@
       display: block;
     }
 
-    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__title {
+    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__title,
+    [data-independent-color-selector] .t4s-swatch__title[class*="t4s-swatch__title--layout-"] {
       display: flex !important;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      justify-content: var(--t4s-color-title-justify, space-between) !important;
+      gap: var(--t4s-color-title-gap, 2px);
       width: 100%;
       margin: 0 0 var(--t4s-color-title-spacing, 16px) !important;
       text-align: left;
@@ -762,14 +815,18 @@
       display: inline-flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 6px;
+      gap: var(--t4s-color-title-gap, 2px);
       min-width: 0;
-      margin-left: auto;
       text-align: right;
     }
 
-    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__current-prefix {
-      flex: 0 0 auto;
+    [data-independent-color-selector] .t4s-swatch__title[class*="t4s-swatch__title--layout-"] .t4s-swatch__title-right {
+      margin-left: 0 !important;
+    }
+
+    .t4s-independent-color-selector-wrapper--title-space-between .t4s-swatch__title-right,
+    [data-independent-color-selector] .t4s-swatch__title--layout-space-between .t4s-swatch__title-right {
+      margin-left: auto !important;
     }
 
     .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__current {

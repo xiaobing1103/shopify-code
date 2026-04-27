@@ -18,6 +18,13 @@
     gap: {{ bk_stts.bundle_gap | default: 12 }}px !important;
     margin-bottom: 8px !important;
   }
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-selector__heading {
+    color: {{ bk_stts.bundle_heading_color | default: '#1f2937' }} !important;
+    font-size: {{ bk_stts.bundle_heading_font_size | default: 18 }}px !important;
+    font-weight: {{ bk_stts.bundle_heading_font_weight | default: 600 }} !important;
+    line-height: 1.3 !important;
+    margin: 0 0 12px !important;
+  }
   /* Horizontal Layout - 3 columns */
   .t4s-bundle-selector-block-{{ block_id }}.t4s-bundle-layout-horizontal .t4s-bundle-selector__options {
     grid-template-columns: repeat(3, 1fr) !important;
@@ -165,6 +172,11 @@
     color: {{ bk_stts.bundle_text_color | default: '#333333' }} !important;
     margin: 0 !important;
   }
+  {%- if bk_stts.hide_bundle_prices -%}
+    .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__price {
+      display: none !important;
+    }
+  {%- endif -%}
   .t4s-bundle-option__shipping {
     width: 100% !important;
     padding: {{ bk_stts.bundle_shipping_padding_v | default: 7 }}px {{ bk_stts.bundle_shipping_padding_h | default: 8 }}px !important;
@@ -223,6 +235,11 @@
   }
 
   @media (max-width: 767px) {
+    .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-selector__heading {
+      color: {{ bk_stts.bundle_heading_color_mobile | default: bk_stts.bundle_heading_color | default: '#1f2937' }} !important;
+      font-size: {{ bk_stts.bundle_heading_font_size_mobile | default: 16 }}px !important;
+      font-weight: {{ bk_stts.bundle_heading_font_weight_mobile | default: bk_stts.bundle_heading_font_weight | default: 600 }} !important;
+    }
     .t4s-bundle-selector-block-{{ block_id }}.t4s-bundle-layout-horizontal .t4s-bundle-selector__options {
       {% if bk_stts.mobile_keep_horizontal %}
         grid-template-columns: repeat(3, 1fr) !important;
@@ -271,11 +288,14 @@
   }
 </style>
 
-{%- if bk_stts.enable_bundle_selector -%}
+{%- unless bk_stts.enable_bundle_selector == false -%}
   {%- comment -%} 读取 Shopify Quantity Rules 和 Price Breaks {%- endcomment -%}
   {%- liquid
     assign price_breaks = current_variant.quantity_price_breaks
     assign base_price = current_variant.price
+    assign bundle_heading_text = bk_stts.bundle_heading_text | strip
+    assign hide_bundle_prices = bk_stts.hide_bundle_prices | default: false
+    assign default_bundle = bk_stts.default_bundle | default: 'pack2'
     
     # 决定使用哪种定价模式
     assign use_shopify_pricing = false
@@ -287,10 +307,14 @@
   <div class="t4s-bundle-selector-wrapper t4s-bundle-selector-block-{{ block_id }} t4s-bundle-layout-{{ bk_stts.layout_direction | default: 'horizontal' }}" {{ block.shopify_attributes }} style="margin: 20px 0;">
     <div class="t4s-bundle-selector" 
          data-bundle-selector 
+         data-product-form-id="{{ product_form_id }}"
          data-base-price="{{ base_price }}" 
          data-base-compare-price="{{ current_variant.compare_at_price | default: current_variant.price }}"
          data-price-breaks='{{ price_breaks | json | escape }}'
          data-pricing-mode="{{ bk_stts.pricing_mode | default: 'manual' }}">
+      {%- if bundle_heading_text != blank -%}
+        <div class="t4s-bundle-selector__heading">{{ bundle_heading_text | escape | newline_to_br }}</div>
+      {%- endif -%}
       <div class="t4s-bundle-selector__options">
         
         {%- if use_shopify_pricing -%}
@@ -304,7 +328,11 @@
               assign discount_amount = original_total | minus: tier_total_price
               assign discount_percent = discount_amount | times: 100.0 | divided_by: original_total | round
               
-              if forloop.index == 2
+              if default_bundle == 'pack1' and forloop.index == 1
+                assign is_selected = ' is-selected'
+              elsif default_bundle == 'pack2' and forloop.index == 2
+                assign is_selected = ' is-selected'
+              elsif default_bundle == 'pack3' and forloop.index == 3
                 assign is_selected = ' is-selected'
               else
                 assign is_selected = ''
@@ -341,13 +369,15 @@
                   <div class="t4s-bundle-option__label" data-label>
                     {{ tier_quantity }} {% if tier_quantity == 1 %}{{ bk_stts.unit_singular | default: 'Card' }}{% else %}{{ bk_stts.unit_plural | default: 'Cards' }}{% endif %}
                   </div>
-                  <div class="t4s-bundle-option__price" data-bundle-price>
-                    {%- if settings.currency_code_enabled -%}
-                      {{ tier_total_price | money_with_currency | remove: '.00' | remove: ',00' }}
-                    {%- else -%}
-                      {{ tier_total_price | money | remove: '.00' | remove: ',00' }}
-                    {%- endif -%}
-                  </div>
+                  {%- unless hide_bundle_prices -%}
+                    <div class="t4s-bundle-option__price" data-bundle-price>
+                      {%- if settings.currency_code_enabled -%}
+                        {{ tier_total_price | money_with_currency | remove: '.00' | remove: ',00' }}
+                      {%- else -%}
+                        {{ tier_total_price | money | remove: '.00' | remove: ',00' }}
+                      {%- endif -%}
+                    </div>
+                  {%- endunless -%}
                 </div>
                 
                 {%- if forloop.index > 1 and bk_stts.pack2_show_shipping -%}
@@ -384,7 +414,7 @@
             endif
           -%}
           <div 
-            class="t4s-bundle-option" 
+            class="t4s-bundle-option{% if default_bundle == 'pack1' %} is-selected{% endif %}" 
             data-bundle-option
             data-tier="tier-{{ pack1_qty }}"
             data-quantity="{{ pack1_qty }}"
@@ -403,13 +433,15 @@
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack1_qty }} {% if pack1_qty == 1 %}{{ bk_stts.unit_singular | default: 'Card' }}{% else %}{{ bk_stts.unit_plural | default: 'Cards' }}{% endif %}
                 </div>
-                <div class="t4s-bundle-option__price" data-bundle-price>
-                  {%- if settings.currency_code_enabled -%}
-                    {{ pack1_price | money_with_currency | remove: '.00' | remove: ',00' }}
-                  {%- else -%}
-                    {{ pack1_price | money | remove: '.00' | remove: ',00' }}
-                  {%- endif -%}
-                </div>
+                {%- unless hide_bundle_prices -%}
+                  <div class="t4s-bundle-option__price" data-bundle-price>
+                    {%- if settings.currency_code_enabled -%}
+                      {{ pack1_price | money_with_currency | remove: '.00' | remove: ',00' }}
+                    {%- else -%}
+                      {{ pack1_price | money | remove: '.00' | remove: ',00' }}
+                    {%- endif -%}
+                  </div>
+                {%- endunless -%}
               </div>
               {%- if bk_stts.pack1_show_shipping -%}
                 <div class="t4s-bundle-option__shipping">{{ bk_stts.pack1_shipping_text | default: 'Free Shipping' }}</div>
@@ -438,7 +470,7 @@
             endif
           -%}
           <div 
-            class="t4s-bundle-option t4s-bundle-option--recommended is-selected" 
+            class="t4s-bundle-option t4s-bundle-option--recommended{% if default_bundle == 'pack2' %} is-selected{% endif %}" 
             data-bundle-option
             data-tier="tier-{{ pack2_qty }}"
             data-quantity="{{ pack2_qty }}"
@@ -453,13 +485,15 @@
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack2_qty }} {{ bk_stts.unit_plural | default: 'Cards' }}
                 </div>
-                <div class="t4s-bundle-option__price" data-bundle-price>
-                  {%- if settings.currency_code_enabled -%}
-                    {{ pack2_price | money_with_currency | remove: '.00' | remove: ',00' }}
-                  {%- else -%}
-                    {{ pack2_price | money | remove: '.00' | remove: ',00' }}
-                  {%- endif -%}
-                </div>
+                {%- unless hide_bundle_prices -%}
+                  <div class="t4s-bundle-option__price" data-bundle-price>
+                    {%- if settings.currency_code_enabled -%}
+                      {{ pack2_price | money_with_currency | remove: '.00' | remove: ',00' }}
+                    {%- else -%}
+                      {{ pack2_price | money | remove: '.00' | remove: ',00' }}
+                    {%- endif -%}
+                  </div>
+                {%- endunless -%}
               </div>
               {%- if bk_stts.pack2_show_shipping -%}
                 <div class="t4s-bundle-option__shipping">{{ bk_stts.pack2_shipping_text | default: 'Free Shipping' }}</div>
@@ -488,7 +522,7 @@
             endif
           -%}
           <div 
-            class="t4s-bundle-option" 
+            class="t4s-bundle-option{% if default_bundle == 'pack3' %} is-selected{% endif %}" 
             data-bundle-option
             data-tier="tier-{{ pack3_qty }}"
             data-quantity="{{ pack3_qty }}"
@@ -503,13 +537,15 @@
                 <div class="t4s-bundle-option__label" data-label>
                   {{ pack3_qty }} {{ bk_stts.unit_plural | default: 'Cards' }}
                 </div>
-                <div class="t4s-bundle-option__price" data-bundle-price>
-                  {%- if settings.currency_code_enabled -%}
-                    {{ pack3_price | money_with_currency | remove: '.00' | remove: ',00' }}
-                  {%- else -%}
-                    {{ pack3_price | money | remove: '.00' | remove: ',00' }}
-                  {%- endif -%}
-                </div>
+                {%- unless hide_bundle_prices -%}
+                  <div class="t4s-bundle-option__price" data-bundle-price>
+                    {%- if settings.currency_code_enabled -%}
+                      {{ pack3_price | money_with_currency | remove: '.00' | remove: ',00' }}
+                    {%- else -%}
+                      {{ pack3_price | money | remove: '.00' | remove: ',00' }}
+                    {%- endif -%}
+                  </div>
+                {%- endunless -%}
               </div>
               {%- if bk_stts.pack3_show_shipping -%}
                 <div class="t4s-bundle-option__shipping">{{ bk_stts.pack3_shipping_text | default: 'Free Shipping' }}</div>
@@ -524,8 +560,25 @@
       </div>
     </div>
     
-    <input type="hidden" data-bundle-quantity-input name="quantity" value="{% if use_shopify_pricing and price_breaks.size > 1 %}{{ price_breaks[1].minimum_quantity }}{% else %}{{ bk_stts.pack2_quantity | default: 3 }}{% endif %}">
-    <input type="hidden" data-bundle-tier-input value="tier-{% if use_shopify_pricing and price_breaks.size > 1 %}{{ price_breaks[1].minimum_quantity }}{% else %}{{ bk_stts.pack2_quantity | default: 3 }}{% endif %}">
+    {%- liquid
+      if use_shopify_pricing
+        if default_bundle == 'pack1'
+          assign default_bundle_qty = price_breaks[0].minimum_quantity | default: 1
+        elsif default_bundle == 'pack3'
+          assign default_bundle_qty = price_breaks[2].minimum_quantity | default: price_breaks[1].minimum_quantity | default: price_breaks[0].minimum_quantity | default: 1
+        else
+          assign default_bundle_qty = price_breaks[1].minimum_quantity | default: price_breaks[0].minimum_quantity | default: 1
+        endif
+      elsif default_bundle == 'pack1'
+        assign default_bundle_qty = bk_stts.pack1_quantity | default: 1
+      elsif default_bundle == 'pack3'
+        assign default_bundle_qty = bk_stts.pack3_quantity | default: 5
+      else
+        assign default_bundle_qty = bk_stts.pack2_quantity | default: 3
+      endif
+    -%}
+    <input type="hidden" data-bundle-quantity-input name="quantity" value="{{ default_bundle_qty }}">
+    <input type="hidden" data-bundle-tier-input value="tier-{{ default_bundle_qty }}">
   </div>
 
   <script>
@@ -620,12 +673,62 @@
         getPriceForQuantity(quantity, discount) {
           return this.getPricingDetails(quantity, discount).totalPrice;
         }
+
+        getCurrentSelectionDetail() {
+          const selectedOption = this.container.querySelector('[data-bundle-option].is-selected');
+          if (!selectedOption) return null;
+
+          const quantity = this.formQuantityInput
+            ? parseInt(this.formQuantityInput.value) || parseInt(selectedOption.dataset.quantity) || 1
+            : parseInt(selectedOption.dataset.quantity) || 1;
+          const discount = parseInt(selectedOption.dataset.discount) || 0;
+          const tier = selectedOption.dataset.tier;
+          const pricingDetails = this.getPricingDetails(quantity, discount);
+
+          return {
+            quantity,
+            discount,
+            tier,
+            option: selectedOption,
+            pricingMode: this.pricingMode,
+            totalPrice: pricingDetails.totalPrice,
+            unitPrice: pricingDetails.unitPrice,
+            compareAtUnitPrice: pricingDetails.compareAtUnitPrice,
+            basePrice: pricingDetails.basePrice,
+            baseCompareAtPrice: pricingDetails.baseCompareAtPrice
+          };
+        }
+
+        syncCurrentSelection() {
+          const detail = this.getCurrentSelectionDetail();
+          if (!detail) return;
+
+          this.container.dispatchEvent(new CustomEvent('bundleChanged', {
+            detail,
+            bubbles: true
+          }));
+
+          document.dispatchEvent(new CustomEvent('bundleSelectorReady', {
+            detail: {
+              selector: this.container,
+              pricing: detail
+            }
+          }));
+        }
         
         init() {
           if (this.options.length === 0) return;
           
-          // 初始化时根据当前 Quantity 选择对应的 option
-          const initialQty = this.formQuantityInput ? parseInt(this.formQuantityInput.value) || 1 : 1;
+          // 初始化时优先使用 Liquid 标记的默认选中套餐，避免表单默认 quantity=1 覆盖推荐套餐。
+          const initiallySelectedOption = this.container.querySelector('[data-bundle-option].is-selected');
+          const initialQty = initiallySelectedOption
+            ? parseInt(initiallySelectedOption.dataset.quantity) || 1
+            : this.formQuantityInput
+              ? parseInt(this.formQuantityInput.value) || 1
+              : 1;
+          if (this.formQuantityInput) {
+            this.formQuantityInput.value = initialQty;
+          }
           this.updateSelection(initialQty);
           
           // Bundle 选项点击事件
@@ -712,6 +815,12 @@
         }
         
         findProductForm() {
+          const formId = this.container.dataset.productFormId;
+          if (formId) {
+            const form = document.getElementById(formId);
+            if (form) return form;
+          }
+
           return this.container.closest('form') || document.querySelector('form[action*="/cart/add"]');
         }
         
@@ -843,6 +952,18 @@
         selectors.forEach(selector => {
           if (!selector.bundleSelectorInstance) {
             selector.bundleSelectorInstance = new BundleSelector(selector);
+            window.setTimeout(() => {
+              selector.bundleSelectorInstance.syncCurrentSelection();
+            }, 0);
+          }
+        });
+      }
+
+      function syncBundleSelectors() {
+        const selectors = document.querySelectorAll('[data-bundle-selector]');
+        selectors.forEach(selector => {
+          if (selector.bundleSelectorInstance) {
+            selector.bundleSelectorInstance.syncCurrentSelection();
           }
         });
       }
@@ -856,6 +977,8 @@
       if (typeof Shopify !== 'undefined' && Shopify.designMode) {
         document.addEventListener('shopify:section:load', initBundleSelectors);
       }
+
+      window.addEventListener('load', syncBundleSelectors, { once: true });
     })();
   </script>
-{%- endif -%}
+{%- endunless -%}

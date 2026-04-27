@@ -1,0 +1,1010 @@
+{%- liquid
+  assign se_stts = section.settings
+  assign row_blocks = section.blocks | where: 'type', 'row'
+-%}
+
+{%- style -%}
+  .smart-card-comparison-{{ section.id }} {
+    margin-top: {{ se_stts.margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ se_stts.margin_bottom | times: 0.75 | round: 0 }}px;
+    background: {{ se_stts.background_color }};
+    color: {{ se_stts.text_color }};
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__inner {
+    width: min(100% - {{ se_stts.padding_horizontal_mobile | times: 2 }}px, {{ se_stts.content_width }}px);
+    margin: 0 auto;
+    padding-top: {{ se_stts.padding_top_mobile }}px;
+    padding-bottom: {{ se_stts.padding_bottom_mobile }}px;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__heading {
+    margin: {{ se_stts.heading_margin_top_mobile }}px auto {{ se_stts.heading_margin_bottom_mobile }}px;
+    max-width: {{ se_stts.heading_width }}px;
+    text-align: center;
+    color: {{ se_stts.heading_color }};
+    font-size: {{ se_stts.heading_size_mobile }}px;
+    line-height: {{ se_stts.heading_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.heading_weight }};
+    letter-spacing: {{ se_stts.heading_letter_spacing }}px;
+    text-transform: none;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__highlight {
+    display: inline-block;
+    padding: {{ se_stts.highlight_padding_vertical_mobile }}px {{ se_stts.highlight_padding_horizontal_mobile }}px;
+    background: {{ se_stts.highlight_background_color }};
+    color: {{ se_stts.highlight_color }};
+    font-size: {{ se_stts.highlight_size_mobile }}px;
+    line-height: {{ se_stts.highlight_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.highlight_weight }};
+    letter-spacing: {{ se_stts.highlight_letter_spacing }}px;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__table {
+    width: min(100%, {{ se_stts.table_width }}px);
+    margin: {{ se_stts.table_margin_top_mobile }}px auto {{ se_stts.table_margin_bottom_mobile }}px;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__row {
+    display: grid;
+    grid-template-columns: minmax(130px, 1.4fr) minmax(82px, 1fr) minmax(82px, 1fr);
+    align-items: center;
+    border-top: {{ se_stts.row_border_thickness }}px solid {{ se_stts.row_border_color }};
+    min-height: {{ se_stts.row_height_mobile }}px;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__row:last-child {
+    border-bottom: {{ se_stts.row_border_thickness }}px solid {{ se_stts.row_border_color }};
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__cell {
+    padding: {{ se_stts.cell_padding_vertical_mobile }}px {{ se_stts.cell_padding_horizontal_mobile }}px;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__cell--status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__head-cell {
+    color: {{ se_stts.column_color }};
+    font-size: {{ se_stts.column_size_mobile }}px;
+    line-height: {{ se_stts.column_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.column_weight }};
+    letter-spacing: {{ se_stts.column_letter_spacing }}px;
+    text-align: center;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__feature {
+    color: {{ se_stts.feature_color }};
+    font-size: {{ se_stts.feature_size_mobile }}px;
+    line-height: {{ se_stts.feature_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.feature_weight }};
+    letter-spacing: {{ se_stts.feature_letter_spacing }}px;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__icon {
+    width: {{ se_stts.icon_size_mobile }}px;
+    height: {{ se_stts.icon_size_mobile }}px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__icon svg {
+    width: {{ se_stts.icon_symbol_size_mobile }}px;
+    height: {{ se_stts.icon_symbol_size_mobile }}px;
+    display: block;
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__icon--check {
+    background: {{ se_stts.check_background_color }};
+    color: {{ se_stts.check_color }};
+  }
+
+  .smart-card-comparison-{{ section.id }} .smart-card-comparison__icon--cross {
+    background: {{ se_stts.cross_background_color }};
+    color: {{ se_stts.cross_color }};
+  }
+
+  @media (min-width: 768px) {
+    .smart-card-comparison-{{ section.id }} {
+      margin-top: {{ se_stts.margin_top }}px;
+      margin-bottom: {{ se_stts.margin_bottom }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__inner {
+      width: min(100% - {{ se_stts.padding_horizontal | times: 2 }}px, {{ se_stts.content_width }}px);
+      padding-top: {{ se_stts.padding_top }}px;
+      padding-bottom: {{ se_stts.padding_bottom }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__heading {
+      margin-top: {{ se_stts.heading_margin_top }}px;
+      margin-bottom: {{ se_stts.heading_margin_bottom }}px;
+      font-size: {{ se_stts.heading_size }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__highlight {
+      padding: {{ se_stts.highlight_padding_vertical }}px {{ se_stts.highlight_padding_horizontal }}px;
+      font-size: {{ se_stts.highlight_size }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__table {
+      margin-top: {{ se_stts.table_margin_top }}px;
+      margin-bottom: {{ se_stts.table_margin_bottom }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__row {
+      grid-template-columns: minmax(220px, 1.35fr) minmax(160px, 1fr) minmax(160px, 1fr);
+      min-height: {{ se_stts.row_height }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__cell {
+      padding: {{ se_stts.cell_padding_vertical }}px {{ se_stts.cell_padding_horizontal }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__head-cell {
+      font-size: {{ se_stts.column_size }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__feature {
+      font-size: {{ se_stts.feature_size }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__icon {
+      width: {{ se_stts.icon_size }}px;
+      height: {{ se_stts.icon_size }}px;
+    }
+
+    .smart-card-comparison-{{ section.id }} .smart-card-comparison__icon svg {
+      width: {{ se_stts.icon_symbol_size }}px;
+      height: {{ se_stts.icon_symbol_size }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- capture check_icon -%}
+  <span class="smart-card-comparison__icon smart-card-comparison__icon--check" aria-label="Yes">
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M5 10.4l3 3.1 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+{%- endcapture -%}
+
+{%- capture cross_icon -%}
+  <span class="smart-card-comparison__icon smart-card-comparison__icon--cross" aria-label="No">
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M6.3 6.3l7.4 7.4M13.7 6.3l-7.4 7.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </span>
+{%- endcapture -%}
+
+<section class="smart-card-comparison-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="smart-card-comparison__inner">
+    {%- if se_stts.heading_before != blank or se_stts.heading_highlight != blank or se_stts.heading_after != blank -%}
+      <h2 class="smart-card-comparison__heading">
+        {%- if se_stts.heading_before != blank -%}{{ se_stts.heading_before }}{%- endif -%}
+        {%- if se_stts.heading_highlight != blank -%}
+          <span class="smart-card-comparison__highlight">{{ se_stts.heading_highlight }}</span>
+        {%- endif -%}
+        {%- if se_stts.heading_after != blank -%}{{ se_stts.heading_after }}{%- endif -%}
+      </h2>
+    {%- endif -%}
+
+    <div class="smart-card-comparison__table">
+      <div class="smart-card-comparison__row smart-card-comparison__row--head">
+        <div class="smart-card-comparison__cell"></div>
+        <div class="smart-card-comparison__cell smart-card-comparison__head-cell">{{ se_stts.digital_column_label }}</div>
+        <div class="smart-card-comparison__cell smart-card-comparison__head-cell">{{ se_stts.paper_column_label }}</div>
+      </div>
+
+      {%- for block in row_blocks -%}
+        <div class="smart-card-comparison__row" {{ block.shopify_attributes }}>
+          <div class="smart-card-comparison__cell smart-card-comparison__feature">
+            {{ block.settings.feature }}
+          </div>
+          <div class="smart-card-comparison__cell smart-card-comparison__cell--status">
+            {%- if block.settings.digital_status == 'check' -%}
+              {{ check_icon }}
+            {%- elsif block.settings.digital_status == 'cross' -%}
+              {{ cross_icon }}
+            {%- endif -%}
+          </div>
+          <div class="smart-card-comparison__cell smart-card-comparison__cell--status">
+            {%- if block.settings.paper_status == 'check' -%}
+              {{ check_icon }}
+            {%- elsif block.settings.paper_status == 'cross' -%}
+              {{ cross_icon }}
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Smart card comparison",
+  "tag": "section",
+  "class": "t4s-section smart-card-comparison-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading_before",
+      "label": "Heading before highlight",
+      "default": "Why Switch to a "
+    },
+    {
+      "type": "text",
+      "id": "heading_highlight",
+      "label": "Highlighted heading text",
+      "default": "Digital Business Card"
+    },
+    {
+      "type": "text",
+      "id": "heading_after",
+      "label": "Heading after highlight",
+      "default": " ?"
+    },
+    {
+      "type": "text",
+      "id": "digital_column_label",
+      "label": "Digital column label",
+      "default": "Our Digital Card"
+    },
+    {
+      "type": "text",
+      "id": "paper_column_label",
+      "label": "Paper column label",
+      "default": "Paper Business Cards"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Content width",
+      "default": 1100
+    },
+    {
+      "type": "range",
+      "id": "heading_width",
+      "min": 500,
+      "max": 1300,
+      "step": 20,
+      "unit": "px",
+      "label": "Heading width",
+      "default": 980
+    },
+    {
+      "type": "range",
+      "id": "table_width",
+      "min": 520,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "label": "Table width",
+      "default": 620
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop padding top",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop padding bottom",
+      "default": 76
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile padding top",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile padding bottom",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 16,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop side padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile side padding",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "table_margin_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop table margin top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "table_margin_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop table margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "table_margin_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile table margin top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "table_margin_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile table margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "row_height",
+      "min": 36,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop row height",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "row_height_mobile",
+      "min": 36,
+      "max": 92,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile row height",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_horizontal",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop cell horizontal padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_vertical",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop cell vertical padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_horizontal_mobile",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile cell horizontal padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "cell_padding_vertical_mobile",
+      "min": 0,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile cell vertical padding",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Heading typography"
+    },
+    {
+      "type": "text",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#f2f2f2"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 18,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 18,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "min": 90,
+      "max": 180,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_top",
+      "min": 0,
+      "max": 90,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 0,
+      "max": 90,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_top_mobile",
+      "min": 0,
+      "max": 90,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom_mobile",
+      "min": 0,
+      "max": 90,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Highlight typography"
+    },
+    {
+      "type": "text",
+      "id": "highlight_background_color",
+      "label": "Background",
+      "default": "#f3c600"
+    },
+    {
+      "type": "text",
+      "id": "highlight_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "highlight_size",
+      "min": 18,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "highlight_size_mobile",
+      "min": 18,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "highlight_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "highlight_line_height",
+      "min": 90,
+      "max": 180,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "highlight_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "highlight_padding_horizontal",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop horizontal padding",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "highlight_padding_vertical",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop vertical padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "highlight_padding_horizontal_mobile",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile horizontal padding",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "highlight_padding_vertical_mobile",
+      "min": 0,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile vertical padding",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Column typography"
+    },
+    {
+      "type": "text",
+      "id": "column_color",
+      "label": "Color",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "range",
+      "id": "column_size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "column_size_mobile",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "column_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "column_line_height",
+      "min": 90,
+      "max": 180,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "column_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Feature typography"
+    },
+    {
+      "type": "text",
+      "id": "feature_color",
+      "label": "Color",
+      "default": "#d9d9d9"
+    },
+    {
+      "type": "range",
+      "id": "feature_size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "feature_size_mobile",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "feature_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "feature_line_height",
+      "min": 90,
+      "max": 190,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 135
+    },
+    {
+      "type": "range",
+      "id": "feature_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0.2
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "text",
+      "id": "check_background_color",
+      "label": "Check background",
+      "default": "#10c85a"
+    },
+    {
+      "type": "text",
+      "id": "check_color",
+      "label": "Check color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "cross_background_color",
+      "label": "Cross background",
+      "default": "#4b5966"
+    },
+    {
+      "type": "text",
+      "id": "cross_color",
+      "label": "Cross color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 18,
+      "max": 54,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop icon size",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "min": 18,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile icon size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "icon_symbol_size",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop symbol size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "icon_symbol_size_mobile",
+      "min": 8,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile symbol size",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Colors and borders"
+    },
+    {
+      "type": "text",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#252525"
+    },
+    {
+      "type": "text",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "row_border_color",
+      "label": "Row border",
+      "default": "#3a4148"
+    },
+    {
+      "type": "range",
+      "id": "row_border_thickness",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Row border thickness",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Comparison row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Feature text",
+          "default": "One-tap sharing"
+        },
+        {
+          "type": "select",
+          "id": "digital_status",
+          "label": "Digital card status",
+          "default": "check",
+          "options": [
+            {
+              "value": "check",
+              "label": "Check"
+            },
+            {
+              "value": "cross",
+              "label": "Cross"
+            },
+            {
+              "value": "blank",
+              "label": "Blank"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "paper_status",
+          "label": "Paper card status",
+          "default": "cross",
+          "options": [
+            {
+              "value": "check",
+              "label": "Check"
+            },
+            {
+              "value": "cross",
+              "label": "Cross"
+            },
+            {
+              "value": "blank",
+              "label": "Blank"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Smart card comparison",
+      "blocks": [
+        {
+          "type": "row",
+          "settings": {
+            "feature": "One-tap sharing",
+            "digital_status": "check",
+            "paper_status": "cross"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "feature": "No app required",
+            "digital_status": "check",
+            "paper_status": "cross"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "feature": "Update details at will real",
+            "digital_status": "check",
+            "paper_status": "cross"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "feature": "Interactive profile",
+            "digital_status": "check",
+            "paper_status": "cross"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "feature": "Save contacts instantly",
+            "digital_status": "check",
+            "paper_status": "cross"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

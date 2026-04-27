@@ -9,6 +9,7 @@
     - price_varies_style: {String} Product price varies (optional)
     - style_inline: {CSS} Product price var css (optional)
     - hide_compare_price: {Boolean} Hide compare-at price/strike-through price (optional)
+    - show_currency_code: {Boolean} Show currency code after price when enabled globally (optional)
 
     Usage:
     {%- render 'product-price-single', variant: current_variant, product: product, PR_no_pick:true -%}
@@ -53,7 +54,11 @@ if hide_compare_price
   assign compare_at_price = price
 endif
 
-assign cur_code_enabled = settings.currency_code_enabled
+if show_currency_code == false or show_currency_code == 'false'
+  assign cur_code_enabled = false
+else
+  assign cur_code_enabled = settings.currency_code_enabled
+endif
 assign saveAmountFixed = compare_at_price | minus: price
 
 if cur_code_enabled

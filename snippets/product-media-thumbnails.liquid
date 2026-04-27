@@ -143,6 +143,12 @@
       <div class="t4s-product-media-heading-{{ se_id }}">{{ media_heading }}</div>
     {%- endif -%}
     {%- render 'product-btns', se_stts: se_stts, product: product -%}
+    <button type="button" class="t4s-main-nav-arrow t4s-main-nav-arrow-prev" data-main-prev-arrow="{{ se_id }}" aria-label="Previous image">
+      &#8249;
+    </button>
+    <button type="button" class="t4s-main-nav-arrow t4s-main-nav-arrow-next" data-main-next-arrow="{{ se_id }}" aria-label="Next image">
+      &#8250;
+    </button>
   </div>
 
   {%- if media_layout != 'without_thumbnails' -%}
@@ -186,11 +192,10 @@
         </div>
       </div>
       
-      {%- comment -%} 缩略图左右小箭头（仅移动端显示） {%- endcomment -%}
-      <div class="t4s-thumb-nav-arrow t4s-thumb-nav-arrow-prev" data-thumb-prev-arrow aria-label="Previous image" style="display: flex;">
+      <div class="t4s-thumb-nav-arrow t4s-thumb-nav-arrow-prev" data-thumb-prev-arrow="{{ se_id }}" aria-label="Previous image">
         &#8249;
       </div>
-      <div class="t4s-thumb-nav-arrow t4s-thumb-nav-arrow-next" data-thumb-next-arrow aria-label="Next image" style="display: flex;">
+      <div class="t4s-thumb-nav-arrow t4s-thumb-nav-arrow-next" data-thumb-next-arrow="{{ se_id }}" aria-label="Next image">
         &#8250;
       </div>
 
@@ -208,16 +213,16 @@
       ></button>
     </div>
 
-    {%- comment -%} 缩略图箭头点击脚本 - 使用 jQuery 和 flickityt4s {%- endcomment -%}
     <script>
     (function() {
-      
+      const sectionId = {{ se_id | json }};
+
       function init() {
-        const prev = document.querySelector('[data-thumb-prev-arrow]');
-        const next = document.querySelector('[data-thumb-next-arrow]');
-        const slider = document.querySelector('[data-main-media]');
-        
-        if (!prev || !next || !slider) {
+        const prev = document.querySelector('[data-thumb-prev-arrow="' + sectionId + '"]');
+        const next = document.querySelector('[data-thumb-next-arrow="' + sectionId + '"]');
+        const slider = document.querySelector('.carousel__nav--' + sectionId) ? document.querySelector('.carousel__nav--' + sectionId).closest('[data-product-single-media-group]').querySelector('[data-main-media]') : null;
+
+        if (!slider) {
           return;
         }
         
@@ -257,19 +262,25 @@
           if (flkty) {
             clearInterval(checkInterval);
             
-            prev.onclick = function(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              flkty.previous();
-              return false;
-            };
-            
-            next.onclick = function(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              flkty.next();
-              return false;
-            };
+            [prev].forEach(function(button) {
+              if (!button) return;
+              button.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                flkty.previous();
+                return false;
+              };
+            });
+
+            [next].forEach(function(button) {
+              if (!button) return;
+              button.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                flkty.next();
+                return false;
+              };
+            });
             
           } else if (checkCount > 100) {
             clearInterval(checkInterval);
@@ -292,12 +303,15 @@
     {%- comment -%} 缩略图同步脚本 {%- endcomment -%}
     <script>
       (function() {
-        
+        const sectionId = {{ se_id | json }};
+
         function initThumbnailSync() {
-          const mainSlider = document.querySelector('[data-main-media]');
-          const thumbnailItems = document.querySelectorAll('.t4s-product__thumb-item-custom');
-          const thumbPrevArrow = document.querySelector('[data-thumb-prev-arrow]');
-          const thumbNextArrow = document.querySelector('[data-thumb-next-arrow]');
+          const thumbNav = document.querySelector('.carousel__nav--' + sectionId);
+          const mediaGroup = thumbNav ? thumbNav.closest('[data-product-single-media-group]') : null;
+          const mainSlider = mediaGroup ? mediaGroup.querySelector('[data-main-media]') : null;
+          const thumbnailItems = thumbNav ? thumbNav.querySelectorAll('.t4s-product__thumb-item-custom') : [];
+          const thumbPrevArrow = document.querySelector('[data-thumb-prev-arrow="' + sectionId + '"]');
+          const thumbNextArrow = document.querySelector('[data-thumb-next-arrow="' + sectionId + '"]');
           
           if (!mainSlider || !thumbnailItems.length) {
             return;
@@ -360,19 +374,15 @@
               // 左箭头
               if (index > 0) {
                 thumbPrevArrow.classList.remove('t4s-dn');
-                thumbPrevArrow.style.display = 'flex';
               } else {
                 thumbPrevArrow.classList.add('t4s-dn');
-                thumbPrevArrow.style.display = 'none';
               }
 
               // 右箭头
               if (index < totalImages - 1) {
                 thumbNextArrow.classList.remove('t4s-dn');
-                thumbNextArrow.style.display = 'flex';
               } else {
                 thumbNextArrow.classList.add('t4s-dn');
-                thumbNextArrow.style.display = 'none';
               }
             }
 
@@ -490,4 +500,61 @@
       })();
     </script>
   {%- endif -%}
+
+  <script>
+    (function() {
+      const sectionId = {{ se_id | json }};
+
+      function getFlickity(slider) {
+        if (!slider) return null;
+        if (slider.flickityData) return slider.flickityData;
+        if (typeof jQuery !== 'undefined' && jQuery(slider).data('flickityt4s')) {
+          return jQuery(slider).data('flickityt4s');
+        }
+        if (window.Flickity) {
+          return window.Flickity.data(slider);
+        }
+        return null;
+      }
+
+      function bindMainArrows() {
+        const prev = document.querySelector('[data-main-prev-arrow="' + sectionId + '"]');
+        const next = document.querySelector('[data-main-next-arrow="' + sectionId + '"]');
+        const mediaGroup = prev ? prev.closest('[data-product-single-media-group]') : null;
+        const slider = mediaGroup ? mediaGroup.querySelector('[data-main-media]') : null;
+        if (!prev || !next || !slider || prev.dataset.mainArrowBound === 'true') return;
+
+        let checks = 0;
+        const timer = setInterval(function() {
+          checks += 1;
+          const flkty = getFlickity(slider);
+          if (flkty) {
+            clearInterval(timer);
+            prev.dataset.mainArrowBound = 'true';
+            next.dataset.mainArrowBound = 'true';
+            prev.addEventListener('click', function(event) {
+              event.preventDefault();
+              event.stopPropagation();
+              flkty.previous();
+            });
+            next.addEventListener('click', function(event) {
+              event.preventDefault();
+              event.stopPropagation();
+              flkty.next();
+            });
+          } else if (checks > 100) {
+            clearInterval(timer);
+          }
+        }, 100);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindMainArrows);
+      } else {
+        bindMainArrows();
+      }
+      setTimeout(bindMainArrows, 1000);
+      setTimeout(bindMainArrows, 2000);
+    })();
+  </script>
 </div>

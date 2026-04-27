@@ -20,9 +20,25 @@
 <style>
   .t4s-custom-upload--{{ block.id }} .t4s-custom-upload__label--upload {
     color: {{ bk_stts.upload_label_color | default: '#000000' }} !important;
+    font-size: {{ bk_stts.upload_label_font_size | default: 14 }}px !important;
+    font-weight: {{ bk_stts.upload_label_font_weight | default: '400' }} !important;
+  }
+  .t4s-custom-upload--{{ block.id }} .t4s-custom-upload__upload-header {
+    margin-top: {{ bk_stts.upload_label_margin_top | default: 0 }}px !important;
+    margin-bottom: {{ bk_stts.upload_label_margin_bottom | default: 8 }}px !important;
   }
   .t4s-custom-upload--{{ block.id }} .t4s-custom-upload__label--note {
     color: {{ bk_stts.note_label_color | default: '#000000' }} !important;
+  }
+  @media (max-width: 767px) {
+    .t4s-custom-upload--{{ block.id }} .t4s-custom-upload__label--upload {
+      font-size: {{ bk_stts.upload_label_font_size_mobile | default: bk_stts.upload_label_font_size | default: 14 }}px !important;
+      font-weight: {{ bk_stts.upload_label_font_weight_mobile | default: bk_stts.upload_label_font_weight | default: '400' }} !important;
+    }
+    .t4s-custom-upload--{{ block.id }} .t4s-custom-upload__upload-header {
+      margin-top: {{ bk_stts.upload_label_margin_top_mobile | default: bk_stts.upload_label_margin_top | default: 0 }}px !important;
+      margin-bottom: {{ bk_stts.upload_label_margin_bottom_mobile | default: bk_stts.upload_label_margin_bottom | default: 8 }}px !important;
+    }
   }
   .t4s-custom-upload__container { width: 100%; }
   .t4s-custom-upload__button {
@@ -62,7 +78,7 @@
 </style>
 
 <div class="t4s-custom-upload t4s-custom-upload--{{ block.id }}" data-custom-upload data-product-id="{{ product.id }}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
-  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+  <div class="t4s-custom-upload__upload-header" style="display: flex; align-items: center; justify-content: space-between;">
     <label class="t4s-custom-upload__label t4s-custom-upload__label--upload" for="{{ upload_id }}" style="margin: 0;">
       {{ display_label }}
       {%- if bk_stts.required -%}<span style="color:#ef4444;margin-left:2px;">*</span>{%- endif -%}

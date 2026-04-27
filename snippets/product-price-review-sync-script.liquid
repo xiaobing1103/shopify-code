@@ -8,6 +8,11 @@
     var initialCompareAtPrice = {{ current_variant.compare_at_price | default: current_variant.price | default: product.price | json }};
     var saleType = {{ sale_type | json }};
     var hideComparePrice = {{ hide_compare_price | default: false | json }};
+    var showCurrencyCode = {% if show_currency_code == false or show_currency_code == 'false' %}false{% else %}true{% endif %};
+    var liquidCurrencyCodeEnabled = {{ settings.currency_code_enabled | json }};
+    var liquidMoneyFormat = {{ shop.money_format | json }};
+    var liquidMoneyWithCurrencyFormat = {{ shop.money_with_currency_format | json }};
+    var liquidCurrencyCode = {{ cart.currency.iso_code | default: shop.currency | json }};
     var salePercentTemplate = {{ 'products.badge.save_amount_2_html' | t: saved_amount: '[saved_amount]' | json }};
     var saleFixedTemplate = {{ 'products.badge.save_amount_fixed_2_html' | t: saved_amount: '[saved_amount]' | json }};
     var variantUnitPriceMap = {
@@ -64,22 +69,31 @@
       return suffixMatch ? suffixMatch[1] : '';
     }
 
+    function isCurrencyCodeEnabled() {
+      if (!showCurrencyCode) return false;
+      if (window.T4Sconfigs && typeof window.T4Sconfigs.currencyCodeEnabled !== 'undefined') {
+        return !!window.T4Sconfigs.currencyCodeEnabled;
+      }
+      return !!liquidCurrencyCodeEnabled;
+    }
+
     function getMoneyFormat() {
       if (window.T4Sconfigs) {
-        if (window.T4Sconfigs.currencyCodeEnabled && window.T4Sconfigs.moneyWithCurrencyFormat) {
+        if (isCurrencyCodeEnabled() && window.T4Sconfigs.moneyWithCurrencyFormat) {
           return window.T4Sconfigs.moneyWithCurrencyFormat;
         }
         if (window.T4Sconfigs.moneyFormat) return window.T4Sconfigs.moneyFormat;
       }
       if (window.theme && window.theme.moneyFormat) return window.theme.moneyFormat;
-      return '${{amount}}';
+      if (isCurrencyCodeEnabled() && liquidMoneyWithCurrencyFormat) return liquidMoneyWithCurrencyFormat;
+      return liquidMoneyFormat || '${{amount}}';
     }
 
     function getActiveCurrencyCode() {
       if (window.T4Sconfigs) {
         return window.T4Sconfigs.cartCurrency || window.T4Sconfigs.shopCurency || '';
       }
-      return '';
+      return liquidCurrencyCode || '';
     }
 
     var initialCurrencySuffix = detectCurrencySuffix(getTarget() ? getTarget().textContent : '');
@@ -103,13 +117,12 @@
       var activeCurrencyCode = getActiveCurrencyCode();
       var currencySuffix = getCurrencySuffix();
 
-      if (currencySuffix && String(formattedMoney).indexOf(currencySuffix.trim()) === -1) {
+      if (isCurrencyCodeEnabled() && currencySuffix && String(formattedMoney).indexOf(currencySuffix.trim()) === -1) {
         formattedMoney = String(formattedMoney).trim() + currencySuffix;
       }
 
       if (
-        window.T4Sconfigs &&
-        window.T4Sconfigs.currencyCodeEnabled &&
+        isCurrencyCodeEnabled() &&
         activeCurrencyCode &&
         String(formattedMoney).indexOf(activeCurrencyCode) === -1
       ) {
@@ -369,6 +382,12 @@
       syncDisplayedPrice(evt.detail || null);
     });
 
+    document.addEventListener('bundleSelectorReady', function (evt) {
+      var selector = getBundleSelector();
+      if (!selector || !evt.detail || evt.detail.selector !== selector) return;
+      syncDisplayedPrice(evt.detail.pricing || null);
+    });
+
     if (typeof jQuery !== 'undefined') {
       jQuery(document).on('variant:changed.t4sBundlePriceReview{{ block_id }}', function (evt) {
         if (!evt.currentVariant || !evt.currentVariant.price) return;
@@ -412,5 +431,7 @@
     } else {
       initPriceSync();
     }
+
+    window.addEventListener('load', initPriceSync, { once: true });
   })();
 </script>

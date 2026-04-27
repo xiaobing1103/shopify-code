@@ -31,7 +31,26 @@
     assign color_swatch = 'is-sw__color '
   endif
   assign hide_color_selector = bk_stts.hide_color_selector | default: false
-  assign hide_non_color_selectors = bk_stts.hide_non_color_selectors | default: false
+  assign show_add_to_cart_button = true
+  if bk_stts.show_add_to_cart_button == false
+    assign show_add_to_cart_button = false
+  endif
+  if bk_stts.hide_non_color_selectors == false
+    assign hide_non_color_selectors = false
+  else
+    assign hide_non_color_selectors = true
+  endif
+  assign qty_full_width = bk_stts.qty_full_width | default: false
+  assign qty_width_class = ''
+  assign qty_width_style = ''
+  assign form_buttons_extra_style = ''
+  assign form_buttons_row_extra_style = ''
+  if qty_full_width
+    assign qty_width_class = ' is-qty-full-width'
+    assign qty_width_style = 'width: 100% !important; min-width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important;'
+    assign form_buttons_extra_style = ' width: 100% !important; max-width: 100% !important;'
+    assign form_buttons_row_extra_style = ' width: 100% !important; max-width: 100% !important; flex-wrap: wrap !important;'
+  endif
   assign current_variant_available = current_variant.available
   assign use_incoming_mess = settings.use_incoming_mess
   assign current_variant_incoming = false
@@ -116,6 +135,23 @@
     margin-bottom: 14px !important;
   }
 
+  #{{ product_form_id }} .t4s-swatch__option--hidden-non-color {
+    position: absolute !important;
+    left: -9999px !important;
+    top: auto !important;
+    display: block !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+  }
+
   #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__title,
   #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__title span,
   #{{ product_form_id }} .t4s-swatch__option:not(.is-t4s-style__color) .t4s-swatch__current,
@@ -173,11 +209,19 @@
     padding-top: {{ atc_btn_padding_y }}px !important;
     padding-bottom: {{ atc_btn_padding_y }}px !important;
   }
+
+  #{{ product_form_id }} .t4s-quantity-wrapper.is-qty-full-width {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
 </style>
 
 <div
-  class="t4s-product-form__variants is-no-pick__{{ PR_no_pick }}{% if PR_buy_pr %} is-payment-btn-true t4s-payment-button t4s-btn-color-{{ bk_stts.button_color_payment }}{% endif %}  is-remove-soldout-{{ remove_soldout }} is-btn-full-width__{{ bk_stts.btn_atc_full }} is-btn-atc-txt-{{ bk_stts.btn_txt }} is--fist-ratio-{{ is_fit_ratio_img }}"
+  class="t4s-product-form__variants is-no-pick__{{ PR_no_pick }}{% if PR_buy_pr %} is-payment-btn-true t4s-payment-button t4s-btn-color-{{ bk_stts.button_color_payment }}{% endif %}  is-remove-soldout-{{ remove_soldout }} is-btn-full-width__{{ bk_stts.btn_atc_full }} is-qty-full-width__{{ qty_full_width }} is-btn-atc-txt-{{ bk_stts.btn_txt }} is--fist-ratio-{{ is_fit_ratio_img }}"
   style="{% if is_fit_ratio_img %};--fit-ratio-img:{{ first_ratio_img }};{% endif %} --wishlist-color: {{ bk_stts.wishlist_color }};--wishlist-hover-color: {{ bk_stts.wishlist_color_hover }};--wishlist-active-color: {{ bk_stts.wishlist_color_active }};--compare-color: {{ bk_stts.compare_color }};--compare-hover-color: {{ bk_stts.compare_color_hover }};--compare-active-color: {{ bk_stts.compare_color_active }};--btn-color: {{ atc_btn_text_color }};--btn-background: {{ atc_btn_bg_color }};--btn-color-hover: {{ atc_btn_text_hover_color }};--btn-background-hover: {{ atc_btn_bg_hover_color }};"
+  data-qty-full-width="{{ qty_full_width }}"
   {{ shopify_attributes }}
 >
   <div data-callBackVariant id="t4s-callBackVariant{{ product_form_id }}">
@@ -259,9 +303,12 @@
               <div
                 data-swatch-option
                 data-id="{{ forloop.index0 }}"
-                class="t4s-swatch__option is-t4s-name__{{ option_name | handle }}"
+                class="t4s-swatch__option is-t4s-name__{{ option_name | handle }}{% if hide_non_color_selectors %} t4s-swatch__option--hidden-non-color{% endif %}"
                 {% if hide_non_color_selectors %}
-                  style="position: absolute !important; left: -9999px !important; opacity: 0 !important; pointer-events: none !important; width: 0 !important; height: 0 !important; overflow: hidden !important;"
+                  data-hidden-non-color-selector
+                {% endif %}
+                {% if hide_non_color_selectors %}
+                  style="position: absolute !important; left: -9999px !important; top: auto !important; display: block !important; opacity: 0 !important; pointer-events: none !important; width: 0 !important; height: 0 !important; min-width: 0 !important; min-height: 0 !important; padding: 0 !important; margin: 0 !important; border: 0 !important; overflow: hidden !important;"
                 {% endif %}
               >
                 <h4 class="t4s-swatch__title">
@@ -522,8 +569,8 @@
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
         </div>
       {%- endif -%}
-      <div class="t4s-product-form__buttons" style="--pr-btn-round:{{ bk_stts.pr_btn_round }}px;">
-        <div class="t4s-d-flex t4s-flex-wrap">
+      <div class="t4s-product-form__buttons" style="--pr-btn-round:{{ bk_stts.pr_btn_round }}px;{{ form_buttons_extra_style }}">
+        <div class="t4s-d-flex t4s-flex-wrap" style="{{ form_buttons_row_extra_style }}">
           {%- if isExternal -%}
             <a
               href="{{ external_link }}"
@@ -562,7 +609,13 @@
 
           {%- else -%}
             {%- if bk_stts.show_qty and isProductAvailable -%}
-              <div data-quantity-wrapper class="t4s-quantity-wrapper t4s-product-form__qty">
+              <div
+                data-quantity-wrapper
+                class="t4s-quantity-wrapper t4s-product-form__qty{{ qty_width_class }}"
+                {% if qty_width_style != blank %}
+                  style="{{ qty_width_style }}"
+                {% endif %}
+              >
                 <button data-quantity-selector data-decrease-qty type="button" class="t4s-quantity-selector is--minus">
                   <svg focusable="false" class="icon icon--minus" viewBox="0 0 10 2" role="presentation">
                     <path d="M10 0v2H0V0z" fill="currentColor"></path>
@@ -596,51 +649,53 @@
               {%- render 't4s_wis_cp', product: product, bk_stts: bk_stts -%}
             {%- endif -%}
 
-            <button
-              data-animation-atc='{ "ani":"{{ bk_stts.ani | default: 'none' }}","time":{{ bk_stts.time | default: 6 }}000 }'
-              type="submit"
-              name="add"
-              data-atc-form
-              class="t4s-product-form__submit t4s-btn t4s-btn-base t4s-btn-style-{{ bk_stts.button_style | default: 'default' }} t4s-btn-color-{{ bk_stts.button_color | default: 'primary' }} t4s-w-100 t4s-justify-content-center {% if bk_stts.button_style == 'default' or bk_stts.button_style == 'outline' %} t4s-btn-effect-{{ bk_stts.button_effect | default: 'default' }}{% endif %} t4s-btn-loading__svg"
-              {% if bk_stts.button_color == 'custom' %}
-                style="--btn-color: {{ atc_btn_text_color }}; --btn-background: {{ atc_btn_bg_color }}; --btn-color-hover: {{ atc_btn_text_hover_color }}; --btn-background-hover: {{ atc_btn_bg_hover_color }};"
-              {% endif %}
-              {% unless current_variant_available %}
-                aria-disabled="true"
-              {% endunless -%}
-              {% unless isProductAvailable %}
-                disabled="disabled"
-              {% endunless %}
-            >
-              {%- if bk_stts.btn_icon -%}
-                <svg class="t4s-btn-icon" viewBox="0 0 24 24">
-                  <use xlink:href="#t4s-icon-atc"></use>
-                </svg>
-              {%- endif -%}
-              <span class="t4s-btn-atc_text">
-                {%- if current_variant_available == false or isProductAvailable == false -%}
-                  {{- 'products.product.sold_out' | t -}}
-                {%- elsif isPreoder -%}
-                  {{- 'products.product.pre_order' | t }}
-                {%- else -%}
-                  {{ 'products.product.add_to_cart' | t }}
+            {%- if show_add_to_cart_button -%}
+              <button
+                data-animation-atc='{ "ani":"{{ bk_stts.ani | default: 'none' }}","time":{{ bk_stts.time | default: 6 }}000 }'
+                type="submit"
+                name="add"
+                data-atc-form
+                class="t4s-product-form__submit t4s-btn t4s-btn-base t4s-btn-style-{{ bk_stts.button_style | default: 'default' }} t4s-btn-color-{{ bk_stts.button_color | default: 'primary' }} t4s-w-100 t4s-justify-content-center {% if bk_stts.button_style == 'default' or bk_stts.button_style == 'outline' %} t4s-btn-effect-{{ bk_stts.button_effect | default: 'default' }}{% endif %} t4s-btn-loading__svg"
+                {% if bk_stts.button_color == 'custom' %}
+                  style="--btn-color: {{ atc_btn_text_color }}; --btn-background: {{ atc_btn_bg_color }}; --btn-color-hover: {{ atc_btn_text_hover_color }}; --btn-background-hover: {{ atc_btn_bg_hover_color }};"
+                {% endif %}
+                {% unless current_variant_available %}
+                  aria-disabled="true"
+                {% endunless -%}
+                {% unless isProductAvailable %}
+                  disabled="disabled"
+                {% endunless %}
+              >
+                {%- if bk_stts.btn_icon -%}
+                  <svg class="t4s-btn-icon" viewBox="0 0 24 24">
+                    <use xlink:href="#t4s-icon-atc"></use>
+                  </svg>
                 {%- endif -%}
-              </span>
-              <span class="t4s-loading__spinner" hidden>
-                <svg
-                  width="16"
-                  height="16"
-                  hidden
-                  class="t4s-svg-spinner"
-                  focusable="false"
-                  role="presentation"
-                  viewBox="0 0 66 66"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle class="t4s-path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
-                </svg>
-              </span>
-            </button>
+                <span class="t4s-btn-atc_text">
+                  {%- if current_variant_available == false or isProductAvailable == false -%}
+                    {{- 'products.product.sold_out' | t -}}
+                  {%- elsif isPreoder -%}
+                    {{- 'products.product.pre_order' | t }}
+                  {%- else -%}
+                    {{ 'products.product.add_to_cart' | t }}
+                  {%- endif -%}
+                </span>
+                <span class="t4s-loading__spinner" hidden>
+                  <svg
+                    width="16"
+                    height="16"
+                    hidden
+                    class="t4s-svg-spinner"
+                    focusable="false"
+                    role="presentation"
+                    viewBox="0 0 66 66"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle class="t4s-path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                  </svg>
+                </span>
+              </button>
+            {%- endif -%}
           {%- endif -%}
         </div>
 

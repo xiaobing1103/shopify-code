@@ -89,6 +89,10 @@
   if show_redirect_notice == blank
     assign show_redirect_notice = true
   endif
+  assign hide_redirect_notice = bk_stts.hide_custom_redirect_notice
+  if hide_redirect_notice == blank
+    assign hide_redirect_notice = false
+  endif
   assign redirect_notice_margin_top = bk_stts.custom_redirect_notice_margin_top | default: 14
   assign redirect_notice_margin_left = bk_stts.custom_redirect_notice_margin_left | default: 0
   assign redirect_notice_margin_right = bk_stts.custom_redirect_notice_margin_right | default: 0
@@ -163,7 +167,7 @@
   assign redirect_notice_overlap = 6
   assign redirect_notice_overlap_mb = 4
   assign show_redirect_notice_block = false
-  if show_redirect_notice and redirect_notice_text != blank
+  if show_redirect_notice and hide_redirect_notice != true and redirect_notice_text != blank
     assign show_redirect_notice_block = true
   endif
   assign redirect_btn_effective_margin_top = redirect_btn_margin_top

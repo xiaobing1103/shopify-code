@@ -1,0 +1,975 @@
+{%- liquid
+  assign se_stts = section.settings
+  assign feature_blocks = section.blocks | where: 'type', 'feature'
+  assign loading_attribute = 'eager'
+
+  if se_stts.lazy_load
+    assign loading_attribute = 'lazy'
+  endif
+-%}
+
+{%- style -%}
+  .smart-system-features-{{ section.id }} {
+    margin-top: {{ se_stts.margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ se_stts.margin_bottom | times: 0.75 | round: 0 }}px;
+    background: {{ se_stts.background_color }};
+    color: {{ se_stts.text_color }};
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__inner {
+    width: min(100% - {{ se_stts.padding_horizontal_mobile | times: 2 }}px, {{ se_stts.content_width }}px);
+    margin: 0 auto;
+    padding-top: {{ se_stts.padding_top_mobile }}px;
+    padding-bottom: {{ se_stts.padding_bottom_mobile }}px;
+    text-align: center;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__header {
+    max-width: {{ se_stts.header_width }}px;
+    margin: 0 auto;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__heading {
+    margin: {{ se_stts.heading_margin_top_mobile }}px 0 {{ se_stts.heading_margin_bottom_mobile }}px;
+    color: {{ se_stts.heading_color }};
+    font-size: {{ se_stts.heading_size_mobile }}px;
+    line-height: {{ se_stts.heading_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.heading_weight }};
+    letter-spacing: {{ se_stts.heading_letter_spacing }}px;
+    text-transform: none;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__text {
+    margin: {{ se_stts.text_margin_top_mobile }}px auto {{ se_stts.text_margin_bottom_mobile }}px;
+    max-width: {{ se_stts.text_width }}px;
+    color: {{ se_stts.text_color }};
+    font-size: {{ se_stts.text_size_mobile }}px;
+    line-height: {{ se_stts.text_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.text_weight }};
+    letter-spacing: {{ se_stts.text_letter_spacing }}px;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: {{ se_stts.feature_gap_mobile }}px;
+    margin-top: {{ se_stts.features_margin_top_mobile }}px;
+    margin-bottom: {{ se_stts.features_margin_bottom_mobile }}px;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__item {
+    text-align: center;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__icon {
+    width: var(--feature-icon-size-mobile, {{ se_stts.icon_size_mobile }}px);
+    height: var(--feature-icon-size-mobile, {{ se_stts.icon_size_mobile }}px);
+    margin: {{ se_stts.icon_margin_top_mobile }}px auto {{ se_stts.icon_margin_bottom_mobile }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__icon img,
+  .smart-system-features-{{ section.id }} .smart-system-features__icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__icon svg {
+    background: transparent;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__title {
+    margin: {{ se_stts.feature_title_margin_top_mobile }}px 0 {{ se_stts.feature_title_margin_bottom_mobile }}px;
+    color: {{ se_stts.feature_title_color }};
+    font-size: {{ se_stts.feature_title_size_mobile }}px;
+    line-height: {{ se_stts.feature_title_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.feature_title_weight }};
+    letter-spacing: {{ se_stts.feature_title_letter_spacing }}px;
+    text-transform: none;
+  }
+
+  .smart-system-features-{{ section.id }} .smart-system-features__description {
+    margin: {{ se_stts.feature_text_margin_top_mobile }}px auto {{ se_stts.feature_text_margin_bottom_mobile }}px;
+    max-width: {{ se_stts.feature_text_width_mobile }}px;
+    color: {{ se_stts.feature_text_color }};
+    font-size: {{ se_stts.feature_text_size_mobile }}px;
+    line-height: {{ se_stts.feature_text_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.feature_text_weight }};
+    letter-spacing: {{ se_stts.feature_text_letter_spacing }}px;
+  }
+
+  @media (min-width: 768px) {
+    .smart-system-features-{{ section.id }} {
+      margin-top: {{ se_stts.margin_top }}px;
+      margin-bottom: {{ se_stts.margin_bottom }}px;
+    }
+
+    .smart-system-features-{{ section.id }} .smart-system-features__inner {
+      width: min(100% - {{ se_stts.padding_horizontal | times: 2 }}px, {{ se_stts.content_width }}px);
+      padding-top: {{ se_stts.padding_top }}px;
+      padding-bottom: {{ se_stts.padding_bottom }}px;
+    }
+
+    .smart-system-features-{{ section.id }} .smart-system-features__heading {
+      margin-top: {{ se_stts.heading_margin_top }}px;
+      margin-bottom: {{ se_stts.heading_margin_bottom }}px;
+      font-size: {{ se_stts.heading_size }}px;
+    }
+
+    .smart-system-features-{{ section.id }} .smart-system-features__text {
+      margin-top: {{ se_stts.text_margin_top }}px;
+      margin-bottom: {{ se_stts.text_margin_bottom }}px;
+      font-size: {{ se_stts.text_size }}px;
+    }
+
+    .smart-system-features-{{ section.id }} .smart-system-features__grid {
+      grid-template-columns: repeat({{ se_stts.columns }}, minmax(0, 1fr));
+      gap: {{ se_stts.feature_gap }}px;
+      margin-top: {{ se_stts.features_margin_top }}px;
+      margin-bottom: {{ se_stts.features_margin_bottom }}px;
+    }
+
+    .smart-system-features-{{ section.id }} .smart-system-features__icon {
+      width: var(--feature-icon-size, {{ se_stts.icon_size }}px);
+      height: var(--feature-icon-size, {{ se_stts.icon_size }}px);
+      margin-top: {{ se_stts.icon_margin_top }}px;
+      margin-bottom: {{ se_stts.icon_margin_bottom }}px;
+    }
+
+    .smart-system-features-{{ section.id }} .smart-system-features__title {
+      margin-top: {{ se_stts.feature_title_margin_top }}px;
+      margin-bottom: {{ se_stts.feature_title_margin_bottom }}px;
+      font-size: {{ se_stts.feature_title_size }}px;
+    }
+
+    .smart-system-features-{{ section.id }} .smart-system-features__description {
+      margin-top: {{ se_stts.feature_text_margin_top }}px;
+      margin-bottom: {{ se_stts.feature_text_margin_bottom }}px;
+      max-width: {{ se_stts.feature_text_width }}px;
+      font-size: {{ se_stts.feature_text_size }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="smart-system-features-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="smart-system-features__inner">
+    <div class="smart-system-features__header">
+      {%- if se_stts.heading != blank -%}
+        <h2 class="smart-system-features__heading">{{ se_stts.heading }}</h2>
+      {%- endif -%}
+
+      {%- if se_stts.text != blank -%}
+        <div class="smart-system-features__text">{{ se_stts.text | escape | newline_to_br }}</div>
+      {%- endif -%}
+    </div>
+
+    {%- if feature_blocks.size > 0 -%}
+      <div class="smart-system-features__grid">
+        {%- for block in feature_blocks -%}
+          <div class="smart-system-features__item" {{ block.shopify_attributes }}>
+            <div
+              class="smart-system-features__icon"
+              style="--feature-icon-size-mobile: {{ block.settings.icon_image_size_mobile | default: se_stts.icon_size_mobile }}px; --feature-icon-size: {{ block.settings.icon_image_size | default: se_stts.icon_size }}px;"
+            >
+              {%- if block.settings.icon != blank -%}
+                {{ block.settings.icon | image_url: width: 480 | image_tag: loading: loading_attribute, widths: '64, 96, 128, 180, 240, 320, 480', alt: block.settings.icon.alt | default: block.settings.title | escape }}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.title != blank -%}
+              <h3 class="smart-system-features__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+
+            {%- if block.settings.text != blank -%}
+              <div class="smart-system-features__description">{{ block.settings.text | escape | newline_to_br }}</div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Smart system features",
+  "tag": "section",
+  "class": "t4s-section smart-system-features-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "A System Custom-Built for You"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "We design and build the software exactly to your needs. Whether you need 25 cards or 8,000+ card activations, we custom a solution that delivers. Best of all, the TaeMark Platform is versatile and procedure. Examples of what we can do:"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Content width",
+      "default": 1100
+    },
+    {
+      "type": "range",
+      "id": "header_width",
+      "min": 400,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "label": "Header width",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "text_width",
+      "min": 400,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "label": "Text width",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Desktop columns",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "feature_gap",
+      "min": 20,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop feature gap",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "feature_gap_mobile",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile feature gap",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "features_margin_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop features margin top",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "features_margin_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop features margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "features_margin_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile features margin top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "features_margin_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile features margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop padding top",
+      "default": 68
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop padding bottom",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile padding top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile padding bottom",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop side padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile side padding",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Heading typography"
+    },
+    {
+      "type": "text",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 18,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "min": 18,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "heading_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "min": 90,
+      "max": 180,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin bottom",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin bottom",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Intro text typography"
+    },
+    {
+      "type": "text",
+      "id": "text_color",
+      "label": "Color",
+      "default": "#5d6672"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "text_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "text_line_height",
+      "min": 100,
+      "max": 220,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 145
+    },
+    {
+      "type": "range",
+      "id": "text_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0.2
+    },
+    {
+      "type": "range",
+      "id": "text_margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 32,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "min": 32,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "icon_margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "icon_margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin bottom",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "icon_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "icon_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin bottom",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Feature title typography"
+    },
+    {
+      "type": "text",
+      "id": "feature_title_color",
+      "label": "Color",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "feature_title_size",
+      "min": 10,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "feature_title_size_mobile",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 17
+    },
+    {
+      "type": "range",
+      "id": "feature_title_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "feature_title_line_height",
+      "min": 90,
+      "max": 180,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "feature_title_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_title_margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_title_margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin bottom",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "feature_title_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_title_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin bottom",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Feature text typography"
+    },
+    {
+      "type": "text",
+      "id": "feature_text_color",
+      "label": "Color",
+      "default": "#5d6672"
+    },
+    {
+      "type": "range",
+      "id": "feature_text_size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "feature_text_size_mobile",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "feature_text_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "feature_text_line_height",
+      "min": 100,
+      "max": 220,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 145
+    },
+    {
+      "type": "range",
+      "id": "feature_text_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0.2
+    },
+    {
+      "type": "range",
+      "id": "feature_text_margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_text_margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_text_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_text_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_text_width",
+      "min": 160,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop text width",
+      "default": 300
+    },
+    {
+      "type": "range",
+      "id": "feature_text_width_mobile",
+      "min": 160,
+      "max": 380,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile text width",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Colors and spacing"
+    },
+    {
+      "type": "text",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "lazy_load",
+      "label": "Lazy load icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image"
+        },
+        {
+          "type": "range",
+          "id": "icon_image_size",
+          "min": 20,
+          "max": 240,
+          "step": 4,
+          "unit": "px",
+          "label": "Icon image size",
+          "default": 64
+        },
+        {
+          "type": "range",
+          "id": "icon_image_size_mobile",
+          "min": 20,
+          "max": 200,
+          "step": 2,
+          "unit": "px",
+          "label": "Icon image size - mobile",
+          "default": 58
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Employee Management"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Deploy end-of-service employees and update their contact info on the fly. Import large groups and manage across the entire team."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Smart system features",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Employee Management",
+            "text": "Deploy end-of-service employees and update their contact info on the fly. Import large groups and manage across the entire team."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Instant Card Programming",
+            "text": "Monitor active cards, track usage and QR code scans. Add website activity. Export detailed reports to support marketing measures."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "All Cards, Anywhere",
+            "text": "All data is securely stored in North America. Accessible through permissions. Full scale security/visibility."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

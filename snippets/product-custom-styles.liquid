@@ -20,6 +20,15 @@
   if thumb_lr_px_mobile == 0
     assign thumb_lr_px_mobile = thumb_lr_px
   endif
+  assign main_arrow_border_width = se_stts.main_arrow_border_width | default: se_stts.thumb_arrow_border_width | default: 1
+  assign main_arrow_bg_color = se_stts.main_arrow_bg_color | default: se_stts.thumb_arrow_bg_color | default: 'rgba(255, 255, 255, 0.95)'
+  assign main_arrow_bg_hover_color = se_stts.main_arrow_bg_hover_color | default: se_stts.thumb_arrow_bg_hover_color | default: 'rgba(255, 255, 255, 1)'
+  assign main_arrow_color = se_stts.main_arrow_color | default: se_stts.thumb_arrow_color | default: '#333'
+  assign main_arrow_border_color = se_stts.main_arrow_border_color | default: se_stts.thumb_arrow_border_color | default: 'rgba(0, 0, 0, 0.1)'
+  assign hide_mobile_thumbnails = false
+  if se_stts.mobile_thumbnail_visibility == 'hide' or se_stts.thumb_show_mobile == false
+    assign hide_mobile_thumbnails = true
+  endif
 -%}
 <style>
   /* 桌面端 - 保持原有布局，只添加样式 */
@@ -90,12 +99,15 @@
     }
 
     .t4s-product-thumbnails-custom-wrapper {
+      {% if hide_mobile_thumbnails %}
+      display: none !important;
+      {% endif %}
       position: relative !important;
       margin-top: {{ se_stts.thumb_margin_top_mobile | default: 15 }}px !important;
       width: 100% !important;
       max-width: 100% !important;
       box-sizing: border-box !important;
-      padding: 0 26px !important;
+      padding: 0 {{ se_stts.thumb_arrow_container_padding_mobile | default: 30 }}px !important;
       margin-left: auto !important;
       margin-right: auto !important;
       overflow-x: hidden !important;
@@ -159,13 +171,17 @@
 
     /* 缩略图左右小箭头 - 圆形设计 */
     .t4s-thumb-nav-arrow {
+      {% if se_stts.thumb_arrow_show_mobile == false or hide_mobile_thumbnails %}
+      display: none !important;
+      {% else %}
       display: flex !important;
+      {% endif %}
       position: absolute !important;
       top: 50% !important;
       transform: translateY(-50%) !important;
-      width: 22px !important;
-      height: 22px !important;
-      background: rgba(255, 255, 255, 0.98) !important;
+      width: {{ se_stts.thumb_arrow_size_mobile | default: 36 }}px !important;
+      height: {{ se_stts.thumb_arrow_size_mobile | default: 36 }}px !important;
+      background: {{ se_stts.thumb_arrow_bg_color | default: 'rgba(255, 255, 255, 0.95)' }} !important;
       border: {{ se_stts.thumb_arrow_border_width | default: 1 }}px solid {{ se_stts.thumb_arrow_border_color | default: 'rgba(0, 0, 0, 0.1)' }} !important;
       border-radius: 50% !important;
       align-items: center !important;
@@ -173,7 +189,7 @@
       cursor: pointer !important;
       z-index: 21 !important;
       transition: all 0.3s ease !important;
-      font-size: 12px !important;
+      font-size: {{ se_stts.thumb_arrow_icon_size_mobile | default: 16 }}px !important;
       color: {{ se_stts.thumb_arrow_color | default: '#333' }} !important;
       line-height: 1 !important;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
@@ -186,27 +202,89 @@
       transform: translateY(-50%) scale(1.04) !important;
     }
 
+    .t4s-thumb-nav-arrow.t4s-dn {
+      display: none !important;
+    }
+
     .t4s-thumb-nav-arrow-prev {
-      left: 2px !important;
+      left: {{ se_stts.thumb_arrow_offset_mobile | default: -10 }}px !important;
     }
 
     .t4s-thumb-nav-arrow-next {
-      right: 2px !important;
+      right: {{ se_stts.thumb_arrow_offset_mobile | default: -10 }}px !important;
     }
 
-    /* 主图箭头样式 */
-    [data-main-media] .flickity-button {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
+  }
+
+  .t4s-main-product__content [data-main-media] .flickity-button,
+  .t4s-main-product__content [data-main-media] .flickityt4s-button {
+    display: none !important;
+  }
+
+  .t4s-main-product__content .t4s-main-nav-arrow {
+    position: absolute !important;
+    top: 50% !important;
+    z-index: 25 !important;
+    border-radius: 50% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    user-select: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+    border: {{ main_arrow_border_width }}px solid {{ main_arrow_border_color }} !important;
+    background: {{ main_arrow_bg_color }} !important;
+    color: {{ main_arrow_color }} !important;
+  }
+
+  .t4s-main-product__content .t4s-main-nav-arrow:hover {
+    background: {{ main_arrow_bg_hover_color }} !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+  }
+
+  @media (min-width: 768px) {
+    .t4s-main-product__content .t4s-main-nav-arrow {
+      {% if se_stts.main_arrow_show_desktop %}
+      display: flex !important;
+      {% else %}
+      display: none !important;
+      {% endif %}
+      width: {{ se_stts.main_arrow_size_desktop | default: 44 }}px !important;
+      height: {{ se_stts.main_arrow_size_desktop | default: 44 }}px !important;
+      font-size: {{ se_stts.main_arrow_icon_size_desktop | default: 20 }}px !important;
+      transform: translateY(-50%) !important;
+    }
+
+    .t4s-main-product__content .t4s-main-nav-arrow-prev {
+      left: {{ se_stts.main_arrow_offset_desktop | default: 16 }}px !important;
+    }
+
+    .t4s-main-product__content .t4s-main-nav-arrow-next {
+      right: {{ se_stts.main_arrow_offset_desktop | default: 16 }}px !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .t4s-main-product__content .t4s-main-nav-arrow {
+      {% if se_stts.main_arrow_show_mobile %}
+      display: flex !important;
+      {% else %}
+      display: none !important;
+      {% endif %}
       top: 50% !important;
       transform: translateY(-50%) !important;
-      z-index: 25 !important;
-      background: rgba(255, 255, 255, 0.95) !important;
-      border-radius: 50% !important;
-      width: 44px !important;
-      height: 44px !important;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2) !important;
+      width: {{ se_stts.main_arrow_size_mobile | default: 36 }}px !important;
+      height: {{ se_stts.main_arrow_size_mobile | default: 36 }}px !important;
+      font-size: {{ se_stts.main_arrow_icon_size_mobile | default: 16 }}px !important;
+    }
+
+    .t4s-main-product__content .t4s-main-nav-arrow-prev {
+      left: {{ se_stts.main_arrow_offset_mobile | default: 12 }}px !important;
+    }
+
+    .t4s-main-product__content .t4s-main-nav-arrow-next {
+      right: {{ se_stts.main_arrow_offset_mobile | default: 12 }}px !important;
     }
   }
 

@@ -1,0 +1,1060 @@
+{%- liquid
+  assign se_stts = section.settings
+  assign slide_blocks = section.blocks | where: 'type', 'slide'
+  assign stat_blocks = section.blocks | where: 'type', 'stat'
+  assign loading_attribute = 'eager'
+
+  if se_stts.lazy_load
+    assign loading_attribute = 'lazy'
+  endif
+-%}
+
+{%- style -%}
+  .smart-card-marquee-stats-{{ section.id }} {
+    margin-top: {{ se_stts.margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ se_stts.margin_bottom | times: 0.75 | round: 0 }}px;
+    background: {{ se_stts.background_color }};
+    color: {{ se_stts.text_color }};
+    overflow: hidden;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__carousel {
+    overflow: hidden;
+    padding-top: {{ se_stts.carousel_padding_top_mobile }}px;
+    padding-bottom: {{ se_stts.carousel_padding_bottom_mobile }}px;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__track {
+    display: flex;
+    width: max-content;
+    animation: smartCardMarquee{{ section.id | replace: '-', '' }} {{ se_stts.scroll_speed_mobile }}s linear infinite;
+    will-change: transform;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__list {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: {{ se_stts.card_gap_mobile }}px;
+    padding-right: {{ se_stts.card_gap_mobile }}px;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__slide {
+    width: {{ se_stts.card_width_mobile }}px;
+    height: {{ se_stts.card_height_mobile }}px;
+    border-radius: {{ se_stts.card_radius }}px;
+    overflow: hidden;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: {{ se_stts.card_border_thickness }}px solid {{ se_stts.card_border_color }};
+    text-decoration: none;
+    background: var(--card-background, #182233);
+    color: var(--card-text-color, #ffffff);
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__slide img,
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__slide svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: {{ se_stts.card_image_fit }};
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__slide svg {
+    background: #1b2430;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__slide-text {
+    padding: 18px;
+    width: 100%;
+    text-align: center;
+    font-size: {{ se_stts.card_text_size_mobile }}px;
+    line-height: {{ se_stts.card_text_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.card_text_weight }};
+    letter-spacing: {{ se_stts.card_text_letter_spacing }}px;
+    color: inherit;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stats-wrap {
+    width: min(100% - {{ se_stts.padding_horizontal_mobile | times: 2 }}px, {{ se_stts.content_width }}px);
+    margin: {{ se_stts.stats_margin_top_mobile }}px auto {{ se_stts.stats_margin_bottom_mobile }}px;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: {{ se_stts.stats_gap_mobile }}px;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stat {
+    text-align: {{ se_stts.stats_text_align }};
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stat-value {
+    margin: 0;
+    color: {{ se_stts.value_color }};
+    font-size: {{ se_stts.value_size_mobile }}px;
+    line-height: {{ se_stts.value_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.value_weight }};
+    letter-spacing: {{ se_stts.value_letter_spacing }}px;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stat-label {
+    margin: {{ se_stts.label_margin_top_mobile }}px 0 0;
+    color: {{ se_stts.label_color }};
+    font-size: {{ se_stts.label_size_mobile }}px;
+    line-height: {{ se_stts.label_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.label_weight }};
+    letter-spacing: {{ se_stts.label_letter_spacing }}px;
+  }
+
+  .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stat-text {
+    margin: {{ se_stts.description_margin_top_mobile }}px auto 0;
+    max-width: {{ se_stts.description_max_width_mobile }}px;
+    color: {{ se_stts.description_color }};
+    font-size: {{ se_stts.description_size_mobile }}px;
+    line-height: {{ se_stts.description_line_height | divided_by: 100.0 }};
+    font-weight: {{ se_stts.description_weight }};
+    letter-spacing: {{ se_stts.description_letter_spacing }}px;
+  }
+
+  {% if se_stts.pause_hover %}
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__carousel:hover .smart-card-marquee-stats__track {
+      animation-play-state: paused;
+    }
+  {% endif %}
+
+  {% if se_stts.reverse_direction %}
+    @keyframes smartCardMarquee{{ section.id | replace: '-', '' }} {
+      from {
+        transform: translateX(-12.5%);
+      }
+      to {
+        transform: translateX(0);
+      }
+    }
+  {% else %}
+    @keyframes smartCardMarquee{{ section.id | replace: '-', '' }} {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-12.5%);
+      }
+    }
+  {% endif %}
+
+  @media (min-width: 768px) {
+    .smart-card-marquee-stats-{{ section.id }} {
+      margin-top: {{ se_stts.margin_top }}px;
+      margin-bottom: {{ se_stts.margin_bottom }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__carousel {
+      padding-top: {{ se_stts.carousel_padding_top }}px;
+      padding-bottom: {{ se_stts.carousel_padding_bottom }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__track {
+      animation-duration: {{ se_stts.scroll_speed }}s;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__list {
+      gap: {{ se_stts.card_gap }}px;
+      padding-right: {{ se_stts.card_gap }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__slide {
+      width: {{ se_stts.card_width }}px;
+      height: {{ se_stts.card_height }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__slide-text {
+      font-size: {{ se_stts.card_text_size }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stats-wrap {
+      width: min(100% - {{ se_stts.padding_horizontal | times: 2 }}px, {{ se_stts.content_width }}px);
+      margin-top: {{ se_stts.stats_margin_top }}px;
+      margin-bottom: {{ se_stts.stats_margin_bottom }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stats {
+      grid-template-columns: repeat({{ se_stts.stats_columns }}, minmax(0, 1fr));
+      gap: {{ se_stts.stats_gap }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stat-value {
+      font-size: {{ se_stts.value_size }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stat-label {
+      margin-top: {{ se_stts.label_margin_top }}px;
+      font-size: {{ se_stts.label_size }}px;
+    }
+
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__stat-text {
+      margin-top: {{ se_stts.description_margin_top }}px;
+      max-width: {{ se_stts.description_max_width }}px;
+      font-size: {{ se_stts.description_size }}px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .smart-card-marquee-stats-{{ section.id }} .smart-card-marquee-stats__track {
+      animation-play-state: paused;
+    }
+  }
+{%- endstyle -%}
+
+{%- capture slide_list -%}
+  <div class="smart-card-marquee-stats__list" aria-hidden="true">
+    {%- for block in slide_blocks -%}
+      {%- liquid
+        assign block_stts = block.settings
+        assign slide_alt = block_stts.image.alt | default: block_stts.title | escape
+      -%}
+      <div
+        class="smart-card-marquee-stats__slide"
+        style="--card-background: {{ block_stts.background_color }}; --card-text-color: {{ block_stts.text_color }};"
+        {{ block.shopify_attributes }}
+      >
+        {%- if block_stts.image != blank -%}
+          {{ block_stts.image | image_url: width: 900 | image_tag: loading: loading_attribute, widths: '240, 360, 520, 700, 900', sizes: '(min-width: 768px) 260px, 190px', alt: slide_alt }}
+        {%- elsif block_stts.title != blank -%}
+          <span class="smart-card-marquee-stats__slide-text">{{ block_stts.title }}</span>
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag }}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endcapture -%}
+
+<section class="smart-card-marquee-stats-{{ section.id }}" {{ section.shopify_attributes }}>
+  {%- if slide_blocks.size > 0 -%}
+    <div class="smart-card-marquee-stats__carousel">
+      <div class="smart-card-marquee-stats__track">
+        {{ slide_list }}
+        {{ slide_list }}
+        {{ slide_list }}
+        {{ slide_list }}
+        {{ slide_list }}
+        {{ slide_list }}
+        {{ slide_list }}
+        {{ slide_list }}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if stat_blocks.size > 0 -%}
+    <div class="smart-card-marquee-stats__stats-wrap">
+      <div class="smart-card-marquee-stats__stats">
+        {%- for block in stat_blocks -%}
+          <div class="smart-card-marquee-stats__stat" {{ block.shopify_attributes }}>
+            {%- if block.settings.value != blank -%}
+              <p class="smart-card-marquee-stats__stat-value">{{ block.settings.value }}</p>
+            {%- endif -%}
+
+            {%- if block.settings.label != blank -%}
+              <p class="smart-card-marquee-stats__stat-label">{{ block.settings.label }}</p>
+            {%- endif -%}
+
+            {%- if block.settings.description != blank -%}
+              <p class="smart-card-marquee-stats__stat-text">{{ block.settings.description }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Smart card marquee stats",
+  "tag": "section",
+  "class": "t4s-section smart-card-marquee-stats-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 150,
+      "step": 2,
+      "unit": "s",
+      "label": "Desktop speed",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed_mobile",
+      "min": 10,
+      "max": 150,
+      "step": 2,
+      "unit": "s",
+      "label": "Mobile speed",
+      "default": 36
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_direction",
+      "label": "Reverse direction",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "min": 120,
+      "max": 420,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop card width",
+      "default": 252
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "min": 80,
+      "max": 360,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop card height",
+      "default": 252
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "min": 120,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile card width",
+      "default": 188
+    },
+    {
+      "type": "range",
+      "id": "card_height_mobile",
+      "min": 80,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile card height",
+      "default": 188
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop card gap",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "card_gap_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile card gap",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Card radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_border_thickness",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border thickness",
+      "default": 0
+    },
+    {
+      "type": "text",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#1f2937"
+    },
+    {
+      "type": "select",
+      "id": "card_image_fit",
+      "label": "Image fit",
+      "default": "cover",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "carousel_padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop carousel padding top",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "carousel_padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop carousel padding bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "carousel_padding_top_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile carousel padding top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "carousel_padding_bottom_mobile",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile carousel padding bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Carousel fallback text"
+    },
+    {
+      "type": "range",
+      "id": "card_text_size",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop text size",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_text_size_mobile",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_text_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Text weight",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "card_text_line_height",
+      "min": 90,
+      "max": 180,
+      "step": 5,
+      "unit": "%",
+      "label": "Text line height",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "card_text_letter_spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Text letter spacing",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Stats layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 800,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "label": "Content width",
+      "default": 1040
+    },
+    {
+      "type": "range",
+      "id": "stats_columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Desktop columns",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "stats_text_align",
+      "label": "Text alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "stats_gap",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop column gap",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "stats_gap_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile row gap",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "stats_margin_top",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop stats margin top",
+      "default": 112
+    },
+    {
+      "type": "range",
+      "id": "stats_margin_bottom",
+      "min": 0,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop stats margin bottom",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "stats_margin_top_mobile",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile stats margin top",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "stats_margin_bottom_mobile",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile stats margin bottom",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 16,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop side padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile side padding",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Value text"
+    },
+    {
+      "type": "text",
+      "id": "value_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "value_size",
+      "min": 18,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "value_size_mobile",
+      "min": 18,
+      "max": 56,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "value_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "value_line_height",
+      "min": 80,
+      "max": 160,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 110
+    },
+    {
+      "type": "range",
+      "id": "value_letter_spacing",
+      "min": 0,
+      "max": 8,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Label text"
+    },
+    {
+      "type": "text",
+      "id": "label_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "min": 10,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "label_size_mobile",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "label_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "label_line_height",
+      "min": 80,
+      "max": 180,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 130
+    },
+    {
+      "type": "range",
+      "id": "label_letter_spacing",
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "label_margin_top",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop margin top",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "label_margin_top_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile margin top",
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "Description text"
+    },
+    {
+      "type": "text",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#8d949f"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "description_size_mobile",
+      "min": 10,
+      "max": 26,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "description_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Weight",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "description_line_height",
+      "min": 100,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "label": "Line height",
+      "default": 125
+    },
+    {
+      "type": "range",
+      "id": "description_letter_spacing",
+      "min": 0,
+      "max": 6,
+      "step": 0.1,
+      "unit": "px",
+      "label": "Letter spacing",
+      "default": 0.2
+    },
+    {
+      "type": "range",
+      "id": "description_margin_top",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop margin top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "description_margin_top_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile margin top",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "description_max_width",
+      "min": 160,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop max width",
+      "default": 330
+    },
+    {
+      "type": "range",
+      "id": "description_max_width_mobile",
+      "min": 160,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile max width",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Colors and spacing"
+    },
+    {
+      "type": "text",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "lazy_load",
+      "label": "Lazy load images",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Carousel image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Fallback text",
+          "default": "Business"
+        },
+        {
+          "type": "text",
+          "id": "background_color",
+          "label": "Fallback background",
+          "default": "#f4bf00"
+        },
+        {
+          "type": "text",
+          "id": "text_color",
+          "label": "Fallback text color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "name": "Text item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Top text",
+          "default": "FREE"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Middle text",
+          "default": "Cards"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Bottom text",
+          "default": "Hardware is $0.00 when you join our Hybrid Platform"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Smart card marquee stats",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Just Tap it",
+            "background_color": "#182233",
+            "text_color": "#ffffff"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Connect",
+            "background_color": "#344153",
+            "text_color": "#ffffff"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Business",
+            "background_color": "#ffcc00",
+            "text_color": "#ffffff"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Premium",
+            "background_color": "#111a27",
+            "text_color": "#ffffff"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Classic",
+            "background_color": "#ffffff",
+            "text_color": "#111111"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Member",
+            "background_color": "#f2b900",
+            "text_color": "#ffffff"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Modern",
+            "background_color": "#ffffff",
+            "text_color": "#111111"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "FREE",
+            "label": "Cards",
+            "description": "Hardware is $0.00 when you join our Hybrid Platform"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "48h",
+            "label": "Dispatch",
+            "description": "All-layer turnaround for weekend orders of 50 units or less"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "value": "350+",
+            "label": "Units",
+            "description": "Scalable solutions for larger-scale enterprise deployments"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

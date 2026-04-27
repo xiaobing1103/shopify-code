@@ -1,0 +1,1498 @@
+{%- liquid
+  assign se_stts = section.settings
+  assign media_image = se_stts.media_image
+  assign mobile_media_image = se_stts.mobile_media_image | default: media_image
+  assign heading_blocks = section.blocks | where: 'type', 'heading_line'
+  assign feature_blocks = section.blocks | where: 'type', 'feature'
+  assign loading_attribute = 'eager'
+
+  if se_stts.lazy_load
+    assign loading_attribute = 'lazy'
+  endif
+
+  assign trust_color = se_stts.trust_color | default: se_stts.muted_color
+  assign trust_color_mobile = se_stts.trust_color_mobile | default: trust_color
+  assign trust_text_size_mobile = se_stts.trust_text_size_mobile | default: se_stts.trust_text_size
+  assign trust_text_weight = se_stts.trust_text_weight | default: 500
+  assign trust_text_weight_mobile = se_stts.trust_text_weight_mobile | default: trust_text_weight
+  assign trust_margin_top = se_stts.trust_margin_top | default: 0
+  assign trust_margin_bottom = se_stts.trust_margin_bottom | default: 32
+  assign trust_margin_top_mobile = se_stts.trust_margin_top_mobile | default: 0
+  assign trust_margin_bottom_mobile = se_stts.trust_margin_bottom_mobile | default: 22
+  assign features_margin_top = se_stts.features_margin_top | default: 20
+  assign features_margin_bottom = se_stts.features_margin_bottom | default: 0
+  assign features_margin_top_mobile = se_stts.features_margin_top_mobile | default: 24
+  assign features_margin_bottom_mobile = se_stts.features_margin_bottom_mobile | default: 0
+  assign features_gap = se_stts.features_gap | default: 14
+  assign features_gap_mobile = se_stts.features_gap_mobile | default: 12
+  assign feature_item_padding_vertical = se_stts.feature_item_padding_vertical | default: 0
+  assign feature_item_padding_vertical_mobile = se_stts.feature_item_padding_vertical_mobile | default: 0
+  assign button_margin_top = se_stts.button_margin_top | default: 30
+  assign button_margin_bottom = se_stts.button_margin_bottom | default: 0
+  assign button_margin_top_mobile = se_stts.button_margin_top_mobile | default: 28
+  assign button_margin_bottom_mobile = se_stts.button_margin_bottom_mobile | default: 0
+  assign button_color_mobile = se_stts.button_color_mobile | default: se_stts.button_color
+  assign button_text_size_mobile = se_stts.button_text_size_mobile | default: se_stts.button_text_size
+  assign button_text_weight = se_stts.button_text_weight | default: 700
+  assign button_text_weight_mobile = se_stts.button_text_weight_mobile | default: button_text_weight
+  assign button_max_width_mobile = se_stts.button_max_width_mobile | default: 520
+  assign media_margin_top = se_stts.media_margin_top | default: 0
+  assign media_margin_bottom = se_stts.media_margin_bottom | default: 0
+  assign media_margin_top_mobile = se_stts.media_margin_top_mobile | default: 0
+  assign media_margin_bottom_mobile = se_stts.media_margin_bottom_mobile | default: 0
+-%}
+
+{%- style -%}
+  .smart-cards-hero-{{ section.id }} {
+    background: {{ se_stts.background_color }};
+    color: {{ se_stts.text_color }};
+    margin-top: {{ se_stts.margin_top | times: 0.75 | round: 0 }}px;
+    margin-bottom: {{ se_stts.margin_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__inner {
+    width: min(100% - {{ se_stts.padding_horizontal_mobile | times: 2 }}px, {{ se_stts.content_width }}px);
+    margin: 0 auto;
+    min-height: {{ se_stts.height_mobile }}px;
+    padding: {{ se_stts.padding_top_mobile }}px 0 {{ se_stts.padding_bottom_mobile }}px;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 34px;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__content {
+    max-width: 560px;
+    order: 2;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__trust {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    margin: {{ trust_margin_top_mobile }}px 0 {{ trust_margin_bottom_mobile }}px;
+    color: {{ trust_color_mobile }};
+    font-size: {{ trust_text_size_mobile }}px;
+    line-height: 1.35;
+    font-weight: {{ trust_text_weight_mobile }};
+    letter-spacing: 0;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__avatars {
+    display: flex;
+    align-items: center;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__avatar {
+    width: {{ se_stts.avatar_size }}px;
+    height: {{ se_stts.avatar_size }}px;
+    border-radius: 50%;
+    border: 2px solid {{ se_stts.background_color }};
+    overflow: hidden;
+    background: linear-gradient(135deg, #e8eef7 0%, #9fb2c8 48%, #25364a 100%);
+    box-shadow: 0 4px 12px rgba(18, 18, 18, 0.12);
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__avatar + .smart-cards-hero__avatar {
+    margin-left: -12px;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__avatar img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__title {
+    margin: 0;
+    max-width: 560px;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__heading-line {
+    display: block;
+    margin-top: var(--heading-line-margin-top-mobile);
+    margin-bottom: var(--heading-line-margin-bottom-mobile);
+    color: var(--heading-line-color-mobile, var(--heading-line-color)) !important;
+    font-size: var(--heading-line-size-mobile) !important;
+    line-height: var(--heading-line-height);
+    font-family: var(--font-heading-family, inherit);
+    font-weight: var(--heading-line-weight-mobile, var(--heading-line-weight)) !important;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__features {
+    display: grid;
+    gap: {{ features_gap_mobile }}px;
+    margin: {{ features_margin_top_mobile }}px 0 {{ features_margin_bottom_mobile }}px;
+    padding: 0;
+    list-style: none;
+    max-width: 560px;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__feature {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: {{ feature_item_padding_vertical_mobile }}px 0;
+    color: var(--feature-text-color-mobile, var(--feature-text-color, {{ se_stts.text_color }}));
+    font-size: var(--feature-text-size-mobile, {{ se_stts.feature_text_size_mobile }}px);
+    font-weight: var(--feature-text-weight-mobile, var(--feature-text-weight, 400));
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__feature svg {
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    color: {{ se_stts.check_color }};
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__feature strong {
+    font-weight: var(--feature-title-weight-mobile, var(--feature-title-weight, 800));
+    color: var(--feature-title-color-mobile, var(--feature-title-color, #111111));
+    font-size: var(--feature-title-size-mobile, {{ se_stts.feature_text_size_mobile }}px);
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__feature-text {
+    color: var(--feature-text-color-mobile, var(--feature-text-color, {{ se_stts.text_color }}));
+    font-size: var(--feature-text-size-mobile, {{ se_stts.feature_text_size_mobile }}px);
+    font-weight: var(--feature-text-weight-mobile, var(--feature-text-weight, 400));
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 46px;
+    margin-top: {{ button_margin_top_mobile }}px;
+    margin-bottom: {{ button_margin_bottom_mobile }}px;
+    padding: 0 30px;
+    border-radius: 999px;
+    background: {{ se_stts.button_background }};
+    color: {{ button_color_mobile }};
+    font-size: {{ button_text_size_mobile }}px;
+    line-height: 1;
+    font-weight: {{ button_text_weight_mobile }};
+    text-decoration: none;
+    letter-spacing: 0;
+    transition: transform 180ms ease, background-color 180ms ease, color 180ms ease;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__button:hover {
+    background: {{ se_stts.button_hover_background }};
+    color: {{ se_stts.button_hover_color }};
+    transform: translateY(-1px);
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__button svg {
+    width: 13px;
+    height: 13px;
+    flex: 0 0 auto;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__media {
+    position: relative;
+    order: 1;
+    min-height: 300px;
+    margin-top: {{ media_margin_top_mobile }}px;
+    margin-bottom: {{ media_margin_bottom_mobile }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__image {
+    width: 100%;
+    max-width: {{ se_stts.media_width_mobile }}px;
+    display: block;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__image--desktop {
+    display: none;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__mockup {
+    width: min(100%, 460px);
+    height: 310px;
+    position: relative;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-card {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 310px;
+    height: 108px;
+    border-radius: 10px;
+    background: linear-gradient(120deg, #1f2225 0%, #090a0b 100%);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.16);
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-card span {
+    position: absolute;
+    left: 34px;
+    top: 38px;
+    color: #ffffff;
+    font-size: 38px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-card svg {
+    position: absolute;
+    right: 22px;
+    top: 42px;
+    color: #ffffff;
+    opacity: 0.75;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-phone {
+    position: absolute;
+    left: 36%;
+    top: 20px;
+    transform: translateX(-50%);
+    width: 170px;
+    height: 340px;
+    border: 7px solid #050607;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at 53% 50%, rgba(160, 213, 55, 0.9) 0 13%, rgba(160, 213, 55, 0.58) 14% 25%, transparent 26%),
+      radial-gradient(circle at 44% 38%, rgba(65, 126, 50, 0.95) 0 16%, rgba(65, 126, 50, 0.45) 17% 31%, transparent 32%),
+      linear-gradient(165deg, #0d302e 0%, #061213 100%);
+    box-shadow: 0 22px 46px rgba(0, 0, 0, 0.18);
+    z-index: 2;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-phone:before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 46px;
+    height: 12px;
+    border-radius: 999px;
+    transform: translateX(-50%);
+    background: #010101;
+  }
+
+  .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-notice {
+    position: absolute;
+    left: 13px;
+    right: 13px;
+    bottom: 78px;
+    height: 31px;
+    border-radius: 5px;
+    background: rgba(238, 242, 237, 0.55);
+    backdrop-filter: blur(8px);
+  }
+
+  @media (min-width: 768px) {
+    .smart-cards-hero-{{ section.id }} {
+      margin-top: {{ se_stts.margin_top }}px;
+      margin-bottom: {{ se_stts.margin_bottom }}px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__inner {
+      width: min(100% - {{ se_stts.padding_horizontal | times: 2 }}px, {{ se_stts.content_width }}px);
+      min-height: {{ se_stts.height_desktop }}px;
+      padding-top: {{ se_stts.padding_top }}px;
+      padding-bottom: {{ se_stts.padding_bottom }}px;
+      grid-template-columns: minmax(360px, 0.88fr) minmax(420px, 1.12fr);
+      gap: 54px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__content {
+      order: 1;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__trust {
+      margin-top: {{ trust_margin_top }}px;
+      margin-bottom: {{ trust_margin_bottom }}px;
+      color: {{ trust_color }};
+      font-size: {{ se_stts.trust_text_size }}px;
+      font-weight: {{ trust_text_weight }};
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__heading-line {
+      color: var(--heading-line-color) !important;
+      margin-top: var(--heading-line-margin-top);
+      margin-bottom: var(--heading-line-margin-bottom);
+      font-size: var(--heading-line-size) !important;
+      font-weight: var(--heading-line-weight) !important;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__features {
+      gap: {{ features_gap }}px;
+      margin-top: {{ features_margin_top }}px;
+      margin-bottom: {{ features_margin_bottom }}px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__feature {
+      padding-top: {{ feature_item_padding_vertical }}px;
+      padding-bottom: {{ feature_item_padding_vertical }}px;
+      color: var(--feature-text-color, {{ se_stts.text_color }});
+      font-size: var(--feature-text-size, {{ se_stts.feature_text_size }}px);
+      font-weight: var(--feature-text-weight, 400);
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__feature strong {
+      color: var(--feature-title-color, #111111);
+      font-size: var(--feature-title-size, {{ se_stts.feature_text_size }}px);
+      font-weight: var(--feature-title-weight, 800);
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__feature-text {
+      color: var(--feature-text-color, {{ se_stts.text_color }});
+      font-size: var(--feature-text-size, {{ se_stts.feature_text_size }}px);
+      font-weight: var(--feature-text-weight, 400);
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__button {
+      margin-top: {{ button_margin_top }}px;
+      margin-bottom: {{ button_margin_bottom }}px;
+      min-height: 46px;
+      color: {{ se_stts.button_color }};
+      font-size: {{ se_stts.button_text_size }}px;
+      font-weight: {{ button_text_weight }};
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__media {
+      order: 2;
+      min-height: 470px;
+      margin-top: {{ media_margin_top }}px;
+      margin-bottom: {{ media_margin_bottom }}px;
+      justify-content: flex-end;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__image {
+      max-width: {{ se_stts.media_width }}px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__image--desktop {
+      display: block;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__image--mobile {
+      display: none;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__mockup {
+      width: min(100%, 620px);
+      height: 470px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-card {
+      top: 86px;
+      width: 405px;
+      height: 150px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-card span {
+      left: 48px;
+      top: 53px;
+      font-size: 50px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-card svg {
+      right: 27px;
+      top: 61px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-phone {
+      left: 42%;
+      width: 210px;
+      height: 415px;
+      border-width: 8px;
+      border-radius: 32px;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__mock-notice {
+      bottom: 92px;
+      height: 36px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__content {
+      max-width: none;
+    }
+
+    .smart-cards-hero-{{ section.id }} .smart-cards-hero__button {
+      width: 100%;
+      max-width: {{ button_max_width_mobile }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="smart-cards-hero-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="smart-cards-hero__inner">
+    <div class="smart-cards-hero__content">
+      {%- if se_stts.trust_text != blank -%}
+        <div class="smart-cards-hero__trust">
+          <div class="smart-cards-hero__avatars" aria-hidden="true">
+            <span class="smart-cards-hero__avatar">
+              {%- if se_stts.avatar_1 != blank -%}
+                {{ se_stts.avatar_1 | image_url: width: 120 | image_tag: loading: loading_attribute, widths: '60, 90, 120', alt: '' }}
+              {%- endif -%}
+            </span>
+            <span class="smart-cards-hero__avatar">
+              {%- if se_stts.avatar_2 != blank -%}
+                {{ se_stts.avatar_2 | image_url: width: 120 | image_tag: loading: loading_attribute, widths: '60, 90, 120', alt: '' }}
+              {%- endif -%}
+            </span>
+            <span class="smart-cards-hero__avatar">
+              {%- if se_stts.avatar_3 != blank -%}
+                {{ se_stts.avatar_3 | image_url: width: 120 | image_tag: loading: loading_attribute, widths: '60, 90, 120', alt: '' }}
+              {%- endif -%}
+            </span>
+          </div>
+          <span>{{ se_stts.trust_text }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- if heading_blocks.size > 0 -%}
+        <div class="smart-cards-hero__title">
+          {%- for block in heading_blocks -%}
+            {%- assign heading_tag = block.settings.tag | default: 'div' -%}
+            {%- if block.settings.text != blank -%}
+              <{{ heading_tag }}
+                class="smart-cards-hero__heading-line"
+                style="
+                  --heading-line-color: {{ block.settings.color }};
+                  --heading-line-color-mobile: {{ block.settings.color_mobile | default: block.settings.color }};
+                  --heading-line-size: {{ block.settings.size }}px;
+                  --heading-line-size-mobile: {{ block.settings.size_mobile }}px;
+                  --heading-line-height: {{ block.settings.line_height | divided_by: 100.0 }};
+                  --heading-line-weight: {{ block.settings.weight }};
+                  --heading-line-weight-mobile: {{ block.settings.weight_mobile | default: block.settings.weight }};
+                  --heading-line-margin-top: {{ block.settings.margin_top }}px;
+                  --heading-line-margin-bottom: {{ block.settings.margin_bottom }}px;
+                  --heading-line-margin-top-mobile: {{ block.settings.margin_top_mobile }}px;
+                  --heading-line-margin-bottom-mobile: {{ block.settings.margin_bottom_mobile }}px;
+                "
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.text }}
+              </{{ heading_tag }}>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if feature_blocks.size > 0 -%}
+        <ul class="smart-cards-hero__features">
+          {%- for block in feature_blocks -%}
+            {%- if block.settings.title != blank or block.settings.text != blank -%}
+              <li
+                class="smart-cards-hero__feature"
+                style="
+                  --feature-title-color: {{ block.settings.title_color | default: '#111111' }};
+                  --feature-title-color-mobile: {{ block.settings.title_color_mobile | default: block.settings.title_color | default: '#111111' }};
+                  --feature-text-color: {{ block.settings.text_color | default: se_stts.text_color }};
+                  --feature-text-color-mobile: {{ block.settings.text_color_mobile | default: block.settings.text_color | default: se_stts.text_color }};
+                  --feature-title-size: {{ block.settings.title_size | default: se_stts.feature_text_size }}px;
+                  --feature-title-size-mobile: {{ block.settings.title_size_mobile | default: se_stts.feature_text_size_mobile }}px;
+                  --feature-title-weight: {{ block.settings.title_weight | default: 800 }};
+                  --feature-title-weight-mobile: {{ block.settings.title_weight_mobile | default: block.settings.title_weight | default: 800 }};
+                  --feature-text-size: {{ block.settings.text_size | default: se_stts.feature_text_size }}px;
+                  --feature-text-size-mobile: {{ block.settings.text_size_mobile | default: se_stts.feature_text_size_mobile }}px;
+                  --feature-text-weight: {{ block.settings.text_weight | default: 400 }};
+                  --feature-text-weight-mobile: {{ block.settings.text_weight_mobile | default: block.settings.text_weight | default: 400 }};
+                "
+                {{ block.shopify_attributes }}
+              >
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M4.5 10.4l3.2 3.2 7.8-8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>
+                  {%- if block.settings.title != blank -%}
+                    <strong>{{ block.settings.title }}</strong>
+                  {%- endif -%}
+                  {%- if block.settings.title != blank and block.settings.text != blank -%}
+                    {{ ' ' }}
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <span class="smart-cards-hero__feature-text">{{ block.settings.text }}</span>
+                  {%- endif -%}
+                </span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if se_stts.button_label != blank -%}
+        <a class="smart-cards-hero__button" href="{{ se_stts.button_link | default: '#' }}">
+          <span>{{ se_stts.button_label }}</span>
+          <svg viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2.3 7h9.1M7.8 3.4 11.4 7l-3.6 3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="smart-cards-hero__media">
+      {%- if media_image != blank -%}
+        <div class="smart-cards-hero__image smart-cards-hero__image--desktop">
+          {{ media_image | image_url: width: 1400 | image_tag: loading: loading_attribute, widths: '400, 600, 800, 1000, 1200, 1400', sizes: '(min-width: 768px) 54vw, 92vw', alt: media_image.alt | escape }}
+        </div>
+        <div class="smart-cards-hero__image smart-cards-hero__image--mobile">
+          {{ mobile_media_image | image_url: width: 900 | image_tag: loading: loading_attribute, widths: '320, 480, 640, 800, 900', sizes: '92vw', alt: mobile_media_image.alt | escape }}
+        </div>
+      {%- else -%}
+        <div class="smart-cards-hero__mockup" aria-hidden="true">
+          <div class="smart-cards-hero__mock-card">
+            <span>Tek</span>
+            <svg viewBox="0 0 18 18" width="18" height="18" fill="none">
+              <path d="M4.7 6.1a4.1 4.1 0 0 1 0 5.8M7.2 3.6a7.6 7.6 0 0 1 0 10.8M9.8 1.2a11.1 11.1 0 0 1 0 15.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="smart-cards-hero__mock-phone">
+            <div class="smart-cards-hero__mock-notice"></div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Smart business cards hero",
+  "tag": "section",
+  "class": "t4s-section smart-business-cards-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar_1",
+      "label": "Avatar 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar_2",
+      "label": "Avatar 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar_3",
+      "label": "Avatar 3"
+    },
+    {
+      "type": "text",
+      "id": "trust_text",
+      "label": "Trust text",
+      "default": "trusted by 1000+ Businesses"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Book a Demo"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_image",
+      "label": "Right desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_media_image",
+      "label": "Right mobile image"
+    },
+    {
+      "type": "range",
+      "id": "media_width",
+      "min": 360,
+      "max": 760,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop media width",
+      "default": 650
+    },
+    {
+      "type": "range",
+      "id": "media_width_mobile",
+      "min": 240,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile media width",
+      "default": 430
+    },
+    {
+      "type": "range",
+      "id": "media_margin_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop media margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "media_margin_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop media margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "media_margin_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile media margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "media_margin_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile media margin bottom",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "lazy_load",
+      "label": "Lazy load images",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 960,
+      "max": 1480,
+      "step": 20,
+      "unit": "px",
+      "label": "Content width",
+      "default": 1100
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "min": 420,
+      "max": 760,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop minimum height",
+      "default": 560
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 520,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile minimum height",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop padding top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop padding bottom",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile padding top",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Mobile padding bottom",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 24,
+      "max": 180,
+      "step": 4,
+      "unit": "px",
+      "label": "Desktop side padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile side padding",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "header",
+      "content": "Trust text"
+    },
+    {
+      "type": "text",
+      "id": "trust_color",
+      "label": "Desktop trust text color",
+      "default": "#5f6673"
+    },
+    {
+      "type": "text",
+      "id": "trust_color_mobile",
+      "label": "Mobile trust text color",
+      "default": "#5f6673"
+    },
+    {
+      "type": "range",
+      "id": "trust_text_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Trust text size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "trust_text_size_mobile",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile trust text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "trust_text_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Desktop trust text weight",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "trust_text_weight_mobile",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Mobile trust text weight",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "trust_margin_top",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop trust margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "trust_margin_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop trust margin bottom",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "trust_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile trust margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "trust_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile trust margin bottom",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "avatar_size",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Avatar size",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Feature text"
+    },
+    {
+      "type": "range",
+      "id": "feature_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop feature text size",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "feature_text_size_mobile",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile feature text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "features_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop features margin top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "features_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop features margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "features_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile features margin top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "features_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile features margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "features_gap",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop gap between features",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "features_gap_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile gap between features",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "feature_item_padding_vertical",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop feature text vertical padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "feature_item_padding_vertical_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile feature text vertical padding",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Button text"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_text_size_mobile",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile button text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_text_weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Desktop button text weight",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "button_text_weight_mobile",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "label": "Mobile button text weight",
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "button_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop button margin top",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "button_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop button margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile button margin top",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "button_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile button margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_max_width_mobile",
+      "min": 240,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile button max width",
+      "default": 520
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "text",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f7f7f7"
+    },
+    {
+      "type": "text",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#2b2b2b"
+    },
+    {
+      "type": "text",
+      "id": "check_color",
+      "label": "Check icon",
+      "default": "#111111"
+    },
+    {
+      "type": "text",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "text",
+      "id": "button_color",
+      "label": "Desktop button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "button_color_mobile",
+      "label": "Mobile button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "button_hover_background",
+      "label": "Button hover background",
+      "default": "#242424"
+    },
+    {
+      "type": "text",
+      "id": "button_hover_color",
+      "label": "Button hover text",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading_line",
+      "name": "Heading line",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Upgrade your networking with"
+        },
+        {
+          "type": "select",
+          "id": "tag",
+          "label": "HTML tag",
+          "default": "div",
+          "options": [
+            {
+              "value": "div",
+              "label": "Div"
+            },
+            {
+              "value": "h1",
+              "label": "H1"
+            },
+            {
+              "value": "h2",
+              "label": "H2"
+            },
+            {
+              "value": "h3",
+              "label": "H3"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "color",
+          "label": "Desktop text color",
+          "default": "#111111"
+        },
+        {
+          "type": "text",
+          "id": "color_mobile",
+          "label": "Mobile text color",
+          "default": "#111111"
+        },
+        {
+          "type": "range",
+          "id": "size",
+          "min": 20,
+          "max": 80,
+          "step": 1,
+          "unit": "px",
+          "label": "Desktop text size",
+          "default": 42
+        },
+        {
+          "type": "range",
+          "id": "size_mobile",
+          "min": 20,
+          "max": 56,
+          "step": 1,
+          "unit": "px",
+          "label": "Mobile text size",
+          "default": 36
+        },
+        {
+          "type": "range",
+          "id": "line_height",
+          "min": 90,
+          "max": 160,
+          "step": 5,
+          "unit": "%",
+          "label": "Line height",
+          "default": 130
+        },
+        {
+          "type": "range",
+          "id": "weight",
+          "min": 100,
+          "max": 900,
+          "step": 100,
+          "label": "Font weight",
+          "default": 500
+        },
+        {
+          "type": "range",
+          "id": "weight_mobile",
+          "min": 100,
+          "max": 900,
+          "step": 100,
+          "label": "Mobile font weight",
+          "default": 500
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "min": 0,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "label": "Desktop margin top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "label": "Desktop margin bottom",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_top_mobile",
+          "min": 0,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "label": "Mobile margin top",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom_mobile",
+          "min": 0,
+          "max": 80,
+          "step": 2,
+          "unit": "px",
+          "label": "Mobile margin bottom",
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Bold text",
+          "default": "Instant Contact Sharing:"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Tap or scan to share details in seconds"
+        },
+        {
+          "type": "text",
+          "id": "title_color",
+          "label": "Desktop bold text color",
+          "default": "#111111"
+        },
+        {
+          "type": "text",
+          "id": "title_color_mobile",
+          "label": "Mobile bold text color",
+          "default": "#111111"
+        },
+        {
+          "type": "text",
+          "id": "text_color",
+          "label": "Desktop text color",
+          "default": "#2b2b2b"
+        },
+        {
+          "type": "text",
+          "id": "text_color_mobile",
+          "label": "Mobile text color",
+          "default": "#2b2b2b"
+        },
+        {
+          "type": "range",
+          "id": "title_size",
+          "min": 10,
+          "max": 26,
+          "step": 1,
+          "unit": "px",
+          "label": "Desktop bold text size",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "title_size_mobile",
+          "min": 10,
+          "max": 22,
+          "step": 1,
+          "unit": "px",
+          "label": "Mobile bold text size",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "title_weight",
+          "min": 100,
+          "max": 900,
+          "step": 100,
+          "label": "Desktop bold text weight",
+          "default": 800
+        },
+        {
+          "type": "range",
+          "id": "title_weight_mobile",
+          "min": 100,
+          "max": 900,
+          "step": 100,
+          "label": "Mobile bold text weight",
+          "default": 800
+        },
+        {
+          "type": "range",
+          "id": "text_size",
+          "min": 10,
+          "max": 26,
+          "step": 1,
+          "unit": "px",
+          "label": "Desktop text size",
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "text_size_mobile",
+          "min": 10,
+          "max": 22,
+          "step": 1,
+          "unit": "px",
+          "label": "Mobile text size",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "text_weight",
+          "min": 100,
+          "max": 900,
+          "step": 100,
+          "label": "Desktop text weight",
+          "default": 400
+        },
+        {
+          "type": "range",
+          "id": "text_weight_mobile",
+          "min": 100,
+          "max": 900,
+          "step": 100,
+          "label": "Mobile text weight",
+          "default": 400
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Smart business cards hero",
+      "blocks": [
+        {
+          "type": "heading_line",
+          "settings": {
+            "text": "Upgrade your networking with",
+            "tag": "div",
+            "color": "#111111",
+            "size": 42,
+            "size_mobile": 36,
+            "line_height": 130,
+            "weight": 500,
+            "margin_top": 0,
+            "margin_bottom": 0,
+            "margin_top_mobile": 0,
+            "margin_bottom_mobile": 0
+          }
+        },
+        {
+          "type": "heading_line",
+          "settings": {
+            "text": "smart digital business cards",
+            "tag": "div",
+            "color": "#111111",
+            "size": 42,
+            "size_mobile": 36,
+            "line_height": 130,
+            "weight": 800,
+            "margin_top": 0,
+            "margin_bottom": 0,
+            "margin_top_mobile": 0,
+            "margin_bottom_mobile": 0
+          }
+        },
+        {
+          "type": "heading_line",
+          "settings": {
+            "text": "for your team and company.",
+            "tag": "div",
+            "color": "#111111",
+            "size": 42,
+            "size_mobile": 36,
+            "line_height": 130,
+            "weight": 500,
+            "margin_top": 0,
+            "margin_bottom": 0,
+            "margin_top_mobile": 0,
+            "margin_bottom_mobile": 0
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Instant Contact Sharing:",
+            "text": "Tap or scan to share details in seconds"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Built for Teams:",
+            "text": "Manage staff cards, links, and branding from one place"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Custom & Ready to Use:",
+            "text": "We design, program, and ship them prepared"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

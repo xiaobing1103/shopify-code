@@ -10,10 +10,10 @@
 @keyframes tkd{0%,60%,100%{opacity:.2;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
 @keyframes tku{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-#tk-app{width:100%;height:calc(100vh - var(--nh,80px) - var(--fh,60px));min-height:500px;display:flex;flex-direction:column;overflow:hidden;background:#fbfaf7;color:#1a1a1a;font-family:'Inter',sans-serif;font-size:14px;position:relative}
+#tk-app{width:100%;min-height:min(680px,calc(100vh - 180px));display:flex;flex-direction:column;background:#fbfaf7;color:#1a1a1a;font-family:'Inter',sans-serif;font-size:14px;position:relative;padding:32px 0 40px;margin:20px 0 40px}
 
 /* Welcome screen */
-.tk-welcome-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;overflow-y:auto}
+.tk-welcome-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 24px;overflow-y:auto}
 .tk-logo-row{display:flex;align-items:center;gap:14px;margin-bottom:36px}
 .tk-logo-mark{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#111;flex-shrink:0}
 .tk-logo-mark svg{width:100%;height:100%}
@@ -31,17 +31,20 @@
 .tk-send-btn svg{width:15px;height:15px;transition:stroke .15s}
 .tk-send-btn:disabled{opacity:.4!important;cursor:not-allowed!important}
 
+.tk-lang-hint{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;font-size:12px;color:#999;font-weight:400}
+.tk-lang-hint svg{width:12px;height:12px}
+
 .tk-examples{width:100%;max-width:720px;margin-top:28px}
 .tk-ex-head{margin-bottom:10px}
 .tk-ex-label{font-size:12px;color:#888;font-weight:500}
-.tk-ex-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tk-ex-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .tk-ex-card{padding:14px 16px;background:#fff;border:1px solid #e5e3dc;border-radius:12px;cursor:pointer;transition:all .15s;text-align:left;position:relative;min-height:68px;width:100%}
 .tk-ex-card:hover{border-color:#c4c1b4!important;background:#fdfcf9!important;transform:translateY(-1px)!important}
 .tk-ex-text{font-size:13px;color:#333;line-height:1.4;font-weight:500}
 .tk-ex-arrow{position:absolute;right:10px;bottom:10px;color:#c4c1b4}
 .tk-ex-arrow svg{width:11px;height:11px}
 
-.tk-footer-note{margin-top:auto;padding:24px 24px 20px;font-size:12px;color:#b8b5a8;text-align:center;width:100%;max-width:720px}
+.tk-footer-note{margin-top:auto;padding:24px 24px 8px;font-size:12px;color:#b8b5a8;text-align:center;width:100%;max-width:720px}
 .tk-footer-note::before,.tk-footer-note::after{content:'';display:inline-block;width:80px;height:1px;background:#e5e3dc;vertical-align:middle;margin:0 12px}
 
 /* Chat mode */
@@ -54,6 +57,7 @@
 .tk-av{width:28px;height:28px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:1px}
 .tk-av.a{background:#111;color:#fff}
 .tk-av.u{background:#ebe9e1;color:#666}
+.tk-av svg{width:16px;height:16px}
 .tk-b{max-width:calc(100% - 40px);padding:11px 15px;border-radius:14px;line-height:1.65;font-size:13.5px}
 .tk-m.a .tk-b{background:#fff;border:1px solid #e5e3dc;color:#111;border-top-left-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
 .tk-m.u .tk-b{background:#111;color:#fff;border-top-right-radius:4px}
@@ -114,23 +118,36 @@
       </div>
     </div>
 
+    <div class="tk-lang-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Supports any language
+    </div>
+
     <div class="tk-examples">
       <div class="tk-ex-head"><div class="tk-ex-label">Prompt examples</div></div>
       <div class="tk-ex-grid">
-        <button class="tk-ex-card" onclick="tkGo('My NFC card isn\'t working')">
-          <div class="tk-ex-text">My NFC card isn't tapping</div>
-          <div class="tk-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
-        </button>
-        <button class="tk-ex-card" onclick="tkGo('How do I activate my card?')">
-          <div class="tk-ex-text">How do I activate my card?</div>
-          <div class="tk-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
-        </button>
         <button class="tk-ex-card" onclick="tkGo('Track my order')">
-          <div class="tk-ex-text">Track my order status</div>
+          <div class="tk-ex-text">Track my order</div>
           <div class="tk-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
         </button>
-        <button class="tk-ex-card" onclick="tkGo('Bulk / B2B pricing')">
-          <div class="tk-ex-text">B2B & bulk pricing</div>
+        <button class="tk-ex-card" onclick="tkGo('I\'d like to inquire about a bulk order')">
+          <div class="tk-ex-text">Bulk order inquiry</div>
+          <div class="tk-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+        </button>
+        <button class="tk-ex-card" onclick="tkGo('How does TekMark work?')">
+          <div class="tk-ex-text">How does TekMark work</div>
+          <div class="tk-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+        </button>
+        <button class="tk-ex-card" onclick="tkGo('How do I customize my card?')">
+          <div class="tk-ex-text">How to customize my card</div>
+          <div class="tk-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+        </button>
+        <button class="tk-ex-card" onclick="tkGo('How do I set up my card?')">
+          <div class="tk-ex-text">How to set up my card</div>
+          <div class="tk-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+        </button>
+        <button class="tk-ex-card" onclick="tkGo('What is your shipping and return policy?')">
+          <div class="tk-ex-text">Shipping & return policy</div>
           <div class="tk-ex-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
         </button>
       </div>
@@ -143,7 +160,7 @@
 
   <div class="tk-tw" id="tk-tw">
     <div style="display:flex;gap:10px;align-items:flex-start">
-      <div class="tk-av a">TM</div>
+      <div class="tk-av a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><path d="M9 17h6"/></svg></div>
       <div class="tk-dots"><s></s><s></s><s></s></div>
     </div>
   </div>
@@ -162,15 +179,6 @@
 
 <script>
 (function(){
-  function gh(s){var e=document.querySelector(s);return e?e.offsetHeight:0}
-  function sh(){
-    var n=gh('header.site-header,header#header,.site-header,.t4s-header,.header,#shopify-section-header > *');
-    var f=gh('footer.site-footer,footer#footer,.site-footer,.t4s-footer,.footer');
-    if(n<20)n=80;if(f<20)f=60;
-    document.getElementById('tk-app').style.height='calc(100vh - '+n+'px - '+f+'px)';
-  }
-  sh();window.addEventListener('resize',sh);
-
   var API='https://pcmrw5ufsgdcrtrshwcst2jhtu0fwais.lambda-url.us-east-2.on.aws/api/v1/chat';
 
   // Fresh session every page load — no storage persistence
@@ -189,10 +197,13 @@
   var err=document.getElementById('tk-err');
   var errt=document.getElementById('tk-errt');
 
+  var ROBOT_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="3" r="1"/><circle cx="8.5" cy="13" r="1" fill="currentColor"/><circle cx="15.5" cy="13" r="1" fill="currentColor"/><path d="M9 17h6"/></svg>';
+
   function add(role,text){
     var w=document.createElement('div');w.className='tk-mw';
     var m=document.createElement('div');m.className='tk-m '+role;
-    var av=document.createElement('div');av.className='tk-av '+role;av.textContent=role==='a'?'TM':'You';
+    var av=document.createElement('div');av.className='tk-av '+role;
+    if(role==='a'){av.innerHTML=ROBOT_SVG;}else{av.textContent='You';}
     var b=document.createElement('div');b.className='tk-b';
     b.innerHTML=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
       .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
@@ -204,9 +215,26 @@
 
   function buildFields(text){
     var f=Object.assign({},flds);
+
+    // ORDER_TRACKING: auto-fill order number
     if(lastFollowup && lastIntent==='ORDER_TRACKING'){
       var clean=text.replace('#','').trim();
       if(/^\d{3,8}$/.test(clean)) f.order_number=clean;
+    }
+
+    // B2B_INQUIRY: auto-fill field based on last assistant question
+    if(lastFollowup && lastIntent==='B2B_INQUIRY'){
+      var lastAssist='';
+      for(var i=hist.length-1;i>=0;i--){
+        if(hist[i].role==='assistant'){lastAssist=hist[i].content.toLowerCase();break;}
+      }
+      if(lastAssist.indexOf('how many cards')>=0){
+        if(!f.quantity) f.quantity=text.trim();
+      } else if(lastAssist.indexOf('which material')>=0){
+        if(!f.material) f.material=text.trim();
+      } else if(lastAssist.indexOf('reach you')>=0){
+        if(!f.contact) f.contact=text.trim();
+      }
     }
     return f;
   }
@@ -221,11 +249,15 @@
     setTimeout(function(){msgs.scrollTop=msgs.scrollHeight;},50);
     hist.push({role:'user',content:text});
 
+    // Build fields with multi-turn context and persist accumulated state
+    var sendFields=buildFields(text);
+    flds=Object.assign({},sendFields);
+
     fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         session_id:sid,message:text,language:'en',
         conversation_history:hist.slice(-10),
-        collected_fields:buildFields(text)
+        collected_fields:sendFields
       })})
     .then(function(r){if(!r.ok)throw r.status;return r.json();})
     .then(function(d){
@@ -234,6 +266,10 @@
       lastIntent=d.intent||'';
       lastFollowup=d.requires_followup||false;
       if(d.collected_fields){flds=Object.assign(flds,d.collected_fields);}
+      // Clear collected fields when flow is complete (no more follow-ups needed)
+      if(!d.requires_followup && (d.intent==='B2B_INQUIRY' || d.intent==='PARTNERSHIP' || d.intent==='ORDER_TRACKING')){
+        flds={};
+      }
       busy=false;tw.style.display='none';add('a',rep);
     })
     .catch(function(){
