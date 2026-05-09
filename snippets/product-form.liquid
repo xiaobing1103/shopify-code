@@ -99,6 +99,126 @@
 {%- assign atc_btn_enable_gradient = bk_stts.atc_btn_enable_gradient | default: false -%}
 {%- assign atc_btn_padding_y = bk_stts.atc_btn_padding_y | default: 0 -%}
 {%- assign atc_btn_font_size = bk_stts.atc_btn_font_size | default: 14 -%}
+{%- liquid
+  assign show_atc_notice = bk_stts.show_custom_redirect_notice
+  if show_atc_notice == blank
+    assign show_atc_notice = true
+  endif
+  assign hide_atc_notice = bk_stts.hide_custom_redirect_notice
+  if hide_atc_notice == blank
+    assign hide_atc_notice = false
+  endif
+  assign atc_notice_margin_top = bk_stts.custom_redirect_notice_margin_top | default: 14
+  assign atc_notice_margin_left = bk_stts.custom_redirect_notice_margin_left | default: 0
+  assign atc_notice_margin_right = bk_stts.custom_redirect_notice_margin_right | default: 0
+  assign atc_notice_font_size = bk_stts.custom_redirect_notice_font_size | default: 15
+  assign atc_notice_font_size_mb = bk_stts.custom_redirect_notice_font_size_mb | default: 14
+  assign atc_notice_line_height = bk_stts.custom_redirect_notice_line_height | default: 120
+  assign atc_notice_icon_gap = bk_stts.custom_redirect_notice_icon_gap | default: 2
+  assign atc_notice_icon_gap_mb = bk_stts.custom_redirect_notice_icon_gap_mb | default: 2
+  assign atc_notice_icon_size = 18
+  assign atc_notice_icon_size_mb = 16
+  assign atc_notice_min_height = bk_stts.custom_redirect_notice_min_height | default: 0
+  assign atc_notice_padding_vertical = bk_stts.custom_redirect_notice_padding_vertical | default: 6
+  assign atc_notice_padding_horizontal = bk_stts.custom_redirect_notice_padding_horizontal | default: 10
+  assign atc_notice_padding_vertical_mb = bk_stts.custom_redirect_notice_padding_vertical_mb | default: 6
+  assign atc_notice_padding_horizontal_mb = bk_stts.custom_redirect_notice_padding_horizontal_mb | default: 8
+  assign atc_notice_border_radius = bk_stts.custom_redirect_notice_border_radius | default: 12
+  assign atc_notice_justify_content = bk_stts.custom_redirect_notice_justify_content | default: 'center'
+  assign atc_notice_text_align = bk_stts.custom_redirect_notice_text_align | default: 'center'
+  if atc_notice_justify_content == 'center'
+    assign atc_notice_text_align = 'center'
+  endif
+  assign atc_notice_text_color = bk_stts.custom_redirect_notice_text_color | default: '#7B7B85'
+  assign atc_notice_count_color = bk_stts.custom_redirect_notice_count_color | default: '#7B7B85'
+  assign atc_notice_bg_color = bk_stts.custom_redirect_notice_bg_color | default: '#ffffff'
+  assign atc_notice_bg_gradient = bk_stts.custom_redirect_notice_bg_gradient | default: 'linear-gradient(90deg, rgba(255, 237, 205, 0.6) 0%, rgba(255, 255, 255, 0) 90%)'
+  assign atc_notice_bg_gradient_key = atc_notice_bg_gradient | replace: ' ', '' | downcase
+  assign atc_notice_border_color = bk_stts.custom_redirect_notice_border_color | default: '#ffffff'
+  if atc_notice_text_color == '#7B7B85'
+    assign atc_notice_text_color = '#d6dbe1'
+  endif
+  if atc_notice_count_color == '#7B7B85'
+    assign atc_notice_count_color = '#f3f6f9'
+  endif
+  if atc_notice_bg_color == '#ffffff'
+    assign atc_notice_bg_color = '#566271'
+  endif
+  if atc_notice_bg_gradient_key == 'linear-gradient(90deg,rgba(255,237,205,0.6)0%,rgba(255,255,255,0)90%)'
+    assign atc_notice_bg_gradient = 'linear-gradient(180deg, #5e6977 0%, #4b5562 100%)'
+  endif
+  if atc_notice_border_color == '#ffffff'
+    assign atc_notice_border_color = 'transparent'
+  endif
+  assign atc_notice_surface = atc_notice_bg_gradient
+  if atc_notice_surface == blank or atc_notice_surface == 'none'
+    assign atc_notice_surface = atc_notice_bg_color
+  endif
+  assign atc_notice_padding_right = atc_notice_padding_horizontal | plus: 18
+  assign atc_notice_padding_right_mb = atc_notice_padding_horizontal_mb | plus: 14
+  assign atc_notice_visual_left = atc_notice_margin_left
+  assign atc_notice_visual_right = atc_notice_margin_right
+  assign atc_notice_redirect_block = blank
+  if seBlocks != blank
+    assign atc_notice_redirect_block = seBlocks | where: 'type', 'custom_redirect_button' | first
+  endif
+  assign atc_notice_redirect_stts = blank
+  if atc_notice_redirect_block != blank
+    assign atc_notice_redirect_stts = atc_notice_redirect_block.settings
+  endif
+  assign atc_notice_text = bk_stts.custom_redirect_notice_text | default: '[count] People Ordered In The Last 2 Hours' | strip
+  if atc_notice_text == '[count] People Ordered In The Last 2 Hours' and atc_notice_redirect_stts.custom_redirect_notice_text != blank
+    assign atc_notice_text = atc_notice_redirect_stts.custom_redirect_notice_text | strip
+  endif
+  assign atc_notice_count = bk_stts.custom_redirect_notice_count | default: '17'
+  if atc_notice_count == '17' and atc_notice_redirect_stts.custom_redirect_notice_count != blank
+    assign atc_notice_count = atc_notice_redirect_stts.custom_redirect_notice_count
+  endif
+  assign atc_notice_count_raw = atc_notice_count | plus: 0
+  if atc_notice_count_raw > 0
+    assign atc_notice_count = atc_notice_count_raw | divided_by: 10 | times: 10
+    if atc_notice_count < 10
+      assign atc_notice_count = 10
+    endif
+  else
+    assign atc_notice_count = 0
+  endif
+  assign atc_notice_random_enabled = bk_stts.custom_redirect_notice_enable_random_count
+  if atc_notice_random_enabled == blank
+    assign atc_notice_random_enabled = false
+  endif
+  assign atc_notice_overnight_min = bk_stts.custom_redirect_notice_overnight_min | default: 4 | plus: 0
+  assign atc_notice_overnight_max = bk_stts.custom_redirect_notice_overnight_max | default: 12 | plus: 0
+  assign atc_notice_daytime_min = bk_stts.custom_redirect_notice_daytime_min | default: 12 | plus: 0
+  assign atc_notice_daytime_max = bk_stts.custom_redirect_notice_daytime_max | default: 24 | plus: 0
+  assign atc_notice_redirect_overnight_min = atc_notice_redirect_stts.custom_redirect_notice_overnight_min | default: atc_notice_overnight_min | plus: 0
+  assign atc_notice_redirect_overnight_max = atc_notice_redirect_stts.custom_redirect_notice_overnight_max | default: atc_notice_overnight_max | plus: 0
+  assign atc_notice_redirect_daytime_min = atc_notice_redirect_stts.custom_redirect_notice_daytime_min | default: atc_notice_daytime_min | plus: 0
+  assign atc_notice_redirect_daytime_max = atc_notice_redirect_stts.custom_redirect_notice_daytime_max | default: atc_notice_daytime_max | plus: 0
+  if atc_notice_overnight_min == 4 and atc_notice_redirect_overnight_min != 4
+    assign atc_notice_overnight_min = atc_notice_redirect_overnight_min
+  endif
+  if atc_notice_overnight_max == 12 and atc_notice_redirect_overnight_max != 12
+    assign atc_notice_overnight_max = atc_notice_redirect_overnight_max
+  endif
+  if atc_notice_daytime_min == 12 and atc_notice_redirect_daytime_min != 12
+    assign atc_notice_daytime_min = atc_notice_redirect_daytime_min
+  endif
+  if atc_notice_daytime_max == 24 and atc_notice_redirect_daytime_max != 24
+    assign atc_notice_daytime_max = atc_notice_redirect_daytime_max
+  endif
+  assign atc_notice_use_range_count = atc_notice_random_enabled
+  if atc_notice_overnight_min != 4 or atc_notice_overnight_max != 12 or atc_notice_daytime_min != 12 or atc_notice_daytime_max != 24
+    assign atc_notice_use_range_count = true
+  endif
+  assign atc_notice_dom_id = 't4s-viewed-today' | append: block.id | append: '-atc-copy'
+  assign atc_notice_overlap = 6
+  assign atc_notice_overlap_mb = 4
+  assign show_atc_notice_block = false
+  if show_atc_notice and hide_atc_notice != true and atc_notice_text != blank
+    assign show_atc_notice_block = true
+  endif
+-%}
 
 <style>
   #{{ product_form_id }} {
@@ -208,6 +328,118 @@
     min-height: 0 !important;
     padding-top: {{ atc_btn_padding_y }}px !important;
     padding-bottom: {{ atc_btn_padding_y }}px !important;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice {
+    --t4s-atc-notice-tail-visible: 26px;
+    --t4s-atc-notice-tail-top-cut: 18px;
+    position: relative;
+    z-index: 1;
+    display: flex !important;
+    align-items: center;
+    align-self: flex-start;
+    gap: {{ atc_notice_icon_gap }}px !important;
+    width: fit-content !important;
+    max-width: calc(100% - {{ atc_notice_visual_left }}px - {{ atc_notice_visual_right }}px - 30px);
+    margin: {{ atc_notice_margin_top }}px {{ atc_notice_visual_right }}px -{{ atc_notice_overlap }}px {{ atc_notice_visual_left }}px !important;
+    padding: {{ atc_notice_padding_vertical }}px {{ atc_notice_padding_right }}px {{ atc_notice_padding_vertical }}px
+      {{ atc_notice_padding_horizontal }}px !important;
+    border: 0 !important;
+    border-radius: {{ atc_notice_border_radius }}px {{ atc_notice_border_radius }}px 0 0 !important;
+    background: transparent !important;
+    color: {{ atc_notice_text_color }} !important;
+    font-size: {{ atc_notice_font_size }}px !important;
+    box-shadow: none !important;
+    overflow: visible;
+    min-height: {{ atc_notice_min_height }}px !important;
+    justify-content: {{ atc_notice_justify_content }} !important;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice::before {
+    content: '';
+    position: absolute;
+    inset: 0 calc(-1 * var(--t4s-atc-notice-tail-visible)) 0 0;
+    border-radius: inherit;
+    background: {{ atc_notice_surface }} !important;
+    clip-path: polygon(0 0, calc(100% - var(--t4s-atc-notice-tail-top-cut)) 0, 100% 100%, 0 100%);
+    box-shadow: 0 8px 14px rgba(36, 45, 57, 0.12) !important;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice .t4s-viewed-today__icon,
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice .t4s-viewed-today__text {
+    position: relative;
+    z-index: 1;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice .t4s-viewed-today__icon {
+    flex: 0 0 {{ atc_notice_icon_size }}px !important;
+    width: {{ atc_notice_icon_size }}px !important;
+    height: {{ atc_notice_icon_size }}px !important;
+    margin-right: -1px !important;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice .t4s-viewed-today__text {
+    display: flex;
+    align-items: center;
+    color: {{ atc_notice_text_color }} !important;
+    text-align: {{ atc_notice_text_align }} !important;
+    line-height: {{ atc_notice_line_height }}% !important;
+    justify-content: {{ atc_notice_justify_content }} !important;
+    white-space: nowrap;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice .t4s-viewed-today__count {
+    color: {{ atc_notice_count_color }} !important;
+  }
+
+  #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-product-form__submit[data-atc-form] {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (min-width: 1025px) {
+    .t4s-product-form__variants.is-btn-full-width__false #{{ product_form_id }} .t4s-product-form__atc-notice-wrap {
+      width: auto;
+      min-width: 160px;
+      flex: 0 0 auto;
+    }
+  }
+
+  @media (max-width: 767px) {
+    #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice {
+      --t4s-atc-notice-tail-visible: 22px;
+      --t4s-atc-notice-tail-top-cut: 15px;
+      gap: {{ atc_notice_icon_gap_mb }}px;
+      max-width: calc(100% - {{ atc_notice_visual_left }}px - {{ atc_notice_visual_right }}px - 24px);
+      margin: {{ atc_notice_margin_top }}px {{ atc_notice_visual_right }}px -{{ atc_notice_overlap_mb }}px {{ atc_notice_visual_left }}px !important;
+      padding: {{ atc_notice_padding_vertical_mb }}px {{ atc_notice_padding_right_mb }}px
+        {{ atc_notice_padding_vertical_mb }}px {{ atc_notice_padding_horizontal_mb }}px !important;
+      font-size: {{ atc_notice_font_size_mb }}px !important;
+    }
+
+    #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice .t4s-viewed-today__icon {
+      flex-basis: {{ atc_notice_icon_size_mb }}px !important;
+      width: {{ atc_notice_icon_size_mb }}px !important;
+      height: {{ atc_notice_icon_size_mb }}px !important;
+      margin-right: -1px !important;
+    }
+
+    #{{ product_form_id }} .t4s-product-form__atc-notice-wrap .t4s-pr_viewed_today_notice .t4s-viewed-today__text {
+      white-space: normal;
+    }
   }
 
   #{{ product_form_id }} .t4s-quantity-wrapper.is-qty-full-width {
@@ -650,6 +882,127 @@
             {%- endif -%}
 
             {%- if show_add_to_cart_button -%}
+              {%- if show_atc_notice_block -%}
+                <div class="t4s-product-form__atc-notice-wrap">
+                  {%- render 'product-block-viewed-today-notice',
+                    block: block,
+                    bk_stts: bk_stts,
+                    instance_suffix: '-atc-copy',
+                    fallback_count: atc_notice_count,
+                    fallback_text: atc_notice_text,
+                    fallback_font_size: atc_notice_font_size,
+                    fallback_font_size_mb: atc_notice_font_size_mb,
+                    fallback_line_height: atc_notice_line_height,
+                    fallback_margin_top: atc_notice_margin_top,
+                    fallback_margin_left: atc_notice_margin_left,
+                    fallback_margin_right: atc_notice_margin_right,
+                    fallback_padding_vertical: bk_stts.custom_redirect_notice_padding_vertical,
+                    fallback_padding_horizontal: bk_stts.custom_redirect_notice_padding_horizontal,
+                    fallback_padding_vertical_mb: bk_stts.custom_redirect_notice_padding_vertical_mb,
+                    fallback_padding_horizontal_mb: bk_stts.custom_redirect_notice_padding_horizontal_mb,
+                    fallback_icon_gap: atc_notice_icon_gap,
+                    fallback_icon_gap_mb: atc_notice_icon_gap_mb,
+                    fallback_icon_size: atc_notice_icon_size,
+                    fallback_icon_size_mb: atc_notice_icon_size_mb,
+                    fallback_border_radius: bk_stts.custom_redirect_notice_border_radius,
+                    fallback_text_color: atc_notice_text_color,
+                    fallback_count_color: atc_notice_count_color,
+                    fallback_bg_color: atc_notice_bg_color,
+                    fallback_bg_gradient: atc_notice_bg_gradient,
+                    fallback_border_color: atc_notice_border_color,
+                    fallback_enable_random_count: 'false',
+                    fallback_overnight_min: atc_notice_overnight_min,
+                    fallback_overnight_max: atc_notice_overnight_max,
+                    fallback_daytime_min: atc_notice_daytime_min,
+                    fallback_daytime_max: atc_notice_daytime_max,
+                    fallback_min_height: bk_stts.custom_redirect_notice_min_height,
+                    fallback_justify_content: bk_stts.custom_redirect_notice_justify_content,
+                    fallback_text_align: bk_stts.custom_redirect_notice_text_align
+                  -%}
+                  <script>
+                    (function() {
+                      var root = document.getElementById('{{ atc_notice_dom_id }}');
+                      if (!root) return;
+
+                      var countNode = root.querySelector('[data-viewed-today-count]');
+                      if (!countNode) return;
+
+                      function toInt(value, fallback) {
+                        var parsed = parseInt(value, 10);
+                        return Number.isFinite(parsed) ? parsed : fallback;
+                      }
+
+                      function normalizeToTens(value) {
+                        var parsed = toInt(value, 0);
+
+                        if (parsed <= 0) return 0;
+
+                        var normalized = Math.floor(parsed / 10) * 10;
+                        return normalized < 10 ? 10 : normalized;
+                      }
+
+                      function hashString(value) {
+                        var hash = 0;
+
+                        for (var index = 0; index < value.length; index += 1) {
+                          hash = (hash * 31 + value.charCodeAt(index)) % 2147483647;
+                        }
+
+                        return Math.abs(hash);
+                      }
+
+                      function resolveDisplayCount() {
+                        if (!{{ atc_notice_use_range_count | json }}) {
+                          return normalizeToTens('{{ atc_notice_count }}');
+                        }
+
+                        var now = new Date();
+                        var currentHour = now.getHours();
+                        var isOvernightHour = currentHour < 8;
+                        var min = isOvernightHour
+                          ? toInt('{{ atc_notice_overnight_min }}', 4)
+                          : toInt('{{ atc_notice_daytime_min }}', 12);
+                        var max = isOvernightHour
+                          ? toInt('{{ atc_notice_overnight_max }}', 12)
+                          : toInt('{{ atc_notice_daytime_max }}', 24);
+
+                        if (min > max) {
+                          var swap = min;
+                          min = max;
+                          max = swap;
+                        }
+
+                        var rangeSize = Math.max(1, max - min + 1);
+                        var hourKey = [
+                          now.getFullYear(),
+                          now.getMonth() + 1,
+                          now.getDate(),
+                          currentHour
+                        ].join('-');
+                        var seedSource = [
+                          '{{ product.id | default: 0 }}',
+                          '{{ block.id | default: product_form_id }}',
+                          hourKey
+                        ].join(':');
+                        var schemaValue = min + (hashString(seedSource) % rangeSize);
+
+                        return normalizeToTens(schemaValue);
+                      }
+
+                      function applyDisplayCount() {
+                        countNode.textContent = String(resolveDisplayCount());
+                      }
+
+                      applyDisplayCount();
+
+                      if (window.requestAnimationFrame) {
+                        window.requestAnimationFrame(applyDisplayCount);
+                      }
+
+                      window.addEventListener('load', applyDisplayCount, { once: true });
+                    })();
+                  </script>
+              {%- endif -%}
               <button
                 data-animation-atc='{ "ani":"{{ bk_stts.ani | default: 'none' }}","time":{{ bk_stts.time | default: 6 }}000 }'
                 type="submit"
@@ -695,6 +1048,9 @@
                   </svg>
                 </span>
               </button>
+              {%- if show_atc_notice_block -%}
+                </div>
+              {%- endif -%}
             {%- endif -%}
           {%- endif -%}
         </div>

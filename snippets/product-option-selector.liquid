@@ -93,6 +93,9 @@
   assign title_display_mode = bk_stts.title_display_mode | default: 'option_value'
   assign title_label_override = bk_stts.title_label_override | strip
   assign title_value_gap = bk_stts.title_value_gap | default: 0
+  assign title_value_color = bk_stts.title_value_color | default: title_text_color
+  assign title_value_font_size = bk_stts.title_value_font_size | default: title_font_size
+  assign title_value_font_weight = bk_stts.title_value_font_weight | default: title_font_weight
   assign show_option_title = true
   if bk_stts.show_option_label == false
     assign show_option_title = false
@@ -158,35 +161,35 @@
   assign mobile_option_min_height = 32
   assign mobile_block_spacing = block_spacing
 
-  if use_custom_style
-    assign mobile_selected_border_width = bk_stts.selected_border_width_mb | default: selected_border_width
-    assign mobile_title_font_size = bk_stts.title_font_size_mobile | default: 14
-    assign mobile_title_font_weight = bk_stts.title_font_weight_mobile | default: title_font_weight
-    assign mobile_title_margin_top = bk_stts.title_margin_top_mb | default: title_margin_top
-    assign mobile_title_margin_bottom = bk_stts.title_margin_bottom_mb
-    if mobile_title_margin_bottom == blank
-      assign mobile_title_margin_bottom = title_margin_bottom
-    endif
-    assign mobile_option_font_size = bk_stts.option_font_size_mb | default: 12
-    assign mobile_option_font_weight = bk_stts.option_font_weight_mb | default: bk_stts.option_font_weight | default: '500'
-    assign mobile_block_radius = bk_stts.block_radius_mb | default: block_radius
-    assign mobile_option_radius = bk_stts.option_radius_mb | default: option_radius
-    assign mobile_block_padding_top = bk_stts.block_padding_top_mb
-    if mobile_block_padding_top == blank
-      assign mobile_block_padding_top = bk_stts.block_padding_y_mb | default: 10
-    endif
-    assign mobile_block_padding_bottom = bk_stts.block_padding_bottom_mb
-    if mobile_block_padding_bottom == blank
-      assign mobile_block_padding_bottom = bk_stts.block_padding_y_mb | default: 10
-    endif
-    assign mobile_block_padding_x = bk_stts.block_padding_x_mb | default: 12
-    assign mobile_option_padding_y = bk_stts.option_padding_y_mb | default: 6
-    assign mobile_option_padding_x = bk_stts.option_padding_x_mb | default: 8
-    assign mobile_option_margin = bk_stts.option_margin_mb | default: 0
-    assign mobile_option_gap = bk_stts.option_gap_mb | default: 6
-    assign mobile_option_min_height = bk_stts.option_min_height_mb | default: 32
-    assign mobile_block_spacing = bk_stts.block_spacing_mb | default: block_spacing
+  assign mobile_selected_border_width = bk_stts.selected_border_width_mb | default: selected_border_width
+  assign mobile_title_font_size = bk_stts.title_font_size_mobile | default: mobile_title_font_size
+  assign mobile_title_font_weight = bk_stts.title_font_weight_mobile | default: mobile_title_font_weight
+  assign mobile_title_value_font_size = bk_stts.title_value_font_size_mobile | default: title_value_font_size
+  assign mobile_title_value_font_weight = bk_stts.title_value_font_weight_mobile | default: title_value_font_weight
+  assign mobile_title_margin_top = bk_stts.title_margin_top_mb | default: title_margin_top
+  assign mobile_title_margin_bottom = bk_stts.title_margin_bottom_mb
+  if mobile_title_margin_bottom == blank
+    assign mobile_title_margin_bottom = title_margin_bottom
   endif
+  assign mobile_option_font_size = bk_stts.option_font_size_mb | default: mobile_option_font_size
+  assign mobile_option_font_weight = bk_stts.option_font_weight_mb | default: bk_stts.option_font_weight | default: mobile_option_font_weight
+  assign mobile_block_radius = bk_stts.block_radius_mb | default: block_radius
+  assign mobile_option_radius = bk_stts.option_radius_mb | default: option_radius
+  assign mobile_block_padding_top = bk_stts.block_padding_top_mb
+  if mobile_block_padding_top == blank
+    assign mobile_block_padding_top = bk_stts.block_padding_y_mb | default: 10
+  endif
+  assign mobile_block_padding_bottom = bk_stts.block_padding_bottom_mb
+  if mobile_block_padding_bottom == blank
+    assign mobile_block_padding_bottom = bk_stts.block_padding_y_mb | default: 10
+  endif
+  assign mobile_block_padding_x = bk_stts.block_padding_x_mb | default: mobile_block_padding_x
+  assign mobile_option_padding_y = bk_stts.option_padding_y_mb | default: mobile_option_padding_y
+  assign mobile_option_padding_x = bk_stts.option_padding_x_mb | default: mobile_option_padding_x
+  assign mobile_option_margin = bk_stts.option_margin_mb | default: mobile_option_margin
+  assign mobile_option_gap = bk_stts.option_gap_mb | default: mobile_option_gap
+  assign mobile_option_min_height = bk_stts.option_min_height_mb | default: mobile_option_min_height
+  assign mobile_block_spacing = bk_stts.block_spacing_mb | default: block_spacing
 
   assign option_half_gap = option_gap | divided_by: 2.0
   assign mobile_option_half_gap = mobile_option_gap | divided_by: 2.0
@@ -224,6 +227,7 @@
       --t4s-option-group-bg: {{ block_bg_color }};
       --t4s-option-group-surface: {{ item_bg_color }};
       --t4s-option-group-title: {{ title_text_color }};
+      --t4s-option-title-value-color: {{ title_value_color }};
       --t4s-option-group-text: {{ item_text_color }};
       --t4s-option-group-border: {{ item_border_color }};
       --t4s-option-group-accent: {{ selected_border_color }};
@@ -294,6 +298,15 @@
       column-gap: var(--t4s-option-title-value-gap) !important;
       gap: var(--t4s-option-title-value-gap) !important;
       min-width: 0 !important;
+    }
+
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title .t4s-option-title-value,
+    .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title .t4s-option-title-value,
+    .t4s-option-selector-block-{{ block.id }} .t4s-swatch__current.t4s-option-title-value {
+      color: var(--t4s-option-title-value-color) !important;
+      font-size: {{ title_value_font_size }}px !important;
+      font-weight: {{ title_value_font_weight }} !important;
+      line-height: 1.35 !important;
     }
 
     {%- if option_items_half_width -%}
@@ -413,12 +426,18 @@
       }
 
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
-      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button,
-      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title,
-      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title span {
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button {
         font-size: {{ bk_stts.option_font_size | default: 16 }}px !important;
         font-weight: {{ bk_stts.option_font_weight | default: 500 }} !important;
         line-height: 1.2 !important;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title .t4s-option-title-value,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title .t4s-option-title-value,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__current.t4s-option-title-value {
+        color: var(--t4s-option-title-value-color) !important;
+        font-size: {{ title_value_font_size }}px !important;
+        font-weight: {{ title_value_font_weight }} !important;
       }
     {%- endif -%}
 
@@ -465,12 +484,33 @@
         line-height: 1.2 !important;
       }
 
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title span,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title a,
+      .t4s-option-selector-block-{{ block.id }} .t4s-option-title-text,
+      .t4s-option-selector-block-{{ block.id }} .t4s-option-title-label,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__current,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title span {
+        font-size: {{ mobile_title_font_size }}px !important;
+        font-weight: {{ mobile_title_font_weight }} !important;
+        line-height: 1.2 !important;
+      }
+
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title > .t4s-option-title-text {
         display: inline-flex !important;
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title .t4s-option-title-value,
+      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title .t4s-option-title-value,
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__current.t4s-option-title-value {
+        color: var(--t4s-option-title-value-color) !important;
+        font-size: {{ mobile_title_value_font_size }}px !important;
+        font-weight: {{ mobile_title_value_font_weight }} !important;
+        line-height: 1.2 !important;
       }
 
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__title .t4s-btn__size-chart {
@@ -505,9 +545,7 @@
       {%- endif -%}
 
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item,
-      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button,
-      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title,
-      .t4s-option-selector-block-{{ block.id }} .t4s-dropdown__title span {
+      .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button {
         font-size: {{ mobile_option_font_size }}px !important;
         font-weight: {{ mobile_option_font_weight }} !important;
         line-height: 1.15 !important;
@@ -515,7 +553,12 @@
 
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__item {
         flex: 1 1 0 !important;
+        width: auto !important;
+        height: auto !important;
         min-width: 0 !important;
+        min-height: var(--t4s-option-min-height) !important;
+        max-height: none !important;
+        border-width: {{ mobile_selected_border_width }}px !important;
         justify-content: center !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -526,7 +569,11 @@
 
       .t4s-option-selector-block-{{ block.id }} .t4s-swatch__list > button {
         width: 100% !important;
+        height: auto !important;
         min-width: 0 !important;
+        min-height: var(--t4s-option-min-height) !important;
+        max-height: none !important;
+        border-width: {{ mobile_selected_border_width }}px !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
@@ -603,7 +650,7 @@
                   {%- if render_option_label -%}
                     <span class="t4s-option-title-label">{{- display_option_label | escape }}:</span>
                   {%- endif -%}
-                  <span data-current-value class="t4s-dib t4s-swatch__current">
+                  <span data-current-value class="t4s-dib t4s-swatch__current t4s-option-title-value">
                     {{- selected_value | default: choose_an_option -}}
                   </span>
                 </span>
@@ -646,7 +693,7 @@
                           {%- if render_option_label -%}
                             <span class="t4s-option-title-label">{{- display_option_label | escape }}:</span>
                           {%- endif -%}
-                          <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                          <span data-current-value class="t4s-option-title-value">{{ selected_value | default: choose_an_option }}</span>
                         </span>
                       </span>
                     {%- endunless -%}
@@ -757,11 +804,11 @@
               }
             });
 
-            var independentCurrentValue = independentOption.querySelector('[data-current-value]');
             var mainCurrentValue = mainOption.querySelector('[data-current-value]');
-            if (independentCurrentValue) {
-              independentCurrentValue.textContent = currentValue || (mainCurrentValue ? mainCurrentValue.textContent : '');
-            }
+            var syncedValue = currentValue || (mainCurrentValue ? mainCurrentValue.textContent : '');
+            independentOption.querySelectorAll('[data-current-value]').forEach(function(independentCurrentValue) {
+              independentCurrentValue.textContent = syncedValue;
+            });
           });
         }
 

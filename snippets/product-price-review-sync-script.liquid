@@ -78,15 +78,17 @@
     }
 
     function getMoneyFormat() {
-      if (window.T4Sconfigs) {
-        if (isCurrencyCodeEnabled() && window.T4Sconfigs.moneyWithCurrencyFormat) {
+      if (isCurrencyCodeEnabled()) {
+        if (window.T4Sconfigs && window.T4Sconfigs.moneyWithCurrencyFormat) {
           return window.T4Sconfigs.moneyWithCurrencyFormat;
         }
-        if (window.T4Sconfigs.moneyFormat) return window.T4Sconfigs.moneyFormat;
+        if (liquidMoneyWithCurrencyFormat) return liquidMoneyWithCurrencyFormat;
       }
+
+      if (liquidMoneyFormat) return liquidMoneyFormat;
+      if (window.T4Sconfigs && window.T4Sconfigs.moneyFormat) return window.T4Sconfigs.moneyFormat;
       if (window.theme && window.theme.moneyFormat) return window.theme.moneyFormat;
-      if (isCurrencyCodeEnabled() && liquidMoneyWithCurrencyFormat) return liquidMoneyWithCurrencyFormat;
-      return liquidMoneyFormat || '${{amount}}';
+      return liquidMoneyFormat || ('$' + '{' + '{amount}' + '}');
     }
 
     function getActiveCurrencyCode() {
@@ -94,6 +96,51 @@
         return window.T4Sconfigs.cartCurrency || window.T4Sconfigs.shopCurency || '';
       }
       return liquidCurrencyCode || '';
+    }
+
+    function addThousandsSeparator(value, separator) {
+      return String(value).replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+    }
+
+    function roundCentsToWholeCurrency(cents) {
+      return Math.round((parseInt(cents, 10) || 0) / 100) * 100;
+    }
+
+    function formatAmount(cents, decimalSeparator, thousandsSeparator) {
+      var roundedAmount = roundCentsToWholeCurrency(cents) / 100;
+      var integerPart = addThousandsSeparator(roundedAmount, thousandsSeparator);
+
+      return integerPart + decimalSeparator + '00';
+    }
+
+    function formatMoneyFromTemplate(cents, format) {
+      var openToken = '{' + '{';
+      if (!format || String(format).indexOf(openToken) === -1) return '';
+
+      return String(format).replace(new RegExp('\\{' + '\\{' + '\\s*(\\w+)\\s*\\}' + '\\}', 'g'), function (match, token) {
+        switch (token) {
+          case 'amount':
+            return formatAmount(cents, '.', ',');
+          case 'amount_no_decimals':
+            return formatAmount(cents, '.', ',');
+          case 'amount_with_comma_separator':
+            return formatAmount(cents, ',', '.');
+          case 'amount_no_decimals_with_comma_separator':
+            return formatAmount(cents, ',', '.');
+          case 'amount_with_apostrophe_separator':
+            return formatAmount(cents, '.', "'");
+          case 'amount_no_decimals_with_space_separator':
+            return formatAmount(cents, '.', ' ');
+          case 'amount_with_space_separator':
+            return formatAmount(cents, '.', ' ');
+          case 'amount_with_period_and_space_separator':
+            return formatAmount(cents, '.', ' ');
+          case 'amount_with_comma_separator_and_space':
+            return formatAmount(cents, ',', ' ');
+          default:
+            return match;
+        }
+      });
     }
 
     var initialCurrencySuffix = detectCurrencySuffix(getTarget() ? getTarget().textContent : '');
@@ -106,27 +153,27 @@
 
     function formatMoney(cents) {
       var normalizedCents = Math.max(parseInt(cents, 10) || 0, 0);
+      var roundedCents = roundCentsToWholeCurrency(normalizedCents);
       var formattedMoney = '';
+      var moneyFormat = getMoneyFormat();
 
-      if (typeof Shopify !== 'undefined' && typeof Shopify.formatMoney === 'function') {
-        formattedMoney = Shopify.formatMoney(normalizedCents, getMoneyFormat());
-      } else {
-        formattedMoney = '$' + (normalizedCents / 100).toFixed(2);
+      formattedMoney = formatMoneyFromTemplate(roundedCents, moneyFormat);
+      if (String(formattedMoney).indexOf('{' + '{') !== -1) {
+        formattedMoney = '';
       }
 
-      var activeCurrencyCode = getActiveCurrencyCode();
+      if (!formattedMoney) {
+        if (typeof Shopify !== 'undefined' && typeof Shopify.formatMoney === 'function') {
+          formattedMoney = Shopify.formatMoney(roundedCents, moneyFormat);
+        } else {
+          formattedMoney = '$' + (roundedCents / 100).toFixed(2);
+        }
+      }
+
       var currencySuffix = getCurrencySuffix();
 
       if (isCurrencyCodeEnabled() && currencySuffix && String(formattedMoney).indexOf(currencySuffix.trim()) === -1) {
         formattedMoney = String(formattedMoney).trim() + currencySuffix;
-      }
-
-      if (
-        isCurrencyCodeEnabled() &&
-        activeCurrencyCode &&
-        String(formattedMoney).indexOf(activeCurrencyCode) === -1
-      ) {
-        formattedMoney = String(formattedMoney).trim() + ' ' + activeCurrencyCode;
       }
 
       return formattedMoney;
@@ -142,30 +189,36 @@
     }
 
     function buildSaleBadge(compareAtPrice, price) {
+      var roundedCompareAtPrice = roundCentsToWholeCurrency(compareAtPrice);
+      var roundedPrice = roundCentsToWholeCurrency(price);
+
       if (hideComparePrice) return '';
-      if (!(compareAtPrice > price)) return '';
+      if (!(roundedCompareAtPrice > roundedPrice)) return '';
 
       if (saleType === '1') {
-        var percent = Math.round(((compareAtPrice - price) * 100) / compareAtPrice);
+        var percent = Math.round(((roundedCompareAtPrice - roundedPrice) * 100) / roundedCompareAtPrice);
         return salePercentTemplate.replace('[saved_amount]', percent);
       }
 
       if (saleType === '2') {
-        return saleFixedTemplate.replace('[saved_amount]', formatMoney(compareAtPrice - price));
+        return saleFixedTemplate.replace('[saved_amount]', formatMoney(roundedCompareAtPrice - roundedPrice));
       }
 
       return '';
     }
 
     function buildPriceContent(price, compareAtPrice) {
+      var roundedCompareAtPrice = roundCentsToWholeCurrency(compareAtPrice);
+      var roundedPrice = roundCentsToWholeCurrency(price);
+
       if (!(price > 0)) return '';
       if (hideComparePrice) {
-        return formatMoney(price);
+        return formatMoney(roundedPrice);
       }
-      if (compareAtPrice > price) {
-        return '<del>' + formatMoney(compareAtPrice) + '</del> <ins>' + formatMoney(price) + '</ins>' + buildSaleBadge(compareAtPrice, price);
+      if (roundedCompareAtPrice > roundedPrice) {
+        return '<del>' + formatMoney(roundedCompareAtPrice) + '</del> <ins>' + formatMoney(roundedPrice) + '</ins>' + buildSaleBadge(compareAtPrice, price);
       }
-      return formatMoney(price);
+      return formatMoney(roundedPrice);
     }
 
     function resolveVariantUnitPriceData(variantId, variantData) {

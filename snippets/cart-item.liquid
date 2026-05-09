@@ -3,9 +3,26 @@
   assign item_key = item.key
   assign item_url = item.url
   assign image = item.image
+  assign mczr_image = item.properties._mczr_image
+  assign image_src = blank
+  assign image_alt = item.product.title | escape
+  assign image_aspect_ratio = 1
+  if mczr_image != blank
+    assign image_src = mczr_image
+  elsif image != blank
+    assign image_src = image | image_url: width: 1
+    assign image_alt = image.alt | default: item.product.title | escape
+    assign image_aspect_ratio = image.aspect_ratio | default: 1
+  endif
   assign item_qty = item.quantity
   assign item_variant = item.variant
   assign item_pr = item.product
+  assign same_product_total_qty = 0
+  for cart_item in cart.items
+    if cart_item.product_id == item.product_id
+      assign same_product_total_qty = same_product_total_qty | plus: cart_item.quantity
+    endif
+  endfor
   assign min_qty = item_pr.metafields.theme.cus_qty | default: min_qty
   if item_variant.quantity_rule.min and min_qty < item_variant.quantity_rule.min
     assign min_qty = item_variant.quantity_rule.min
@@ -31,16 +48,20 @@
 
 <div
   data-cart-item
+  data-cart-item-key="{{ item_key }}"
   data-pid="{{ item.product_id }}"
   class="t4s-mini_cart__item cart_item_{{ item_id }} t4s-pr t4s-oh{% if gift_pr_id == item.product_id %} is--gift{% endif %}"
 >
   {%- comment -%}Title and Variant Badge - Top Row{%- endcomment -%}
-  <div class="t4s-mini_cart__header">
+  <div
+    class="t4s-mini_cart__header"
+    style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;"
+  >
     <a href="{{ item_url }}" class="t4s-mini_cart__title">{{ item_pr.title }}</a>
     {%- assign qv_key = item_pr.id -%}
     {%- unless item_pr.has_only_default_variant or item_variant.title contains 'mczr_price_' -%}
       {%- assign qv_key = item_id -%}
-      <span class="t4s-cart_variant_badge">
+      <span class="t4s-cart_variant_badge" style="display:inline-flex;align-self:flex-start;">
         <span class="t4s-variant_dot"></span>
         <span class="t4s-variant_text">{{ item_variant.title }}</span>
       </span>
@@ -51,19 +72,20 @@
   <div class="t4s-mini_cart__body t4s-d-flex">
     <a
       href="{{ item_url }}"
+      data-cart-item-image
       class="t4s-mini_cart__img t4s-pr t4s-oh t4s_ratio t4s-bg-11"
-      style="background: url({{ image | image_url: width: 1 }});--aspect-ratioapt:{{ image.aspect_ratio | default: 1 }}"
+      style="{% if image_src != blank %}background: url({{ image_src }});{% endif %}--aspect-ratioapt:{{ image_aspect_ratio }}"
     >
-      {%- if image != blank -%}
+      {%- if image_src != blank -%}
         <img
           class="lazyloadt4s"
           width="120"
-          height="{{ 120 | divided_by: image.aspect_ratio | ceil }}"
+          height="{{ 120 | divided_by: image_aspect_ratio | ceil }}"
           src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-          data-src="{{ image | image_url: width: 1 }}"
+          data-src="{{ image_src }}"
           data-widths="[120, 240]"
           data-sizes="auto"
-          alt="{{ image.alt | escape }}"
+          alt="{{ image_alt }}"
         >
       {%- endif -%}
       <div class="t4s-cart-ld__bar t4s-pe-none t4s-dn" hidden>
@@ -320,34 +342,9 @@
             </ul>
           {%- endif -%}
 
-          {%- liquid
-            assign discount_badge_base_price = item.original_price
-            if item_variant.compare_at_price > discount_badge_base_price
-              assign discount_badge_base_price = item_variant.compare_at_price
-            endif
-            assign discount_badge_percent = 0
-            if discount_badge_base_price > item.final_price
-              assign discount_badge_percent = discount_badge_base_price | minus: item.final_price | times: 100.0 | divided_by: discount_badge_base_price | round
-            endif
-          -%}
-
-          {%- if show_discount_percent_badge and discount_badge_percent > 0 -%}
-            <div class="t4s-cart-discount-percent-badge-wrap">
-              <span
-                class="t4s-cart-discount-percent-badge"
-                style="--discount-badge-bg: {{ discount_percent_badge_bg | default: '#EAF3FF' }};"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-cart-tag"/>
-                </svg>
-                <span>Save {{ discount_badge_percent }}%</span>
-              </span>
-            </div>
-          {%- endif -%}
-
           {%- comment -%}Quantity Discount Progress Bar{%- endcomment -%}
           {%- liquid
-            assign current_qty = item_qty
+            assign current_qty = same_product_total_qty
             assign base_qty = 1
             assign first_discount_qty = 2
             assign final_discount_qty = 5
@@ -525,6 +522,39 @@
             </a>
           </div>
         </div>
+        {%- liquid
+          assign upsell_badge_prefix = blank
+          assign upsell_badge_percent = blank
+          assign upsell_badge_suffix = blank
+          if same_product_total_qty == 1
+            assign upsell_badge_prefix = '1 More for '
+            assign upsell_badge_percent = '10%'
+            assign upsell_badge_suffix = ' Off'
+          elsif same_product_total_qty > 1 and same_product_total_qty < 5
+            assign upsell_badge_prefix = 5 | minus: same_product_total_qty | append: ' More for '
+            assign upsell_badge_percent = '30%'
+            assign upsell_badge_suffix = ' Off'
+          endif
+        -%}
+        {%- if show_discount_percent_badge and upsell_badge_percent != blank -%}
+          <div class="t4s-cart-discount-percent-badge-wrap">
+            <span
+              class="t4s-cart-discount-percent-badge"
+              style="--discount-badge-bg: {{ discount_percent_badge_bg | default: '#EAF3FF' }};"
+            >
+              <img
+                src="{{ 'icon_present@3x.webp' | asset_url }}"
+                alt=""
+                loading="lazy"
+                width="12"
+                height="12"
+              >
+              <span>{{ upsell_badge_prefix }}</span>
+              <span class="t4s-cart-discount-percent-badge__accent">{{ upsell_badge_percent }}</span>
+              <span>{{ upsell_badge_suffix }}</span>
+            </span>
+          </div>
+        {%- endif -%}
       </div>
     </div>
   </div>

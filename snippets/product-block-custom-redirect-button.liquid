@@ -14,8 +14,10 @@
   endif
   assign redirect_btn_default_gradient = 'linear-gradient(90deg, #2f80e7 0%, #2a73da 100%)'
   assign redirect_btn_default_gradient_hover = 'linear-gradient(90deg, #2a76dc 0%, #255fbe 100%)'
-  assign redirect_btn_text_color = bk_stts.custom_redirect_btn_text_color | default: form_stts.atc_btn_text_color | default: '#ffffff'
-  assign redirect_btn_text_hover_color = bk_stts.custom_redirect_btn_text_hover_color | default: form_stts.atc_btn_text_hover_color | default: '#ffffff'
+  assign custom_redirect_btn_text_color = bk_stts.custom_redirect_btn_text_color | strip
+  assign custom_redirect_btn_text_hover_color = bk_stts.custom_redirect_btn_text_hover_color | strip
+  assign redirect_btn_text_color = form_stts.atc_btn_text_color | default: '#ffffff'
+  assign redirect_btn_text_hover_color = form_stts.atc_btn_text_hover_color | default: '#ffffff'
   assign redirect_btn_gradient = bk_stts.custom_redirect_btn_gradient | default: 'linear-gradient(90deg, #5b5c61 0%, #2d2e31 100%)'
   assign redirect_btn_gradient_hover = bk_stts.custom_redirect_btn_gradient_hover | default: 'linear-gradient(90deg, #424348 0%, #212225 100%)'
   assign redirect_btn_gradient_key = redirect_btn_gradient | replace: ' ', '' | downcase
@@ -85,6 +87,12 @@
       assign redirect_btn_border_color = redirect_btn_bg_color
       assign redirect_btn_border_hover_color = redirect_btn_bg_hover_color
   endcase
+  if custom_redirect_btn_text_color != blank
+    assign redirect_btn_text_color = custom_redirect_btn_text_color
+  endif
+  if custom_redirect_btn_text_hover_color != blank
+    assign redirect_btn_text_hover_color = custom_redirect_btn_text_hover_color
+  endif
   assign show_redirect_notice = bk_stts.show_custom_redirect_notice
   if show_redirect_notice == blank
     assign show_redirect_notice = true
@@ -290,7 +298,7 @@
         border-color: transparent !important;
       {%- elsif button_style == 'outline' -%}
         background: transparent !important;
-        color: {{ redirect_btn_bg_color }} !important;
+        color: {{ redirect_btn_text_color }} !important;
         border-color: {{ redirect_btn_border_color }} !important;
       {%- else -%}
         background: {{ redirect_btn_bg_color }} !important;
@@ -433,7 +441,7 @@
           border-color: transparent !important;
         {%- elsif button_style == 'outline' -%}
           background: transparent !important;
-          color: {{ redirect_btn_bg_color }} !important;
+          color: {{ redirect_btn_text_color }} !important;
           border-color: {{ redirect_btn_border_color }} !important;
         {%- else -%}
           background: {{ redirect_btn_bg_color }} !important;

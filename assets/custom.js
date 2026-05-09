@@ -112,25 +112,255 @@ jQuery_T4NT(document).ready(function($) {
        setTimeout(fullResetLoadingStates, 150);
        setTimeout(fullResetLoadingStates, 300);
      });
+
+     // ========== Guard against duplicate studio add-to-cart requests on cart page ==========
+     var CART_ADD_ALLOW_KEY = 't4s_studio_cart_add_allow_until';
+     var CART_ADD_ALLOW_TTL = 4000;
+
+     function readSessionJSON(key) {
+       try {
+         var raw = window.sessionStorage.getItem(key);
+         return raw ? JSON.parse(raw) : null;
+       } catch (e) {
+         return null;
+       }
+     }
+
+     function writeSessionJSON(key, value) {
+       try {
+         window.sessionStorage.setItem(key, JSON.stringify(value));
+       } catch (e) {
+         // Ignore storage write failures
+       }
+     }
+
+     function removeSessionKey(key) {
+       try {
+         window.sessionStorage.removeItem(key);
+       } catch (e) {
+         // Ignore storage removal failures
+       }
+     }
+
+     function isCartPage() {
+       return window.location.pathname === '/cart' || document.body.classList.contains('template-cart');
+     }
+
+     function allowNextCartAdd() {
+       writeSessionJSON(CART_ADD_ALLOW_KEY, {
+         expiresAt: Date.now() + CART_ADD_ALLOW_TTL
+       });
+     }
+
+     function hasExplicitCartAddAllowance() {
+       var allowance = readSessionJSON(CART_ADD_ALLOW_KEY);
+       if (!allowance || !allowance.expiresAt) return false;
+
+       if (allowance.expiresAt <= Date.now()) {
+         removeSessionKey(CART_ADD_ALLOW_KEY);
+         return false;
+       }
+
+       return true;
+     }
+
+     function consumeExplicitCartAddAllowance() {
+       if (hasExplicitCartAddAllowance()) {
+         removeSessionKey(CART_ADD_ALLOW_KEY);
+         return true;
+       }
+
+       return false;
+     }
+
+     function getRequestUrl(input) {
+       if (!input) return '';
+       if (typeof input === 'string') return input;
+       if (typeof Request !== 'undefined' && input instanceof Request) return input.url || '';
+       return input.url || '';
+     }
+
+     function isCartAddUrl(url) {
+       if (!url) return false;
+
+       try {
+         var parsed = new URL(url, window.location.origin);
+         return parsed.pathname.indexOf('/cart/add') !== -1;
+       } catch (e) {
+         return String(url).indexOf('/cart/add') !== -1;
+       }
+     }
+
+     function cartPageHasStudioItem() {
+       if (!isCartPage()) return false;
+
+       var cartItems = document.querySelectorAll('[data-cart-item]');
+       if (!cartItems.length) return false;
+
+       return Array.prototype.some.call(cartItems, function(cartItem) {
+         var title = cartItem.querySelector('.t4s-page_cart__title, .t4s-mini_cart__title');
+         var titleText = title ? title.textContent.toLowerCase() : '';
+         if (titleText.indexOf('studio') !== -1) return true;
+
+         var meta = cartItem.querySelector('.t4s-cart_meta_propertyList, .t4s-page_cart__meta, .t4s-mini_cart__meta');
+         var metaText = meta ? meta.textContent.toLowerCase() : '';
+         return metaText.indexOf('choose metal color') !== -1 ||
+           metaText.indexOf('choose your finish') !== -1 ||
+           metaText.indexOf('additional comments') !== -1 ||
+           metaText.indexOf('design:') !== -1;
+       });
+     }
+
+     function isExplicitCartAddTrigger(target) {
+       if (!target || typeof target.closest !== 'function') return false;
+
+       return !!target.closest(
+         '[data-atc-form], [data-action-atc], [data-add-gift], a[href*="/cart/add"], ' +
+         'button[type="submit"][name="add"], input[type="submit"][name="add"], ' +
+         '.t4s-quantity-selector, .t4s-quantity-wrapper button, [data-quantity-selector], [data-cart-qty]'
+       );
+     }
+
+     function isHeaderNavigationTrigger(target) {
+       if (!target || typeof target.closest !== 'function') return false;
+
+       var link = target.closest('.t4s-section-header a[href], .t4s-header__wrapper a[href], [data-menu-drawer]');
+       if (!link) return false;
+       return !isCartAddUrl(link.getAttribute('href') || link.href || '');
+     }
+
+     function shouldBlockSilentCartAdd(url) {
+       if (!isCartPage() || !isCartAddUrl(url)) return false;
+       if (!cartPageHasStudioItem()) return false;
+       if (consumeExplicitCartAddAllowance()) return false;
+       return true;
+     }
+
+     function blockedCartAddResponse() {
+       var body = JSON.stringify({ blocked: true });
+       if (typeof Response === 'function') {
+         return new Response(body, {
+           status: 200,
+           headers: { 'Content-Type': 'application/json' }
+         });
+       }
+
+       return {
+         ok: true,
+         status: 200,
+         json: function() {
+           return Promise.resolve({ blocked: true });
+         },
+         text: function() {
+           return Promise.resolve(body);
+         }
+       };
+     }
+
+     document.addEventListener('click', function(event) {
+       if (!isCartPage()) return;
+
+       if (isHeaderNavigationTrigger(event.target)) {
+         removeSessionKey(CART_ADD_ALLOW_KEY);
+         return;
+       }
+
+       if (isExplicitCartAddTrigger(event.target)) {
+         allowNextCartAdd();
+       }
+     }, true);
+
+     document.addEventListener('submit', function(event) {
+       var form = event.target;
+       if (!(form instanceof HTMLFormElement)) return;
+
+       var action = form.getAttribute('action') || '';
+       if (!isCartAddUrl(action)) return;
+
+       if (isCartPage()) {
+         if (cartPageHasStudioItem() && !hasExplicitCartAddAllowance()) {
+           event.preventDefault();
+           event.stopPropagation();
+           return;
+         }
+
+         consumeExplicitCartAddAllowance();
+       }
+     }, true);
+
+     (function() {
+       if (typeof HTMLFormElement === 'undefined') return;
+
+       var nativeSubmit = HTMLFormElement.prototype.submit;
+       if (typeof nativeSubmit === 'function') {
+         HTMLFormElement.prototype.submit = function() {
+           var action = this.getAttribute('action') || '';
+           if (shouldBlockSilentCartAdd(action)) return;
+           return nativeSubmit.apply(this, arguments);
+         };
+       }
+
+       var nativeRequestSubmit = HTMLFormElement.prototype.requestSubmit;
+       if (typeof nativeRequestSubmit === 'function') {
+         HTMLFormElement.prototype.requestSubmit = function() {
+           var action = this.getAttribute('action') || '';
+           if (isCartAddUrl(action) && isCartPage() && cartPageHasStudioItem() && !hasExplicitCartAddAllowance()) return;
+           return nativeRequestSubmit.apply(this, arguments);
+         };
+       }
+     })();
+
+     (function() {
+       if (!window.navigator || typeof window.navigator.sendBeacon !== 'function') return;
+
+       var originalSendBeacon = window.navigator.sendBeacon.bind(window.navigator);
+       window.navigator.sendBeacon = function(url, data) {
+         if (shouldBlockSilentCartAdd(url)) return true;
+         return originalSendBeacon(url, data);
+       };
+     })();
      
      // 监听fetch请求完成 - 拦截Ajax请求
      (function() {
        var originalFetch = window.fetch;
-       window.fetch = function() {
+       if (typeof originalFetch !== 'function') return;
+
+       window.fetch = function(input, init) {
+         var requestUrl = getRequestUrl(input);
+         if (shouldBlockSilentCartAdd(requestUrl)) {
+           return Promise.resolve(blockedCartAddResponse());
+         }
+
          var promise = originalFetch.apply(this, arguments);
          promise.then(function(response) {
-           // 检查是否是购物车相关请求
-           if (arguments[0] && typeof arguments[0] === 'string' && 
-               (arguments[0].includes('/cart') || arguments[0].includes('add.js'))) {
+           if (requestUrl && (requestUrl.indexOf('/cart') !== -1 || requestUrl.indexOf('add.js') !== -1)) {
              setTimeout(fullResetLoadingStates, 100);
              setTimeout(fullResetLoadingStates, 300);
            }
            return response;
          }).catch(function() {
-           // 请求失败也要重置loading状态
            setTimeout(fullResetLoadingStates, 100);
          });
          return promise;
+       };
+     })();
+
+     (function() {
+       var originalOpen = XMLHttpRequest.prototype.open;
+       var originalSend = XMLHttpRequest.prototype.send;
+
+       XMLHttpRequest.prototype.open = function(method, url) {
+         this._t4sRequestUrl = url;
+         return originalOpen.apply(this, arguments);
+       };
+
+       XMLHttpRequest.prototype.send = function() {
+         if (shouldBlockSilentCartAdd(this._t4sRequestUrl)) {
+           this.abort();
+           return;
+         }
+
+         return originalSend.apply(this, arguments);
        };
      })();
      
@@ -258,9 +488,152 @@ jQuery_T4NT(document).ready(function($) {
 	     // Fallback
 	     return '$' + (cents / 100).toFixed(2);
 	   }
+
+	   // ========== Cart image persistence for customized studio items ==========
+	   var CART_IMAGE_STATE_KEY = 't4s_cart_item_images';
+	   var cartImageState = readCartImageState();
+
+	   function readCartImageState() {
+	     try {
+	       var stored = window.sessionStorage.getItem(CART_IMAGE_STATE_KEY);
+	       return stored ? JSON.parse(stored) : {};
+	     } catch (e) {
+	       return {};
+	     }
+	   }
+
+	   function writeCartImageState() {
+	     try {
+	       window.sessionStorage.setItem(CART_IMAGE_STATE_KEY, JSON.stringify(cartImageState));
+	     } catch (e) {
+	       // Ignore storage write failures
+	     }
+	   }
+
+	   function getCartImageNodes(cartItem) {
+	     if (!cartItem) return {};
+	     var imageLink = cartItem.querySelector('[data-cart-item-image]');
+	     if (!imageLink) return {};
+	     return {
+	       imageLink: imageLink,
+	       imageTag: imageLink.querySelector('img')
+	     };
+	   }
+
+	   function normalizeBackgroundImage(backgroundImage) {
+	     if (!backgroundImage || backgroundImage === 'none') return '';
+	     return backgroundImage;
+	   }
+
+	   function captureCartItemImages(context) {
+	     var root = context && context.querySelectorAll ? context : document;
+	     root.querySelectorAll('[data-cart-item-key]').forEach(function(cartItem) {
+	       var itemKey = cartItem.getAttribute('data-cart-item-key');
+	       var nodes = getCartImageNodes(cartItem);
+	       if (!itemKey || !nodes.imageLink) return;
+
+	       var imageSrc = '';
+	       var dataSrc = '';
+	       if (nodes.imageTag) {
+	         imageSrc = nodes.imageTag.getAttribute('src') || '';
+	         dataSrc = nodes.imageTag.getAttribute('data-src') || '';
+	       }
+
+	       var backgroundImage = normalizeBackgroundImage(nodes.imageLink.style.backgroundImage || window.getComputedStyle(nodes.imageLink).backgroundImage);
+	       if (!backgroundImage && !imageSrc && !dataSrc) return;
+
+	       cartImageState[itemKey] = {
+	         backgroundImage: backgroundImage,
+	         src: imageSrc,
+	         dataSrc: dataSrc
+	       };
+	     });
+
+	     writeCartImageState();
+	   }
+
+	   function restoreCartItemImages(context) {
+	     var root = context && context.querySelectorAll ? context : document;
+	     root.querySelectorAll('[data-cart-item-key]').forEach(function(cartItem) {
+	       var itemKey = cartItem.getAttribute('data-cart-item-key');
+	       var state = itemKey ? cartImageState[itemKey] : null;
+	       var nodes = getCartImageNodes(cartItem);
+
+	       if (!state || !nodes.imageLink) return;
+
+	       if (state.backgroundImage) {
+	         nodes.imageLink.style.backgroundImage = state.backgroundImage;
+	       }
+
+	       if (nodes.imageTag) {
+	         if (state.dataSrc) {
+	           nodes.imageTag.setAttribute('data-src', state.dataSrc);
+	         }
+	         if (state.src) {
+	           nodes.imageTag.setAttribute('src', state.src);
+	         } else if (state.dataSrc) {
+	           nodes.imageTag.setAttribute('src', state.dataSrc);
+	         }
+	         nodes.imageTag.removeAttribute('srcset');
+	       }
+	     });
+	   }
+
+	   function syncCartItemImages(context) {
+	     restoreCartItemImages(context);
+	     captureCartItemImages(context);
+	   }
+
+	   function queueCartImageSync() {
+	     setTimeout(function() {
+	       syncCartItemImages(document);
+	     }, 0);
+	     setTimeout(function() {
+	       syncCartItemImages(document);
+	     }, 120);
+	     setTimeout(function() {
+	       syncCartItemImages(document);
+	     }, 350);
+	   }
+
+	   document.addEventListener('click', function(event) {
+	     if (event.target.closest('[data-increase-qty], [data-decrease-qty], [data-cart-remove], [data-action-change]')) {
+	       captureCartItemImages(document);
+	     }
+	   }, true);
+
+	   document.addEventListener('change', function(event) {
+	     if (event.target.matches('[data-action-change]')) {
+	       captureCartItemImages(document);
+	     }
+	   }, true);
+
+	   $(document).on('add:cart:success cart:updated ajaxCart:afterRender cart:refresh drawer:open drawer:opened', function() {
+	     queueCartImageSync();
+	   });
+
+	   if (window.MutationObserver) {
+	     var cartImageObserver = new MutationObserver(function(mutations) {
+	       var shouldSync = mutations.some(function(mutation) {
+	         if (mutation.type !== 'childList') return false;
+	         return Array.prototype.some.call(mutation.addedNodes, function(node) {
+	           if (!node || node.nodeType !== 1) return false;
+	           return node.matches('[data-cart-item], [data-cart-items]') || !!node.querySelector('[data-cart-item], [data-cart-items]');
+	         });
+	       });
+
+	       if (shouldSync) {
+	         queueCartImageSync();
+	       }
+	     });
+
+	     cartImageObserver.observe(document.body, {
+	       childList: true,
+	       subtree: true
+	     });
+	   }
 	   
 	   // 页面加载时初始化
 	   updateBFDiscountPrice();
+	   queueCartImageSync();
 });
-
-

@@ -26,6 +26,13 @@
   assign title_label = bk_stts.title_label | default: ''
   assign title_spacing = bk_stts.title_spacing | default: 16
   assign title_gap = bk_stts.title_gap | default: 2
+  assign title_font_size = bk_stts.title_font_size | default: 14
+  assign title_font_weight = bk_stts.title_font_weight | default: 400
+  assign title_value_color = bk_stts.title_value_color | default: bk_stts.title_color | default: '#000000'
+  assign title_value_font_size = bk_stts.title_value_font_size | default: title_font_size
+  assign title_value_font_weight = bk_stts.title_value_font_weight | default: title_font_weight
+  assign mobile_title_value_font_size = bk_stts.title_value_font_size_mobile | default: title_value_font_size
+  assign mobile_title_value_font_weight = bk_stts.title_value_font_weight_mobile | default: title_value_font_weight
   assign title_layout = bk_stts.title_layout | default: 'space-between'
   assign title_justify = title_layout
   if title_layout == 'left'
@@ -54,7 +61,7 @@
   {%- assign independent_form_id = 'product-form-independent-' | append: pr_se_id -%}
   
   {%- comment -%} 渲染一个独立的 product form，包含必要的包装器 {%- endcomment -%}
-  <div class="t4s-independent-color-selector-wrapper t4s-independent-color-selector-wrapper--title-split t4s-independent-color-selector-wrapper--title-{{ title_layout | handle }} t4s-independent-color-selector-wrapper--main-product-title-right" style="--t4s-color-title-spacing: {{ title_spacing }}px; --t4s-color-title-gap: {{ title_gap }}px; --t4s-color-title-justify: {{ title_justify }};">
+  <div class="t4s-independent-color-selector-wrapper t4s-independent-color-selector-wrapper--title-split t4s-independent-color-selector-wrapper--title-{{ title_layout | handle }} t4s-independent-color-selector-wrapper--main-product-title-right" style="--t4s-color-title-spacing: {{ title_spacing }}px; --t4s-color-title-gap: {{ title_gap }}px; --t4s-color-title-justify: {{ title_justify }}; --t4s-color-title-value-color: {{ title_value_color }};">
     <div data-callBackVariant id="t4s-callBackVariant{{ independent_form_id }}">
       {%- comment -%} 隐藏的 JSON 数据（主题 JS 需要）{%- endcomment -%}
       <script class="pr_variants_json" type="application/json">
@@ -113,7 +120,7 @@
               {%- if name_sizeg == name_downcase %}{{ html_sizeg }}{% endif %}
             </span>
             <span class="t4s-swatch__title-right" style="{% if title_layout == 'space-between' %}margin-left: auto !important;{% else %}margin-left: 0 !important;{% endif %}">
-              <span data-current-value class="t4s-dib t4s-swatch__current">
+              <span data-current-value class="t4s-dib t4s-swatch__current t4s-color-title-value">
                 {{- selected_value | default: choose_an_option -}}
               </span>
             </span>
@@ -168,7 +175,7 @@
                 <div class="t4s-dropdown__header">
                   <span class="t4s-dropdown__title">
                     {{- option_name }}:
-                    <span data-current-value>{{ selected_value | default: choose_an_option }}</span>
+                    <span data-current-value class="t4s-color-title-value">{{ selected_value | default: choose_an_option }}</span>
                   </span>
                   <button type="button" data-dropdown-close aria-label="{{ 'general.aria.close' | t }}">
                     <svg role="presentation" class="t4s-iconsvg-close" viewBox="0 0 16 14">
@@ -569,10 +576,9 @@
           clickedItem.classList.add('is--selected');
           
           // 更新当前值显示
-          var currentValueEl = swatchOption.querySelector('[data-current-value]');
-          if (currentValueEl) {
+          swatchOption.querySelectorAll('[data-current-value]').forEach(function(currentValueEl) {
             currentValueEl.textContent = selectedValue;
-          }
+          });
           
           // 🔧 关键修复：判断是单层还是多层逻辑
           var independentOptions = independentSwatch.querySelectorAll('[data-swatch-option]');
@@ -680,10 +686,9 @@
                             itemToSelect.classList.add('is--selected');
                             
                             // 更新当前值显示
-                            var mainCurrentValueEl = mainOption.querySelector('[data-current-value]');
-                            if (mainCurrentValueEl) {
+                            mainOption.querySelectorAll('[data-current-value]').forEach(function(mainCurrentValueEl) {
                               mainCurrentValueEl.textContent = valueToSelect;
-                            }
+                            });
                           }
                         }
                       });
@@ -722,10 +727,9 @@
                       independentItem.classList.add('is--selected');
                       
                       // 更新当前值显示
-                      var currentValueEl = independentOption.querySelector('[data-current-value]');
-                      if (currentValueEl) {
+                      independentOption.querySelectorAll('[data-current-value]').forEach(function(currentValueEl) {
                         currentValueEl.textContent = selectedValue;
-                      }
+                      });
                     }
                   }
                   
@@ -820,10 +824,9 @@
                   independentItem.classList.add('is--selected');
                   
                   // 更新当前值显示
-                  var currentValueEl = independentOption.querySelector('[data-current-value]');
-                  if (currentValueEl) {
+                  independentOption.querySelectorAll('[data-current-value]').forEach(function(currentValueEl) {
                     currentValueEl.textContent = itemValue;
-                  }
+                  });
                 } else {
                   independentItem.classList.remove('is--selected');
                 }
@@ -908,6 +911,15 @@
       white-space: normal;
     }
 
+    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__title .t4s-color-title-value,
+    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-dropdown__title .t4s-color-title-value,
+    .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__current.t4s-color-title-value {
+      color: var(--t4s-color-title-value-color) !important;
+      font-size: {{ title_value_font_size }}px !important;
+      font-weight: {{ title_value_font_weight }} !important;
+      line-height: 1.2 !important;
+    }
+
     .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__title a {
       margin: 0;
     }
@@ -920,6 +932,14 @@
       .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__title {
         gap: 12px;
         margin-bottom: var(--t4s-color-title-spacing, 16px) !important;
+      }
+
+      .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__title .t4s-color-title-value,
+      .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-dropdown__title .t4s-color-title-value,
+      .t4s-independent-color-selector-wrapper--main-product-title-right .t4s-swatch__current.t4s-color-title-value {
+        color: var(--t4s-color-title-value-color) !important;
+        font-size: {{ mobile_title_value_font_size }}px !important;
+        font-weight: {{ mobile_title_value_font_weight }} !important;
       }
     }
   </style>

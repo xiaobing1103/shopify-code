@@ -37,10 +37,11 @@
     position: relative !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
-    {% comment %} overflow: hidden !important; {% endcomment %}
     border-radius: {{ bk_stts.bundle_border_radius | default: 8 }}px !important;
+    overflow: visible !important;
   }
   .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__inner {
+    box-sizing: border-box !important;
     border: {{ bk_stts.bundle_border_width | default: 2 }}px solid {{ bk_stts.bundle_border_color | default: '#E0E0E0' }} !important;
     border-radius: {{ bk_stts.bundle_border_radius | default: 8 }}px !important;
     background: {{ bk_stts.bundle_bg_color | default: '#F5F5F5' }} !important;
@@ -71,18 +72,20 @@
 
   }
   .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__badge {
-    width: 100% !important;
+    box-sizing: border-box !important;
+    width: calc(100% + 2px) !important;
     padding: {{ bk_stts.bundle_badge_padding_v | default: 8 }}px {{ bk_stts.bundle_badge_padding_h | default: 8 }}px !important;
+    margin: -1px -1px 0 !important;
     {% if bk_stts.bundle_badge_use_gradient and bk_stts.bundle_badge_gradient != blank %}
       background: {{ bk_stts.bundle_badge_gradient }} !important;
     {% else %}
-      background: #555555 !important;
+      background: {{ bk_stts.bundle_discount_bg_color | default: '#555555' }} !important;
     {% endif %}
-    color: #FFFFFF !important;
+    color: {{ bk_stts.bundle_discount_text_color | default: '#FFFFFF' }} !important;
     font-size: 12px !important;
     font-weight: 600 !important;
     text-align: center !important;
-    border-radius: 7px 7px 0 0
+    border-radius: {{ bk_stts.bundle_border_radius | default: 8 }}px {{ bk_stts.bundle_border_radius | default: 8 }}px 0 0 !important;
   }
   .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__content {
     padding: {{ bk_stts.bundle_padding | default: 8 }}px !important;
@@ -100,9 +103,9 @@
     {% if bk_stts.bundle_badge_use_gradient and bk_stts.bundle_badge_gradient != blank %}
       background: {{ bk_stts.bundle_badge_gradient }} !important;
     {% else %}
-      background: #555555 !important;
+      background: {{ bk_stts.bundle_discount_bg_color | default: '#555555' }} !important;
     {% endif %}
-    color: #FFFFFF !important;
+    color: {{ bk_stts.bundle_discount_text_color | default: '#FFFFFF' }} !important;
     font-size: 9px !important;
     font-weight: 600 !important;
     text-align: left !important;
@@ -110,11 +113,11 @@
     align-items: center !important;
     justify-content: flex-start !important;
     padding: 0 12px !important;
-    margin-top: 5px !important;
+    margin: 5px 0 0 -10px !important;
     position: relative !important;
-    left: -10px !important;
+    left: auto !important;
     border-radius: 5px 5px 5px 0px !important;
-    border: 1px solid #333 !important;
+    border: {{ bk_stts.bundle_fold_tag_border_width | default: 1 }}px solid {{ bk_stts.bundle_fold_tag_border_color | default: '#333333' }} !important;
     opacity: 1 !important;
     box-shadow: -3px 0 8px rgba(201,169,97,0.4) !important;
     white-space: nowrap !important;
@@ -142,7 +145,7 @@
     height: 0 !important;
     border-style: solid !important;
     border-width: 0 0 10px 10px !important;
-    border-color: transparent transparent #333 transparent !important;
+    border-color: transparent transparent {{ bk_stts.bundle_fold_tag_border_color | default: '#333333' }} transparent !important;
     transform: scaleY(-1) !important;
   }
   /* 空标签时隐藏三角形 */
@@ -156,9 +159,12 @@
     {% else %}
       background: {{ bk_stts.bundle_selected_border_color | default: '#303030' }} !important;
     {% endif %}
-    border: 1px solid  #C9A961 !important;
+    border: {{ bk_stts.bundle_fold_tag_border_width | default: 1 }}px solid {{ bk_stts.bundle_fold_tag_selected_border_color | default: '#C9A961' }} !important;
 
 
+  }
+  .t4s-bundle-option.is-selected .t4s-bundle-fold-tag::after {
+    border-color: transparent transparent {{ bk_stts.bundle_fold_tag_selected_border_color | default: '#C9A961' }} transparent !important;
   }
   .t4s-bundle-option__label {
     font-size: {{ bk_stts.bundle_quantity_size | default: 16 }}px !important;
@@ -178,6 +184,7 @@
     }
   {%- endif -%}
   .t4s-bundle-option__shipping {
+    box-sizing: border-box !important;
     width: 100% !important;
     padding: {{ bk_stts.bundle_shipping_padding_v | default: 7 }}px {{ bk_stts.bundle_shipping_padding_h | default: 8 }}px !important;
     background: {{ bk_stts.bundle_shipping_bg_color | default: '#E8E8E8' }} !important;
@@ -186,17 +193,30 @@
     text-align: center !important;
     min-height: 24px !important;
     line-height: 1.2 !important;
-    border-radius: 0 0 6px 6px !important;
+    border-radius: 0 0 max(0px, calc({{ bk_stts.bundle_border_radius | default: 8 }}px - {{ bk_stts.bundle_border_width | default: 2 }}px)) max(0px, calc({{ bk_stts.bundle_border_radius | default: 8 }}px - {{ bk_stts.bundle_border_width | default: 2 }}px)) !important;
   }
   .t4s-bundle-option__shipping-placeholder {
+    box-sizing: border-box !important;
     width: 100% !important;
     height: 24px !important;
+  }
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__shipping--pack1 {
+    background: {{ bk_stts.pack1_shipping_bg_color | default: bk_stts.bundle_shipping_bg_color | default: '#E8E8E8' }} !important;
+    color: {{ bk_stts.pack1_shipping_text_color | default: bk_stts.bundle_shipping_text_color | default: '#555555' }} !important;
+  }
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__shipping--pack2 {
+    background: {{ bk_stts.pack2_shipping_bg_color | default: bk_stts.bundle_shipping_bg_color | default: '#E8E8E8' }} !important;
+    color: {{ bk_stts.pack2_shipping_text_color | default: bk_stts.bundle_shipping_text_color | default: '#555555' }} !important;
+  }
+  .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__shipping--pack3 {
+    background: {{ bk_stts.pack3_shipping_bg_color | default: bk_stts.bundle_shipping_bg_color | default: '#E8E8E8' }} !important;
+    color: {{ bk_stts.pack3_shipping_text_color | default: bk_stts.bundle_shipping_text_color | default: '#555555' }} !important;
   }
   .t4s-bundle-option__inner::after {
     content: '' !important;
     position: absolute !important;
-    bottom: 0 !important;
-    right: 0 !important;
+    bottom: 0px !important;
+    right: 0px !important;
     border-style: solid !important;
     border-width: 0 0 {{ bk_stts.bundle_checkmark_triangle_size | default: 35 }}px {{ bk_stts.bundle_checkmark_triangle_size | default: 35 }}px !important;
     border-color: transparent !important;
@@ -212,8 +232,8 @@
   }
   .t4s-bundle-option__checkmark {
     position: absolute !important;
-    bottom: {{ bk_stts.bundle_checkmark_bottom | default: 4 }}px !important;
-    right: {{ bk_stts.bundle_checkmark_right | default: 4 }}px !important;
+    bottom: calc({{ bk_stts.bundle_checkmark_bottom | default: 4 }}px + 1px) !important;
+    right: calc({{ bk_stts.bundle_checkmark_right | default: 4 }}px + 1px) !important;
     color: {{ bk_stts.bundle_checkmark_color | default: '#FFFFFF' }} !important;
     font-size: {{ bk_stts.bundle_checkmark_size | default: 16 }}px !important;
     font-weight: 700 !important;
@@ -251,6 +271,7 @@
     {% if bk_stts.mobile_keep_horizontal %}
       .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__inner {
         height: 100% !important;
+        min-height: {{ bk_stts.mobile_min_height | default: 80 }}px !important;
         padding: {{ bk_stts.bundle_padding_mobile | default: 6 }}px !important;
       }
       .t4s-bundle-selector-block-{{ block_id }} .t4s-bundle-option__badge {
@@ -273,8 +294,8 @@
         font-size: {{ bk_stts.mobile_checkmark_size | default: 12 }}px !important;
         width: {{ bk_stts.mobile_checkmark_size | default: 12 }}px !important;
         height: {{ bk_stts.mobile_checkmark_size | default: 12 }}px !important;
-        bottom: {{ bk_stts.mobile_checkmark_bottom | default: 2 }}px !important;
-        right: {{ bk_stts.mobile_checkmark_right | default: 2 }}px !important;
+        bottom: calc({{ bk_stts.mobile_checkmark_bottom | default: 2 }}px + 1px) !important;
+        right: calc({{ bk_stts.mobile_checkmark_right | default: 2 }}px + 1px) !important;
       }
       .t4s-bundle-option__inner::after {
         border-width: 0 0 {{ bk_stts.mobile_checkmark_triangle_size | default: 25 }}px {{ bk_stts.mobile_checkmark_triangle_size | default: 25 }}px !important;
@@ -354,7 +375,15 @@
                 {%- if discount_percent > 0 -%}
                   <div class="t4s-bundle-option__badge">SAVE {{ discount_percent }}%</div>
                 {%- else -%}
-                  <div class="t4s-bundle-option__badge">{{ bk_stts.pack1_title | default: 'Standard' }}</div>
+                  <div class="t4s-bundle-option__badge">
+                    {%- if forloop.index == 1 -%}
+                      {{ bk_stts.pack1_title | default: 'Standard' }}
+                    {%- elsif forloop.index == 2 -%}
+                      {{ bk_stts.pack2_title | default: 'Recommended' }}
+                    {%- elsif forloop.index == 3 -%}
+                      {{ bk_stts.pack3_title | default: 'Best Value' }}
+                    {%- endif -%}
+                  </div>
                 {%- endif -%}
                 {%- comment -%} 始终渲染 fold tag，即使为空（保持布局一致） {%- endcomment -%}
                 {%- if forloop.index == 1 -%}
@@ -380,10 +409,12 @@
                   {%- endunless -%}
                 </div>
                 
-                {%- if forloop.index > 1 and bk_stts.pack2_show_shipping -%}
-                  <div class="t4s-bundle-option__shipping">{{ bk_stts.pack2_shipping_text | default: 'Free Shipping' }}</div>
-                {%- elsif forloop.index > 2 and bk_stts.pack3_show_shipping -%}
-                  <div class="t4s-bundle-option__shipping">{{ bk_stts.pack3_shipping_text | default: 'Free Shipping' }}</div>
+                {%- if forloop.index == 1 and bk_stts.pack1_show_shipping -%}
+                  <div class="t4s-bundle-option__shipping t4s-bundle-option__shipping--pack1">{{ bk_stts.pack1_shipping_text | default: 'Free Shipping' }}</div>
+                {%- elsif forloop.index == 2 and bk_stts.pack2_show_shipping -%}
+                  <div class="t4s-bundle-option__shipping t4s-bundle-option__shipping--pack2">{{ bk_stts.pack2_shipping_text | default: 'Free Shipping' }}</div>
+                {%- elsif forloop.index == 3 and bk_stts.pack3_show_shipping -%}
+                  <div class="t4s-bundle-option__shipping t4s-bundle-option__shipping--pack3">{{ bk_stts.pack3_shipping_text | default: 'Free Shipping' }}</div>
                 {%- else -%}
                   <div class="t4s-bundle-option__shipping-placeholder"></div>
                 {%- endif -%}
@@ -444,7 +475,7 @@
                 {%- endunless -%}
               </div>
               {%- if bk_stts.pack1_show_shipping -%}
-                <div class="t4s-bundle-option__shipping">{{ bk_stts.pack1_shipping_text | default: 'Free Shipping' }}</div>
+                <div class="t4s-bundle-option__shipping t4s-bundle-option__shipping--pack1">{{ bk_stts.pack1_shipping_text | default: 'Free Shipping' }}</div>
               {%- else -%}
                 <div class="t4s-bundle-option__shipping-placeholder"></div>
               {%- endif -%}
@@ -478,7 +509,11 @@
             style="position: relative; cursor: pointer;"
           >
             <div class="t4s-bundle-option__inner">
-              <div class="t4s-bundle-option__badge">SAVE {{ pack2_discount }}%</div>
+              {%- if pack2_discount > 0 -%}
+                <div class="t4s-bundle-option__badge">SAVE {{ pack2_discount }}%</div>
+              {%- else -%}
+                <div class="t4s-bundle-option__badge">{{ bk_stts.pack2_title | default: 'Recommended' }}</div>
+              {%- endif -%}
               {%- comment -%} 始终渲染 fold tag，即使为空（保持布局一致） {%- endcomment -%}
               <div class="t4s-bundle-fold-tag">{{ bk_stts.pack2_fold_tag_text }}</div>
               <div class="t4s-bundle-option__content">
@@ -496,7 +531,7 @@
                 {%- endunless -%}
               </div>
               {%- if bk_stts.pack2_show_shipping -%}
-                <div class="t4s-bundle-option__shipping">{{ bk_stts.pack2_shipping_text | default: 'Free Shipping' }}</div>
+                <div class="t4s-bundle-option__shipping t4s-bundle-option__shipping--pack2">{{ bk_stts.pack2_shipping_text | default: 'Free Shipping' }}</div>
               {%- else -%}
                 <div class="t4s-bundle-option__shipping-placeholder"></div>
               {%- endif -%}
@@ -530,7 +565,11 @@
             style="position: relative; cursor: pointer;"
           >
             <div class="t4s-bundle-option__inner">
-              <div class="t4s-bundle-option__badge">SAVE {{ pack3_discount }}%</div>
+              {%- if pack3_discount > 0 -%}
+                <div class="t4s-bundle-option__badge">SAVE {{ pack3_discount }}%</div>
+              {%- else -%}
+                <div class="t4s-bundle-option__badge">{{ bk_stts.pack3_title | default: 'Best Value' }}</div>
+              {%- endif -%}
               {%- comment -%} 始终渲染 fold tag，即使为空（保持布局一致） {%- endcomment -%}
               <div class="t4s-bundle-fold-tag">{{ bk_stts.pack3_fold_tag_text }}</div>
               <div class="t4s-bundle-option__content">
@@ -548,7 +587,7 @@
                 {%- endunless -%}
               </div>
               {%- if bk_stts.pack3_show_shipping -%}
-                <div class="t4s-bundle-option__shipping">{{ bk_stts.pack3_shipping_text | default: 'Free Shipping' }}</div>
+                <div class="t4s-bundle-option__shipping t4s-bundle-option__shipping--pack3">{{ bk_stts.pack3_shipping_text | default: 'Free Shipping' }}</div>
               {%- else -%}
                 <div class="t4s-bundle-option__shipping-placeholder"></div>
               {%- endif -%}

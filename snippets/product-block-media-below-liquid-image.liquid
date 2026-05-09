@@ -4,27 +4,16 @@
     assign image_height = bk_stts.image_height | default: 0
     assign image_height_mobile = bk_stts.image_height_mobile | default: image_height
     assign image_fit = bk_stts.image_fit | default: 'cover'
-    assign show_on_desktop = true
-    assign show_on_mobile = true
-
-    if bk_stts.show_on_desktop == false
-      assign show_on_desktop = false
-    endif
-    if bk_stts.show_on_mobile == false
-      assign show_on_mobile = false
-    endif
+    assign show_on_mobile = bk_stts.show_on_mobile | default: false
   -%}
 
   <style>
-    .t4s-custom-liquid-image_{{ bk_id }} {
+    .t4s-media-below-liquid-image_{{ bk_id }} {
       margin-top: {{ bk_stts.margin_top | default: 16 }}px;
       margin-bottom: {{ bk_stts.margin_bottom | default: 16 }}px;
-      {% unless show_on_desktop %}
-        display: none !important;
-      {% endunless %}
     }
 
-    .t4s-custom-liquid-image_{{ bk_id }} img {
+    .t4s-media-below-liquid-image_{{ bk_id }} img {
       display: block;
       width: 100%;
       {% if image_height > 0 %}
@@ -36,15 +25,13 @@
     }
 
     @media (max-width: 767px) {
-      .t4s-custom-liquid-image_{{ bk_id }} {
-        {% if show_on_mobile %}
-          display: block !important;
-        {% else %}
+      .t4s-media-below-liquid-image_{{ bk_id }} {
+        {% unless show_on_mobile %}
           display: none !important;
-        {% endif %}
+        {% endunless %}
       }
 
-      .t4s-custom-liquid-image_{{ bk_id }} img {
+      .t4s-media-below-liquid-image_{{ bk_id }} img {
         {% if image_height_mobile > 0 %}
           height: {{ image_height_mobile }}px;
           object-fit: {{ image_fit }};
@@ -56,7 +43,7 @@
   </style>
 
   <div
-    class="t4s-custom-liquid-image_{{ bk_id }} t4s-pr__custom-liquid-image"
+    class="t4s-media-below-liquid-image_{{ bk_id }} t4s-product-media-block t4s-product-media-block--liquid-image{% unless show_on_mobile %} t4s-dn-mb{% endunless %}"
     {{ block.shopify_attributes }}
   >
     {{

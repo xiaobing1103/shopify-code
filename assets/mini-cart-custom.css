@@ -16,13 +16,13 @@
 }
 
 /* ============================================
-   HEADER: Title + Variant Badge Row
+   HEADER: Title + Variant Badge Stack
    ============================================ */
 .t4s-mini_cart__header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
   margin-bottom: 10px;
 }
 
@@ -56,6 +56,7 @@
   color: #1976D2;
   white-space: nowrap;
   flex-shrink: 0;
+  align-self: flex-start;
   line-height: 1.2;
 }
 

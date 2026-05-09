@@ -31,6 +31,16 @@
   endif
 -%}
 <style>
+  #shopify-section-{{ se_id }} {
+    margin-top: {{ se_stts.main_product_margin_top | default: 0 }}px !important;
+  }
+
+  @media (max-width: 767px) {
+    #shopify-section-{{ se_id }} {
+      margin-top: {{ se_stts.main_product_margin_top_mobile | default: se_stts.main_product_margin_top | default: 0 }}px !important;
+    }
+  }
+
   /* 桌面端 - 保持原有布局，只添加样式 */
   @media (min-width: 768px) {
     .t4s-main-product__content.t4s-product-media__thumbnails_left .t4s-col-thumb,
@@ -311,8 +321,18 @@
       margin-top: {{ se_stts.info_wrapper_margin_top_mobile | default: 0 }}px !important;
       margin-bottom: {{ se_stts.info_wrapper_margin_bottom_mobile | default: 0 }}px !important;
       padding: {{ se_stts.info_wrapper_padding_mobile | default: 16 }}px !important;
+      border: {{ se_stts.info_wrapper_border_width_mobile | default: se_stts.info_wrapper_border_width | default: 1 }}px solid {{ se_stts.info_wrapper_border_color_mobile | default: se_stts.info_wrapper_border_color | default: 'rgba(0, 0, 0, 0.1)' }} !important;
       border-radius: {{ se_stts.info_wrapper_border_radius_mobile | default: 8 }}px !important;
       box-shadow: {{ se_stts.info_wrapper_shadow_mobile | default: '0 2px 8px rgba(0, 0, 0, 0.06)' }} !important;
+      {% if se_stts.info_wrapper_bg_gradient_mobile != blank %}
+      background: {{ se_stts.info_wrapper_bg_gradient_mobile }} !important;
+      {% elsif se_stts.info_wrapper_bg_color_mobile != blank %}
+      background: {{ se_stts.info_wrapper_bg_color_mobile }} !important;
+      {% elsif se_stts.info_wrapper_bg_gradient != blank %}
+      background: {{ se_stts.info_wrapper_bg_gradient }} !important;
+      {% else %}
+      background: {{ se_stts.info_wrapper_bg_color | default: '#ffffff' }} !important;
+      {% endif %}
     }
   }
 </style>
