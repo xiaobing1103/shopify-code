@@ -37,8 +37,13 @@
     assign max_qty = item_variant.quantity_rule.max
   endif
   assign item_title_lower = item_pr.title | downcase
+  assign item_design_id = item.properties.Design | default: item.properties.design | default: item.properties._mczr_designId
+  assign is_studio_cart_item = false
+  if item_title_lower contains 'studio' or item_design_id != blank
+    assign is_studio_cart_item = true
+  endif
   assign hide_qty_discount_bar = false
-  if item_title_lower contains 'studio'
+  if is_studio_cart_item
     assign hide_qty_discount_bar = true
   endif
   if show_qty_discount_progress == false
@@ -347,17 +352,26 @@
     </div>
     <div class="t4s-col-12 t4s-col-md-4 t4s-col-lg-2 t4s-col-item t4s-text-center t4s-page_cart__actions">
       <div data-quantity-wrapper class="t4s-quantity-wrapper t4s-quantity-cart-item">
-        <button data-quantity-selector data-decrease-qty type="button" class="t4s-quantity-selector is--minus">
-          {% if item_qty > 1 or min_qty == 1 %}
+        {% if item_qty > 1 %}
+          <button data-quantity-selector data-decrease-qty type="button" class="t4s-quantity-selector is--minus">
             <svg focusable="false" class="icon icon--minus" viewBox="0 0 10 2" role="presentation">
               <path d="M10 0v2H0V0z" fill="currentColor"></path>
             </svg>
-          {% else %}
+          </button>
+        {% else %}
+          <a
+            href="{{ cart_change_url }}?quantity=0&amp;id={{ item_key }}"
+            rel="nofollow"
+            class="t4s-quantity-selector is--minus"
+            data-no-instant
+            data-cart-remove
+            data-id="{{ item_key }}"
+          >
             <svg viewBox="0 0 24 24" width="17">
               <use href="#icon-cart-remove"/>
             </svg>
-          {% endif %}
-        </button>
+          </a>
+        {% endif %}
         <input
           data-action-change
           data-quantity-value
@@ -441,7 +455,7 @@
         assign final_discount_pack_label_style = 'white-space: nowrap;'
       -%}
 
-      {%- if show_discount_percent_badge and upsell_badge_percent != blank -%}
+      {%- if show_discount_percent_badge and upsell_badge_percent != blank and is_studio_cart_item == false -%}
         <div class="t4s-cart-discount-percent-badge-wrap">
           <span
             class="t4s-cart-discount-percent-badge"

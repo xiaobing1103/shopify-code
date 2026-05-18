@@ -37,8 +37,13 @@
     assign max_qty = item_variant.quantity_rule.max
   endif
   assign item_title_lower = item_pr.title | downcase
+  assign item_design_id = item.properties.Design | default: item.properties.design | default: item.properties._mczr_designId
+  assign is_studio_cart_item = false
+  if item_title_lower contains 'studio' or item_design_id != blank
+    assign is_studio_cart_item = true
+  endif
   assign hide_qty_discount_bar = false
-  if item_title_lower contains 'studio'
+  if is_studio_cart_item
     assign hide_qty_discount_bar = true
   endif
   if show_qty_discount_progress == false
@@ -536,7 +541,7 @@
             assign upsell_badge_suffix = ' Off'
           endif
         -%}
-        {%- if show_discount_percent_badge and upsell_badge_percent != blank -%}
+        {%- if show_discount_percent_badge and upsell_badge_percent != blank and is_studio_cart_item == false -%}
           <div class="t4s-cart-discount-percent-badge-wrap">
             <span
               class="t4s-cart-discount-percent-badge"
