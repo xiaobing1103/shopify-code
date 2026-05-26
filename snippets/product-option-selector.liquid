@@ -741,9 +741,127 @@
         blockRoot.dataset.optionSelectorInitialized = 'true';
 
         var syncScheduled = false;
+        var variantsJson = mainWrapper.querySelector('.pr_variants_json');
+        var optionsJson = mainWrapper.querySelector('.pr_options_json');
+        var variants = variantsJson ? JSON.parse(variantsJson.textContent) : [];
+        var options = optionsJson ? JSON.parse(optionsJson.textContent) : [];
+        var mainForm = mainWrapper.querySelector('form');
+        var mainSelect = mainForm ? mainForm.querySelector('select[name="id"]') : null;
 
-        function escapeAttributeValue(value) {
-          return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+        function findVariantById(variantId) {
+          if (!variantId) {
+            return null;
+          }
+
+          return variants.find(function(variant) {
+            return String(variant.id) === String(variantId);
+          }) || null;
+        }
+
+        function findSwatchItemByValue(scope, value) {
+          if (!scope) {
+            return null;
+          }
+
+          return Array.from(scope.querySelectorAll('[data-swatch-item]')).find(function(item) {
+            return item.getAttribute('data-value') === value;
+          }) || null;
+        }
+
+        function getVariantSelectedValues(selectedVariant) {
+          var selectedValues = {};
+          if (!selectedVariant) {
+            return selectedValues;
+          }
+
+          options.forEach(function(option, index) {
+            var optionValue = selectedVariant['option' + (index + 1)];
+            if (optionValue) {
+              selectedValues[String(index)] = optionValue;
+            }
+          });
+
+          return selectedValues;
+        }
+
+        function findVariantForSelection(optionIndex, selectedValue) {
+          var currentVariant = mainSelect ? findVariantById(mainSelect.value) : null;
+          var selectedValues = getVariantSelectedValues(currentVariant);
+          selectedValues[String(optionIndex)] = selectedValue;
+
+          var matchedVariant = variants.find(function(variant) {
+            return options.every(function(option, index) {
+              return variant['option' + (index + 1)] === selectedValues[String(index)];
+            });
+          });
+
+          if (matchedVariant) {
+            return matchedVariant;
+          }
+
+          return variants.find(function(variant) {
+            return variant['option' + (parseInt(optionIndex, 10) + 1)] === selectedValue;
+          }) || null;
+        }
+
+        function syncMainOption(optionIndex, selectedValue) {
+          if (!selectedValue) {
+            return;
+          }
+
+          mainWrapper.querySelectorAll('[data-swatch-option][data-id="' + optionIndex + '"]').forEach(function(mainOption) {
+            mainOption.querySelectorAll('[data-swatch-item]').forEach(function(item) {
+              item.classList.remove('is--selected');
+            });
+
+            var selectedItem = findSwatchItemByValue(mainOption, selectedValue);
+            if (selectedItem) {
+              selectedItem.classList.add('is--selected');
+            }
+
+            mainOption.querySelectorAll('[data-current-value]').forEach(function(currentValueEl) {
+              currentValueEl.textContent = selectedValue;
+            });
+          });
+        }
+
+        function syncMainFromVariant(selectedVariant) {
+          if (!selectedVariant) {
+            return;
+          }
+
+          options.forEach(function(option, index) {
+            var optionValue = selectedVariant['option' + (index + 1)];
+            if (optionValue) {
+              syncMainOption(String(index), optionValue);
+            }
+          });
+        }
+
+        function selectMainVariant(selectedVariant) {
+          if (!selectedVariant || !mainSelect) {
+            return;
+          }
+
+          mainSelect.value = selectedVariant.id;
+          syncMainFromVariant(selectedVariant);
+          mainSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+          options.forEach(function(option, index) {
+            var optionValue = selectedVariant['option' + (index + 1)];
+            if (!optionValue) {
+              return;
+            }
+
+            window.dispatchEvent(new CustomEvent('t4s:independent-color-selector-change', {
+              detail: {
+                sectionId: '{{ pr_se_id }}',
+                optionIndex: String(index),
+                selectedValue: optionValue,
+                sourceFormId: 'option-selector-{{ block.id }}'
+              }
+            }));
+          });
         }
 
         function findMainOption(independentOption) {
@@ -773,9 +891,7 @@
 
             independentOption.querySelectorAll('[data-swatch-item]').forEach(function(independentItem) {
               var itemValue = independentItem.getAttribute('data-value');
-              var mainItem = mainOption.querySelector(
-                '[data-swatch-item][data-value="' + escapeAttributeValue(itemValue) + '"]'
-              );
+              var mainItem = findSwatchItemByValue(mainOption, itemValue);
 
               if (!mainItem) {
                 independentItem.classList.add('is--soldout', 'is--unavailable', 'is--hidden');
@@ -841,15 +957,21 @@
           var mainOption = findMainOption(independentOption);
           if (!mainOption) return;
 
-          var mainItem = mainOption.querySelector(
-            '[data-swatch-item][data-value="' + escapeAttributeValue(clickedItem.getAttribute('data-value')) + '"]'
-          );
+          var optionIndex = independentOption.getAttribute('data-id');
+          var selectedValue = clickedItem.getAttribute('data-value');
+          var mainItem = findSwatchItemByValue(mainOption, selectedValue);
 
           if (!mainItem) return;
 
           event.preventDefault();
           event.stopPropagation();
-          mainItem.click();
+
+          var matchedVariant = findVariantForSelection(optionIndex, selectedValue);
+          if (matchedVariant) {
+            selectMainVariant(matchedVariant);
+          } else {
+            mainItem.click();
+          }
 
           setTimeout(scheduleSync, 60);
           setTimeout(scheduleSync, 180);

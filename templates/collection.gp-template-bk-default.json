@@ -283,7 +283,7 @@
         "card_WpHw9P": {
           "type": "card",
           "settings": {
-            "image": "shopify://shop_images/Gemini_Generated_Image_oev6i1oev6i1oev6.png",
+            "image": "shopify://shop_images/Your_Design_b18f3530-a0e9-4d41-80bd-d6ec3b7cb153.png",
             "image_url": "shopify://products/digital-table-tent",
             "title": "Table Tent",
             "product": "digital-table-tent",
@@ -293,7 +293,7 @@
             "ingredients": "",
             "show_button": true,
             "button_text": "Buy Now",
-            "button_url": "shopify://products/digital-business-card"
+            "button_url": "shopify://products/digital-table-tent"
           }
         }
       },

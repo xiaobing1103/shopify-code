@@ -1,6 +1,6 @@
 {% comment %}TekMark AI Widget — Floating chat button + popup panel (site-wide){% endcomment %}
 
-{%- if section.settings.enabled -%}
+{%- if section.settings.enabled_desktop or section.settings.enabled_mobile -%}
 
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -14,8 +14,8 @@
 @keyframes tkwbtnin{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
 
 /* ── Floating button ─────────────────────────────────────── */
-.tkw-fab{position:fixed!important;bottom:24px!important;right:24px!important;width:60px!important;height:60px!important;border-radius:50%!important;background:#111!important;border:none!important;cursor:pointer!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:999998!important;transition:all .2s ease!important;animation:tkwbtnin .3s ease!important;padding:0!important}
-.tkw-fab:hover{transform:translateY(-2px) scale(1.05)!important;box-shadow:0 12px 32px rgba(0,0,0,.25)!important}
+.tkw-fab{position:fixed!important;bottom:24px!important;right:24px!important;width:60px!important;height:60px!important;border-radius:50%!important;background:linear-gradient(180deg,#007AFF 0%,#005DC2 100%)!important;border:none!important;cursor:pointer!important;box-shadow:0 8px 24px rgba(0,122,255,.35)!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:999998!important;transition:all .2s ease!important;animation:tkwbtnin .3s ease!important;padding:0!important}
+.tkw-fab:hover{transform:translateY(-2px) scale(1.05)!important;box-shadow:0 12px 32px rgba(0,122,255,.45)!important}
 .tkw-fab svg{width:28px;height:28px;color:#fff;stroke:#fff}
 .tkw-fab .tkw-close-icon{display:none}
 #tkw.open .tkw-fab .tkw-bot-icon{display:none}
@@ -105,6 +105,14 @@
   .tkw-panel{width:calc(100vw - 24px)!important;height:calc(100vh - 200px)!important;max-height:560px!important;right:12px!important;bottom:80px!important;top:auto!important}
   .tkw-ex-grid{grid-template-columns:1fr}
 }
+
+/* ── Device visibility (toggle per platform) ─────────────── */
+{%- unless section.settings.enabled_desktop -%}
+@media(min-width:501px){#tkw{display:none!important}}
+{%- endunless -%}
+{%- unless section.settings.enabled_mobile -%}
+@media(max-width:500px){#tkw{display:none!important}}
+{%- endunless -%}
 </style>
 
 <div id="tkw">
@@ -296,10 +304,21 @@
   "name": "TekMark AI Widget",
   "settings": [
     {
+      "type": "header",
+      "content": "Display Settings"
+    },
+    {
       "type": "checkbox",
-      "id": "enabled",
-      "label": "Enable AI Widget",
-      "info": "Show the floating chat button on all pages. Uncheck to hide site-wide.",
+      "id": "enabled_desktop",
+      "label": "Show on Desktop",
+      "info": "Display the floating chat widget on desktop devices.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled_mobile",
+      "label": "Show on Mobile",
+      "info": "Display the floating chat widget on mobile devices.",
       "default": true
     }
   ]

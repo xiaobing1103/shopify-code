@@ -79,6 +79,10 @@ For inquiries or permissions, contact daniel@section.store
   assign sixth_heading = section.settings.sixth_heading
   assign sixth_heading_image = section.settings.sixth_heading_image
   assign sixth_heading_url = section.settings.sixth_heading_url
+  assign has_heading_images = false
+  if first_heading_image != blank or second_heading_image != blank or third_heading_image != blank or fourth_heading_image != blank or fifth_heading_image != blank or sixth_heading_image != blank
+    assign has_heading_images = true
+  endif
 
   assign heading_image_size_mobile = section.settings.heading_image_size_mobile
   assign heading_image_size = section.settings.heading_image_size   
@@ -192,7 +196,7 @@ For inquiries or permissions, contact daniel@section.store
   }
 
   .comparison-table-wrapper-{{ section.id }} {
-    padding-top: {{ heading_image_size_mobile | divided_by: 2 }}px;
+    padding-top: {% if has_heading_images %}{{ heading_image_size_mobile | divided_by: 2 }}{% else %}0{% endif %}px;
     overflow-x: scroll;
     scrollbar-width: none;
     margin-left: -{{ padding_horizontal_mobile }}rem;
@@ -336,7 +340,7 @@ For inquiries or permissions, contact daniel@section.store
   }
 
   .comparison-grid-header-{{ section.id }} .comparison-column-heading-{{ section.id }} {
-    margin: 16px 0 0 0;
+    margin: 0;
     width: 100%;
     position: relative;
     z-index: 2;
@@ -418,6 +422,10 @@ For inquiries or permissions, contact daniel@section.store
 
   .comparison-item-heading-image-{{ section.id }} svg {
     background-color: #AFAFAF;
+  }
+
+  .comparison-item-heading-image-{{ section.id }} + .comparison-column-heading-{{ section.id }} {
+    margin-top: 16px;
   }
 
   .comparison-value-{{ section.id }} {
@@ -509,7 +517,7 @@ For inquiries or permissions, contact daniel@section.store
     }
 
     .comparison-table-wrapper-{{ section.id }} {
-      padding-top: {{ heading_image_size | divided_by: 2 }}px;
+      padding-top: {% if has_heading_images %}{{ heading_image_size | divided_by: 2 }}{% else %}0{% endif %}px;
       margin-left: 0rem;
       margin-right: 0rem;
     }
@@ -850,9 +858,9 @@ For inquiries or permissions, contact daniel@section.store
           <div class="comparison-grid-{{ section.id }} comparison-grid-header-{{ section.id }}">
             <div class="comparison-item-{{ section.id }}"></div>
             {% if first_heading != blank %}
-              <div class="comparison-item-{{ section.id }} active">
-                <{% if first_heading_url != blank %}a href="{{ first_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">               
-                  {% if first_heading_image != blank %}                
+            <div class="comparison-item-{{ section.id }} active">
+                {% if first_heading_image != blank %}
+                  <{% if first_heading_url != blank %}a href="{{ first_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">
                     {%- capture sizes -%}(min-width: {{ content_width }}px) {{ content_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2){%- endcapture -%}
                       {{ first_heading_image | image_url: width: 535 | image_tag:
                         loading: loading_attribute,
@@ -861,10 +869,8 @@ For inquiries or permissions, contact daniel@section.store
                         sizes: sizes,
                         widths: '535, 750, 1070, 1500'
                       }}
-                  {% else %}
-                    {{ 'image' | placeholder_svg_tag }}
-                  {% endif %}   
-                </{% if first_heading_url != blank %}a{% else %}div{% endif %}>  
+                  </{% if first_heading_url != blank %}a{% else %}div{% endif %}>
+                {% endif %}
                 {% if use_background_image %}
                   <div class="comparison-item-bg-image-{{ section.id }}">
                     <svg width="200" height="100" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1050,8 +1056,8 @@ For inquiries or permissions, contact daniel@section.store
             {% endif %}
             {% if table_columns > 1 and second_heading != blank %}
               <div class="comparison-item-{{ section.id }}">   
-                <{% if second_heading_url != blank %}a href="{{ second_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">                     
-                  {% if second_heading_image != blank %}                     
+                {% if second_heading_image != blank %}
+                  <{% if second_heading_url != blank %}a href="{{ second_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">
                     {%- capture sizes -%}(min-width: {{ content_width }}px) {{ content_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2){%- endcapture -%}
                       {{ second_heading_image | image_url: width: 535 | image_tag:
                         loading: loading_attribute,
@@ -1059,11 +1065,9 @@ For inquiries or permissions, contact daniel@section.store
                         height: second_heading_image.height,
                         sizes: sizes,
                         widths: '535, 750, 1070, 1500'
-                      }}              
-                  {% else %}
-                    {{ 'image' | placeholder_svg_tag }}
-                  {% endif %}    
-                </{% if second_heading_url != blank %}a{% else %}div{% endif %}>   
+                      }}
+                  </{% if second_heading_url != blank %}a{% else %}div{% endif %}>
+                {% endif %}
                 {% if use_background_image %}
                   <div class="comparison-item-bg-image-{{ section.id }}">
                     <svg width="200" height="100" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1249,8 +1253,8 @@ For inquiries or permissions, contact daniel@section.store
             {% endif %}
             {% if table_columns > 2 and third_heading != blank %}
               <div class="comparison-item-{{ section.id }}">
-                <{% if third_heading_url != blank %}a href="{{ third_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">                
-                  {% if third_heading_image != blank %}                
+                {% if third_heading_image != blank %}
+                  <{% if third_heading_url != blank %}a href="{{ third_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">
                     {%- capture sizes -%}(min-width: {{ content_width }}px) {{ content_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2){%- endcapture -%}
                       {{ third_heading_image | image_url: width: 535 | image_tag:
                         loading: loading_attribute,
@@ -1259,10 +1263,8 @@ For inquiries or permissions, contact daniel@section.store
                         sizes: sizes,
                         widths: '535, 750, 1070, 1500'
                       }}
-                  {% else %}
-                    {{ 'image' | placeholder_svg_tag }}
-                  {% endif %}  
-                </{% if third_heading_url != blank %}a{% else %}div{% endif %}> 
+                  </{% if third_heading_url != blank %}a{% else %}div{% endif %}>
+                {% endif %}
                 {% if use_background_image %}
                   <div class="comparison-item-bg-image-{{ section.id }}">
                     <svg width="200" height="100" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1448,8 +1450,8 @@ For inquiries or permissions, contact daniel@section.store
             {% endif %}
             {% if table_columns > 3 and fourth_heading != blank %}
               <div class="comparison-item-{{ section.id }}">
-                <{% if fourth_heading_url != blank %}a href="{{ fourth_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">                
-                  {% if fourth_heading_image != blank %}                
+                {% if fourth_heading_image != blank %}
+                  <{% if fourth_heading_url != blank %}a href="{{ fourth_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">
                     {%- capture sizes -%}(min-width: {{ content_width }}px) {{ content_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2){%- endcapture -%}
                       {{ fourth_heading_image | image_url: width: 535 | image_tag:
                         loading: loading_attribute,
@@ -1458,10 +1460,8 @@ For inquiries or permissions, contact daniel@section.store
                         sizes: sizes,
                         widths: '535, 750, 1070, 1500'
                       }}
-                  {% else %}
-                    {{ 'image' | placeholder_svg_tag }}
-                  {% endif %} 
-                </{% if fourth_heading_url != blank %}a{% else %}div{% endif %}> 
+                  </{% if fourth_heading_url != blank %}a{% else %}div{% endif %}>
+                {% endif %}
                 {% if use_background_image %}
                   <div class="comparison-item-bg-image-{{ section.id }}">
                     <svg width="200" height="100" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1647,8 +1647,8 @@ For inquiries or permissions, contact daniel@section.store
             {% endif %}
             {% if table_columns > 4 and fifth_heading != blank %}
               <div class="comparison-item-{{ section.id }}">
-                <{% if fifth_heading_url != blank %}a href="{{ fifth_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">             
-                  {% if fifth_heading_image != blank %}                
+                {% if fifth_heading_image != blank %}
+                  <{% if fifth_heading_url != blank %}a href="{{ fifth_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">
                     {%- capture sizes -%}(min-width: {{ content_width }}px) {{ content_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2){%- endcapture -%}
                       {{ fifth_heading_image | image_url: width: 535 | image_tag:
                         loading: loading_attribute,
@@ -1657,10 +1657,8 @@ For inquiries or permissions, contact daniel@section.store
                         sizes: sizes,
                         widths: '535, 750, 1070, 1500'
                       }}
-                  {% else %}
-                    {{ 'image' | placeholder_svg_tag }}
-                  {% endif %} 
-                </{% if fifth_heading_url != blank %}a{% else %}div{% endif %}>   
+                  </{% if fifth_heading_url != blank %}a{% else %}div{% endif %}>
+                {% endif %}
                 {% if use_background_image %}
                   <div class="comparison-item-bg-image-{{ section.id }}">
                     <svg width="200" height="100" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1846,8 +1844,8 @@ For inquiries or permissions, contact daniel@section.store
             {% endif %}
             {% if table_columns > 5 and sixth_heading != blank %}
               <div class="comparison-item-{{ section.id }}">
-                <{% if sixth_heading_url != blank %}a href="{{ sixth_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">              
-                  {% if sixth_heading_image != blank %}                
+                {% if sixth_heading_image != blank %}
+                  <{% if sixth_heading_url != blank %}a href="{{ sixth_heading_url }}"{% else %}div{% endif %} class="comparison-item-heading-image-{{ section.id }}">
                     {%- capture sizes -%}(min-width: {{ content_width }}px) {{ content_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2){%- endcapture -%}
                       {{ sixth_heading_image | image_url: width: 535 | image_tag:
                         loading: loading_attribute,
@@ -1856,10 +1854,8 @@ For inquiries or permissions, contact daniel@section.store
                         sizes: sizes,
                         widths: '535, 750, 1070, 1500'
                       }}
-                  {% else %}
-                    {{ 'image' | placeholder_svg_tag }}
-                  {% endif %}   
-                </{% if sixth_heading_url != blank %}a{% else %}div{% endif %}> 
+                  </{% if sixth_heading_url != blank %}a{% else %}div{% endif %}>
+                {% endif %}
                 {% if use_background_image %}
                   <div class="comparison-item-bg-image-{{ section.id }}">
                     <svg width="200" height="100" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">

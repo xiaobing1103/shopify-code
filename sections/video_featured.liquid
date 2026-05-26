@@ -32,49 +32,49 @@
             <div class="t4s-hero-inner t4s-col-item t4s-pr t4s-oh" timeline hdt-reveal="slide-in">
                 <div class="t4s_ratio">
                     {%- if se_stts.source == '2' and se_stts.video != blank -%}
-                        <video controls playsinline="playsinline" preload="metadata" aria-label="{{ se_stts.video.alt }}" poster="{{ image | default: se_stts.video.preview_image.src | image_url: width: se_stts.video.preview_image.width }}" muted {% if autoplay %} autoplay{% endif %}{% if loop %} loop{% endif %} class="lazyVdHide">
+                        <video controls playsinline="playsinline" preload="metadata" aria-label="{{ se_stts.video.alt | escape }}" poster="{{ se_stts.video.preview_image | image_url: width: se_stts.video.preview_image.width }}" muted {% if autoplay %} autoplay{% endif %}{% if loop %} loop{% endif %}>
                             {%- for media in se_stts.video.sources -%}
-                                <source data-src="{{ media.url }}" type="{{ media.mime_type }}">
+                                <source src="{{ media.url }}" type="{{ media.mime_type }}">
                             {%- endfor -%}
-                            <img src="{{ mb_image | default: se_stts.video.preview_image.src | image_url: width: 100 }}" width="100" height="100">
-                    </video>
+                            <img src="{{ se_stts.video.preview_image | image_url: width: 100 }}" width="100" height="100" alt="{{ se_stts.video.alt | escape }}">
+                        </video>
                     {%- elsif video_url.type == 'youtube' -%}
-                        <iframe data-src="https://www.youtube.com/embed/{{ video_url.id }}?controls=1{% if autoplay %}&autoplay=1{% endif %}{% if loop %}&playlist={{ video_url.id }}&loop=1{% endif %}&showinfo=0&rel=0&modestbranding=1&playsinline=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="lazyVdHide"></iframe>
+                        <iframe src="https://www.youtube.com/embed/{{ video_url.id }}?controls=1{% if autoplay %}&autoplay=1&mute=1{% endif %}{% if loop %}&playlist={{ video_url.id }}&loop=1{% endif %}&showinfo=0&rel=0&modestbranding=1&playsinline=1" title="{{ section.settings.video_url.alt | default: section.settings.video_url.id | escape }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     {%- elsif video_url.type == 'vimeo' -%}
-                        <iframe class="lazyloadt4s" data-src="//player.vimeo.com/video/{{ video_url.id }}?portrait=0{% if autoplay %}&autoplay=1{% endif %}{% if loop %}&loop=1{% endif %}&byline=0&color={{ settings.accent_color | remove_first: '#' }}" frameborder="0"></iframe>
+                        <iframe src="https://player.vimeo.com/video/{{ video_url.id }}?portrait=0{% if autoplay %}&autoplay=1&muted=1{% endif %}{% if loop %}&loop=1{% endif %}&byline=0&color={{ settings.accent_color | remove_first: '#' }}" title="{{ section.settings.video_url.alt | default: section.settings.video_url.id | escape }}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
                     {%- endif -%}              
                 </div>
             </div>
         </div>
-    {{- html_layout[0] -}}
+    {{- html_layout[1] -}}
 </div>
 {%- schema -%}
 {
-    "name":"Video featured",
+    "name":"精选视频",
     "tag": "section",
     "class": "t4s-section t4s-section-all",
     "settings":[
         {
             "type": "header",
-            "content": "1. General options"
+            "content": "1. 常规选项"
         },
         {
             "type": "select",
             "id": "se_height",
-            "label": "Section height",
+            "label": "区块高度",
             "default": "t4s_ratio16_9",
             "options": [
                 {
                     "value":"t4s_ratio_po",
-                    "label":"Preserve original ratio"
+                    "label":"保留原始比例"
                 },
                 {
                     "value": "t4s_ratio_fh",
-                    "label": "Full screen height"
+                    "label": "全屏高度"
                 },
                 {
                     "value": "t4s_ratio_cuspx",
-                    "label": "Custom height"
+                    "label": "自定义高度"
                 },
                 {
                     "value": "t4s_ratio16_9",
@@ -89,90 +89,90 @@
         {
             "type": "checkbox",
             "id": "custom_dk",
-            "label": "Use custom height (Desktop)",
+            "label": "使用自定义高度（桌面端）",
             "default": true
         },
         {
             "type": "number",
             "id": "height_dk",
-            "label": "Section height (Desktop)",
+            "label": "区块高度（桌面端）",
             "default": 600
         },
         {
             "type": "checkbox",
             "id": "custom_tb",
-            "label": "Use custom height (Tablet)",
+            "label": "使用自定义高度（平板端）",
             "default": true
         },
         {
             "type": "number",
             "id": "height_tb",
-            "label": "Section height (Tablet)",
+            "label": "区块高度（平板端）",
             "default": 400
         },
         {
             "type": "checkbox",
             "id": "custom_mb",
-            "label": "Use custom height (Mobile)",
+            "label": "使用自定义高度（移动端）",
             "default": true
         },
         {
             "type": "number",
             "id": "height_mb",
-            "label": "Section height (Mobile)",
+            "label": "区块高度（移动端）",
             "default": 250
         }, 
         {
             "type": "select",
             "id": "source",
-            "label": "Source video",
+            "label": "视频来源",
             "default": "2",
             "options": [
                 {
                     "value": "1",
-                    "label": "Youtube"
+                    "label": "YouTube"
                 },
                 {
                     "value": "2",
-                    "label": "Upload file"
+                    "label": "上传文件"
                 }
             ]
         },
         {
             "id": "video_url",
             "type": "video_url",
-            "label": "1. Video url",
+            "label": "1. 视频链接",
             "accept": ["youtube","vimeo"],
             "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
         },
         {
           "type": "video",
           "id": "video",
-          "label": "2. Upload file",
-          "info": "File video link from uploaded files. File size is smaller 4 mb recommended"
+          "label": "2. 上传文件",
+          "info": "从已上传文件中选择视频，建议文件小于 4 MB"
         },
         {
             "type":"checkbox",
             "id":"au_video",
-            "label":"Enable video autoplay",
+            "label":"启用视频自动播放",
             "default":false
         },
         {
             "type":"checkbox",
             "id":"loop_video",
-            "label":"Enable video looping",
+            "label":"启用视频循环播放",
             "default":true
         },     
         {
             "type": "color",
             "id": "bg_overlay",
-            "label": "Overlay",
+            "label": "遮罩",
             "default": "#000"
         },
         {
             "type": "range",
             "id": "bg_opacity",
-            "label": "Overlay opacity",
+            "label": "遮罩透明度",
             "default": 0,
             "min": 0,
             "max": 100,
@@ -181,96 +181,96 @@
         },
         {
             "type": "header",
-            "content": "2. Design options"
+            "content": "2. 设计选项"
         },
         {
-            "type": "select","id": "layout","default": "t4s-container-fluid","label": "Layout",
+            "type": "select","id": "layout","default": "t4s-container-fluid","label": "布局",
             "options": [
-                { "value": "t4s-se-container", "label": "Container"},
-                { "value": "t4s-container-fluid", "label": "Full width"}
+                { "value": "t4s-se-container", "label": "固定宽度"},
+                { "value": "t4s-container-fluid", "label": "全宽"}
             ]
         },
         {
             "type": "color",
             "id": "cl_bg",
-            "label": "Background"
+            "label": "背景"
         },
         {
             "type": "color_background",
             "id": "cl_bg_gradient",
-            "label": "Background gradient"
+            "label": "背景渐变"
         },
         {
             "type": "text",
             "id": "mg",
-            "label": "Margin",
-            "info":"Margin top, margin right, margin bottom, margin left. If you not use to blank",
+            "label": "外边距",
+            "info":"依次填写上、右、下、左外边距；不使用请留空",
             "default": ",,50px,",
             "placeholder": ",,50px,"
         },
         {
             "type": "text",
             "id": "pd",
-            "label": "Padding",
-            "info":"Padding top, padding right, padding bottom, padding left. If you not use to blank",
+            "label": "内边距",
+            "info":"依次填写上、右、下、左内边距；不使用请留空",
             "placeholder": "50px,,50px,"
         },
         {
           "type": "header",
-          "content": "+ Design Tablet Options"
+          "content": "+ 平板端设计选项"
         },
         {
           "type": "text",
           "id": "mg_tb",
-          "label": "Margin",
+          "label": "外边距",
           "placeholder": ",,50px,"
         },
         {
           "type": "text",
           "id": "pd_tb",
-          "label": "Padding",
+          "label": "内边距",
           "placeholder": ",,50px,"
         },
         {
             "type": "header",
-            "content": "+ Design Mobile Options"
+            "content": "+ 移动端设计选项"
         },
         {
             "type": "text",
             "id": "mg_mb",
-            "label": "Margin",
+            "label": "外边距",
             "default":",,30px,",
             "placeholder": ",,50px,"
         },
         {
             "type": "text",
             "id": "pd_mb",
-            "label": "Padding",
+            "label": "内边距",
             "placeholder": ",,50px,"
         },
         {
             "type": "header",
-            "content": "3. Custom css"
+            "content": "3. 自定义 CSS"
         },
         {
             "id": "use_cus_css",
             "type": "checkbox",
-            "label": "Use custom css",
+            "label": "使用自定义 CSS",
             "default":false,
-            "info": "If you want custom style for this section."
+            "info": "如需为此区块添加自定义样式，请启用。"
         },
         { 
             "id": "code_cus_css",
             "type": "textarea",
-            "label": "Code custom css",
-            "info": "Use selector .SectionID to style css"
+            "label": "自定义 CSS 代码",
+            "info": "使用选择器 .SectionID 编写样式"
             
         }
     ],
     "presets": [
         {
             "category": "homepage",
-            "name":"Video featured"
+            "name":"精选视频"
         }
     ]
 }

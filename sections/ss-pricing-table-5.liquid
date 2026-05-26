@@ -71,6 +71,8 @@
   assign card_radius = section.settings.card_radius
   assign card_align = section.settings.card_align
   assign card_align_mobile = section.settings.card_align_mobile
+  assign card_top_min_height = section.settings.card_top_min_height
+  assign card_top_min_height_mobile = section.settings.card_top_min_height_mobile
 
   assign title_custom = section.settings.title_custom
   assign title_font = section.settings.title_font
@@ -223,7 +225,28 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    height: 100%;
+  }
+
+  .pricing-card-top-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: {{ card_top_min_height_mobile }}px;
+  }
+
+  .pricing-card-bottom-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1 1 auto;
+    min-height: calc(
+      ({{ price_size_mobile }}px * {{ price_height }}) / 100
+      + {{ button_mt_mobile }}px
+      + ({{ button_padding_vertical_mobile }}px * 2)
+      + ({{ button_size_mobile }}px * {{ button_height }}) / 100
+    );
   }
 
   .pricing-title-{{ section.id }} {
@@ -254,6 +277,7 @@
     align-items: center;
     flex-wrap: wrap;
     justify-content: {{ card_align_mobile }};
+    min-height: calc(({{ price_size_mobile }}px * {{ price_height }}) / 100);
   }
 
   .pricing-price-{{ section.id }} * {
@@ -310,6 +334,7 @@
     padding-top: {{ table_padding_vertical_mobile }}px;
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
     gap: {{ table_padding_vertical_mobile }}px;
   }
 
@@ -338,6 +363,7 @@
     font-size: {{ features_title_size_mobile }}px;
     line-height: {{ features_title_height }}%;
     font-weight: 700;
+    min-height: calc(({{ features_title_size_mobile }}px * {{ features_title_height }}) / 100 * 3);
   }
 
   .pricing-feature-item-{{ section.id }} {
@@ -401,6 +427,19 @@
       padding: {{ card_padding_vertical }}px {{ card_padding_horizontal }}px;
     }
 
+    .pricing-card-top-{{ section.id }} {
+      min-height: {{ card_top_min_height }}px;
+    }
+
+    .pricing-card-bottom-{{ section.id }} {
+      min-height: calc(
+        ({{ price_size }}px * {{ price_height }}) / 100
+        + {{ button_mt }}px
+        + ({{ button_padding_vertical }}px * 2)
+        + ({{ button_size }}px * {{ button_height }}) / 100
+      );
+    }
+
     .pricing-title-{{ section.id }} {
       text-align: {{ card_align }};
       font-size: {{ title_size }}px;
@@ -419,6 +458,7 @@
       text-align: {{ card_align }};
       margin-top: {{ price_mt }}px;
       justify-content: {{ card_align }};
+      min-height: calc(({{ price_size }}px * {{ price_height }}) / 100);
     }
 
     .pricing-price-{{ section.id }} * {
@@ -452,6 +492,7 @@
     .pricing-features-title-{{ section.id }} {
       margin-bottom: {{ features_title_mt }}px;
       font-size: {{ features_title_size }}px;
+      min-height: calc(({{ features_title_size }}px * {{ features_title_height }}) / 100 * 2);
     }
 
     .pricing-feature-item-{{ section.id }} {
@@ -1363,11 +1404,11 @@
 
 {% schema %}
 {
-  "name": "SS - Pricing table #5",
+  "name": "SS - 定价表 #5",
   "settings": [
     {
       "type": "header",
-      "content": "Tabs"
+      "content": "标签页"
     },
     {
       "type": "range",
@@ -1376,7 +1417,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Roundness",
+      "label": "圆角",
       "default": 100
     },
     {
@@ -1386,7 +1427,7 @@
       "max": 10,
       "step": 1,
       "unit": "px",
-      "label": "Border thickness",
+      "label": "边框粗细",
       "default": 2
     },
     {
@@ -1396,7 +1437,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top",
+      "label": "上边距",
       "default": 24
     },
     {
@@ -1406,23 +1447,23 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top - mobile",
+      "label": "移动端上边距",
       "default": 16
     },
     {
       "type": "header",
-      "content": "Tab"
+      "content": "标签"
     },
     {
       "type": "checkbox",
       "id": "tab_custom",
-      "label": "Use custom font",
+      "label": "使用自定义字体",
       "default": false
     },
     {
       "type": "font_picker",
       "id": "tab_font",
-      "label": "Font family",
+      "label": "字体系列",
       "default": "josefin_sans_n4"
     },
     {
@@ -1432,7 +1473,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size",
+      "label": "字体大小",
       "default": 18
     },
     {
@@ -1442,7 +1483,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size - mobile",
+      "label": "移动端字体大小",
       "default": 16
     },
     {
@@ -1452,7 +1493,7 @@
       "max": 200,
       "step": 10,
       "unit": "%",
-      "label": "Line height",
+      "label": "行高",
       "default": 100
     },
     {
@@ -1462,7 +1503,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding horizontal",
+      "label": "左右内边距",
       "default": 24
     },
     {
@@ -1472,7 +1513,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding horizontal - mobile",
+      "label": "移动端左右内边距",
       "default": 24
     },
     {
@@ -1482,7 +1523,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding vertical",
+      "label": "上下内边距",
       "default": 14
     },
     {
@@ -1492,7 +1533,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding vertical - mobile",
+      "label": "移动端上下内边距",
       "default": 14
     },
     {
@@ -1502,7 +1543,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Roundness",
+      "label": "圆角",
       "default": 100
     },
     {
@@ -1512,18 +1553,18 @@
       "max": 10,
       "step": 1,
       "unit": "px",
-      "label": "Border thickness",
+      "label": "边框粗细",
       "default": 0
     },
     {
       "type": "checkbox",
       "id": "tab_shadow",
-      "label": "Use shadow",
+      "label": "使用阴影",
       "default": true
     },
     {
       "type": "header",
-      "content": "Cards"
+      "content": "卡片"
     },
     {
       "type": "range",
@@ -1531,7 +1572,7 @@
       "min": 1,
       "max": 3,
       "step": 1,
-      "label": "Cards per row",
+      "label": "每行卡片数",
       "default": 2
     },
     {
@@ -1541,7 +1582,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Gap",
+      "label": "间距",
       "default": 16
     },
     {
@@ -1551,7 +1592,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Gap - mobile",
+      "label": "移动端间距",
       "default": 16
     },
     {
@@ -1561,7 +1602,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top",
+      "label": "上边距",
       "default": 48
     },
     {
@@ -1571,12 +1612,12 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top - mobile",
+      "label": "移动端上边距",
       "default": 32
     },
     {
       "type": "header",
-      "content": "Card"
+      "content": "卡片"
     },
     {
       "type": "range",
@@ -1585,7 +1626,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding horizontal",
+      "label": "左右内边距",
       "default": 32
     },
     {
@@ -1595,7 +1636,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding horizontal - mobile",
+      "label": "移动端左右内边距",
       "default": 24
     },
     {
@@ -1605,7 +1646,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding vertical",
+      "label": "上下内边距",
       "default": 32
     },
     {
@@ -1615,7 +1656,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding vertical - mobile",
+      "label": "移动端上下内边距",
       "default": 24
     },
     {
@@ -1625,7 +1666,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Roundness",
+      "label": "圆角",
       "default": 20
     },
     {
@@ -1635,33 +1676,53 @@
       "max": 10,
       "step": 1,
       "unit": "px",
-      "label": "Border thickness",
+      "label": "边框粗细",
       "default": 0
     },
     {
       "type": "text_alignment",
       "id": "card_align",
-      "label": "Alignment"
+      "label": "对齐方式"
     },
     {
       "type": "text_alignment",
       "id": "card_align_mobile",
-      "label": "Alignment - mobile"
+      "label": "移动端对齐方式"
+    },
+    {
+      "type": "range",
+      "id": "card_top_min_height",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "label": "标题/文本区域最小高度",
+      "default": 144
+    },
+    {
+      "type": "range",
+      "id": "card_top_min_height_mobile",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "label": "移动端标题/文本区域最小高度",
+      "default": 120
     },
     {
       "type": "header",
-      "content": "Title"
+      "content": "标题"
     },
     {
       "type": "checkbox",
       "id": "title_custom",
-      "label": "Use custom font",
+      "label": "使用自定义字体",
       "default": false
     },
     {
       "type": "font_picker",
       "id": "title_font",
-      "label": "Font family",
+      "label": "字体系列",
       "default": "josefin_sans_n4"
     },
     {
@@ -1671,7 +1732,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size",
+      "label": "字体大小",
       "default": 40
     },
     {
@@ -1681,7 +1742,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size - mobile",
+      "label": "移动端字体大小",
       "default": 32
     },
     {
@@ -1691,23 +1752,23 @@
       "max": 200,
       "step": 10,
       "unit": "%",
-      "label": "Line height",
+      "label": "行高",
       "default": 130
     },
     {
       "type": "header",
-      "content": "Text"
+      "content": "文本"
     },
     {
       "type": "checkbox",
       "id": "text_custom",
-      "label": "Use custom font",
+      "label": "使用自定义字体",
       "default": false
     },
     {
       "type": "font_picker",
       "id": "text_font",
-      "label": "Font family",
+      "label": "字体系列",
       "default": "josefin_sans_n4"
     },
     {
@@ -1717,7 +1778,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size",
+      "label": "字体大小",
       "default": 16
     },
     {
@@ -1727,7 +1788,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size - mobile",
+      "label": "移动端字体大小",
       "default": 14
     },
     {
@@ -1737,7 +1798,7 @@
       "max": 200,
       "step": 10,
       "unit": "%",
-      "label": "Line height",
+      "label": "行高",
       "default": 150
     },
     {
@@ -1747,7 +1808,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top",
+      "label": "上边距",
       "default": 16
     },
     {
@@ -1757,29 +1818,29 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top - mobile",
+      "label": "移动端上边距",
       "default": 16
     },
     {
       "type": "header",
-      "content": "Price"
+      "content": "价格"
     },
     {
       "type": "text",
       "id": "price_second_text",
-      "label": "Billing frequency text",
+      "label": "计费周期文本",
       "default": "/mo"
     },
     {
       "type": "checkbox",
       "id": "price_custom",
-      "label": "Use custom font",
+      "label": "使用自定义字体",
       "default": false
     },
     {
       "type": "font_picker",
       "id": "price_font",
-      "label": "Font family",
+      "label": "字体系列",
       "default": "josefin_sans_n4"
     },
     {
@@ -1789,7 +1850,7 @@
       "max": 72,
       "step": 2,
       "unit": "px",
-      "label": "Font size",
+      "label": "字体大小",
       "default": 56
     },
     {
@@ -1799,7 +1860,7 @@
       "max": 72,
       "step": 2,
       "unit": "px",
-      "label": "Font size - mobile",
+      "label": "移动端字体大小",
       "default": 40
     },
     {
@@ -1809,7 +1870,7 @@
       "max": 200,
       "step": 10,
       "unit": "%",
-      "label": "Line height",
+      "label": "行高",
       "default": 130
     },
     {
@@ -1819,7 +1880,7 @@
       "max": 72,
       "step": 2,
       "unit": "px",
-      "label": "Margin top",
+      "label": "上边距",
       "default": 32
     },
     {
@@ -1829,23 +1890,23 @@
       "max": 72,
       "step": 2,
       "unit": "px",
-      "label": "Margin top - mobile",
+      "label": "移动端上边距",
       "default": 32
     },
     {
       "type": "header",
-      "content": "Button"
+      "content": "按钮"
     },
     {
       "type": "checkbox",
       "id": "button_custom",
-      "label": "Use custom font",
+      "label": "使用自定义字体",
       "default": false
     },
     {
       "type": "font_picker",
       "id": "button_font",
-      "label": "Font family",
+      "label": "字体系列",
       "default": "josefin_sans_n4"
     },
     {
@@ -1855,7 +1916,7 @@
       "max": 30,
       "step": 1,
       "unit": "px",
-      "label": "Font size",
+      "label": "字体大小",
       "default": 18
     },
     {
@@ -1865,7 +1926,7 @@
       "max": 30,
       "step": 1,
       "unit": "px",
-      "label": "Font size - mobile",
+      "label": "移动端字体大小",
       "default": 16
     },
     {
@@ -1875,7 +1936,7 @@
       "max": 200,
       "step": 10,
       "unit": "%",
-      "label": "Line height",
+      "label": "行高",
       "default": 100
     },
     {
@@ -1885,7 +1946,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding horizontal",
+      "label": "左右内边距",
       "default": 32
     },
     {
@@ -1895,7 +1956,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding horizontal - mobile",
+      "label": "移动端左右内边距",
       "default": 28
     },
     {
@@ -1905,7 +1966,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding vertical",
+      "label": "上下内边距",
       "default": 20
     },
     {
@@ -1915,7 +1976,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding vertical - mobile",
+      "label": "移动端上下内边距",
       "default": 18
     },
     {
@@ -1925,7 +1986,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Roundness",
+      "label": "圆角",
       "default": 100
     },
     {
@@ -1935,7 +1996,7 @@
       "max": 10,
       "step": 1,
       "unit": "px",
-      "label": "Border thickness",
+      "label": "边框粗细",
       "default": 1
     },
     {
@@ -1945,7 +2006,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top",
+      "label": "上边距",
       "default": 32
     },
     {
@@ -1955,40 +2016,40 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top - mobile",
+      "label": "移动端上边距",
       "default": 20
     },
     {
       "type": "select",
       "id": "button_style",
-      "label": "Button style",
+      "label": "按钮样式",
       "default": "non_outline",
       "options": [
         {
-          "label": "Link",
+          "label": "链接",
           "value": "link"
         },
         {
-          "label": "Non-outline",
+          "label": "实心",
           "value": "non_outline"
         },
         {
-          "label": "Non-outline & arrow",
+          "label": "实心 + 箭头",
           "value": "non_outline_arrow"
         },
         {
-          "label": "Outline",
+          "label": "描边",
           "value": "outline"
         },
         {
-          "label": "Outline & arrow",
+          "label": "描边 + 箭头",
           "value": "outline_arrow"
         }
       ]
     },
     {
       "type": "header",
-      "content": "Table"
+      "content": "表格"
     },
     {
       "type": "range",
@@ -1997,7 +2058,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding vertical",
+      "label": "上下内边距",
       "default": 16
     },
     {
@@ -2007,7 +2068,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Padding vertical - mobile",
+      "label": "移动端上下内边距",
       "default": 14
     },
     {
@@ -2017,7 +2078,7 @@
       "max": 10,
       "step": 1,
       "unit": "px",
-      "label": "Border thickness",
+      "label": "边框粗细",
       "default": 1
     },
     {
@@ -2027,7 +2088,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top",
+      "label": "上边距",
       "default": 32
     },
     {
@@ -2037,23 +2098,23 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top - mobile",
+      "label": "移动端上边距",
       "default": 20
     },
     {
       "type": "header",
-      "content": "Label"
+      "content": "标签"
     },
     {
       "type": "checkbox",
       "id": "table_left_custom",
-      "label": "Use custom font",
+      "label": "使用自定义字体",
       "default": false
     },
     {
       "type": "font_picker",
       "id": "table_left_font",
-      "label": "Font family",
+      "label": "字体系列",
       "default": "josefin_sans_n4"
     },
     {
@@ -2063,7 +2124,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size",
+      "label": "字体大小",
       "default": 16
     },
     {
@@ -2073,7 +2134,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size - mobile",
+      "label": "移动端字体大小",
       "default": 14
     },
     {
@@ -2083,23 +2144,23 @@
       "max": 200,
       "step": 10,
       "unit": "%",
-      "label": "Line height",
+      "label": "行高",
       "default": 130
     },
     {
       "type": "header",
-      "content": "Value"
+      "content": "值"
     },
     {
       "type": "checkbox",
       "id": "table_right_custom",
-      "label": "Use custom font",
+      "label": "使用自定义字体",
       "default": false
     },
     {
       "type": "font_picker",
       "id": "table_right_font",
-      "label": "Font family",
+      "label": "字体系列",
       "default": "josefin_sans_n4"
     },
     {
@@ -2109,7 +2170,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size",
+      "label": "字体大小",
       "default": 24
     },
     {
@@ -2119,7 +2180,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size - mobile",
+      "label": "移动端字体大小",
       "default": 20
     },
     {
@@ -2129,23 +2190,23 @@
       "max": 200,
       "step": 10,
       "unit": "%",
-      "label": "Line height",
+      "label": "行高",
       "default": 130
     },
     {
       "type": "header",
-      "content": "Features Title"
+      "content": "功能标题"
     },
     {
       "type": "checkbox",
       "id": "features_title_custom",
-      "label": "Use custom font",
+      "label": "使用自定义字体",
       "default": false
     },
     {
       "type": "font_picker",
       "id": "features_title_font",
-      "label": "Font family",
+      "label": "字体系列",
       "default": "josefin_sans_n4"
     },
     {
@@ -2155,7 +2216,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size",
+      "label": "字体大小",
       "default": 18
     },
     {
@@ -2165,7 +2226,7 @@
       "max": 40,
       "step": 1,
       "unit": "px",
-      "label": "Font size - mobile",
+      "label": "移动端字体大小",
       "default": 16
     },
     {
@@ -2175,7 +2236,7 @@
       "max": 200,
       "step": 10,
       "unit": "%",
-      "label": "Line height",
+      "label": "行高",
       "default": 140
     },
     {
@@ -2185,7 +2246,7 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top",
+      "label": "上边距",
       "default": 24
     },
     {
@@ -2195,12 +2256,12 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Margin top - mobile",
+      "label": "移动端上边距",
       "default": 20
     },
     {
       "type": "header",
-      "content": "Feature Icon"
+      "content": "功能图标"
     },
     {
       "type": "range",
@@ -2209,7 +2270,7 @@
       "max": 48,
       "step": 2,
       "unit": "px",
-      "label": "Icon size",
+      "label": "图标大小",
       "default": 20
     },
     {
@@ -2219,7 +2280,7 @@
       "max": 48,
       "step": 2,
       "unit": "px",
-      "label": "Icon size - mobile",
+      "label": "移动端图标大小",
       "default": 18
     },
     {
@@ -2229,7 +2290,7 @@
       "max": 32,
       "step": 2,
       "unit": "px",
-      "label": "Gap between icon and text",
+      "label": "图标与文字间距",
       "default": 12
     },
     {
@@ -2239,100 +2300,100 @@
       "max": 32,
       "step": 2,
       "unit": "px",
-      "label": "Gap between icon and text - mobile",
+      "label": "移动端图标与文字间距",
       "default": 10
     },
     {
       "type": "header",
-      "content": "Tabs colors"
+      "content": "标签页颜色"
     },
     {
       "type": "color",
-      "label": "Background",
+      "label": "背景",
       "id": "tabs_bg_color",
       "default": "#F5F5F5"
     },
     {
       "type": "color",
-      "label": "Border",
+      "label": "边框",
       "id": "tabs_border_color",
       "default": "#DEDEDE"
     },
     {
       "type": "header",
-      "content": "Tab colors"
+      "content": "标签颜色"
     },
     {
       "type": "color",
-      "label": "Text",
+      "label": "文本",
       "id": "tab_color",
       "default": "#767676"
     },
     {
       "type": "color",
-      "label": "Background",
+      "label": "背景",
       "id": "tab_bg_color",
       "default": "transparent"
     },
     {
       "type": "color",
-      "label": "Border",
+      "label": "边框",
       "id": "tab_border_color",
       "default": "transparent"
     },
     {
       "type": "header",
-      "content": "Active tab colors"
+      "content": "激活标签颜色"
     },
     {
       "type": "color",
-      "label": "Text",
+      "label": "文本",
       "id": "tab_active_color",
       "default": "#121212"
     },
     {
       "type": "color",
-      "label": "Background",
+      "label": "背景",
       "id": "tab_bg_active_color",
       "default": "#FFFFFF"
     },
     {
       "type": "color_background",
       "id": "tab_bg_active_gradient",
-      "label": "Background gradient",
-      "info": "Remove gradient to replace with solid colors"
+      "label": "背景渐变",
+      "info": "清空渐变后将使用纯色"
     },
     {
       "type": "color",
-      "label": "Border",
+      "label": "边框",
       "id": "tab_border_active_color",
       "default": "#DEDEDE"
     },
     {
       "type": "header",
-      "content": "Section colors"
+      "content": "区块颜色"
     },
     {
       "type": "color",
-      "label": "Section background",
+      "label": "区块背景",
       "id": "background_color",
       "default": "#FFFFFF"
     },
     {
       "type": "color_background",
       "id": "background_gradient",
-      "label": "Section background gradient",
-      "info": "Remove gradient to replace with solid colors"
+      "label": "区块背景渐变",
+      "info": "清空渐变后将使用纯色"
     },
     {
       "type": "color",
-      "label": "Border",
+      "label": "边框",
       "id": "border_color",
       "default": "#121212"
     },
     {
       "type": "header",
-      "content": "Section margin (outside)"
+      "content": "区块外边距（外部）"
     },
     {
       "type": "range",
@@ -2341,7 +2402,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "Margin top",
+      "label": "上边距",
       "default": 0
     },
     {
@@ -2351,7 +2412,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "Margin bottom",
+      "label": "下边距",
       "default": 0
     },
     {
@@ -2361,7 +2422,7 @@
       "max": 30,
       "step": 1,
       "unit": "rem",
-      "label": "Margin sides",
+      "label": "左右外边距",
       "default": 0
     },
     {
@@ -2371,12 +2432,12 @@
       "max": 15,
       "step": 0.5,
       "unit": "rem",
-      "label": "Margin sides mobile",
+      "label": "移动端左右外边距",
       "default": 0
     },
     {
       "type": "header",
-      "content": "Section padding (inside)"
+      "content": "区块内边距（内部）"
     },
     {
       "type": "range",
@@ -2385,7 +2446,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "Padding top",
+      "label": "上内边距",
       "default": 36
     },
     {
@@ -2395,7 +2456,7 @@
       "max": 100,
       "step": 4,
       "unit": "px",
-      "label": "Padding bottom",
+      "label": "下内边距",
       "default": 36
     },
     {
@@ -2405,7 +2466,7 @@
       "max": 30,
       "step": 1,
       "unit": "rem",
-      "label": "Padding sides",
+      "label": "左右内边距",
       "default": 5
     },
     {
@@ -2415,17 +2476,17 @@
       "max": 15,
       "step": 0.5,
       "unit": "rem",
-      "label": "Padding sides mobile",
+      "label": "移动端左右内边距",
       "default": 1.5
     },
     {
       "type": "header",
-      "content": "Section"
+      "content": "区块"
     },
     {
       "type": "checkbox",
       "id": "full_width",
-      "label": "Full width",
+      "label": "全宽",
       "default": false
     },
     {
@@ -2435,7 +2496,7 @@
       "max": 2000,
       "step": 100,
       "unit": "px",
-      "label": "Section content width",
+      "label": "区块内容宽度",
       "default": 1000
     },
     {
@@ -2445,7 +2506,7 @@
       "max": 50,
       "step": 1,
       "unit": "px",
-      "label": "Border thickness",
+      "label": "边框粗细",
       "default": 0
     },
     {
@@ -2455,31 +2516,31 @@
       "max": 100,
       "step": 2,
       "unit": "px",
-      "label": "Section roundness",
+      "label": "区块圆角",
       "default": 0
     }
   ],
   "blocks": [
     {
       "type": "heading",
-      "name": "Heading",
+      "name": "标题",
       "settings": [
         {
           "type": "richtext",
           "id": "heading",
-          "label": "Heading",
+          "label": "标题",
           "default": "<h2>Pricing table #5</h2>"
         },
         {
           "type": "checkbox",
           "id": "heading_custom",
-          "label": "Use custom font",
+          "label": "使用自定义字体",
           "default": false
         },
         {
           "type": "font_picker",
           "id": "heading_font",
-          "label": "Font family",
+          "label": "字体系列",
           "default": "josefin_sans_n4"
         },
         {
@@ -2489,7 +2550,7 @@
           "max": 72,
           "step": 2,
           "unit": "px",
-          "label": "Font size",
+          "label": "字体大小",
           "default": 52
         },
         {
@@ -2499,7 +2560,7 @@
           "max": 72,
           "step": 2,
           "unit": "px",
-          "label": "Font size - mobile",
+          "label": "移动端字体大小",
           "default": 32
         },
         {
@@ -2509,7 +2570,7 @@
           "max": 200,
           "step": 10,
           "unit": "%",
-          "label": "Line height",
+          "label": "行高",
           "default": 130
         },
         {
@@ -2519,7 +2580,7 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Margin top",
+          "label": "上边距",
           "default": 0
         },
         {
@@ -2529,24 +2590,24 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Margin top - mobile",
+          "label": "移动端上边距",
           "default": 0
         },
         {
           "type": "text_alignment",
           "id": "heading_align",
-          "label": "Alignment",
+          "label": "对齐方式",
           "default": "center"
         },
         {
           "type": "text_alignment",
           "id": "heading_align_mobile",
-          "label": "Alignment - mobile",
+          "label": "移动端对齐方式",
           "default": "center"
         },
         {
           "type": "color",
-          "label": "Color",
+          "label": "颜色",
           "id": "heading_color",
           "default": "#121212"
         }
@@ -2554,391 +2615,391 @@
     },
     {
       "type": "tab",
-      "name": "Tab",
+      "name": "标签",
       "limit": 2,
       "settings": [
         {
           "type": "text",
           "id": "tab",
-          "label": "Tab",
+          "label": "标签",
           "default": "Tab"
         },
         {
           "type": "checkbox",
           "id": "active_default",
-          "label": "Active",
+          "label": "激活",
           "default": false
         }
       ]
     },
     {
       "type": "card",
-      "name": "Card",
+      "name": "卡片",
       "settings": [
         {
           "type": "text",
           "id": "title",
-          "label": "Title",
+          "label": "标题",
           "default": "Title"
         },
         {
           "type": "richtext",
           "id": "text",
-          "label": "Text",
+          "label": "文本",
           "default": "<p>Tell your story</p>"
         },
         {
           "type": "text",
           "id": "price_text",
-          "label": "Price",
+          "label": "价格",
           "default": "$10"
         },
         {
           "type": "color",
           "id": "price_text_color",
-          "label": "Price color",
+          "label": "价格颜色",
           "default": "#121212"
         },
         {
           "type": "text",
           "id": "price_suffix",
-          "label": "Price suffix (e.g. /month)",
+          "label": "价格后缀（例如 /月）",
           "default": "/month",
-          "info": "Leave empty to use global setting"
+          "info": "留空则使用全局设置"
         },
         {
           "type": "color",
           "id": "price_suffix_text_color",
-          "label": "Price suffix color",
+          "label": "价格后缀颜色",
           "default": "#767676"
         },
         {
           "type": "text",
           "id": "button_text",
-          "label": "Button label",
+          "label": "按钮文案",
           "default": "Get started"
         },
         {
           "type": "url",
           "id": "url",
-          "label": "Button link"
+          "label": "按钮链接"
         },
         {
           "type": "header",
-          "content": "Features Section"
+          "content": "功能区"
         },
         {
           "type": "text",
           "id": "features_title",
-          "label": "Features title",
+          "label": "功能标题",
           "default": "Standard Features"
         },
         {
           "type": "header",
-          "content": "Feature 1"
+          "content": "功能1"
         },
         {
           "type": "text",
           "id": "first_left_text",
-          "label": "Feature text",
+          "label": "功能文本",
           "default": "190+ Profile Theme Styles"
         },
         {
           "type": "image_picker",
           "id": "first_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "first_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 2"
+          "content": "功能2"
         },
         {
           "type": "text",
           "id": "second_left_text",
-          "label": "Feature text",
+          "label": "功能文本",
           "default": "Unlimited Link Content"
         },
         {
           "type": "image_picker",
           "id": "second_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "second_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 3"
+          "content": "功能3"
         },
         {
           "type": "text",
           "id": "third_left_text",
-          "label": "Feature text",
+          "label": "功能文本",
           "default": "Two Way Contact Exchange"
         },
         {
           "type": "image_picker",
           "id": "third_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "third_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 4"
+          "content": "功能4"
         },
         {
           "type": "text",
           "id": "fourth_left_text",
-          "label": "Feature text",
+          "label": "功能文本",
           "default": "Basic Contact Management"
         },
         {
           "type": "image_picker",
           "id": "fourth_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "fourth_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 5"
+          "content": "功能5"
         },
         {
           "type": "text",
           "id": "fifth_left_text",
-          "label": "Feature text",
+          "label": "功能文本",
           "default": "Last 7 day insights"
         },
         {
           "type": "image_picker",
           "id": "fifth_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "fifth_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 6"
+          "content": "功能6"
         },
         {
           "type": "text",
           "id": "sixth_left_text",
-          "label": "Feature text"
+          "label": "功能文本"
         },
         {
           "type": "image_picker",
           "id": "sixth_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "sixth_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 7"
+          "content": "功能7"
         },
         {
           "type": "text",
           "id": "seventh_left_text",
-          "label": "Feature text"
+          "label": "功能文本"
         },
         {
           "type": "image_picker",
           "id": "seventh_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "seventh_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 8"
+          "content": "功能8"
         },
         {
           "type": "text",
           "id": "eighth_left_text",
-          "label": "Feature text"
+          "label": "功能文本"
         },
         {
           "type": "image_picker",
           "id": "eighth_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "eighth_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 9"
+          "content": "功能9"
         },
         {
           "type": "text",
           "id": "ninth_left_text",
-          "label": "Feature text"
+          "label": "功能文本"
         },
         {
           "type": "image_picker",
           "id": "ninth_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "ninth_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Feature 10"
+          "content": "功能10"
         },
         {
           "type": "text",
           "id": "tenth_left_text",
-          "label": "Feature text"
+          "label": "功能文本"
         },
         {
           "type": "image_picker",
           "id": "tenth_icon",
-          "label": "Custom icon (optional)"
+          "label": "自定义图标（可选）"
         },
         {
           "type": "color",
           "id": "tenth_icon_color",
-          "label": "Icon color",
+          "label": "图标颜色",
           "default": "#6366F1"
         },
         {
           "type": "header",
-          "content": "Content colors"
+          "content": "内容颜色"
         },
         {
           "type": "color",
-          "label": "Title",
+          "label": "标题",
           "id": "title_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Text",
+          "label": "文本",
           "id": "text_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Features title",
+          "label": "功能标题",
           "id": "features_title_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Feature text",
+          "label": "功能文本",
           "id": "feature_text_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Feature icon",
+          "label": "功能图标",
           "id": "feature_icon_color",
           "default": "#6366F1"
         },
         {
           "type": "color",
-          "label": "Background",
+          "label": "背景",
           "id": "card_bg_color",
           "default": "#F3F3F3"
         },
         {
           "type": "color",
-          "label": "Divider",
+          "label": "分隔线",
           "id": "table_border_color",
           "default": "#DEDEDE"
         },
         {
           "type": "color",
-          "label": "Border",
+          "label": "边框",
           "id": "card_border_color",
           "default": "#121212"
         },
         {
           "type": "header",
-          "content": "Button colors"
+          "content": "按钮颜色"
         },
         {
           "type": "color",
-          "label": "Text",
+          "label": "文本",
           "id": "button_color",
           "default": "#FFFFFF"
         },
         {
           "type": "color",
-          "label": "Hover text",
+          "label": "悬停文本",
           "id": "button_hover_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Background",
+          "label": "背景",
           "id": "button_bg_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Background hover",
+          "label": "悬停背景",
           "id": "button_bg_hover_color",
           "default": "#FFFFFF"
         },
         {
           "type": "color_background",
           "id": "button_bg_gradient",
-          "label": "Background gradient",
-          "info": "Remove gradient to replace with solid colors"
+          "label": "背景渐变",
+          "info": "清空渐变后将使用纯色"
         },
         {
           "type": "color_background",
           "id": "button_bg_hover_gradient",
-          "label": "Background hover gradient",
-          "info": "Remove gradient to replace with solid colors"
+          "label": "悬停背景渐变",
+          "info": "清空渐变后将使用纯色"
         },
         {
           "type": "color",
-          "label": "Button border",
+          "label": "按钮边框",
           "id": "button_border_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Border hover",
+          "label": "悬停边框",
           "id": "button_border_hover_color",
           "default": "#121212"
         }
@@ -2947,29 +3008,29 @@
     {
       "type": "button",
       "limit": 1,
-      "name": "Button",
+      "name": "按钮",
       "settings": [
         {
           "type": "text",
           "id": "button",
-          "label": "Button label",
+          "label": "按钮文案",
           "default": "Learn more"
         },
         {
           "type": "url",
           "id": "url",
-          "label": "Button link"
+          "label": "按钮链接"
         },
         {
           "type": "checkbox",
           "id": "button_custom",
-          "label": "Use custom font",
+          "label": "使用自定义字体",
           "default": false
         },
         {
           "type": "font_picker",
           "id": "button_font",
-          "label": "Font family",
+          "label": "字体系列",
           "default": "josefin_sans_n4"
         },
         {
@@ -2979,7 +3040,7 @@
           "max": 30,
           "step": 1,
           "unit": "px",
-          "label": "Font size",
+          "label": "字体大小",
           "default": 18
         },
         {
@@ -2989,7 +3050,7 @@
           "max": 30,
           "step": 1,
           "unit": "px",
-          "label": "Font size - mobile",
+          "label": "移动端字体大小",
           "default": 18
         },
         {
@@ -2999,7 +3060,7 @@
           "max": 200,
           "step": 10,
           "unit": "%",
-          "label": "Line height",
+          "label": "行高",
           "default": 100
         },
         {
@@ -3009,7 +3070,7 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Padding horizontal",
+          "label": "左右内边距",
           "default": 36
         },
         {
@@ -3019,7 +3080,7 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Padding horizontal - mobile",
+          "label": "移动端左右内边距",
           "default": 36
         },
         {
@@ -3029,7 +3090,7 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Padding vertical",
+          "label": "上下内边距",
           "default": 20
         },
         {
@@ -3039,7 +3100,7 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Padding vertical - mobile",
+          "label": "移动端上下内边距",
           "default": 18
         },
         {
@@ -3049,7 +3110,7 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Roundness",
+          "label": "圆角",
           "default": 100
         },
         {
@@ -3059,7 +3120,7 @@
           "max": 10,
           "step": 1,
           "unit": "px",
-          "label": "Border thickness",
+          "label": "边框粗细",
           "default": 1
         },
         {
@@ -3069,7 +3130,7 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Margin top",
+          "label": "上边距",
           "default": 52
         },
         {
@@ -3079,86 +3140,86 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Margin top - mobile",
+          "label": "移动端上边距",
           "default": 32
         },
         {
           "type": "select",
           "id": "button_style",
-          "label": "Button style",
+          "label": "按钮样式",
           "default": "link",
           "options": [
             {
-              "label": "Link",
+              "label": "链接",
               "value": "link"
             },
             {
-              "label": "Non-outline",
+              "label": "实心",
               "value": "non_outline"
             },
             {
-              "label": "Non-outline & arrow",
+              "label": "实心 + 箭头",
               "value": "non_outline_arrow"
             },
             {
-              "label": "Outline",
+              "label": "描边",
               "value": "outline"
             },
             {
-              "label": "Outline & arrow",
+              "label": "描边 + 箭头",
               "value": "outline_arrow"
             }
           ]
         },
         {
           "type": "header",
-          "content": "Colors"
+          "content": "颜色"
         },
         {
           "type": "color",
-          "label": "Text",
+          "label": "文本",
           "id": "button_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Hover text",
+          "label": "悬停文本",
           "id": "button_hover_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Background",
+          "label": "背景",
           "id": "button_bg_color",
           "default": "#F3F3F3"
         },
         {
           "type": "color",
-          "label": "Background hover",
+          "label": "悬停背景",
           "id": "button_bg_hover_color",
           "default": "#EDEDED"
         },
         {
           "type": "color_background",
           "id": "button_bg_gradient",
-          "label": "Background gradient",
-          "info": "Remove gradient to replace with solid colors"
+          "label": "背景渐变",
+          "info": "清空渐变后将使用纯色"
         },
         {
           "type": "color_background",
           "id": "button_bg_hover_gradient",
-          "label": "Background hover gradient",
-          "info": "Remove gradient to replace with solid colors"
+          "label": "悬停背景渐变",
+          "info": "清空渐变后将使用纯色"
         },
         {
           "type": "color",
-          "label": "Button border",
+          "label": "按钮边框",
           "id": "button_border_color",
           "default": "#121212"
         },
         {
           "type": "color",
-          "label": "Border hover",
+          "label": "悬停边框",
           "id": "button_border_hover_color",
           "default": "#121212"
         }
@@ -3166,24 +3227,24 @@
     },
     {
       "type": "caption",
-      "name": "Caption",
+      "name": "说明文字",
       "settings": [
         {
           "type": "richtext",
           "id": "text",
-          "label": "Caption",
+          "label": "说明文字",
           "default": "<p>Caption</p>"
         },
         {
           "type": "checkbox",
           "id": "text_custom",
-          "label": "Use custom font",
+          "label": "使用自定义字体",
           "default": false
         },
         {
           "type": "font_picker",
           "id": "text_font",
-          "label": "Font family",
+          "label": "字体系列",
           "default": "josefin_sans_n4"
         },
         {
@@ -3193,7 +3254,7 @@
           "max": 40,
           "step": 1,
           "unit": "px",
-          "label": "Font size",
+          "label": "字体大小",
           "default": 12
         },
         {
@@ -3203,7 +3264,7 @@
           "max": 40,
           "step": 1,
           "unit": "px",
-          "label": "Font size - mobile",
+          "label": "移动端字体大小",
           "default": 12
         },
         {
@@ -3213,7 +3274,7 @@
           "max": 200,
           "step": 10,
           "unit": "%",
-          "label": "Line height",
+          "label": "行高",
           "default": 150
         },
         {
@@ -3223,7 +3284,7 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Margin top",
+          "label": "上边距",
           "default": 24
         },
         {
@@ -3233,18 +3294,18 @@
           "max": 100,
           "step": 2,
           "unit": "px",
-          "label": "Margin top - mobile",
+          "label": "移动端上边距",
           "default": 16
         },
         {
           "type": "text_alignment",
           "id": "text_align",
-          "label": "Alignment"
+          "label": "对齐方式"
         },
         {
           "type": "text_alignment",
           "id": "text_align_mobile",
-          "label": "Alignment - mobile"
+          "label": "移动端对齐方式"
         },
         {
           "type": "range",
@@ -3253,12 +3314,12 @@
           "max": 100,
           "step": 2,
           "unit": "%",
-          "label": "Max width",
+          "label": "最大宽度",
           "default": 80
         },
         {
           "type": "color",
-          "label": "Color",
+          "label": "颜色",
           "id": "text_color",
           "default": "#121212"
         }
@@ -3267,7 +3328,7 @@
   ],
   "presets": [
     {
-      "name": "SS - Pricing table #5",
+      "name": "SS - 定价表 #5",
       "blocks": [
         {
           "type": "heading"
